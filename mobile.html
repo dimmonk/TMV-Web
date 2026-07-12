@@ -666,7 +666,20 @@ class Component extends DCLogic {
     return { label: 'Opens 11 AM', fg: 'rgba(255,255,255,.6)', bg: 'rgba(255,255,255,.07)', bd: 'rgba(255,255,255,.15)', dot: 'rgba(255,255,255,.4)' };
   }
 
+  // Open the screen named in the URL hash (e.g. mobile.html#pricing), so
+  // device redirects from desktop pages land on the matching mobile screen.
+  initFromHash = () => {
+    const h = (location.hash || '').replace('#', '').toLowerCase().trim();
+    const tabs = ['home', 'train', 'book', 'schedule', 'more'];
+    const subs = ['pricing', 'store', 'about', 'reviews', 'getstarted', 'camps', 'events', 'groups'];
+    if (tabs.indexOf(h) >= 0) this.setState({ tab: h, sub: null });
+    else if (subs.indexOf(h) >= 0) this.setState({ tab: 'more', sub: h });
+  };
+
   componentDidMount() {
+    this.initFromHash();
+    window.addEventListener('hashchange', this.initFromHash);
+
     import('./categories.js')
       .then((m) => {
         const map = Object.fromEntries(m.CATEGORIES.map((x) => [x.key, x.color]));
