@@ -1,0 +1,149 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import JumpNav from '../components/JumpNav.astro';
+import BookingCard from '../components/BookingCard.astro';
+import Faq from '../components/Faq.astro';
+import { seo, cat, links, url } from '../data/site';
+
+const options = [
+  { title: 'Introduction Class', color: cat.intro, status: 'Reservation required', statusTone: 'neutral' as const, desc: 'A one-on-one intro on a set beginner curriculum — the best place to start.', cta: 'Book intro', href: links.booking, target: '_blank' as const },
+  { title: 'Private Class', color: cat.private, status: 'Reservation required', statusTone: 'neutral' as const, desc: 'One-on-one or your own friend group, fully tailored to your goals.', cta: 'Book private', href: links.booking, target: '_blank' as const },
+  { title: 'Group Class', color: cat.classes, status: 'No reservation', statusTone: 'go' as const, desc: 'Drop into a scheduled class with other beginners — just show up.', cta: 'See schedule', href: url('schedule'), target: '_self' as const },
+  { title: 'Open Gym', color: cat.openGym, status: 'No reservation', statusTone: 'go' as const, desc: 'Grab a day pass and train on your own, any time.', cta: 'Open gym info', href: `${url('train')}#opengym`, target: '_self' as const },
+];
+const bring = [
+  'Comfortable clothes you can move in.',
+  "A second pair of clean indoor shoes — not the ones you arrived in. (Forgot them? You can train barefoot, but shoes are comfier when you're starting out.)",
+  'A water bottle so you can stay hydrated.',
+];
+const arrive = [
+  { n: '1', text: 'Arrive 15 minutes early to sign in and get set.' },
+  { n: '2', text: 'Stash your things in a locker (bring your own lock).' },
+  { n: '3', text: 'Read the Rules poster at the entrance.' },
+  { n: '4', text: 'Head to the spring floor and join the group warm-up.' },
+];
+const otherFaqs = [
+  { q: 'Do I need any experience to start?', a: 'None at all. Most people who walk in have never done parkour before. Book an Introduction Class or drop into open gym and a coach will start you with the basics at your own pace.' },
+  { q: 'What ages do you welcome?', a: 'Everyone from age 3 and up. We run youth classes, adult classes, camps for kids 5+, and open gym for all ages. There is a class and a session for every body.' },
+  { q: 'Do I have to book, or can I just drop in?', a: 'Both work. Open Gym and Group Classes need no reservation — just check the schedule and show up. Introduction and Private Classes are reserved ahead of time so a coach is set aside for you.' },
+  { q: 'Is it safe? What about the kids?', a: 'Safety is built into the space — padded floors, a foam pit, and trained coaches who scale every skill to your level. Read the Rules poster at the entrance and your coach will guide the rest.' },
+  { q: 'Can I host a birthday or group event?', a: 'Absolutely. We run full and mini birthday parties plus group events for schools, teams and organizations. Weekend slots fill fast, so book early — see the Events page for details.' },
+];
+---
+<BaseLayout title={seo.getStarted.title} description={seo.getStarted.description} active="">
+  <section class="pagehero">
+    <div class="pagehero-glow"></div>
+    <div class="gs-hero">
+      <div class="gs-kicker"><span class="rule"></span>New here? Start here<span class="rule"></span></div>
+      <h1 class="gs-title">Your first visit,<br>in three steps.</h1>
+      <p class="gs-lead">Never trained with us before? No experience needed. Sign your waiver, pick how you want to start, and show up ready to move — we'll take care of the rest.</p>
+    </div>
+  </section>
+
+  <JumpNav items={[{ label: '1 · Waiver', id: 'step-1' }, { label: '2 · First Session', id: 'step-2' }, { label: '3 · What to Bring', id: 'step-3' }, { label: 'Questions', id: 'questions' }]} top={66} />
+
+  <div class="gswrap">
+    <section id="step-1" class="gsstep">
+      <div class="gsrow">
+        <div class="gsnum">1</div>
+        <div>
+          <div class="gseyebrow">Step one</div>
+          <h2 class="gsh2">Sign our waiver</h2>
+          <p class="gsp">Everyone needs a signed waiver before their first session — it only takes a couple of minutes online, so you're not filling out forms at the front desk when you arrive.</p>
+          <div class="gsnote"><i class="bi bi-info-circle-fill" aria-hidden="true"></i><span>All waivers must be completed by a parent or legal guardian if the participant is <strong>17 or younger</strong>.</span></div>
+          <a href={links.getStartedWaiver} target="_blank" rel="noopener" class="btn btn-dark">Sign our waiver <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>
+        </div>
+      </div>
+      <div class="gsdiv"></div>
+    </section>
+
+    <section id="step-2" class="gsstep">
+      <div class="gsrow">
+        <div class="gsnum">2</div>
+        <div>
+          <div class="gseyebrow">Step two</div>
+          <h2 class="gsh2">Book your first session</h2>
+          <p class="gsp">Four ways to get started — pick whichever fits how you like to learn. Prefer your own pace or a friend group? Reserve an <strong>Introduction</strong> or <strong>Private</strong> class. Happy to jump in with others? Drop into a <strong>Group</strong> class or <strong>Open Gym</strong> anytime — no reservation needed.</p>
+        </div>
+      </div>
+      <div class="gsopts">
+        {options.map((o) => (
+          <BookingCard color={o.color} status={o.status} statusTone={o.statusTone} title={o.title} description={o.desc} actionLabel={o.cta} href={o.href} target={o.target} />
+        ))}
+      </div>
+      <div class="gsdiv"></div>
+    </section>
+
+    <section id="step-3" class="gsstep">
+      <div class="gsrow">
+        <div class="gsnum">3</div>
+        <div><div class="gseyebrow">Step three</div><h2 class="gsh2">Things to know</h2></div>
+      </div>
+      <div class="gsknow">
+        <div class="gscard">
+          <h3 class="gscard-title"><i class="bi bi-bag-check" aria-hidden="true"></i>Before you get here</h3>
+          <div class="gslist">{bring.map((b) => <div class="gsli"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>{b}</span></div>)}</div>
+        </div>
+        <div class="gscard">
+          <h3 class="gscard-title"><i class="bi bi-geo-alt" aria-hidden="true"></i>I'm at the gym. What now?</h3>
+          <div class="gslist">{arrive.map((a) => <div class="gsli"><span class="gslin">{a.n}</span><span>{a.text}</span></div>)}</div>
+        </div>
+      </div>
+      <div class="gsarrival"><i class="bi bi-clock-history" aria-hidden="true"></i><span>Please arrive <strong>15 minutes early</strong> to sign in. To be fair to those who arrive on time, there's a 15-minute cutoff — anyone more than 15 minutes late can't be admitted to a class.</span></div>
+      <div class="gsbonus">
+        <span class="gsbonus-ic"><i class="bi bi-piggy-bank" aria-hidden="true"></i></span>
+        <div><div class="gsbonus-t">Took an Introduction Class? Here's a bonus.</div><div class="gsbonus-b">You get <strong>15% off</strong> any class or open-gym pass you buy the same day. Just ask the coach at the front desk.</div></div>
+      </div>
+    </section>
+
+    <section id="questions" class="gsstep" style="scroll-margin-top:132px">
+      <div class="gsdiv" style="margin-bottom:4px"></div>
+    </section>
+  </div>
+
+  <Faq eyebrow="One more thing" heading="A few more questions" subhead="The other things people usually ask before their first visit." faqs={otherFaqs} />
+</BaseLayout>
+
+<style>
+  .pagehero { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
+  .pagehero-glow { position: absolute; inset: 0; background: radial-gradient(680px 360px at 88% -14%, rgba(255,212,0,.13), transparent 70%); }
+  .gs-hero { max-width: 1000px; margin-inline: auto; padding: 64px 24px 70px; position: relative; text-align: center; }
+  .gs-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 22px; }
+  .gs-kicker .rule { width: 22px; height: 2px; background: var(--brand); }
+  .gs-title { font: 800 clamp(38px,9vw,58px)/1.02 var(--font-display); letter-spacing: -.022em; margin-bottom: 18px; text-wrap: balance; }
+  .gs-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 540px; margin-inline: auto; }
+
+  .gswrap { max-width: 1100px; margin-inline: auto; padding: 0 24px 80px; }
+  .gsstep { padding-top: 48px; scroll-margin-top: 132px; }
+  #step-1 { padding-top: 72px; }
+  .gsrow { display: grid; grid-template-columns: auto 1fr; gap: 26px; align-items: start; }
+  .gsnum { flex: none; width: 56px; height: 56px; border-radius: 15px; background: var(--ink); color: var(--brand); display: flex; align-items: center; justify-content: center; font: 900 24px/1 var(--font-display); }
+  .gseyebrow { font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--faint); margin-bottom: 10px; }
+  .gsh2 { font: 800 clamp(26px,4.5vw,32px)/1.05 var(--font-display); letter-spacing: -.015em; margin: 0 0 12px; }
+  .gsp { font: 400 15px/1.55 var(--font-body); color: #54514b; max-width: 640px; margin: 0 0 8px; }
+  .gsnote { display: flex; align-items: flex-start; gap: 11px; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--brand); border-radius: 12px; padding: 16px 20px; max-width: 620px; margin: 18px 0 22px; }
+  .gsnote i { font-size: 17px; color: var(--ink); margin-top: 1px; }
+  .gsnote span { font: 600 14px/1.6 var(--font-body); color: var(--text-2); }
+  .gsdiv { height: 1px; background: #e6e4dd; margin-top: 48px; }
+  .gsopts { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-top: 30px; }
+  .gsknow { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 26px; }
+  .gscard { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 30px 32px; box-shadow: var(--shadow-sm); }
+  .gscard-title { font: 800 18px/1.1 var(--font-display); letter-spacing: -.01em; margin: 0 0 18px; display: flex; align-items: center; gap: 10px; }
+  .gscard-title i { color: var(--brand); }
+  .gslist { display: flex; flex-direction: column; gap: 15px; }
+  .gsli { display: flex; align-items: flex-start; gap: 12px; font: 500 14px/1.6 var(--font-body); color: var(--text-2); }
+  .gsli > i { font-size: 16px; color: var(--c-opengym); margin-top: 2px; flex: none; }
+  .gslin { flex: none; width: 22px; height: 22px; border-radius: 7px; background: #f3f2ee; display: flex; align-items: center; justify-content: center; font: 800 11px/1 var(--font-display); color: var(--ink); margin-top: 1px; }
+  .gsarrival { display: flex; align-items: flex-start; gap: 13px; background: #fff7d6; border: 1px solid #f1e4a0; border-radius: 14px; padding: 18px 22px; margin-top: 18px; font: 600 14px/1.6 var(--font-body); color: #5c4d12; }
+  .gsarrival i { font-size: 18px; color: #9a7b00; margin-top: 1px; flex: none; }
+  .gsbonus { display: flex; align-items: center; gap: 16px; background: var(--ink); color: #fff; border-radius: 16px; padding: 24px 30px; margin-top: 18px; flex-wrap: wrap; }
+  .gsbonus-ic { flex: none; width: 46px; height: 46px; border-radius: 12px; background: rgba(255,212,0,.16); display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--brand); }
+  .gsbonus-t { font: 800 17px/1.2 var(--font-display); margin-bottom: 5px; }
+  .gsbonus-b { font: 500 14px/1.6 var(--font-body); color: rgba(255,255,255,.72); }
+  .gsbonus-b strong { color: var(--brand); }
+
+  @media (max-width: 700px) {
+    .gsrow { grid-template-columns: 1fr; gap: 14px; }
+    .gsknow { grid-template-columns: 1fr; }
+  }
+</style>

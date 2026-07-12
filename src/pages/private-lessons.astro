@@ -1,0 +1,174 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import JumpNav from '../components/JumpNav.astro';
+import { seo, cat, site } from '../data/site';
+import { sq } from '../data/square-links';
+
+const coaches = [
+  { name: 'Taigh Smullen', role: 'Manager', hint: 'Photo of Taigh', bio: 'Trampoline and parkour specialist — explosive air awareness built on solid fundamentals. Great if you want big, controlled movement.', tags: ['Trampoline', 'Parkour'], cta: 'Book with Taigh', href: sq.privateLessons.coachTaigh },
+  { name: 'Steven Leblanc', role: 'Manager', hint: 'Photo of Steven', bio: '24+ years of parkour and a true all-around mover — flips, acrobatics and conditioning. Methodical, progression-driven coaching, with an app to track your progress between sessions.', tags: ['Parkour', 'Flips', 'Acrobatics', 'Conditioning'], cta: 'Book with Steven', href: sq.privateLessons.coachSteven },
+  { name: 'Nelson Lin', role: 'Coach', hint: 'Photo of Nelson', bio: 'Tricking, calisthenics and gymnastics — high-energy flips and bodyweight strength. From your first kick to your cleanest combos.', tags: ['Tricking', 'Calisthenics', 'Flips', 'Gymnastics'], cta: 'Book with Nelson', href: sq.privateLessons.coachNelson },
+];
+const notes = [
+  { icon: 'bi-graph-up-arrow', title: 'One coach, your whole journey', body: 'Sticking with a specific coach means continuity — they know your history, track your progress and build each session on the last.' },
+  { icon: 'bi-calendar-heart', title: 'They come in just for you', body: "Book a specific coach outside their regular shift — even on their day off — and they'll come in only for your session. Coaching on demand, on your schedule." },
+  { icon: 'bi-tag', title: 'Each coach sets their rate', body: 'Because these are private sessions on their own time, each coach sets their own rate — separate from standard class pricing. The rate shows when you book.' },
+  { icon: 'bi-clipboard-check', title: 'Waiver first', body: 'Everyone needs a signed waiver before a first session. New here? Start on the Get Started page, then come back and book.' },
+];
+---
+<BaseLayout title={seo.privateLessons.title} description={seo.privateLessons.description} active="">
+  <section class="pagehero red">
+    <div class="pagehero-glow"></div>
+    <div class="pl-hero container">
+      <div class="pl-kicker"><span class="rule"></span>Private · 1-on-1 coaching</div>
+      <h1 class="pl-title">Private lessons, built around you.</h1>
+      <p class="pl-lead">One-on-one coaching shaped entirely around your goals and pace — bring your own small group if you like. There are three ways in: start with a discounted intro, book standard sessions with whoever's on, or pick the specific coach you want to train with.</p>
+    </div>
+  </section>
+
+  <JumpNav items={[{ label: 'Three Ways', id: 'ways' }, { label: 'Choose a Coach', id: 'coaches' }, { label: 'Good to Know', id: 'know' }]} top={66} />
+
+  <div class="plwrap">
+    <div id="ways" class="pl-label" style="scroll-margin-top:132px">Three ways to train privately</div>
+    <div class="pl-ways">
+      <div class="pl-way">
+        <div class="pl-wayhead"><span class="pl-waynum grey">1</span><span class="pl-waytag grey">Start here</span></div>
+        <h3 class="pl-waytitle">Introduction</h3>
+        <div class="pl-price"><span class="pl-big">$45</span><span class="pl-per">first session</span></div>
+        <div class="pl-sub">$35 each for 2 · $30 each for 3+</div>
+        <p class="pl-desc">A one-time lesson on a set beginner curriculum — the best first taste of parkour, and where everyone starts.</p>
+        <a href={sq.privateLessons.introduction} target="_blank" rel="noopener" class="pl-book">Book intro <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+      </div>
+      <div class="pl-way">
+        <div class="pl-wayhead"><span class="pl-waynum red">2</span></div>
+        <h3 class="pl-waytitle">Private Lesson</h3>
+        <div class="pl-price"><span class="pl-big">From $65</span><span class="pl-per">per session</span></div>
+        <div class="pl-sub">Kids $65 · Adults $85 · 5-packs available</div>
+        <p class="pl-desc">Ongoing one-on-one (or your own small group) with whichever coach is on shift. All ages, all levels, flexible scheduling.</p>
+        <a href={sq.privateLessons.privateLesson} target="_blank" rel="noopener" class="pl-book">Book a private <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+      </div>
+      <div class="pl-way featured">
+        <div class="pl-wayhead"><span class="pl-waynum solid">3</span><span class="pl-waytag solid">Ongoing · on demand</span></div>
+        <h3 class="pl-waytitle">Train with a specific coach</h3>
+        <div class="pl-price"><span class="pl-big">Coach's rate</span></div>
+        <div class="pl-sub">Set per coach · ongoing 1-on-1</div>
+        <p class="pl-desc">Pick the coach whose style fits your goals and stick with them — one instructor who follows your whole progress, building each session on the last. They'll come in just for you, even on a day off.</p>
+        <a href="#coaches" class="pl-book solid">Choose a coach <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
+      </div>
+    </div>
+
+    <div class="pl-fine">
+      <span><i class="bi bi-unlock" aria-hidden="true"></i>Every session includes open gym that day</span>
+      <span><i class="bi bi-receipt" aria-hidden="true"></i>All prices include tax</span>
+      <span><i class="bi bi-people" aria-hidden="true"></i>Packs can be shared with friends &amp; family</span>
+    </div>
+
+    <section id="coaches" class="pl-section">
+      <div class="pl-cintro">
+        <div class="pl-ceyebrow">Choose your coach</div>
+        <h2 class="pl-ctitle">The coaches taking private students</h2>
+        <p class="pl-clead">A few of our coaches are building their own roster of private students — the ones taking the initiative to train you one-on-one, on your schedule. Reserve one outside their regular shift and they'll come in just for your session, at their own rate.</p>
+      </div>
+      <div class="pl-coaches">
+        {coaches.map((c) => (
+          <div class="pl-coach">
+            <div class="pl-cphoto"><div class="pl-cphoto-ph"><i class="bi bi-camera" aria-hidden="true"></i><span>{c.hint}</span></div><span class="pl-crole">{c.role}</span></div>
+            <div class="pl-cbody">
+              <h3 class="pl-cname">{c.name}</h3>
+              <p class="pl-cbio">{c.bio}</p>
+              <div class="pl-ctags">{c.tags.map((t) => <span class="pl-ctag">{t}</span>)}</div>
+              <a href={c.href} target="_blank" rel="noopener" class="pl-book">{c.cta} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section id="know" class="pl-section">
+      <div class="pl-label">Good to know</div>
+      <div class="pl-notes">
+        {notes.map((n) => (
+          <div class="pl-note"><span class="pl-noteic"><i class={`bi ${n.icon}`} aria-hidden="true"></i></span><div class="pl-notetitle">{n.title}</div><p class="pl-notebody">{n.body}</p></div>
+        ))}
+      </div>
+    </section>
+
+    <section class="pl-help">
+      <div class="pl-help-left"><span class="pl-help-ic"><i class="bi bi-chat-dots-fill" aria-hidden="true"></i></span><div><div class="pl-help-t">Not sure who to train with?</div><div class="pl-help-b">Tell us your goals and we'll point you to the right coach. Call {site.phoneDisplay} or email us.</div></div></div>
+      <a href={`mailto:${site.email}`} class="btn btn-primary">Get in touch <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .pagehero { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
+  .pagehero.red .pagehero-glow { background: radial-gradient(680px 360px at 88% -15%, rgba(244,67,54,.16), transparent 70%); }
+  .pagehero-glow { position: absolute; inset: 0; }
+  .pl-hero { padding-block: 58px 54px; position: relative; max-width: 1120px; }
+  .pl-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--c-private); margin-bottom: 18px; }
+  .pl-kicker .rule { width: 22px; height: 2px; background: var(--c-private); }
+  .pl-title { font: 800 clamp(34px,8vw,54px)/1.04 var(--font-display); letter-spacing: -.022em; margin-bottom: 16px; max-width: 760px; text-wrap: balance; }
+  .pl-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 620px; }
+
+  .plwrap { max-width: 1120px; margin-inline: auto; padding: 54px 24px 24px; }
+  .pl-label { font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--faint); margin-bottom: 18px; }
+  .pl-ways { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .pl-way { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 26px 24px; box-shadow: var(--shadow-sm); transition: transform .2s ease, box-shadow .2s ease; }
+  .pl-way:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .pl-way.featured { border: 2px solid var(--c-private); box-shadow: 0 1px 3px rgba(28,25,23,.05), 0 18px 38px -22px rgba(244,67,54,.45); }
+  .pl-wayhead { display: flex; align-items: center; gap: 11px; margin-bottom: 18px; }
+  .pl-waynum { flex: none; width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font: 900 16px/1 var(--font-display); }
+  .pl-waynum.grey { background: #f1f0ec; color: #6e6e6e; }
+  .pl-waynum.red { background: color-mix(in srgb,#f44336 12%,#fff); color: color-mix(in srgb,#f44336 62%,#000); }
+  .pl-waynum.solid { background: var(--c-private); color: #fff; }
+  .pl-waytag { font: 700 10px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; border-radius: 999px; padding: 6px 11px; }
+  .pl-waytag.grey { color: #6e6e6e; background: #f1f0ec; }
+  .pl-waytag.solid { color: #fff; background: var(--c-private); }
+  .pl-waytitle { font: 800 22px/1.1 var(--font-display); letter-spacing: -.015em; margin: 0 0 12px; }
+  .pl-price { display: flex; align-items: baseline; gap: 7px; margin-bottom: 4px; }
+  .pl-big { font: 800 30px/1 var(--font-display); color: var(--ink); }
+  .pl-per { font: 600 13px/1 var(--font-body); color: var(--muted-3); }
+  .pl-sub { font: 600 12.5px/1.4 var(--font-body); color: var(--muted-3); margin-bottom: 16px; }
+  .pl-desc { font: 400 13.5px/1.55 var(--font-body); color: var(--text-3); margin: 0 0 22px; }
+  .pl-book { margin-top: auto; display: inline-flex; align-items: center; justify-content: center; gap: 9px; background: var(--ink); color: #fff; font: 800 13.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; text-decoration: none; padding: 14px 18px; border-radius: 11px; transition: transform .15s ease; }
+  .pl-book:hover { transform: translateY(-1px); }
+  .pl-book i { color: var(--brand); }
+  .pl-book.solid { background: var(--c-private); } .pl-book.solid i { color: #fff; }
+
+  .pl-fine { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 20px 2px 0; font: 600 12.5px/1.4 var(--font-body); color: var(--muted-3); }
+  .pl-fine span { display: inline-flex; align-items: center; gap: 7px; }
+  .pl-fine i { color: var(--c-opengym); }
+
+  .pl-section { margin-top: 56px; scroll-margin-top: 132px; }
+  .pl-cintro { max-width: 680px; margin-bottom: 26px; }
+  .pl-ceyebrow { font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--c-private); margin-bottom: 14px; }
+  .pl-ctitle { font: 800 clamp(26px,4.5vw,34px)/1.05 var(--font-display); letter-spacing: -.018em; margin: 0 0 12px; }
+  .pl-clead { font: 400 15px/1.55 var(--font-body); color: var(--text-3); margin: 0; }
+  .pl-coaches { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 22px; }
+  .pl-coach { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-sm); transition: transform .2s ease, box-shadow .2s ease; }
+  .pl-coach:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .pl-cphoto { position: relative; height: 260px; background: #ece9e3; }
+  .pl-cphoto-ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--muted-3); background: repeating-linear-gradient(45deg,#f0eee9,#f0eee9 12px,#e9e7e1 12px,#e9e7e1 24px); }
+  .pl-cphoto-ph i { font-size: 24px; }
+  .pl-cphoto-ph span { font: 700 11px/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; }
+  .pl-crole { position: absolute; top: 14px; left: 14px; padding: 6px 11px; border-radius: 999px; background: var(--c-private); color: #fff; font: 700 10px/1 var(--font-display); letter-spacing: .09em; text-transform: uppercase; box-shadow: 0 6px 16px -6px rgba(244,67,54,.6); }
+  .pl-cbody { display: flex; flex-direction: column; gap: 14px; padding: 22px 22px 24px; flex: 1; }
+  .pl-cname { font: 800 23px/1.08 var(--font-display); letter-spacing: -.015em; color: var(--ink); margin: 0; }
+  .pl-cbio { font: 400 13.5px/1.55 var(--font-body); color: var(--text-3); margin: 0; }
+  .pl-ctags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+  .pl-ctag { font: 600 12px/1 var(--font-body); color: color-mix(in srgb,#f44336 62%,#000); background: color-mix(in srgb,#f44336 10%,#fff); border: 1px solid color-mix(in srgb,#f44336 24%,#fff); border-radius: 999px; padding: 6px 11px; white-space: nowrap; }
+
+  .pl-notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .pl-note { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px rgba(28,25,23,.05); }
+  .pl-noteic { display: flex; width: 42px; height: 42px; border-radius: 12px; background: color-mix(in srgb,#f44336 12%,#fff); align-items: center; justify-content: center; margin-bottom: 15px; font-size: 19px; color: color-mix(in srgb,#f44336 62%,#000); }
+  .pl-notetitle { font: 800 16px/1.15 var(--font-display); letter-spacing: -.01em; margin-bottom: 8px; }
+  .pl-notebody { font: 400 13.5px/1.55 var(--font-body); color: var(--text-3); margin: 0; }
+
+  .pl-help { background: var(--ink); color: #fff; border-radius: 18px; padding: 30px 36px; display: flex; align-items: center; justify-content: space-between; gap: 22px; flex-wrap: wrap; margin: 36px 0 8px; }
+  .pl-help-left { display: flex; align-items: center; gap: 16px; }
+  .pl-help-ic { flex: none; width: 48px; height: 48px; border-radius: 13px; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; font-size: 21px; color: var(--brand); }
+  .pl-help-t { font: 800 19px/1.1 var(--font-display); letter-spacing: -.01em; margin-bottom: 5px; }
+  .pl-help-b { font: 400 12.5px/1.5 var(--font-body); color: rgba(255,255,255,.66); }
+
+  @media (max-width: 560px) { .pl-notes { grid-template-columns: 1fr; } }
+</style>

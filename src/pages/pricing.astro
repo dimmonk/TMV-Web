@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import JumpNav from '../components/JumpNav.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { seo, cat, links, url } from '../data/site';
+
+const groups = [
+  {
+    id: 'opengym', title: 'Open Gym', color: cat.openGym,
+    rows: [
+      { label: 'Day pass', note: 'no time limit', val: '$25' },
+      { label: '10-visit pack', note: 'valid ~12 months', val: '$225' },
+      { label: '20-visit pack', note: 'valid ~20 months', val: '$400' },
+      { label: 'Membership · 30 days', note: 'unlimited open gym', val: '$110' },
+    ],
+  },
+  {
+    id: 'classes', title: 'Group Classes', color: cat.classes,
+    rows: [
+      { label: 'Single class', val: '$30' },
+      { label: '10-class pack', val: '$275' },
+      { label: '20-class pack', val: '$500' },
+      { label: 'Class membership · 30 days', note: 'classes + open gym', val: '$180' },
+    ],
+  },
+  {
+    id: 'private', title: 'Private Lessons', color: cat.private,
+    rows: [
+      { label: 'Introduction', note: 'one-time · groups from $30 each', val: '$45' },
+      { label: 'Kids private', val: '$65' },
+      { label: 'Adults private', val: '$85' },
+      { label: '5-pack · kids', val: '$250' },
+    ],
+  },
+  {
+    id: 'athletic', title: 'Athletic Program', color: cat.athletic,
+    rows: [
+      { label: 'Monthly membership', note: 'per month · year-round', val: '$150' },
+      { label: 'Class add-on for members', note: 'per drop-in class', val: '$5' },
+      { label: '10× class pass', note: 'fallback · no membership', val: '$275' },
+    ],
+  },
+  {
+    id: 'camps', title: 'Camps', color: cat.camps,
+    rows: [
+      { label: 'Weekly camp', note: 'per week · 9 AM–2 PM', val: '$350' },
+      { label: 'P.A. Day / single day', note: 'per day', val: '$90' },
+      { label: 'Late pickup', note: 'to 4 PM · $75 for five days', val: '$20' },
+    ],
+  },
+  {
+    id: 'parties', title: 'Parties & Groups', color: cat.parties,
+    rows: [
+      { label: 'Full party · base', note: 'up to 8 kids · +$25 each extra', val: '$350' },
+      { label: 'Mini party', note: 'per kid · 3–15 kids', val: '$30' },
+      { label: 'Group events', note: 'per person · tiered, min 10', val: 'From $22.50' },
+      { label: 'Early gym access', note: 'per hour + $25/person', val: 'From $50' },
+    ],
+  },
+];
+---
+<BaseLayout title={seo.pricing.title} description={seo.pricing.description} active="pricing">
+  <section class="pagehero">
+    <div class="pagehero-glow"></div>
+    <div class="container pagehero-inner">
+      <div class="pagehero-kicker"><span class="rule"></span>The rate sheet · CAD, tax included</div>
+      <h1 class="pagehero-title">Passes, packs &amp; memberships.</h1>
+      <p class="pagehero-lead">Every rate in one place. Buy passes and memberships online, or reserve sessions through Book Now — you only pay for what you use.</p>
+      <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap">
+        <a href={url('store')} class="btn btn-primary">Buy online <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        <a href={url('book')} class="btn btn-ghost-light">Book a session</a>
+      </div>
+    </div>
+  </section>
+
+  <JumpNav items={groups.map((g) => ({ label: g.title, id: g.id }))} top={66} />
+
+  <div class="pr-wrap">
+    <div class="pr-grid">
+      {groups.map((g) => (
+        <section id={g.id} class="pr-group" style="scroll-margin-top:120px">
+          <div class="pr-ghead"><span class="pr-dot" style={`background:${g.color}`}></span><h2 class="pr-gtitle">{g.title}</h2></div>
+          <div class="pr-table">
+            {g.rows.map((r) => (
+              <div class="pr-row">
+                <div class="pr-rl"><div class="pr-label">{r.label}</div>{r.note && <div class="pr-note">{r.note}</div>}</div>
+                <div class="pr-val">{r.val}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <p class="pr-fine">Prices are current rates in CAD with tax included and may change. Camps and memberships have their own booking and cancellation terms, shown at checkout. Questions about a rate? <a href={`mailto:${links.googleReviews ? 'info@themonkeyvault.com' : ''}`}>Email us</a>.</p>
+
+    <section class="pr-cta">
+      <CtaBand cards={[
+        { theme: 'dark', eyebrow: 'Ready to buy?', title: 'Open the store', icon: 'bi-bag-fill', href: url('store') },
+        { theme: 'light', eyebrow: 'Booking a time instead?', title: 'Book a session', icon: 'bi-calendar-check', href: url('book') },
+      ]} />
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .pagehero { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
+  .pagehero-glow { position: absolute; inset: 0; background: radial-gradient(680px 360px at 88% -15%, rgba(255,212,0,.13), transparent 70%); }
+  .pagehero-inner { padding-block: 58px 52px; position: relative; }
+  .pagehero-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 18px; }
+  .pagehero-kicker .rule { width: 22px; height: 2px; background: var(--brand); }
+  .pagehero-title { font: 800 clamp(34px,8vw,54px)/1.02 var(--font-display); letter-spacing: -.02em; margin-bottom: 16px; }
+  .pagehero-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 560px; }
+
+  .pr-wrap { max-width: 1120px; margin-inline: auto; padding: 56px 24px 24px; }
+  .pr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .pr-group { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 26px 28px 12px; box-shadow: var(--shadow-sm); }
+  .pr-ghead { display: flex; align-items: center; gap: 11px; margin-bottom: 8px; }
+  .pr-dot { width: 12px; height: 12px; border-radius: 4px; }
+  .pr-gtitle { font: 800 18px/1 var(--font-display); letter-spacing: -.01em; }
+  .pr-table { display: flex; flex-direction: column; }
+  .pr-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-top: 1px solid var(--line-soft); }
+  .pr-label { font: 600 14.5px/1.2 var(--font-body); color: var(--ink); }
+  .pr-note { font: 500 12px/1.3 var(--font-body); color: var(--muted-3); margin-top: 4px; }
+  .pr-val { flex: none; font: 800 16px/1 var(--font-display); color: var(--ink); }
+  .pr-fine { font: 400 12.5px/1.5 var(--font-body); color: var(--muted-3); max-width: 760px; margin: 26px auto 0; text-align: center; }
+  .pr-fine a { color: var(--ink); font-weight: 700; }
+  .pr-cta { margin-top: 40px; }
+
+  @media (max-width: 760px) { .pr-grid { grid-template-columns: 1fr; } }
+</style>

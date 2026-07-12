@@ -61,6 +61,23 @@ export const sq = {
     membership: links.athleticMembership,
     trial: links.booking,
   },
+
+  /* -------------------------------------------------- Private Lessons ----- */
+  // Per-coach booking links: each coach can have their own Square staff booking
+  // URL. Empty defaults to the general appointments link.
+  privateLessons: {
+    introduction: links.booking,
+    privateLesson: links.booking,
+    coachTaigh: links.booking,
+    coachSteven: links.booking,
+    coachNelson: links.booking,
+  },
+
+  /* -------------------------------------------------- Get Started --------- */
+  getStarted: {
+    introduction: links.booking,
+    privateClass: links.booking,
+  },
 } as const;
 
 /** Flat helper: resolve a "page.key" path to its URL (used where handy). */

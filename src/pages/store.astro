@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import JumpNav from '../components/JumpNav.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import BookingCard from '../components/BookingCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { seo, cat, links, url } from '../data/site';
+import { sq } from '../data/square-links';
+---
+<BaseLayout title={seo.store.title} description={seo.store.description} active="store">
+  <section class="pagehero">
+    <div class="pagehero-glow"></div>
+    <div class="container pagehero-inner">
+      <div class="pagehero-kicker"><span class="rule"></span>Online store · buy before you arrive</div>
+      <h1 class="pagehero-title">Passes &amp; Memberships.</h1>
+      <p class="pagehero-lead">Pick what you need, check out securely with Square, and it's ready at the front desk when you walk in — no line, no paperwork.</p>
+      <p class="pagehero-fine">All prices in CAD, HST included. Pre-paid packs are valid 10–20 months depending on size. Full rate sheet on the <a href={url('pricing')}>price list</a>.</p>
+    </div>
+  </section>
+
+  <JumpNav items={[{ label: 'Open Gym', id: 'opengym' }, { label: 'Classes', id: 'classes' }, { label: 'Athletic', id: 'athletic' }, { label: 'Gift Cards', id: 'gift' }]} top={66} />
+
+  <div class="storewrap">
+    <section id="opengym" class="storesec">
+      <div class="storesec-head"><SectionHeader num="01" eyebrow="Drop in any day" title="Open Gym" description="Come whenever, stay as long as you want — 11 AM to 10 PM daily." /></div>
+      <div class="storegrid">
+        <BookingCard color={cat.openGym} title="Day Passes" description="Your ticket to the gym — walk in and train as long as you like. Buy one visit, or save with a pack of 10 or 20." pills="All ages | No time limit" price="From $25" priceNote="single pass" actionLabel="Buy" href={sq.store.dayPasses} target="_blank" />
+        <BookingCard color={cat.openGym} title="Open Gym Membership" description="Come every day if you want — unlimited open gym for whatever stretch suits you, 30 days to a full year." pills="Unlimited visits | 30–360 days" price="From $110" priceNote="30 days" actionLabel="Buy" href={sq.store.openGymMembership} target="_blank" />
+      </div>
+    </section>
+
+    <section id="classes" class="storesec">
+      <div class="storesec-head"><SectionHeader num="02" eyebrow="Passes, memberships & packs" title="Classes" description="Group class passes good for any class on the schedule — plus pre-paid packs for private lessons." /></div>
+      <div class="storegrid">
+        <BookingCard color={cat.classes} title="Class Passes" description="Good for any group class on the schedule — no reservation, just show up. Buy one class, or save with a pack of 10 or 20." pills="Any group class | All levels" price="From $30" priceNote="single class" actionLabel="Buy" href={sq.store.classPasses} target="_blank" />
+        <BookingCard color={cat.classes} title="Class Membership" description="Everything drop-in, one flat month — unlimited group classes and unlimited open gym for 30 days." pills="Classes + open gym | Unlimited" price="$180" priceNote="30 days" actionLabel="Buy" href={sq.store.classMembership} target="_blank" />
+        <BookingCard color={cat.private} title="Private Class Pack" description="A block of private lessons at a better rate — pay once, then book each session with your coach when you're ready." pills="1-on-1 or small group | Book as you go" price="From $250" priceNote="5-pack · kids" actionLabel="Buy" href={sq.store.privateClassPack} target="_blank" />
+      </div>
+    </section>
+
+    <section id="athletic" class="storesec">
+      <div class="storesec-head"><SectionHeader num="03" eyebrow="For enrolled athletes" title="Athletic Program" description="The structured training stream — a coach confirms you're ready before your first session." /></div>
+      <div class="storegrid">
+        <BookingCard color={cat.athletic} title="Monthly Membership" description="Unlimited Athletic Program training — grab a single month, or set it to auto-renew and pause or cancel any time." pills="Ages 9+ | One-time or auto-renew" price="$150" priceNote="per month" actionLabel="Buy" href={sq.store.athleticMembership} target="_blank" />
+      </div>
+      <p class="storenote">New to the program? Read how it works on the <a href={url('athletic-program')}>Athletic Program page</a> first.</p>
+    </section>
+
+    <section id="gift" class="storesec">
+      <a href={sq.store.giftCard} target="_blank" rel="noopener" class="giftcard">
+        <div class="giftcard-left">
+          <span class="giftcard-ic"><i class="bi bi-gift-fill" aria-hidden="true"></i></span>
+          <div><div class="giftcard-eyebrow">The easy gift</div><div class="giftcard-title">Gift cards — any amount</div></div>
+        </div>
+        <span class="giftcard-btn">Buy a gift card <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+      </a>
+    </section>
+
+    <p class="storefine">Camps register on the <a href={url('camps')}>Camps page</a>. Birthday parties, private sessions and group events are booked, not bought — reserve them through <a href={url('book')}>Book Now</a> and your card just holds the slot.</p>
+
+    <section class="storesec">
+      <CtaBand cards={[
+        { theme: 'dark', eyebrow: 'Every rate, one sheet', title: 'See the Price List', icon: 'bi-tag-fill', href: url('pricing') },
+        { theme: 'light', eyebrow: 'Booking a time instead?', title: 'Book a session', icon: 'bi-calendar-check', href: url('book') },
+      ]} />
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .pagehero { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
+  .pagehero-glow { position: absolute; inset: 0; background: radial-gradient(680px 360px at 88% -15%, rgba(255,212,0,.13), transparent 70%); }
+  .pagehero-inner { padding-block: 58px 52px; position: relative; }
+  .pagehero-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 18px; }
+  .pagehero-kicker .rule { width: 22px; height: 2px; background: var(--brand); }
+  .pagehero-title { font: 800 clamp(34px,8vw,54px)/1.02 var(--font-display); letter-spacing: -.02em; margin-bottom: 16px; max-width: 760px; }
+  .pagehero-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 560px; }
+  .pagehero-fine { font: 500 13px/1.5 var(--font-body); color: rgba(255,255,255,.5); margin-top: 18px; }
+  .pagehero-fine a { color: var(--brand); text-decoration: none; font-weight: 700; }
+
+  .storewrap { max-width: 1120px; margin-inline: auto; padding: 56px 24px 24px; }
+  .storesec { margin-bottom: 54px; scroll-margin-top: 132px; }
+  .storesec-head { margin-bottom: 24px; }
+  .storegrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 18px; }
+  .storenote { font: 400 12.5px/1.5 var(--font-body); color: var(--muted-3); margin: 14px 0 0; }
+  .storenote a, .storefine a { color: var(--ink); font-weight: 700; }
+  .storefine { font: 400 12.5px/1.5 var(--font-body); color: var(--muted-3); text-align: center; max-width: 680px; margin: 26px auto 44px; }
+
+  .giftcard { text-decoration: none; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; background: var(--ink); color: #fff; border-radius: 18px; padding: 34px 38px; }
+  .giftcard-left { display: flex; align-items: center; gap: 18px; }
+  .giftcard-ic { flex: none; width: 52px; height: 52px; border-radius: 14px; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--brand); }
+  .giftcard-eyebrow { font: 700 11px/1 var(--font-display); letter-spacing: .13em; text-transform: uppercase; color: var(--brand); margin-bottom: 8px; }
+  .giftcard-title { font: 800 24px/1.05 var(--font-display); letter-spacing: -.012em; }
+  .giftcard-btn { display: inline-flex; align-items: center; gap: 9px; background: var(--brand); color: var(--ink); font: 800 13.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; padding: 14px 22px; border-radius: 11px; }
+
+  @media (max-width: 560px) { .storegrid { grid-template-columns: 1fr; } }
+</style>

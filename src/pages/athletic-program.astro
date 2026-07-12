@@ -1,0 +1,223 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import JumpNav from '../components/JumpNav.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Pill from '../components/Pill.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { seo, links, url } from '../data/site';
+
+const heroStats = [
+  { value: '2 × 90 min', label: 'core sessions each week' },
+  { value: '9–14 & 15+', label: 'two age groups' },
+  { value: 'Unlimited', label: 'open gym access' },
+  { value: '$150', label: 'per month · year-round' },
+];
+const benefits = [
+  { icon: 'bi-arrow-up-circle', title: 'Jumping power', body: 'Jump higher and further — basketball, volleyball, track & field.' },
+  { icon: 'bi-lightning-charge', title: 'Agility & speed', body: 'Quick reflexes and nimble footwork for soccer, tennis, martial arts.' },
+  { icon: 'bi-shield-check', title: 'Body resilience', body: 'A body that absorbs impact, lowering injury risk in any activity.' },
+  { icon: 'bi-fire', title: 'Strength & endurance', body: 'The stamina demanding sports like football, rugby and gymnastics need.' },
+  { icon: 'bi-bullseye', title: 'Coordination', body: 'Sharper body control for dance, skateboarding and climbing.' },
+  { icon: 'bi-graph-up-arrow', title: 'Faster learning', body: 'Skills that make picking up any new sport quicker.' },
+];
+const structure = [
+  { n: '1', title: 'Intro / Warm Up', body: 'Dynamic movement and a quick overview of the day to prime body and mind.', tags: '' },
+  { n: '2', title: 'Physical Conditioning', body: 'Strength and endurance work — overall fitness plus parkour-specific power.', tags: '' },
+  { n: '3', title: 'Technical Foundations', body: 'Core parkour technique that builds the base for advanced movement.', tags: '' },
+  { n: '4', title: 'Theme of the Day', body: 'A focused block that rotates each session:', tags: 'Challenges | Speed runs | Acrobatics | Fluidity' },
+  { n: '5', title: 'Stretching / Outro', body: 'Stretching and recovery, plus a preview of what the next class brings.', tags: '' },
+];
+const classTypes = [
+  { name: 'Athletic', color: '#ffd400', days: 'Tue & Thu evenings · two age brackets', note: 'Core · 2 × 90 min/week · 9–14 & 15+' },
+  { name: 'Explosive', color: '#e23b3b', days: 'Mon & Fri, late afternoon', note: 'Complementary · power · teens & adults' },
+  { name: 'Speed League', color: '#ef5a4e', days: 'Wed evenings · two age brackets', note: 'Complementary · speed & agility · 9–14 & 15+' },
+];
+const joinPoints = [
+  'Enroll at any time — the program runs all year.',
+  'We recommend at least three months to truly see progress.',
+  'Unlimited open gym and monthly evaluations included.',
+  'Half-price class add-on — just $5 (normally $10) to drop into any other group class.',
+];
+const payOptions = [
+  { icon: 'bi-arrow-repeat', title: 'Automatic monthly', body: 'Set it and forget it — uninterrupted access at $150 / month.' },
+  { icon: 'bi-credit-card', title: 'One-time, renew anytime', body: 'Pay for a month, renew whenever you like. Same price, full flexibility.' },
+];
+---
+<BaseLayout title={seo.athletic.title} description={seo.athletic.description} active="train">
+  <section class="pagehero">
+    <div class="pagehero-glow"></div>
+    <div class="ap-hero container">
+      <div class="ap-kicker"><span class="rule"></span>Athletic Program · Serious training</div>
+      <h1 class="ap-title">Train like an athlete. Move like one everywhere.</h1>
+      <p class="ap-lead">Our core training stream: two 90-minute coached sessions a week that build strength, speed and agility for any sport — for ages 9–14 and 15+. Explosive and Speed League classes complement it, and membership adds unlimited open gym.</p>
+      <div class="ap-actions">
+        <a href={links.athleticMembership} target="_blank" rel="noopener" class="btn btn-primary">Join the program <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+        <a href="#program" class="btn btn-ghost-light">How it works</a>
+      </div>
+      <div class="ap-stats">{heroStats.map((s) => <div class="ap-stat"><div class="n">{s.value}</div><div class="l">{s.label}</div></div>)}</div>
+    </div>
+  </section>
+
+  <JumpNav items={[{ label: 'The Program', id: 'program' }, { label: 'Class Structure', id: 'structure' }, { label: 'Schedule', id: 'schedule' }, { label: 'Join Now', id: 'join' }]} top={66} />
+
+  <section id="program" class="section container" style="scroll-margin-top:132px">
+    <div class="ap-program">
+      <div>
+        <div style="margin-bottom:16px"><SectionHeader num="01" eyebrow="The program" title="More than parkour — preparation for any sport." /></div>
+        <p class="ap-body">The Athletic Program is built around <strong>two 90-minute coached sessions each week</strong> — the core of the program — for ages 9–14 and 15+. It's designed to boost real athletic performance: you'll build the strength, speed and control that carry into any sport you choose.</p>
+        <p class="ap-body">Two complementary classes round it out — <strong>Explosive</strong> for power and <strong>Speed League</strong> for speed and agility — so you can train more of what your sport demands.</p>
+        <p class="ap-body">Membership includes unlimited open gym to practice at your own pace, plus monthly evaluations with personalized feedback — so progress is tracked, not guessed.</p>
+      </div>
+      <div>
+        <div class="ap-benlabel">Key benefits</div>
+        <div class="ap-bens">
+          {benefits.map((b) => (
+            <div class="ap-ben"><span class="ap-benic"><i class={`bi ${b.icon}`} aria-hidden="true"></i></span><div class="ap-bentitle">{b.title}</div><p class="ap-benbody">{b.body}</p></div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="structure" class="section container" style="scroll-margin-top:132px">
+    <div style="margin-bottom:32px"><SectionHeader num="02" eyebrow="Class structure" title="How a core session runs" description="Every 90-minute Athletic session follows the same five-part arc — warm up, build, refine, push, recover — so training stays structured and safe." /></div>
+    <div class="ap-structure">
+      {structure.map((st) => (
+        <div class="ap-scard">
+          <div class="ap-shead"><span class="ap-snum">{st.n}</span><div class="ap-stitle">{st.title}</div></div>
+          <p class="ap-sbody">{st.body}</p>
+          {st.tags && <div style="margin-top:14px"><Pill variant="tinted" color="#e0a800" gap={7} items={st.tags} /></div>}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section id="schedule" class="section container" style="scroll-margin-top:132px">
+    <div style="margin-bottom:8px"><SectionHeader num="03" eyebrow="Schedule" title="When we train" /></div>
+    <p class="ap-schedlead">Classes run Monday–Friday; open gym is available every day. Exact class times live on the real-time schedule — always current, straight from the booking system.</p>
+    <div class="ap-classtypes">
+      {classTypes.map((ct) => (
+        <div class="ap-ct"><span class="ap-ctdot" style={`background:${ct.color}`}></span><div><div class="ap-ctname">{ct.name}</div><div class="ap-ctdays">{ct.days}</div><div class="ap-ctnote">{ct.note}</div></div></div>
+      ))}
+    </div>
+    <div class="ap-schedfoot">
+      <div class="ap-schedfine">Sessions start on the hour · no entry after 15 minutes late · membership includes unlimited open gym.</div>
+      <a href={url('schedule')} class="btn btn-primary" style="padding:13px 20px;font-size:13px">View full schedule <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+    </div>
+  </section>
+
+  <section id="join" class="section container" style="scroll-margin-top:132px; padding-bottom:80px">
+    <div class="ap-join">
+      <div>
+        <div style="margin-bottom:18px"><SectionHeader num="04" eyebrow="Join now" title="Start any time. Stay as long as you keep growing." description="Sign up for the year-round program and start training right away — you can enroll at any point in the year. For real, visible progress, we recommend committing to at least three months." /></div>
+        <div class="ap-joinpoints">{joinPoints.map((j) => <div class="ap-jp"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>{j}</span></div>)}</div>
+      </div>
+      <div class="ap-joincol">
+        <div class="ap-membership">
+          <div class="ap-memhead">
+            <div class="ap-memlabel">30-day membership</div>
+            <div class="ap-memprice"><span class="ap-membig">$150</span><span class="ap-memper">/ month</span></div>
+            <p class="ap-memnote">Year-round · cancel or renew on your terms · half-price class add-on ($5 instead of $10) to try any other class.</p>
+          </div>
+          <div class="ap-membody">
+            <div class="ap-memways">Two ways to pay</div>
+            <div class="ap-payopts">{payOptions.map((o) => <div class="ap-pay"><i class={`bi ${o.icon}`} aria-hidden="true"></i><div><div class="ap-paytitle">{o.title}</div><div class="ap-paybody">{o.body}</div></div></div>)}</div>
+            <a href={links.athleticMembership} target="_blank" rel="noopener" class="btn btn-dark" style="justify-content:center">Sign up &amp; start training <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+            <p class="ap-memfine">New here? You'll sign the waiver at sign-up. A coach confirms you're ready before your first session.</p>
+          </div>
+        </div>
+        <div class="ap-fallback">
+          <div class="ap-fbtext"><div class="ap-fblabel">Fallback option</div><div class="ap-fbtitle">10× Class Pass</div><p class="ap-fbbody">For athletes training about once a week — ten classes to use whenever, no membership.</p></div>
+          <div class="ap-fbright"><div class="ap-fbprice">$275</div><a href={links.store} target="_blank" rel="noopener" class="ap-fbget">Get the pass <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container" style="padding-top:0">
+    <CtaBand cards={[
+      { theme: 'dark', eyebrow: 'Passes & memberships', title: 'See the Price List', icon: 'bi-tag-fill', href: url('pricing') },
+      { theme: 'light', eyebrow: 'All classes, one view', title: 'Group Class Schedule', icon: 'bi-calendar3', href: url('schedule') },
+    ]} />
+  </section>
+</BaseLayout>
+
+<style>
+  .pagehero { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
+  .pagehero-glow { position: absolute; inset: 0; background: radial-gradient(720px 380px at 88% -15%, rgba(255,212,0,.14), transparent 70%); }
+  .ap-hero { padding-block: 60px 56px; position: relative; }
+  .ap-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .16em; text-transform: uppercase; color: var(--brand); margin-bottom: 20px; }
+  .ap-kicker .rule { width: 22px; height: 2px; background: var(--brand); }
+  .ap-title { font: 800 clamp(36px,8.5vw,56px)/1.04 var(--font-display); letter-spacing: -.022em; margin-bottom: 18px; max-width: 760px; text-wrap: balance; }
+  .ap-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 620px; margin-bottom: 30px; }
+  .ap-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 42px; }
+  .ap-stats { display: flex; flex-wrap: wrap; gap: 0; border-top: 1px solid rgba(255,255,255,.14); padding-top: 26px; }
+  .ap-stat { padding: 0 30px 0 0; margin-right: 30px; border-right: 1px solid rgba(255,255,255,.14); }
+  .ap-stat:last-child { border-right: 0; }
+  .ap-stat .n { font: 800 24px/1 var(--font-display); color: var(--brand); }
+  .ap-stat .l { font: 600 12.5px/1.3 var(--font-body); color: rgba(255,255,255,.6); margin-top: 7px; }
+
+  .ap-program { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .ap-body { font: 400 15px/1.62 var(--font-body); color: #54514b; margin: 0 0 16px; }
+  .ap-body strong { color: var(--ink); }
+  .ap-body:last-child { margin-bottom: 0; }
+  .ap-benlabel { font: 700 11px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: #e0a800; margin-bottom: 16px; }
+  .ap-bens { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .ap-ben { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow-sm); transition: transform .18s ease, box-shadow .18s ease; }
+  .ap-ben:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .ap-benic { display: inline-flex; width: 36px; height: 36px; border-radius: 10px; background: color-mix(in srgb,var(--brand) 22%,#fff); align-items: center; justify-content: center; margin-bottom: 12px; font-size: 17px; color: #b8870a; }
+  .ap-bentitle { font: 800 14.5px/1.18 var(--font-display); letter-spacing: -.005em; margin-bottom: 6px; }
+  .ap-benbody { font: 400 12px/1.5 var(--font-body); color: var(--muted); margin: 0; }
+
+  .ap-structure { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .ap-scard { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 24px 22px 22px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
+  .ap-shead { display: flex; align-items: center; gap: 11px; margin-bottom: 13px; }
+  .ap-snum { flex: none; width: 34px; height: 34px; border-radius: 10px; background: var(--ink); color: var(--brand); display: flex; align-items: center; justify-content: center; font: 800 15px/1 var(--font-display); }
+  .ap-stitle { font: 800 16px/1.12 var(--font-display); letter-spacing: -.01em; }
+  .ap-sbody { font: 400 13px/1.55 var(--font-body); color: var(--muted); margin: 0; }
+
+  .ap-schedlead { font: 400 14px/1.55 var(--font-body); color: var(--muted); max-width: 640px; margin: 0 0 18px; }
+  .ap-classtypes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .ap-ct { display: flex; align-items: flex-start; gap: 13px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+  .ap-ctdot { flex: none; width: 14px; height: 14px; border-radius: 4px; margin-top: 2px; }
+  .ap-ctname { font: 800 15px/1.1 var(--font-display); color: var(--ink); }
+  .ap-ctdays { font: 700 12px/1.3 var(--font-display); color: var(--text-3); margin-top: 6px; }
+  .ap-ctnote { font: 500 12px/1.4 var(--font-body); color: var(--muted-2); margin-top: 4px; }
+  .ap-schedfoot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 18px; }
+  .ap-schedfine { font: 500 12px/1.5 var(--font-body); color: var(--muted-3); }
+
+  .ap-join { display: grid; grid-template-columns: .95fr 1.05fr; gap: 32px; align-items: stretch; }
+  .ap-joinpoints { display: flex; flex-direction: column; gap: 13px; }
+  .ap-jp { display: flex; align-items: flex-start; gap: 12px; font: 500 14px/1.5 var(--font-body); color: var(--text-2); }
+  .ap-jp i { color: #b8870a; font-size: 16px; margin-top: 2px; flex: none; }
+  .ap-joincol { display: flex; flex-direction: column; gap: 16px; }
+  .ap-membership { background: #fff; border: 2px solid var(--brand); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; flex: 1; }
+  .ap-memhead { background: var(--ink); color: #fff; padding: 26px 30px; }
+  .ap-memlabel { font: 700 11px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--brand); margin-bottom: 14px; }
+  .ap-memprice { display: flex; align-items: flex-end; gap: 8px; }
+  .ap-membig { font: 800 46px/1 var(--font-display); letter-spacing: -.02em; }
+  .ap-memper { font: 700 15px/1 var(--font-display); color: rgba(255,255,255,.6); padding-bottom: 7px; }
+  .ap-memnote { font: 400 12.5px/1.5 var(--font-body); color: rgba(255,255,255,.6); margin: 12px 0 0; }
+  .ap-membody { padding: 26px 30px 30px; display: flex; flex-direction: column; flex: 1; }
+  .ap-memways { font: 700 10px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted-3); margin-bottom: 14px; }
+  .ap-payopts { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .ap-pay { display: flex; align-items: flex-start; gap: 12px; padding: 15px 16px; border: 1px solid var(--line); border-radius: 13px; }
+  .ap-pay i { font-size: 18px; color: #b8870a; flex: none; margin-top: 1px; }
+  .ap-paytitle { font: 800 13.5px/1.15 var(--font-display); margin-bottom: 4px; }
+  .ap-paybody { font: 400 12px/1.5 var(--font-body); color: var(--muted); }
+  .ap-memfine { font: 400 11.5px/1.5 var(--font-body); color: var(--muted-3); margin: 13px 0 0; text-align: center; }
+  .ap-fallback { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; display: flex; align-items: center; gap: 18px; box-shadow: var(--shadow-sm); }
+  .ap-fbtext { flex: 1; }
+  .ap-fblabel { font: 700 10px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted-3); margin-bottom: 9px; }
+  .ap-fbtitle { font: 800 16px/1.12 var(--font-display); letter-spacing: -.01em; }
+  .ap-fbbody { font: 400 12px/1.5 var(--font-body); color: var(--muted); margin: 6px 0 0; }
+  .ap-fbright { flex: none; text-align: right; }
+  .ap-fbprice { font: 800 26px/1 var(--font-display); color: var(--ink); }
+  .ap-fbget { display: inline-flex; align-items: center; gap: 6px; font: 800 11.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); text-decoration: none; margin-top: 9px; border-bottom: 2px solid var(--brand); padding-bottom: 3px; }
+
+  @media (max-width: 900px) {
+    .ap-program, .ap-join { grid-template-columns: 1fr; gap: 32px; }
+    .ap-bens { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) { .ap-bens { grid-template-columns: 1fr; } }
+</style>

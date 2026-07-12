@@ -1,0 +1,220 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import JumpNav from '../components/JumpNav.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Pill from '../components/Pill.astro';
+import { seo, links, cat, url } from '../data/site';
+
+const CDN = 'https://97c4ca0509b4c38d26ba.cdn6.editmysite.com/uploads/b/97c4ca0509b4c38d26ba323484b80b964616e1d4454eb6debcf2c66267495c04/';
+const camps = [
+  {
+    title: 'Weekly Camps', tag: 'Winter · March · Summer', image: `${CDN}2024-05-17_18-06-23_1715983657.png?width=1200&optimize=medium`,
+    desc: 'A full week of parkour adventure over school breaks — skill-building, games, friendship and unforgettable memories.',
+    facts: [{ icon: 'bi-calendar-week', text: 'Mon–Fri, full weeks' }, { icon: 'bi-people', text: 'Ages 5+, all levels' }, { icon: 'bi-stopwatch', text: '9 AM–2 PM · late pickup to 4 PM' }],
+    back: 'A full week of parkour', included: 'Daily structured lessons, flips, individual skills, games and a cool-down — plus a lunch break. Sessions run over Winter, March Break and Summer.',
+    price: '$350 / week', cta: 'Reserve', href: links.summerCamp,
+  },
+  {
+    title: 'Private Day Camp', tag: 'Your own group', image: `${CDN}PRIVATE_1714697505.png?width=1200&optimize=medium`,
+    desc: 'Gather your crew for a private day — tailored activities and personal coaching for groups of five or more, any day of the week.',
+    facts: [{ icon: 'bi-people-fill', text: 'Minimum 5 kids' }, { icon: 'bi-calendar-check', text: 'Book at least a week ahead' }, { icon: 'bi-stars', text: 'Birthdays, homeschool, friends' }],
+    back: 'Your own private camp day', included: 'Parkour, acrobatics, nerf battles and more with your own instructor, 9 AM–2 PM. Flexible start times; late pickup available.',
+    price: '$90 / kid', cta: 'Enquire', href: links.booking,
+  },
+  {
+    title: 'P.A. Day Camp', tag: 'Single day · public', image: `${CDN}PA%20DAY_1714697506.png?width=1200&optimize=medium`,
+    desc: 'A single day of parkour excitement on your day off school. Open to the public — fun challenges and expert coaching, start to finish.',
+    facts: [{ icon: 'bi-sun', text: 'One-day sessions' }, { icon: 'bi-unlock', text: 'Open to the general public' }, { icon: 'bi-clock-history', text: '9 AM–2 PM · late pickup to 4 PM' }],
+    back: 'A day off, well spent', included: 'Expert coaching and non-stop challenges, open to everyone. The next P.A. Day date is always posted on the booking page.',
+    price: '$90 / day', cta: 'Reserve', href: links.paDayCamp,
+  },
+];
+
+const schedule = [
+  { time: '8:45 – 9:00', label: 'Arrival & check-in' },
+  { time: '9:00 – 11:00', label: 'Activities' },
+  { time: '11:00 – 11:30', label: 'Lunch' },
+  { time: '11:30 – 12:00', label: 'Free time' },
+  { time: '12:00 – 2:00', label: 'Activities' },
+  { time: '2:00 – 4:00', label: 'Late pick-up (optional)' },
+];
+const facts = [
+  { icon: 'bi-clock', title: 'Hours', body: 'Arrival from 8:45 AM, camp runs 9 AM–2 PM. Late pickup to 4 PM — $20 for one day or $75 for five days.' },
+  { icon: 'bi-person-badge', title: 'Ages', body: '5 years old and up, all levels.' },
+  { icon: 'bi-bag', title: 'What to bring', body: 'Clean indoor shoes, a labelled water bottle, lunch and snacks, and comfortable clothes.' },
+  { icon: 'bi-shield-check', title: 'Waiver', body: 'Every new participant needs a completed waiver before their first day. Do it online to save time.' },
+  { icon: 'bi-exclamation-triangle', title: 'Allergies', body: 'A nut-free environment — please pack nut-free, and let us know about any allergies.' },
+  { icon: 'bi-geo-alt', title: 'Location', body: 'The Monkey Vault, 75 Carl Hall Rd, Unit 15 — in Downsview Park.' },
+];
+---
+<BaseLayout title={seo.camps.title} description={seo.camps.description} active="camps">
+  <section class="pagehero">
+    <div class="pagehero-glow"></div>
+    <div class="container hero2">
+      <div>
+        <div class="pagehero-kicker"><span class="rule"></span>School breaks &amp; days off · Ages 5+</div>
+        <h1 class="hero2-title">Parkour camps,<br>packed with fun.</h1>
+        <p class="hero2-lead">A full day of skill-building, flips, games and friends. All levels — and always a big focus on having fun in the process.</p>
+        <div class="hero2-actions">
+          <a href="#camps" class="btn btn-primary">See the camps <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
+          <a href="#know" class="btn btn-ghost-light">Before you book</a>
+        </div>
+        <div class="hero2-stats">
+          <div class="hero2-stat"><div class="n">9 AM–2 PM</div><div class="l">camp hours daily</div></div>
+          <div class="hero2-stat"><div class="n">Ages 5+</div><div class="l">all levels</div></div>
+          <div class="hero2-stat last"><div class="n">til 4 PM</div><div class="l">late pickup option</div></div>
+        </div>
+      </div>
+      <div class="hero2-media">
+        <div class="camps-video">
+          <iframe src="https://www.youtube.com/embed/61gq7pvEHPI?rel=0" title="Camp at The Monkey Vault" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="hero2-badge">Limited<br>spots</div>
+      </div>
+    </div>
+  </section>
+
+  <JumpNav items={[{ label: 'The Camps', id: 'camps' }, { label: 'A Day at Camp', id: 'know' }]} top={66} />
+
+  <section id="camps" class="section container" style="scroll-margin-top:132px">
+    <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Pick your camp" title="Three ways to camp with us" description="Book a full week of camp, gather your own crew for a private day, or grab a single P.A. Day spot." /></div>
+    <div class="camps-grid">
+      {camps.map((c) => (
+        <article class="campflip" style={`--c:${cat.camps}`} aria-pressed="false">
+          <div class="campflip-inner">
+            <div class="campface campfront">
+              <div class="campmedia"><img src={c.image} alt={c.title} loading="lazy" /><span class="camptag">{c.tag}</span><button class="campflipbtn" type="button" aria-label="More info"><i class="bi bi-arrow-repeat" aria-hidden="true"></i></button></div>
+              <div class="campbody">
+                <h3 class="camptitle">{c.title}</h3>
+                <p class="campdesc">{c.desc}</p>
+                <div class="camphint"><i class="bi bi-arrow-repeat" aria-hidden="true"></i> Tap for full details</div>
+                <div class="campfoot"><span class="campprice">{c.price}</span><a href={c.href} target="_blank" rel="noopener" class="campresv">{c.cta} <i class="bi bi-arrow-right" aria-hidden="true"></i></a></div>
+              </div>
+            </div>
+            <div class="campface campback">
+              <div class="campbackhead"><span>{c.title}</span><button class="campflipback" type="button"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Back</button></div>
+              <h3 class="campbacktitle">{c.back}</h3>
+              <div class="campfacts">{c.facts.map((f) => <div class="campfact"><i class={`bi ${f.icon}`} aria-hidden="true"></i>{f.text}</div>)}</div>
+              <p class="campincl">{c.included}</p>
+              <a href={c.href} target="_blank" rel="noopener" class="campresv" style="margin-top:auto;align-self:flex-start">{c.cta} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section id="know" class="section container" style="scroll-margin-top:132px">
+    <div class="know">
+      <div class="know-left">
+        <div class="know-eyebrow">02 — A day at camp</div>
+        <h2 class="know-title">From drop-off to pick-up</h2>
+        <p class="know-lead">Doors open at 8:45 for arrival. Here's how a typical day flows — a mix of coached skills, games and free time.</p>
+        <div class="know-sched">{schedule.map((d) => <div class="know-row"><span class="know-time">{d.time}</span><span>{d.label}</span></div>)}</div>
+        <div class="know-pilltitle">What we get up to</div>
+        <Pill variant="dark" gap={7} items="Warm up | Safety skills | Parkour movements | Flips | Parkour & flip challenges | Group games | Nerf battles | Stretching | Free time" />
+      </div>
+      <div class="know-right">
+        <div class="know-facts">{facts.map((f) => (
+          <div>
+            <div class="know-facthead"><span class="know-factic"><i class={`bi ${f.icon}`} aria-hidden="true"></i></span><div class="know-facttitle">{f.title}</div></div>
+            <p class="know-factbody">{f.body}</p>
+          </div>
+        ))}</div>
+        <div class="know-actions">
+          <a href={links.getStartedWaiver} target="_blank" rel="noopener" class="btn btn-primary">Sign the waiver <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+          <a href={url('about')} class="btn btn-ghost">Questions? Contact us</a>
+        </div>
+      </div>
+    </div>
+    <p class="know-fine">Cancellation policy: two weeks' written notice for weekly camps (15% deposit retained for late notice; $20 transaction fee otherwise). No-nut policy in effect — please tell us about any allergies.</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .pagehero { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
+  .pagehero-glow { position: absolute; inset: 0; background: radial-gradient(680px 360px at 90% -12%, rgba(255,212,0,.13), transparent 70%); }
+  .pagehero-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 20px; }
+  .pagehero-kicker .rule { width: 22px; height: 2px; background: var(--brand); }
+  .hero2 { padding-block: 60px 66px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; position: relative; }
+  .hero2-title { font: 800 clamp(38px,9vw,56px)/1 var(--font-display); letter-spacing: -.02em; margin-bottom: 18px; }
+  .hero2-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 460px; margin-bottom: 30px; }
+  .hero2-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .hero2-stats { display: flex; flex-wrap: wrap; margin-top: 34px; border-top: 1px solid rgba(255,255,255,.12); }
+  .hero2-stat { padding: 20px 28px 0 0; margin-right: 28px; border-right: 1px solid rgba(255,255,255,.12); }
+  .hero2-stat.last { border-right: 0; margin-right: 0; padding-right: 0; }
+  .hero2-stat .n { font: 800 24px/1 var(--font-display); color: var(--brand); }
+  .hero2-stat .l { font: 600 12.5px/1.3 var(--font-body); color: rgba(255,255,255,.6); margin-top: 6px; }
+  .hero2-media { position: relative; }
+  .camps-video { aspect-ratio: 16/9; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 60px -25px rgba(0,0,0,.7); border: 3px solid rgba(255,255,255,.08); background: #000; }
+  .camps-video iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .hero2-badge { position: absolute; bottom: -16px; right: -10px; background: var(--brand); color: var(--ink); font: 800 13px/1.2 var(--font-display); text-transform: uppercase; letter-spacing: .03em; padding: 13px 16px; border-radius: 12px; box-shadow: 0 12px 30px -10px rgba(0,0,0,.5); }
+
+  .camps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
+  .campflip { position: relative; height: 486px; perspective: 1700px; cursor: pointer; transition: transform .2s ease; }
+  .campflip:hover { transform: translateY(-5px); }
+  .campflip-inner { position: relative; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.2,.75,.25,1); transform-style: preserve-3d; }
+  .campflip.flipped .campflip-inner { transform: rotateY(180deg); }
+  .campface { backface-visibility: hidden; -webkit-backface-visibility: hidden; background: #fff; border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 1px 3px rgba(28,25,23,.05), 0 16px 34px -30px rgba(28,25,23,.4); }
+  .campflip:hover .campface { box-shadow: var(--shadow-lg); }
+  .campfront { position: relative; min-height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+  .campback { position: absolute; inset: 0; transform: rotateY(180deg); padding: 24px 24px 22px; display: flex; flex-direction: column; }
+  .campmedia { position: relative; aspect-ratio: 16/10; overflow: hidden; background: #eceae4; }
+  .campmedia img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+  .campflip:hover .campmedia img { transform: scale(1.06); }
+  .camptag { position: absolute; top: 12px; left: 12px; z-index: 2; font: 700 10px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: #fff; background: var(--c); padding: 6px 10px; border-radius: 999px; }
+  .campflipbtn { position: absolute; top: 12px; right: 12px; z-index: 2; width: 30px; height: 30px; border-radius: 50%; background: rgba(28,25,23,.5); backdrop-filter: blur(4px); border: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; cursor: pointer; transition: all .15s; }
+  .campflipbtn:hover { background: var(--c); }
+  .campbody { padding: 20px 24px 22px; display: flex; flex-direction: column; flex: 1; }
+  .camptitle { font: 800 22px/1.1 var(--font-display); letter-spacing: -.01em; margin: 0 0 8px; }
+  .campdesc { font: 400 13px/1.5 var(--font-body); color: var(--muted); margin: 0 0 14px; }
+  .camphint { margin-top: auto; display: inline-flex; align-items: center; gap: 6px; font: 700 11px/1 var(--font-display); letter-spacing: .04em; text-transform: uppercase; color: var(--muted-3); margin-bottom: 14px; }
+  .camphint i { color: var(--c); }
+  .campfoot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+  .campprice { font: 800 16px/1.1 var(--font-display); color: var(--c); }
+  .campresv { display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: #fff; font: 800 12.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; text-decoration: none; padding: 12px 18px; border-radius: 10px; transition: gap .18s ease; }
+  .campresv:hover { gap: 11px; }
+  .campbackhead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font: 700 11px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--c); }
+  .campflipback { background: none; border: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font: 700 11px/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+  .campbacktitle { font: 800 19px/1.12 var(--font-display); letter-spacing: -.01em; margin: 0 0 14px; }
+  .campfacts { display: flex; flex-direction: column; gap: 11px; margin-bottom: 14px; }
+  .campfact { display: flex; align-items: flex-start; gap: 9px; font: 600 13px/1.5 var(--font-body); color: var(--text-2); }
+  .campfact i { font-size: 14px; color: var(--c); margin-top: 1px; flex: none; }
+  .campincl { font: 400 13px/1.5 var(--font-body); color: var(--muted); margin: 0 0 16px; }
+
+  .know { background: #fff; border: 1px solid var(--line); border-radius: 22px; overflow: hidden; box-shadow: var(--shadow-md); display: grid; grid-template-columns: 1fr 1.25fr; }
+  .know-left { background: var(--ink); color: #fff; padding: 44px 46px; }
+  .know-eyebrow { font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 14px; }
+  .know-title { font: 800 30px/1.08 var(--font-display); letter-spacing: -.015em; margin-bottom: 16px; }
+  .know-lead { font: 400 13px/1.5 var(--font-body); color: rgba(255,255,255,.66); margin-bottom: 24px; }
+  .know-sched { display: flex; flex-direction: column; margin-bottom: 24px; }
+  .know-row { display: flex; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.1); font: 600 14px/1.3 var(--font-body); color: rgba(255,255,255,.85); }
+  .know-time { flex: none; min-width: 104px; font: 800 12.5px/1 var(--font-display); color: var(--brand); }
+  .know-pilltitle { font: 700 11px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: 12px; }
+  .know-right { padding: 44px 46px; }
+  .know-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 32px; }
+  .know-facthead { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .know-factic { flex: none; width: 36px; height: 36px; border-radius: 10px; background: #f3f2ee; display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--ink); }
+  .know-facttitle { font: 800 14px/1.1 var(--font-display); }
+  .know-factbody { font: 400 13px/1.5 var(--font-body); color: var(--muted); margin: 0; }
+  .know-actions { margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--line-soft); display: flex; flex-wrap: wrap; gap: 12px; }
+  .know-fine { font: 400 12.5px/1.5 var(--font-body); color: var(--muted-3); max-width: 760px; margin: 22px auto 0; text-align: center; }
+
+  @media (max-width: 900px) {
+    .hero2 { grid-template-columns: 1fr; gap: 40px; }
+    .hero2-media { order: -1; }
+    .know { grid-template-columns: 1fr; }
+    .know-left, .know-right { padding: 32px; }
+  }
+  @media (max-width: 520px) { .know-facts { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  document.querySelectorAll('.campflip').forEach((card) => {
+    card.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) return;
+      card.classList.toggle('flipped');
+      card.setAttribute('aria-pressed', card.classList.contains('flipped') ? 'true' : 'false');
+    });
+  });
+</script>

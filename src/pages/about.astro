@@ -1,0 +1,166 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import JumpNav from '../components/JumpNav.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import { seo, site, social, hours, links, url } from '../data/site';
+
+const base = 'https://97c4ca0509b4c38d26ba.cdn6.editmysite.com/uploads/b/97c4ca0509b4c38d26ba323484b80b964616e1d4454eb6debcf2c66267495c04/';
+const q = '?width=900&optimize=medium';
+const photos = [
+  { file: 'hero_5_1671600108.jpg', alt: 'The Monkey Vault gymnastics floor and training space' },
+  { file: '045A1596_1671044591.JPG', alt: 'Padded landing mats and obstacle ramps' },
+  { file: '045A1295_1670786028.jpeg', alt: 'Athlete launching into the foam pit' },
+  { file: 'hero_2_1644891308.jpeg', alt: 'Parkour blocks and vaults on the training floor' },
+  { file: '045A1297%202_1671044569.JPG', alt: 'Foam blocks and angled walls by the windows' },
+  { file: '045A1273_1670786026.jpeg', alt: 'High bars and rig with crash mat' },
+  { file: 'hero_4_1671600111.jpg', alt: 'Rails, bars and trampoline training zone' },
+  { file: '045A1283_1670786023.jpeg', alt: 'Parkour block course' },
+  { file: '045A1268%202_1671044556.JPG', alt: 'Training walls and crash mats' },
+  { file: '045A1402%203_1671609291.JPG', alt: 'Rails and padded landing area' },
+  { file: '045A1266_1671044553.JPG', alt: 'Concrete walls and vault structures' },
+].map((p) => ({ src: base + p.file + q, alt: p.alt }));
+
+const facility = [
+  { icon: 'bi-grid-3x3-gap-fill', title: 'Gymnastics floor', body: 'Sprung floor and tumbling space for flips, acrobatics and clean form work.' },
+  { icon: 'bi-box-seam', title: 'Foam pit & mats', body: 'Land big tricks safely. Padded throughout for confident progression.' },
+  { icon: 'bi-bricks', title: 'Obstacles & rigs', body: 'Walls, bars, rails and vaults — purpose-built for parkour movement.' },
+  { icon: 'bi-heart-pulse', title: 'Weight training', body: 'A strength-and-conditioning section to build the engine behind the skills.' },
+];
+const socials = [
+  { icon: 'bi-instagram', label: 'Instagram', href: social.instagram },
+  { icon: 'bi-youtube', label: 'YouTube', href: social.youtube || social.instagram },
+  { icon: 'bi-facebook', label: 'Facebook', href: social.facebook },
+];
+---
+<BaseLayout title={seo.about.title} description={seo.about.description} active="about">
+  <section class="pagehero">
+    <div class="pagehero-glow"></div>
+    <div class="container hero2">
+      <div>
+        <div class="pagehero-kicker"><span class="rule"></span>About · Downsview Park, Toronto</div>
+        <h1 class="hero2-title">A home for<br>the movement.</h1>
+        <p class="hero2-lead">The Monkey Vault is Toronto's parkour and movement training centre. Our community is built around open gym — a place for dancers, athletes, fitness enthusiasts and anyone who just wants to jump around and have fun.</p>
+        <div class="hero2-actions">
+          <a href={site.mapUrl} target="_blank" rel="noopener" class="btn btn-primary">Get directions <i class="bi bi-geo-alt" aria-hidden="true"></i></a>
+          <a href="#visit" class="btn btn-ghost-light">Hours &amp; contact</a>
+        </div>
+      </div>
+      <div class="hero2-media">
+        <div class="about-hero-photo" style={`background-image:url('${photos[0].src}')`} role="img" aria-label={photos[0].alt}></div>
+        <div class="hero2-badge">75 Carl Hall Rd<br>Downsview Park</div>
+      </div>
+    </div>
+  </section>
+
+  <JumpNav items={[{ label: 'Our Facility', id: 'facility' }, { label: 'Gallery', id: 'gallery' }, { label: 'Visit Us', id: 'visit' }]} top={66} />
+
+  <section id="facility" class="section container" style="scroll-margin-top:132px">
+    <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Our facility" title="Built for every kind of mover" description="A full movement playground under one roof. Sign the waiver, grab a pass, and it's all yours." /></div>
+    <div class="ab-facility">
+      {facility.map((f) => (
+        <div class="ab-fcard">
+          <span class="ab-fic"><i class={`bi ${f.icon}`} aria-hidden="true"></i></span>
+          <div class="ab-ftitle">{f.title}</div>
+          <p class="ab-fbody">{f.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section id="gallery" class="section container" style="scroll-margin-top:132px">
+    <div style="margin-bottom:34px"><SectionHeader num="02" eyebrow="Inside the gym" title="Take a look around" description="10,000+ square feet of parkour rigs, foam pits, a sprung gymnastics floor and a full strength section — all under one roof." /></div>
+    <div class="ab-gallery">
+      {photos.map((g) => (
+        <div class="ab-gitem"><img src={g.src} alt={g.alt} loading="lazy" /></div>
+      ))}
+    </div>
+  </section>
+
+  <section id="visit" class="section container" style="scroll-margin-top:132px">
+    <div style="margin-bottom:34px"><SectionHeader num="03" eyebrow="Visit us" title="Find us in Downsview Park" /></div>
+    <div class="ab-visit">
+      <div class="ab-contact">
+        <div class="ab-crow"><span class="ab-cic"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></span><div><div class="ab-clabel">Location</div><div class="ab-cval">{site.legalName}<br>{site.address.street}<br>{site.address.locality}, Ontario {site.address.postalCode}</div></div></div>
+        <div class="ab-crow"><span class="ab-cic"><i class="bi bi-telephone-fill" aria-hidden="true"></i></span><div><div class="ab-clabel">Get in touch</div><div class="ab-cval"><a href={`tel:${site.phone}`}>{site.phoneDisplay}</a><br><a href={`mailto:${site.email}`}>{site.email}</a></div></div></div>
+        <div class="ab-crow"><span class="ab-cic"><i class="bi bi-shield-check" aria-hidden="true"></i></span><div><div class="ab-clabel">Before your first visit</div><div class="ab-cval">Everyone needs a signed waiver. <a href={links.getStartedWaiver} target="_blank" rel="noopener" class="ab-waiver">Sign it online →</a></div></div></div>
+        <a href={site.mapUrl} target="_blank" rel="noopener" class="btn btn-primary" style="align-self:flex-start">Get directions <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+      </div>
+      <div class="ab-hours">
+        <div class="ab-hlabel">Hours</div>
+        <div class="ab-htitle">Open 7 days a week</div>
+        <p class="ab-hnote">Listed times are "lights out, doors locked" — give yourself time to be out by close.</p>
+        <div class="ab-hlist">{hours.map((h) => <div class="ab-hrow"><span>{h.day}</span><span class="ab-htime">{h.time}</span></div>)}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container" style="padding-bottom:80px">
+    <div class="ab-social">
+      <div>
+        <div class="ab-social-eyebrow">Follow along</div>
+        <h3 class="ab-social-title">See the gym in motion</h3>
+        <p class="ab-social-lead">Drops, edits and event news live on our Instagram, YouTube and Facebook.</p>
+      </div>
+      <div class="ab-social-links">
+        {socials.map((s) => <a href={s.href} target="_blank" rel="noopener" aria-label={s.label} class="ab-soc"><i class={`bi ${s.icon}`} aria-hidden="true"></i></a>)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .pagehero { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
+  .pagehero-glow { position: absolute; inset: 0; background: radial-gradient(680px 360px at 90% -12%, rgba(255,212,0,.13), transparent 70%); }
+  .pagehero-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 20px; }
+  .pagehero-kicker .rule { width: 22px; height: 2px; background: var(--brand); }
+  .hero2 { padding-block: 60px 66px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; position: relative; }
+  .hero2-title { font: 800 clamp(38px,9vw,56px)/1 var(--font-display); letter-spacing: -.02em; margin-bottom: 18px; }
+  .hero2-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 470px; margin-bottom: 30px; }
+  .hero2-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .hero2-media { position: relative; }
+  .about-hero-photo { aspect-ratio: 5/4; border-radius: 18px; background-size: cover; background-position: center; box-shadow: 0 30px 60px -25px rgba(0,0,0,.7); border: 3px solid rgba(255,255,255,.08); }
+  .hero2-badge { position: absolute; bottom: -16px; right: -10px; background: var(--brand); color: var(--ink); font: 800 13px/1.2 var(--font-display); text-transform: uppercase; letter-spacing: .03em; padding: 13px 16px; border-radius: 12px; box-shadow: 0 12px 30px -10px rgba(0,0,0,.5); }
+
+  .ab-facility { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+  .ab-fcard { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 24px 26px; box-shadow: var(--shadow-sm); }
+  .ab-fic { display: inline-flex; width: 44px; height: 44px; border-radius: 12px; background: #f3f2ee; align-items: center; justify-content: center; margin-bottom: 14px; font-size: 20px; color: var(--ink); }
+  .ab-ftitle { font: 800 16px/1.15 var(--font-display); margin-bottom: 6px; }
+  .ab-fbody { font: 400 13px/1.5 var(--font-body); color: var(--muted); margin: 0; }
+
+  .ab-gallery { column-count: 3; column-gap: 14px; }
+  .ab-gitem { break-inside: avoid; margin: 0 0 14px; border-radius: 16px; overflow: hidden; background: #e9e7e1; box-shadow: var(--shadow-sm); }
+  .ab-gitem img { width: 100%; height: auto; display: block; transition: transform .5s ease; }
+  .ab-gitem:hover img { transform: scale(1.05); }
+  @media (max-width: 760px) { .ab-gallery { column-count: 2; } }
+  @media (max-width: 460px) { .ab-gallery { column-count: 1; } }
+
+  .ab-visit { display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; align-items: stretch; }
+  .ab-contact { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 34px 36px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 22px; }
+  .ab-crow { display: flex; gap: 15px; align-items: flex-start; }
+  .ab-cic { flex: none; width: 42px; height: 42px; border-radius: 11px; background: #f3f2ee; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--ink); }
+  .ab-clabel { font: 700 11px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 7px; }
+  .ab-cval { font: 600 15px/1.55 var(--font-body); color: var(--ink); }
+  .ab-cval a { color: var(--ink); text-decoration: none; }
+  .ab-waiver { color: #9a6e00 !important; text-decoration: none; }
+  .ab-hours { background: var(--ink); color: #fff; border-radius: 18px; padding: 34px 36px; box-shadow: var(--shadow-sm); }
+  .ab-hlabel { font: 700 11px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--brand); margin-bottom: 6px; }
+  .ab-htitle { font: 800 22px/1.1 var(--font-display); letter-spacing: -.01em; margin-bottom: 6px; }
+  .ab-hnote { font: 400 12.5px/1.5 var(--font-body); color: rgba(255,255,255,.55); margin: 0 0 16px; }
+  .ab-hlist { display: flex; flex-direction: column; }
+  .ab-hrow { display: flex; align-items: center; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.1); font: 600 14px/1 var(--font-body); color: rgba(255,255,255,.82); }
+  .ab-htime { color: rgba(255,255,255,.55); }
+
+  .ab-social { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 38px 40px; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .ab-social-eyebrow { font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--faint); margin-bottom: 10px; }
+  .ab-social-title { font: 800 24px/1.1 var(--font-display); letter-spacing: -.012em; }
+  .ab-social-lead { font: 400 13px/1.5 var(--font-body); color: var(--muted); margin: 8px 0 0; max-width: 420px; }
+  .ab-social-links { display: flex; gap: 12px; }
+  .ab-soc { width: 54px; height: 54px; border-radius: 14px; background: var(--ink); display: inline-flex; align-items: center; justify-content: center; color: var(--brand); text-decoration: none; font-size: 22px; transition: transform .18s ease; }
+  .ab-soc:hover { transform: translateY(-3px); }
+
+  @media (max-width: 900px) {
+    .hero2 { grid-template-columns: 1fr; gap: 40px; }
+    .hero2-media { order: -1; }
+    .ab-visit { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,168 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { seo, links, url } from '../data/site';
+const base = import.meta.env.BASE_URL;
+const filters = [
+  ['all', 'All'], ['kids', 'Kids'], ['teens', 'Teens'],
+  ['adults', 'Adults'], ['athletic', 'Athletic'], ['open-gym', 'Open Gym'],
+];
+---
+<BaseLayout title={seo.schedule.title} description={seo.schedule.description} active="train">
+  <section class="pagehero">
+    <div class="pagehero-glow"></div>
+    <div class="container pagehero-inner">
+      <div class="pagehero-kicker"><span class="rule"></span>Live from our booking system</div>
+      <h1 class="pagehero-title">Class schedule.</h1>
+      <p class="pagehero-lead">Every group class, filterable by age. Times update automatically — this is the same schedule our front desk runs from. Group classes and open gym need no reservation; just show up.</p>
+      <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap">
+        <a href={links.booking} target="_blank" rel="noopener" class="btn btn-primary">Book a class <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+        <a href={url('pricing')} class="btn btn-ghost-light">See pricing</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="sc-wrap container" id="sched" data-base={base}>
+    <div class="sc-chips" role="tablist" aria-label="Filter by age">
+      {filters.map(([key, label], i) => (
+        <button class="sc-chip" data-filter={key} aria-selected={i === 0 ? 'true' : 'false'}>{label}</button>
+      ))}
+    </div>
+
+    <div class="sc-state sc-loading" id="sc-loading">
+      <span class="sc-spinner"></span><span>Loading live schedule…</span>
+    </div>
+    <div class="sc-state sc-error" id="sc-error" hidden>
+      <i class="bi bi-wifi-off" aria-hidden="true"></i>
+      <p>Couldn't reach the booking system right now.</p>
+      <button id="sc-retry" class="btn btn-dark">Try again</button>
+    </div>
+    <div id="sc-days"></div>
+    <div class="sc-empty" id="sc-empty" hidden>No classes match this filter.</div>
+    <div class="sc-foot" id="sc-foot" hidden>
+      <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+      <span>Times update automatically — the same schedule our front desk runs from.</span>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .pagehero { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
+  .pagehero-glow { position: absolute; inset: 0; background: radial-gradient(680px 360px at 88% -15%, rgba(255,212,0,.13), transparent 70%); }
+  .pagehero-inner { padding-block: 58px 52px; position: relative; }
+  .pagehero-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 18px; }
+  .pagehero-kicker .rule { width: 22px; height: 2px; background: var(--brand); }
+  .pagehero-title { font: 800 clamp(34px,8vw,54px)/1.02 var(--font-display); letter-spacing: -.02em; margin-bottom: 16px; }
+  .pagehero-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 620px; }
+
+  .sc-wrap { padding-block: clamp(40px,7vw,60px); }
+  .sc-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 26px; }
+  .sc-chip { cursor: pointer; font: 700 12.5px/1 var(--font-display); color: var(--text-2); background: #fff; border: 1px solid #e6e4dd; border-radius: 999px; padding: 9px 16px; transition: all .15s; }
+  .sc-chip:hover { border-color: var(--ink); }
+  .sc-chip[aria-selected='true'] { color: #fff; background: var(--ink); border-color: var(--ink); }
+
+  .sc-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 70px 0; color: var(--muted-2); text-align: center; }
+  .sc-spinner { width: 26px; height: 26px; border-radius: 50%; border: 3px solid #e6e4dd; border-top-color: var(--ink); animation: sc-spin .8s linear infinite; }
+  @keyframes sc-spin { to { transform: rotate(360deg); } }
+  .sc-error i { font-size: 28px; color: var(--faint); }
+  .sc-error p { font: 600 14px/1.5 var(--font-body); color: var(--muted); }
+
+  .sc-day { margin-bottom: 26px; }
+  .sc-daylabel { font: 800 12px/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--muted-3); margin-bottom: 12px; }
+  .sc-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm); }
+  .sc-row { display: flex; gap: 14px; padding: 15px 18px; border-top: 1px solid var(--line-soft); align-items: center; }
+  .sc-row:first-child { border-top: 0; }
+  .sc-bar { flex: none; width: 4px; align-self: stretch; border-radius: 2px; min-height: 34px; }
+  .sc-info { flex: 1; min-width: 0; }
+  .sc-name { display: inline-flex; align-items: center; gap: 8px; font: 800 15px/1.15 var(--font-display); color: var(--ink); }
+  .sc-tag { font: 800 9px/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; border-radius: 4px; padding: 3px 6px; }
+  .sc-tag.new { color: #1b6b2f; background: #e6f4ea; border: 1px solid #c7e4cf; }
+  .sc-tag.end { color: #8b1f1f; background: #fbeaea; border: 1px solid #ecc6c6; }
+  .sc-meta { font: 500 13px/1.3 var(--font-body); color: var(--muted-2); margin-top: 4px; }
+  .sc-cancelled .sc-name { text-decoration: line-through; }
+  .sc-cancelled { opacity: .55; }
+  .sc-empty { text-align: center; padding: 50px 0; font: 500 14px/1.5 var(--font-body); color: var(--muted-2); font-style: italic; }
+  .sc-foot { display: flex; align-items: center; gap: 10px; background: #f3f2ee; border-radius: 12px; padding: 14px 16px; margin-top: 6px; font: 500 12.5px/1.4 var(--font-body); color: var(--muted); }
+  .sc-foot i { color: var(--muted-3); }
+</style>
+
+<script>
+  import { matchesFilter, fmtClassTimeRange } from '../lib/print-schedule-sheet.js';
+  const root = document.getElementById('sched');
+  const API = 'https://us-central1-tmv-management.cloudfunctions.net/getPublicSchedule';
+  const DAY_ORDER = [1, 2, 3, 4, 5, 6, 0];
+  const DAY_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  const loadingEl = document.getElementById('sc-loading');
+  const errorEl = document.getElementById('sc-error');
+  const daysEl = document.getElementById('sc-days');
+  const emptyEl = document.getElementById('sc-empty');
+  const footEl = document.getElementById('sc-foot');
+
+  let classes = null, filter = 'all';
+  const fmtRange = (s, e) => fmtClassTimeRange(s, e, { suffix: 'long', sep: ' – ' });
+
+  function esc(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+
+  function openGymEntries() {
+    const out = [];
+    DAY_ORDER.forEach((d) => {
+      out.push({ day: d, time: '11:00', endTime: '22:00', disciplineName: 'Open Gym', ageGroupName: 'All Ages', color: '#2e9e4f' });
+      if (d === 5) out.push({ day: d, time: '22:00', endTime: '24:00', disciplineName: 'Open Gym', ageGroupName: 'Adults Only', color: '#2e7d32' });
+    });
+    return out;
+  }
+
+  function timeKey(t) { const [h, m] = String(t || '').split(':'); return (parseInt(h, 10) || 0) * 60 + (parseInt(m || '0', 10) || 0); }
+
+  function render() {
+    const list = filter === 'open-gym'
+      ? openGymEntries()
+      : (classes || []).filter((c) => matchesFilter(c, filter));
+    const today = new Date().getDay();
+    let html = '';
+    DAY_ORDER.forEach((d) => {
+      const sessions = list.filter((c) => c.day === d).sort((a, b) => timeKey(a.time) - timeKey(b.time));
+      if (!sessions.length) return;
+      html += '<div class="sc-day"><div class="sc-daylabel">' + (d === today ? 'Today · ' : '') + DAY_LONG[d] + '</div><div class="sc-card">';
+      sessions.forEach((c) => {
+        const range = fmtRange(c.time, c.endTime);
+        const color = c.color || '#2196f3';
+        const cancelled = !!c.isCancelled;
+        const isNew = !!c.isNew && !cancelled;
+        html += '<div class="sc-row' + (cancelled ? ' sc-cancelled' : '') + '">'
+          + '<span class="sc-bar" style="background:' + esc(color) + '"></span>'
+          + '<div class="sc-info"><div class="sc-name">' + esc(c.disciplineName || '')
+          + (isNew ? '<span class="sc-tag new">New</span>' : '')
+          + (cancelled ? '<span class="sc-tag end">Ending</span>' : '')
+          + '</div><div class="sc-meta">' + esc(range) + ' · ' + esc(c.ageGroupName || '') + '</div></div></div>';
+      });
+      html += '</div></div>';
+    });
+    daysEl.innerHTML = html;
+    emptyEl.hidden = html !== '';
+    footEl.hidden = false;
+  }
+
+  async function load() {
+    loadingEl.hidden = false; errorEl.hidden = true; daysEl.innerHTML = ''; emptyEl.hidden = true; footEl.hidden = true;
+    try {
+      const res = await fetch(API).then((r) => r.json());
+      classes = (res && res.success && res.data && res.data.classes) || [];
+      loadingEl.hidden = true;
+      render();
+    } catch (e) {
+      loadingEl.hidden = true; errorEl.hidden = false;
+      console.warn('[schedule] load failed', e);
+    }
+  }
+
+  root.querySelectorAll('.sc-chip').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      filter = btn.dataset.filter;
+      root.querySelectorAll('.sc-chip').forEach((b) => b.setAttribute('aria-selected', b === btn ? 'true' : 'false'));
+      if (classes || filter === 'open-gym') render();
+    });
+  });
+  document.getElementById('sc-retry').addEventListener('click', load);
+  load();
+</script>
