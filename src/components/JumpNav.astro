@@ -1,22 +1,83 @@
 ---
+interface Action { label: string; href: string; icon?: string; }
 interface Props {
   items: { label: string; id: string }[];
+  actions?: Action[];
   top?: number;      // sticky offset below the header
 }
-const { items, top = 66 } = Astro.props;
+const { items, actions = [], top = 66 } = Astro.props;
+const hasActions = actions.length > 0;
 ---
-<nav class="jn" style={`--top:${top}px`} aria-label="On this page">
+<nav class="jn" style={`--top:${top}px`} aria-label="On this page" data-ids={items.map((i) => i.id).join(',')}>
   <div class="jn-scroll">
     {items.map((it) => (
-      <a href={`#${it.id}`} class="jn-link">{it.label}</a>
+      <a href={`#${it.id}`} class="jn-link" data-anchor={it.id}>{it.label}</a>
     ))}
+    {hasActions && (
+      <div class="jn-actions">
+        {actions.map((a) => {
+          const external = /^https?:/i.test(a.href);
+          return (
+            <a href={a.href} target={external ? '_blank' : '_self'} rel={external ? 'noopener' : undefined} class="jn-act">
+              {a.icon && <i class={a.icon} aria-hidden="true"></i>}
+              {a.label}
+            </a>
+          );
+        })}
+      </div>
+    )}
   </div>
 </nav>
 
+<button class="jn-top" aria-label="Back to top" title="Back to top" hidden>
+  <i class="bi bi-arrow-up" aria-hidden="true"></i>
+</button>
+
 <style>
-  .jn { position: sticky; top: var(--top); z-index: 40; background: rgba(245,244,241,.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
-  .jn-scroll { max-width: 1120px; margin-inline: auto; padding: 0 24px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  .jn { position: sticky; top: var(--top); z-index: 40; background: rgba(245,244,241,.92); backdrop-filter: saturate(140%) blur(8px); -webkit-backdrop-filter: saturate(140%) blur(8px); border-bottom: 1px solid var(--line); }
+  .jn-scroll { max-width: 1120px; margin-inline: auto; padding: 13px 24px; display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; }
   .jn-scroll::-webkit-scrollbar { display: none; }
-  .jn-link { flex: none; white-space: nowrap; font: 700 12.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--muted); text-decoration: none; padding: 15px 4px; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; }
-  .jn-link:hover { color: var(--ink); border-bottom-color: var(--brand); }
+  .jn-link { flex: none; white-space: nowrap; font: 700 12.5px/1 var(--font-display); text-decoration: none; padding: 7px 13px; border-radius: 999px; background: transparent; color: var(--muted); border: 1px solid transparent; transition: all .15s ease; }
+  .jn-link:hover { background: #fff; color: var(--ink); border-color: var(--line); }
+  .jn-link.active { background: #fff; color: var(--ink); border-color: #e0c64a; }
+  .jn-actions { margin-left: auto; display: flex; gap: 18px; flex: none; }
+  .jn-act { display: inline-flex; align-items: center; gap: 6px; font: 700 13px/1 var(--font-display); color: var(--ink); text-decoration: none; transition: gap .15s ease; white-space: nowrap; }
+  .jn-act:hover { gap: 8px; }
+  .jn-act i { color: #e0a800; }
+
+  .jn-top { position: fixed; right: 22px; bottom: 22px; z-index: 60; width: 46px; height: 46px; border-radius: 50%; border: 0; cursor: pointer; background: var(--ink); color: var(--brand); display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 10px 26px -8px rgba(28,25,23,.55); transition: transform .15s ease, box-shadow .15s ease; }
+  .jn-top:hover { transform: translateY(-3px); box-shadow: 0 16px 32px -10px rgba(28,25,23,.6); }
+  .jn-top[hidden] { display: none; }
 </style>
+
+<script>
+  document.querySelectorAll('.jn').forEach((nav) => {
+    const ids = (nav.getAttribute('data-ids') || '').split(',').filter(Boolean);
+    const links = Array.from(nav.querySelectorAll('.jn-link'));
+    const els = ids.map((id) => document.getElementById(id)).filter((el) => !!el);
+    const top = parseInt(getComputedStyle(nav).getPropertyValue('--top'), 10);
+    const offset = (isNaN(top) ? 66 : top) + 90;
+
+    function onScroll() {
+      let current = els[0] ? els[0].id : '';
+      for (const el of els) {
+        if (el.getBoundingClientRect().top - offset <= 0) current = el.id;
+      }
+      links.forEach((l) => l.classList.toggle('active', l.getAttribute('data-anchor') === current));
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  });
+
+  const topBtn = document.querySelector('.jn-top');
+  if (topBtn) {
+    const toggle = () => { topBtn.hidden = window.scrollY <= 700; };
+    window.addEventListener('scroll', toggle, { passive: true });
+    toggle();
+    topBtn.addEventListener('click', () => {
+      const y = window.scrollY;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => { if (window.scrollY >= y && y > 0) window.scrollTo(0, 0); }, 250);
+    });
+  }
+</script>

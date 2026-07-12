@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import JumpNav from '../components/JumpNav.astro';
-import { seo, cat, site } from '../data/site';
+import { seo, cat, site, url } from '../data/site';
 import { sq } from '../data/square-links';
 
 const coaches = [
@@ -26,7 +26,7 @@ const notes = [
     </div>
   </section>
 
-  <JumpNav items={[{ label: 'Three Ways', id: 'ways' }, { label: 'Choose a Coach', id: 'coaches' }, { label: 'Good to Know', id: 'know' }]} top={66} />
+  <JumpNav items={[{ label: 'Three Ways', id: 'ways' }, { label: 'Choose a Coach', id: 'coaches' }, { label: 'Good to Know', id: 'know' }]} actions={[{ label: 'Price List', href: url('pricing'), icon: 'bi bi-tag' }]} top={66} />
 
   <div class="plwrap">
     <div id="ways" class="pl-label" style="scroll-margin-top:132px">Three ways to train privately</div>

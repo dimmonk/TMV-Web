@@ -1,46 +1,67 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { seo, links, url } from '../data/site';
-const base = import.meta.env.BASE_URL;
-const filters = [
-  ['all', 'All'], ['kids', 'Kids'], ['teens', 'Teens'],
-  ['adults', 'Adults'], ['athletic', 'Athletic'], ['open-gym', 'Open Gym'],
-];
+import { seo, url } from '../data/site';
+import '../styles/print-schedule-sheet.css';
 ---
 <BaseLayout title={seo.schedule.title} description={seo.schedule.description} active="train" mobileHash="schedule">
   <section class="pagehero">
     <div class="pagehero-glow"></div>
     <div class="container pagehero-inner">
-      <div class="pagehero-kicker"><span class="rule"></span>Live from our booking system</div>
-      <h1 class="pagehero-title">Class schedule.</h1>
-      <p class="pagehero-lead">Every group class, filterable by age. Times update automatically — this is the same schedule our front desk runs from. Group classes and open gym need no reservation; just show up.</p>
+      <div class="pagehero-kicker"><span class="rule"></span>Group classes · live timetable</div>
+      <h1 class="pagehero-title">The full class schedule, always up to date.</h1>
+      <p class="pagehero-lead">Every recreational, specialized and athletic class — straight from our booking system. Find a time that works and reserve your spot in a couple of taps.</p>
       <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap">
-        <a href={links.booking} target="_blank" rel="noopener" class="btn btn-primary">Book a class <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
-        <a href={url('pricing')} class="btn btn-ghost-light">See pricing</a>
+        <a href={url('pricing')} class="btn btn-primary">See the price list <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        <a href={url('train')} class="btn btn-ghost-light">Explore the classes</a>
       </div>
     </div>
   </section>
 
-  <div class="sc-wrap container" id="sched" data-base={base}>
-    <div class="sc-chips" role="tablist" aria-label="Filter by age">
-      {filters.map(([key, label], i) => (
-        <button class="sc-chip" data-filter={key} aria-selected={i === 0 ? 'true' : 'false'}>{label}</button>
-      ))}
+  <!-- LIVE SCHEDULE — production embed running natively (no iframe). DOM
+       verbatim from TMV-Management public/schedule-embed-sheet.html;
+       rendered by the same print-schedule-sheet.js used for printed PDFs. -->
+  <main class="sched-main">
+    <div class="embed-shell">
+      <div class="embed-filters" id="embed-filters">
+        <button class="embed-filter active" data-filter="all">All Classes</button>
+        <button class="embed-filter" data-filter="kids">Parent &amp; Child &middot; Kids</button>
+        <button class="embed-filter" data-filter="teens">Teens</button>
+        <button class="embed-filter" data-filter="adults">Adults</button>
+        <button class="embed-filter" data-filter="athletic">Athletic Program</button>
+        <button class="embed-filter" data-filter="open-gym">Open Gym</button>
+      </div>
+
+      <!-- Desktop: full sheet, 11:8.5 letter-landscape aspect -->
+      <div class="embed-desktop">
+        <div id="embed-desktop-root"></div>
+      </div>
+
+      <!-- Mobile: day-grouped class list -->
+      <div class="embed-mobile" id="embed-mobile-root"></div>
     </div>
 
-    <div class="sc-state sc-loading" id="sc-loading">
-      <span class="sc-spinner"></span><span>Loading live schedule…</span>
-    </div>
-    <div class="sc-state sc-error" id="sc-error" hidden>
-      <i class="bi bi-wifi-off" aria-hidden="true"></i>
-      <p>Couldn't reach the booking system right now.</p>
-      <button id="sc-retry" class="btn btn-dark">Try again</button>
-    </div>
-    <div id="sc-days"></div>
-    <div class="sc-empty" id="sc-empty" hidden>No classes match this filter.</div>
-    <div class="sc-foot" id="sc-foot" hidden>
-      <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
-      <span>Times update automatically — the same schedule our front desk runs from.</span>
+    <p class="sched-foot">
+      <i class="bi bi-arrow-repeat" aria-hidden="true"></i>&nbsp; Times update automatically from our booking system — the same schedule our front desk runs from.
+    </p>
+  </main>
+
+  <!-- Popup modal (verbatim from the embed page) -->
+  <div class="popup-overlay" id="embed-popup-overlay">
+    <div class="popup" id="embed-popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+      <div class="popup-stripe"></div>
+      <button class="popup-close" type="button" aria-label="Close">&times;</button>
+      <h2 class="popup-title" id="popup-title"></h2>
+      <div class="popup-row">
+        <span class="popup-row-label">Time</span>
+        <span class="popup-row-value popup-time"></span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-row-label">Age</span>
+        <span class="popup-row-value popup-age"></span>
+      </div>
+      <div class="popup-desc-wrap" style="display:none;">
+        <div class="popup-desc"></div>
+      </div>
     </div>
   </div>
 </BaseLayout>
@@ -51,118 +72,156 @@ const filters = [
   .pagehero-inner { padding-block: 58px 52px; position: relative; }
   .pagehero-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 18px; }
   .pagehero-kicker .rule { width: 22px; height: 2px; background: var(--brand); }
-  .pagehero-title { font: 800 clamp(34px,8vw,54px)/1.02 var(--font-display); letter-spacing: -.02em; margin-bottom: 16px; }
-  .pagehero-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 620px; }
+  .pagehero-title { font: 800 clamp(34px,8vw,54px)/1.04 var(--font-display); letter-spacing: -.02em; margin-bottom: 16px; max-width: 760px; }
+  .pagehero-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 560px; }
 
-  .sc-wrap { padding-block: clamp(40px,7vw,60px); }
-  .sc-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 26px; }
-  .sc-chip { cursor: pointer; font: 700 12.5px/1 var(--font-display); color: var(--text-2); background: #fff; border: 1px solid #e6e4dd; border-radius: 999px; padding: 9px 16px; transition: all .15s; }
-  .sc-chip:hover { border-color: var(--ink); }
-  .sc-chip[aria-selected='true'] { color: #fff; background: var(--ink); border-color: var(--ink); }
+  .sched-main { max-width: 1440px; margin: 0 auto; padding: 40px 20px 20px; }
+  .sched-foot { font: 500 12.5px/1.5 var(--font-body); color: #9b9890; text-align: center; margin: 20px 0 44px; }
+  .sched-foot i { color: var(--brand); }
+</style>
 
-  .sc-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 70px 0; color: var(--muted-2); text-align: center; }
-  .sc-spinner { width: 26px; height: 26px; border-radius: 50%; border: 3px solid #e6e4dd; border-top-color: var(--ink); animation: sc-spin .8s linear infinite; }
-  @keyframes sc-spin { to { transform: rotate(360deg); } }
-  .sc-error i { font-size: 28px; color: var(--faint); }
-  .sc-error p { font: 600 14px/1.5 var(--font-body); color: var(--muted); }
+<!-- Embed chrome CSS — verbatim from TMV-Management public/schedule-embed-sheet.html's
+     own <style> block (the filter pills, desktop sheet wrap, mobile list, and popup
+     modal). is:global because renderPrintSheet()/initEmbed() inject this markup at
+     runtime via raw DOM APIs, which Astro's scoped-style hashing can't reach. -->
+<style is:global>
+  :root {
+    --emb-ink: #14110f;
+    --emb-ink-2: #3a3530;
+    --emb-paper: #ffffff;
+    --emb-hairline: #d8d2ca;
+    --emb-warm: #faf7f1;
+    --emb-classes: #2196f3;
+    --emb-athletic: #ffb82a;
+    --emb-opengym: #4caf50;
+  }
 
-  .sc-day { margin-bottom: 26px; }
-  .sc-daylabel { font: 800 12px/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--muted-3); margin-bottom: 12px; }
-  .sc-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm); }
-  .sc-row { display: flex; gap: 14px; padding: 15px 18px; border-top: 1px solid var(--line-soft); align-items: center; }
-  .sc-row:first-child { border-top: 0; }
-  .sc-bar { flex: none; width: 4px; align-self: stretch; border-radius: 2px; min-height: 34px; }
-  .sc-info { flex: 1; min-width: 0; }
-  .sc-name { display: inline-flex; align-items: center; gap: 8px; font: 800 15px/1.15 var(--font-display); color: var(--ink); }
-  .sc-tag { font: 800 9px/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; border-radius: 4px; padding: 3px 6px; }
-  .sc-tag.new { color: #1b6b2f; background: #e6f4ea; border: 1px solid #c7e4cf; }
-  .sc-tag.end { color: #8b1f1f; background: #fbeaea; border: 1px solid #ecc6c6; }
-  .sc-meta { font: 500 13px/1.3 var(--font-body); color: var(--muted-2); margin-top: 4px; }
-  .sc-cancelled .sc-name { text-decoration: line-through; }
-  .sc-cancelled { opacity: .55; }
-  .sc-empty { text-align: center; padding: 50px 0; font: 500 14px/1.5 var(--font-body); color: var(--muted-2); font-style: italic; }
-  .sc-foot { display: flex; align-items: center; gap: 10px; background: #f3f2ee; border-radius: 12px; padding: 14px 16px; margin-top: 6px; font: 500 12.5px/1.4 var(--font-body); color: var(--muted); }
-  .sc-foot i { color: var(--muted-3); }
+  .embed-shell { width: 100%; max-width: 1400px; margin: 0 auto; padding: 12px; box-sizing: border-box; }
+
+  .embed-filters { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 0 0 14px; }
+  .embed-filter {
+    font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 8px 16px; border-radius: 999px; border: 1.5px solid var(--ink,#211f1b);
+    background: transparent; color: var(--ink,#211f1b); cursor: pointer; transition: background 0.15s ease, color 0.15s ease;
+  }
+  .embed-filter:hover { background: rgba(33,31,27,.06); }
+  .embed-filter.active { background: var(--ink,#211f1b); color: #fff; }
+
+  .embed-filter[data-filter="all"], .embed-filter[data-filter="kids"],
+  .embed-filter[data-filter="teens"], .embed-filter[data-filter="adults"] {
+    border-color: var(--emb-classes); color: var(--emb-classes);
+  }
+  .embed-filter[data-filter="all"]:hover, .embed-filter[data-filter="kids"]:hover,
+  .embed-filter[data-filter="teens"]:hover, .embed-filter[data-filter="adults"]:hover {
+    background: color-mix(in srgb, var(--emb-classes) 14%, transparent);
+  }
+  .embed-filter[data-filter="all"].active, .embed-filter[data-filter="kids"].active,
+  .embed-filter[data-filter="teens"].active, .embed-filter[data-filter="adults"].active {
+    background: var(--emb-classes); border-color: var(--emb-classes); color: #fff;
+  }
+  .embed-filter[data-filter="athletic"] { border-color: var(--emb-athletic); color: #9a6c00; }
+  .embed-filter[data-filter="athletic"]:hover { background: color-mix(in srgb, var(--emb-athletic) 18%, transparent); }
+  .embed-filter[data-filter="athletic"].active { background: var(--emb-athletic); border-color: var(--emb-athletic); color: var(--emb-ink); }
+  .embed-filter[data-filter="open-gym"] { border-color: var(--emb-opengym); color: var(--emb-opengym); }
+  .embed-filter[data-filter="open-gym"]:hover { background: color-mix(in srgb, var(--emb-opengym) 18%, transparent); }
+  .embed-filter[data-filter="open-gym"].active { background: var(--emb-opengym); border-color: var(--emb-opengym); color: #fff; }
+
+  .embed-desktop { width: 100%; aspect-ratio: 11 / 8.5; }
+  .embed-desktop #embed-desktop-root,
+  .embed-desktop #embed-desktop-root .sheet { width: 100%; height: 100%; }
+  .embed-desktop .sheet .class { transition: outline 0.1s ease; }
+  .embed-desktop .sheet .class:hover { outline: 2px solid var(--emb-ink); outline-offset: -2px; }
+
+  .embed-mobile { display: none; }
+  .embed-mobile .m-day { margin: 0 0 18px; }
+  .embed-mobile .m-day-name {
+    font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--emb-ink); margin: 0 0 8px; padding: 0 0 6px;
+    border-bottom: 1px solid var(--emb-hairline);
+  }
+  .embed-mobile .m-card {
+    display: block; width: 100%; text-align: left; font-family: 'Roboto', sans-serif; font-size: 14px;
+    line-height: 1.3; padding: 14px 16px; margin: 0 0 8px; border: 1.25px solid var(--emb-ink);
+    border-radius: 4px; cursor: pointer; position: relative; background: var(--emb-paper); color: var(--emb-ink);
+  }
+  .embed-mobile .m-card:hover { background: var(--emb-warm); }
+  .embed-mobile .m-name {
+    font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 17px; letter-spacing: 0.02em;
+    text-transform: uppercase; line-height: 1.1; margin-bottom: 4px;
+  }
+  .embed-mobile .m-meta { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--emb-ink-2); }
+  .embed-mobile .m-time { font-family: 'Roboto Mono', monospace; font-weight: 500; }
+  .embed-mobile .m-dot { opacity: 0.5; }
+  .embed-mobile .m-age { font-family: 'Oswald', sans-serif; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+  .embed-mobile .m-tag {
+    position: absolute; top: 8px; right: 8px; font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; padding: 1px 6px; border-radius: 1px; background: var(--emb-paper); border: 1px solid currentColor;
+  }
+  .embed-mobile .m-tag-new { color: #1f6f3f; }
+  .embed-mobile .m-tag-end { color: #8b1f1f; }
+  .embed-mobile .m-cancelled .m-name { text-decoration: line-through; }
+  .embed-mobile .m-cancelled { opacity: 0.55; }
+  .embed-mobile .m-empty { text-align: center; color: var(--emb-ink-2); font-style: italic; padding: 24px; }
+
+  .embed-mobile .m-card.m-v-color .m-meta { color: inherit; opacity: 0.85; }
+  .embed-mobile .m-card.m-v-color .m-meta .m-time, .embed-mobile .m-card.m-v-color .m-meta .m-age { color: inherit; }
+  .embed-mobile .m-card.m-v-editorial { background: var(--emb-warm); border-left: 5px solid var(--c, var(--emb-ink)); }
+  .embed-mobile .m-card.m-v-bw .m-name { font-weight: 700; }
+
+  .embed-error { padding: 40px; text-align: center; color: #b03030; }
+
+  .popup-overlay {
+    position: fixed; inset: 0; background: rgba(20, 17, 15, 0.55); display: none;
+    align-items: center; justify-content: center; padding: 24px; z-index: 9999; animation: popup-fade 0.15s ease;
+  }
+  .popup-overlay.is-open { display: flex; }
+  @keyframes popup-fade { from { opacity: 0; } to { opacity: 1; } }
+  .popup {
+    background: var(--emb-paper); max-width: 480px; width: 100%; border-radius: 4px; padding: 28px 28px 24px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25); position: relative; box-sizing: border-box;
+  }
+  .popup-stripe {
+    position: absolute; top: 0; left: 0; right: 0; height: 6px; border-top-left-radius: 4px;
+    border-top-right-radius: 4px; background: var(--emb-ink);
+  }
+  .popup-close {
+    position: absolute; top: 10px; right: 12px; background: transparent; border: 0; font-size: 22px;
+    line-height: 1; cursor: pointer; color: var(--emb-ink-2); padding: 4px 8px;
+  }
+  .popup-close:hover { color: var(--emb-ink); }
+  .popup-title {
+    font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 0.02em;
+    text-transform: uppercase; line-height: 1.05; margin: 12px 36px 14px 0;
+  }
+  .popup-row { display: flex; align-items: baseline; gap: 10px; margin: 8px 0; font-size: 14px; color: var(--emb-ink-2); }
+  .popup-row-label {
+    font-family: 'Roboto Mono', monospace; font-weight: 500; font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--emb-ink-2); min-width: 56px;
+  }
+  .popup-row-value { font-family: 'Roboto', sans-serif; color: var(--emb-ink); font-size: 15px; }
+  .popup-time { font-family: 'Roboto Mono', monospace; }
+  .popup-age { font-family: 'Oswald', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; }
+  .popup-desc-wrap { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--emb-hairline); }
+  .popup-desc { font-family: 'Roboto', sans-serif; font-size: 14px; line-height: 1.5; color: var(--emb-ink); }
+  .popup-desc strong { font-weight: 600; color: var(--emb-ink); }
+  .popup-desc em { font-style: italic; }
+  .popup-desc code {
+    font-family: 'Roboto Mono', monospace; font-size: 13px; background: var(--emb-warm);
+    border: 1px solid var(--emb-hairline); border-radius: 3px; padding: 1px 5px;
+  }
+  .popup-desc a { color: var(--emb-classes); text-decoration: underline; }
+  .popup-desc ul { margin: 6px 0 6px 18px; padding-left: 0; }
+  .popup-desc li { margin: 2px 0; }
+
+  @media (max-width: 768px) {
+    .embed-desktop { display: none; }
+    .embed-mobile { display: block; }
+    .embed-shell { padding: 10px; }
+    .embed-filter { padding: 6px 12px; font-size: 12px; }
+  }
 </style>
 
 <script>
-  import { matchesFilter, fmtClassTimeRange } from '../lib/print-schedule-sheet.js';
-  const root = document.getElementById('sched');
-  const API = 'https://us-central1-tmv-management.cloudfunctions.net/getPublicSchedule';
-  const DAY_ORDER = [1, 2, 3, 4, 5, 6, 0];
-  const DAY_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-  const loadingEl = document.getElementById('sc-loading');
-  const errorEl = document.getElementById('sc-error');
-  const daysEl = document.getElementById('sc-days');
-  const emptyEl = document.getElementById('sc-empty');
-  const footEl = document.getElementById('sc-foot');
-
-  let classes = null, filter = 'all';
-  const fmtRange = (s, e) => fmtClassTimeRange(s, e, { suffix: 'long', sep: ' – ' });
-
-  function esc(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
-
-  function openGymEntries() {
-    const out = [];
-    DAY_ORDER.forEach((d) => {
-      out.push({ day: d, time: '11:00', endTime: '22:00', disciplineName: 'Open Gym', ageGroupName: 'All Ages', color: '#2e9e4f' });
-      if (d === 5) out.push({ day: d, time: '22:00', endTime: '24:00', disciplineName: 'Open Gym', ageGroupName: 'Adults Only', color: '#2e7d32' });
-    });
-    return out;
-  }
-
-  function timeKey(t) { const [h, m] = String(t || '').split(':'); return (parseInt(h, 10) || 0) * 60 + (parseInt(m || '0', 10) || 0); }
-
-  function render() {
-    const list = filter === 'open-gym'
-      ? openGymEntries()
-      : (classes || []).filter((c) => matchesFilter(c, filter));
-    const today = new Date().getDay();
-    let html = '';
-    DAY_ORDER.forEach((d) => {
-      const sessions = list.filter((c) => c.day === d).sort((a, b) => timeKey(a.time) - timeKey(b.time));
-      if (!sessions.length) return;
-      html += '<div class="sc-day"><div class="sc-daylabel">' + (d === today ? 'Today · ' : '') + DAY_LONG[d] + '</div><div class="sc-card">';
-      sessions.forEach((c) => {
-        const range = fmtRange(c.time, c.endTime);
-        const color = c.color || '#2196f3';
-        const cancelled = !!c.isCancelled;
-        const isNew = !!c.isNew && !cancelled;
-        html += '<div class="sc-row' + (cancelled ? ' sc-cancelled' : '') + '">'
-          + '<span class="sc-bar" style="background:' + esc(color) + '"></span>'
-          + '<div class="sc-info"><div class="sc-name">' + esc(c.disciplineName || '')
-          + (isNew ? '<span class="sc-tag new">New</span>' : '')
-          + (cancelled ? '<span class="sc-tag end">Ending</span>' : '')
-          + '</div><div class="sc-meta">' + esc(range) + ' · ' + esc(c.ageGroupName || '') + '</div></div></div>';
-      });
-      html += '</div></div>';
-    });
-    daysEl.innerHTML = html;
-    emptyEl.hidden = html !== '';
-    footEl.hidden = false;
-  }
-
-  async function load() {
-    loadingEl.hidden = false; errorEl.hidden = true; daysEl.innerHTML = ''; emptyEl.hidden = true; footEl.hidden = true;
-    try {
-      const res = await fetch(API).then((r) => r.json());
-      classes = (res && res.success && res.data && res.data.classes) || [];
-      loadingEl.hidden = true;
-      render();
-    } catch (e) {
-      loadingEl.hidden = true; errorEl.hidden = false;
-      console.warn('[schedule] load failed', e);
-    }
-  }
-
-  root.querySelectorAll('.sc-chip').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      filter = btn.dataset.filter;
-      root.querySelectorAll('.sc-chip').forEach((b) => b.setAttribute('aria-selected', b === btn ? 'true' : 'false'));
-      if (classes || filter === 'open-gym') render();
-    });
-  });
-  document.getElementById('sc-retry').addEventListener('click', load);
-  load();
+  import { initEmbed } from '../lib/schedule-embed-sheet.js';
+  initEmbed();
 </script>

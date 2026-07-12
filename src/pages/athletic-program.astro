@@ -58,7 +58,7 @@ const payOptions = [
     </div>
   </section>
 
-  <JumpNav items={[{ label: 'The Program', id: 'program' }, { label: 'Class Structure', id: 'structure' }, { label: 'Schedule', id: 'schedule' }, { label: 'Join Now', id: 'join' }]} top={66} />
+  <JumpNav items={[{ label: 'The Program', id: 'program' }, { label: 'Class Structure', id: 'structure' }, { label: 'Schedule', id: 'schedule' }, { label: 'Join Now', id: 'join' }]} actions={[{ label: 'Join now', href: links.athleticMembership, icon: 'bi bi-trophy' }]} top={66} />
 
   <section id="program" class="section container" style="scroll-margin-top:132px">
     <div class="ap-program">
@@ -136,7 +136,7 @@ const payOptions = [
 
   <section class="section container" style="padding-top:0">
     <CtaBand cards={[
-      { theme: 'dark', eyebrow: 'Passes & memberships', title: 'See the Price List', icon: 'bi-tag-fill', href: url('pricing') },
+      { theme: 'dark', eyebrow: 'Passes & Drop-ins', title: 'See the Price List', icon: 'bi-tag-fill', href: url('pricing') },
       { theme: 'light', eyebrow: 'All classes, one view', title: 'Group Class Schedule', icon: 'bi-calendar3', href: url('schedule') },
     ]} />
   </section>

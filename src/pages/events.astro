@@ -18,18 +18,18 @@ const faqGroups = [
   { title: 'Booking', items: [
     { q: 'When do I pay?', a: "You don't pay anything upfront. The credit card collected during booking is only for our cancellation policy and won't be charged. Payment is made in person on the day of the party, based on the final count of participants — so you only pay for who actually shows up." },
     { q: 'What is the cancellation policy?', a: "A cancellation fee applies if the booking is canceled within 24 hours of the appointment or if there's a no-show. Full details are provided during the booking process." },
-    { q: 'What if weekend slots are fully booked?', a: "The availability you see online is all we have. If you have a smaller group, consider the Mini Birthday Party: the same one-hour coached parkour session, minimum 3 participants ($30 each, max 15), ages 8+. Each kid gets an all-day pass, but it doesn't include a private room." },
+    { q: 'What if weekend slots are fully booked?', a: "The availability you see online is all we have — we can't create additional slots. If you have a smaller group, consider the Mini Birthday Party: the same one-hour coached parkour session, with a minimum of just 3 participants ($30 each, max 15), ages 8+. Each kid gets an all-day pass, but it doesn't include a private room — common-area tables are shared and not guaranteed." },
   ] },
   { title: 'Day of the party', items: [
-    { q: 'When should we arrive?', a: "The host is welcome to arrive 15 minutes before the scheduled party time. Depending on availability, the room may be ready a little earlier." },
-    { q: 'Are there age requirements?', a: "We ask that the group be similar in age. Our coaches tailor activities and difficulty to the group, so mixing very different ages doesn't work well." },
+    { q: 'When should we arrive?', a: "The host is welcome to arrive 15 minutes before the scheduled party time. Depending on availability — if there's no party before yours — the room may be ready a little earlier." },
+    { q: 'Are there age requirements?', a: "To make sure everyone has a great time, we ask that the group be similar in age. Our coaches tailor the activities and difficulty to the group, so mixing very different ages (e.g. a 4-year-old with 7–8 year olds) doesn't work well." },
   ] },
   { title: 'Food & drinks', items: [
-    { q: 'What are the food options?', a: "We don't provide food or catering, but you're welcome to bring whatever you'd like (cake, pizza, snacks, drinks) with no fees. You can order delivery too. We provide a fridge/freezer to store your items during the party." },
-    { q: 'What supplies do you provide?', a: "We provide the party room, tables, and a fridge/freezer. We don't provide plates, cups, utensils or napkins — the host brings catering items. You're welcome to bring decorations." },
+    { q: 'What are the food options?', a: "We don't provide food, drinks or catering — but you're welcome to bring whatever you'd like (cake, pizza, snacks, drinks) with no restrictions or fees. You can also order delivery; Domino's and Pizza Nova are within three blocks and know our location well. We recommend ordering on arrival or ahead of time, and we provide a fridge/freezer to store your items during the party." },
+    { q: 'What supplies do you provide?', a: "We provide the party room, tables, and a fridge/freezer for storage. We don't provide plates, cups, utensils, napkins or serving supplies — the host brings all catering items. You're also welcome to bring your own decorations." },
   ] },
   { title: 'During the party', items: [
-    { q: 'Can we extend the open gym time?', a: "Yes — ask the instructor assigned to your party. It's $5 per participant for an extra hour. Extending gym time does not extend party-room time: the room must be vacated at the 2-hour mark." },
+    { q: 'Can we extend the open gym time?', a: "Yes — just ask the instructor assigned to your party. It's $5 per participant for an extra hour. Note that extending gym time does not extend your party-room time: the room must be vacated at the 2-hour mark so we can prep it for the next group." },
   ] },
 ];
 const tiers = [
@@ -57,7 +57,7 @@ const tiers = [
     </div>
   </section>
 
-  <JumpNav items={[{ label: 'Birthdays', id: 'birthdays' }, { label: 'Birthday FAQ', id: 'faq' }, { label: 'Groups & Teams', id: 'groups' }]} top={66} />
+  <JumpNav items={[{ label: 'Birthdays', id: 'birthdays' }, { label: 'Birthday FAQ', id: 'faq' }, { label: 'Groups & Teams', id: 'groups' }]} actions={[{ label: 'Book a party', href: links.booking, icon: 'bi bi-calendar-check' }]} top={66} />
 
   <section id="birthdays" class="section container" style="scroll-margin-top:140px">
     <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Birthdays" title="Two ways to celebrate" description="Go all-in with the full package, or keep it nimble with a Mini party for smaller groups and last-minute plans." /></div>
@@ -150,11 +150,11 @@ const tiers = [
     <div class="ev-groups">
       <div class="ev-gcard">
         <div class="ev-ghead"><span class="ev-gic" style="background:color-mix(in srgb,#8c52ff 14%,#fff)"><i class="bi bi-people-fill" style="color:#8c52ff" aria-hidden="true"></i></span><div><div class="ev-geyebrow" style="color:#8c52ff">Group Events</div><div class="ev-gtitle">Field trips &amp; team-building</div></div></div>
-        <p class="ev-gdesc">Two hours total — an hour of guided activities, then an hour of open gym. Intro parkour workshops, team-building obstacle courses, games and skill development for all levels.</p>
+        <p class="ev-gdesc">Two hours total — an hour of guided activities, then an hour of open gym. Intro parkour workshops, team-building obstacle courses, games and skill development for all levels. Great for field trips, teams and community events.</p>
         <div class="ev-gfoot">
           <div class="ev-glabel">Price per participant</div>
           <div class="ev-tiers">{tiers.map((t) => <div class="ev-tier"><span>{t.label}</span><span class="ev-tier-v">{t.val}</span></div>)}</div>
-          <p class="ev-gfine">Minimum 10 participants; smaller groups pay the $300 base. Final total is calculated on event day.</p>
+          <p class="ev-gfine">Minimum 10 participants; smaller groups pay the $300 base. Final total is calculated on event day from the final headcount.</p>
           <a href={links.booking} target="_blank" rel="noopener" class="btn btn-dark">Plan an event <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
         </div>
       </div>
