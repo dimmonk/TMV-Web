@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dimmonk.github.io/TMV-Web/sitemap.xml

@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../data/site';
+---
+<BaseLayout title="Page not found | The Monkey Vault" description="That page doesn't exist. Head back to The Monkey Vault.">
+  <section class="nf">
+    <div class="container nf-inner">
+      <div class="nf-code">404</div>
+      <h1 class="nf-title">This page took a leap we couldn't land.</h1>
+      <p class="nf-lead">The page you're after doesn't exist or has moved. Let's get you back on the floor.</p>
+      <div class="nf-actions">
+        <a href={url('')} class="btn btn-primary">Back to home <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        <a href={url('book')} class="btn btn-ghost">Book a session</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf { background: var(--ink); color: #fff; }
+  .nf-inner { padding-block: clamp(80px, 16vw, 140px); text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .nf-code { font: 900 clamp(72px, 18vw, 130px)/1 var(--font-display); color: var(--brand); letter-spacing: -.03em; }
+  .nf-title { font: 800 clamp(24px, 5vw, 34px)/1.1 var(--font-display); letter-spacing: -.02em; margin: 14px 0 12px; max-width: 620px; text-wrap: balance; }
+  .nf-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.7); max-width: 440px; margin-bottom: 30px; }
+  .nf-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+</style>
