@@ -1,0 +1,518 @@
+/* TMV Print Schedule ; adaptive sheet layout
+   ──────────────────────────────────────────────────────────────
+   Sheet declares a sized container, everything sizes in cqh/cqi
+   so the same markup fits letter, tabloid, or 22x28 poster
+   without per-size overrides.
+
+   Ported from design_handoff_print_schedule/schedule-styles.css.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@500&display=swap');
+
+:root {
+  --ink: #14110f;
+  --ink-2: #3a3530;
+  --paper: #ffffff;
+  --hairline: #d8d2ca;
+  --warm-paper: #faf7f1;
+  --accent: #c8351e;
+  --new: #1f6f3f;
+  --end: #8b1f1f;
+}
+
+.sheet, .sheet * { box-sizing: border-box; }
+
+.sheet {
+  width: 100%;
+  height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Roboto', sans-serif;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr auto;  /* header / body / footer */
+  container-type: size;               /* enable cqh / cqi */
+  font-size: 1.6cqh;
+  line-height: 1.3;
+  /* Preserve background colors, gradients, and tints when printing.
+     Without this, browsers strip all backgrounds in print to save ink
+     and the design loses its discipline-color fills, the diagonal
+     hatching on empty hours, and the bw grayscale tones. */
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.sheet * {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ─────────── HEADER ─────────── */
+.sheet .h-rail {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: stretch;
+  border-bottom: 0.25cqh solid var(--ink);
+  min-height: 8cqh;
+}
+
+.sheet .h-mark {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 5.2cqh;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  padding: 2cqh 2.4cqi;
+  border-right: 1px solid var(--hairline);
+  display: flex; align-items: center;
+}
+.sheet .h-mark sup {
+  font-size: 1.4cqh;
+  vertical-align: top;
+  margin-left: 0.4cqi;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.sheet .h-title {
+  padding: 1.6cqh 2.6cqi;
+  display: flex; flex-direction: column; justify-content: center;
+  min-width: 0;
+}
+.sheet .h-eyebrow {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 500;
+  font-size: 1.2cqh;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-bottom: 0.5cqh;
+}
+.sheet .h-headline {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 4.8cqh;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+.sheet .h-subline {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.5cqh;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+  margin-top: 0.6cqh;
+}
+
+.sheet .h-meta {
+  padding: 1.6cqh 2.6cqi;
+  text-align: right;
+  display: flex; flex-direction: column; justify-content: center;
+  border-left: 1px solid var(--hairline);
+  min-width: 14cqi;
+}
+.sheet .h-meta-label {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1.05cqh;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.sheet .h-meta-value {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: 2.4cqh;
+  margin-top: 0.3cqh;
+  letter-spacing: 0.04em;
+}
+
+/* ─────────── BODY: CSS GRID schedule ─────────── */
+.sheet .body {
+  min-height: 0;
+  padding: 1.4cqh 2.2cqi 0.8cqh;
+  display: grid;
+  grid-template-columns: 5.5cqi repeat(7, 1fr);
+  column-gap: 0.5cqi;
+  row-gap: 0;
+}
+
+.sheet .day-h {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: 1.7cqh;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.8cqh 0.6cqi;
+  border-bottom: 1.5px solid var(--ink);
+  border-right: 1px solid var(--hairline);
+  align-self: stretch;
+}
+.sheet .day-h.col-end { border-right: 0; }
+
+.sheet .time-h {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1.05cqh;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  padding: 0.8cqh 0.4cqi;
+  border-bottom: 1.5px solid var(--ink);
+  border-right: 1.5px solid var(--ink);
+}
+
+.sheet .time-c {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 500;
+  font-size: 1.7cqh;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  padding: 0.4cqh 0.4cqi 0;
+  border-right: 1.5px solid var(--ink);
+  border-bottom: 1px solid var(--hairline);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+.sheet .time-c.row-end-time { border-bottom: 0; }
+
+.sheet .cell {
+  border-right: 1px solid var(--hairline);
+  /* No bottom border by default. Horizontal dividers appear ONLY at hour
+     boundaries (.cell.hour-end), so multi-stack hours read as one visual
+     block and align with the time column (which spans the whole hour
+     via rowspan). */
+  padding: 0.25cqh 0.25cqi;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+}
+.sheet .cell.hour-end { border-bottom: 1px solid var(--hairline); }
+.sheet .cell.col-end { border-right: 0; }
+.sheet .cell.row-end { border-bottom: 0; }
+
+/* Diagonal hatching for empty afternoon hours.
+   IMPORTANT: do NOT use repeating-linear-gradient here. Chrome's Skia PDF
+   generator encodes CSS gradients as PDF tiling-pattern dictionaries,
+   which macOS Preview / Quick Look (CoreGraphics) silently drop. The
+   on-screen rendering looks fine in Chrome but the printed PDF shows
+   blank cells in Preview. Inline SVG data URIs round-trip cleanly
+   because Chrome rasterizes them into regular PDF image streams that
+   every PDF viewer renders. */
+.sheet .cell.empty-hour {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14'><line x1='-1' y1='15' x2='15' y2='-1' stroke='%2314110f' stroke-opacity='0.10' stroke-width='1'/></svg>");
+  background-size: 10px 10px;
+  background-repeat: repeat;
+}
+.sheet .time-c.empty-hour-time {
+  color: var(--ink-2);
+  opacity: 0.45;
+  font-weight: 400;
+}
+.sheet.v-bw .cell.empty-hour {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14'><line x1='-1' y1='15' x2='15' y2='-1' stroke='%23000000' stroke-opacity='0.14' stroke-width='1'/></svg>");
+}
+
+/* ─── CLASS CARD ─── */
+.sheet .class {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  padding: 0.4cqh 5%;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  justify-content: center;
+  gap: 0.3cqh;
+}
+.sheet .class.layout-expanded {
+  justify-content: space-between;
+  gap: 0;
+}
+
+.sheet .class .c-name {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.sheet .class.layout-compact .c-name { font-size: 1.7cqh; margin-bottom: 0; }
+.sheet .class.layout-compact .c-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6cqi;
+  font-size: 1.15cqh;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  opacity: 0.92;
+  min-width: 0;
+  flex: 0 0 auto;
+}
+.sheet .class.layout-compact .c-time {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 500;
+  line-height: 1;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.sheet .class.layout-compact .c-age-abbr {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: 0.92em;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+  opacity: 0.85;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  min-width: 0;
+  position: relative;
+  top: 0.05em;
+}
+.sheet .class.layout-compact .c-age-abbr::before {
+  content: '·';
+  margin-right: 0.6cqi;
+  opacity: 0.6;
+}
+
+.sheet .class.layout-expanded .c-name {
+  font-size: 1.95cqh;
+}
+.sheet .class.layout-expanded .c-time {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1.6cqh;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  opacity: 0.9;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+.sheet .class.layout-expanded .c-age-full {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.5cqh;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+  opacity: 0.82;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.sheet .class .tag {
+  position: absolute;
+  top: 0.3cqh;
+  right: 0.3cqi;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.1cqh;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 0.1cqh 0.4cqi;
+  border-radius: 1px;
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid currentColor;
+}
+.sheet .class .tag.new { color: var(--new); }
+.sheet .class .tag.end { color: var(--end); }
+.sheet .class.cancelled .c-name { text-decoration: line-through; }
+.sheet .class.cancelled { opacity: 0.55; }
+
+/* ─────────── FOOTER ─────────── */
+.sheet .foot {
+  border-top: 0.25cqh solid var(--ink);
+  padding: 1.2cqh 2.2cqi;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2cqi;
+  min-height: 6cqh;
+}
+/* Legend renders as a uniform grid so columns line up across rows for
+   easy scanning. auto-fill + minmax means more disciplines just add
+   more rows; the chip widths stay consistent. */
+.sheet .legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9cqi, 1fr));
+  gap: 0.6cqh 0.8cqi;
+  align-items: center;
+}
+.sheet .legend .swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6cqi;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.25cqh;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  /* Don't break a name mid-word and don't truncate ; column width is
+     sized for the longest legitimate discipline name. */
+  white-space: nowrap;
+  min-width: 0;
+}
+.sheet .legend .swatch::before {
+  content: '';
+  width: 1.4cqh;
+  height: 1.4cqh;
+  background: var(--c, #ccc);
+  border-radius: 1px;
+}
+.sheet .foot .notes {
+  font-size: 1.25cqh;
+  color: var(--ink-2);
+  line-height: 1.4;
+  text-align: right;
+}
+.sheet .foot .notes strong {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 1.15cqh;
+  margin-right: 0.3cqi;
+}
+
+/* ─────────── VARIANTS ─────────── */
+.sheet.v-editorial { background: var(--warm-paper); }
+.sheet.v-editorial .h-rail { border-bottom-width: 0.35cqh; }
+.sheet.v-editorial .h-headline { font-weight: 700; font-size: 5.2cqh; }
+.sheet.v-editorial .cell { border-right: 1px solid #ece6da; }
+.sheet.v-editorial .cell.hour-end { border-bottom: 1px solid #c8c0b3; }
+.sheet.v-editorial .class {
+  background: transparent !important;
+  color: var(--ink) !important;
+  border-left: 0.45cqh solid var(--c, var(--ink));
+  padding-left: 0.7cqi;
+  border-radius: 0;
+}
+.sheet.v-editorial .class .c-age,
+.sheet.v-editorial .class .c-time { color: var(--ink-2); }
+
+/* B&W edition ; designed for the office black-ink-only laser printer.
+   Use case is "quick reference, throwaway" prints; the colored edition
+   goes to the print shop for the final version.
+
+   Print-shop best practices for single-ink laser:
+   - No fills. Light grays (#f0f0f0..) dither to pure white below the
+     printer's threshold; mid grays render as a grainy halftone and
+     waste a lot of toner. So we ship pure line art: borders + text.
+   - Strong typography hierarchy. The discipline name is the anchor;
+     bumping it to weight 700 makes each card read at a glance.
+   - The age label (KIDS / ADULTS / WOMEN'S ONLY etc.) already lives
+     in the card text ; that's the at-a-glance age distinction. No
+     visual gray-coding is needed or appropriate for a B&W print.
+   - Diagonal hatching for empty hours stays because it's pure-black
+     line art (no halftone), so it prints cleanly.
+*/
+.sheet.v-bw { background: #fff; }
+.sheet.v-bw .cell.hour-end { border-bottom: 1px solid #888; }
+.sheet.v-bw .class {
+  background: #fff !important;
+  color: #000 !important;
+  border: 1.25px solid #000;
+  border-radius: 0;
+  padding: 0.5cqh 0.6cqi;
+}
+.sheet.v-bw .class .c-name {
+  font-weight: 700;
+}
+.sheet.v-bw .class .c-age,
+.sheet.v-bw .class .c-time { color: #333; }
+/* In B&W there is no per-discipline color, so a row of identical black
+   swatches communicates nothing. Drop the swatch dot entirely; the
+   discipline name alone forms the legend. */
+.sheet.v-bw .legend .swatch::before { display: none; }
+.sheet.v-bw .legend .swatch { gap: 0; }
+
+/* ─────────── CLEANING SHEET (two fixed shift rows; reuses the sheet scaffold) ─────────── */
+.sheet.v-clean .clean-rowlabel {
+  border-right: 1.5px solid var(--ink);
+  border-bottom: 1px solid var(--hairline);
+  padding: 0.5cqh 0.5cqi;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: right;
+}
+.sheet.v-clean .clean-rowlabel.is-last { border-bottom: 0; }
+.sheet.v-clean .clean-rowlabel-name {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 1.9cqh;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+.sheet.v-clean .clean-rowlabel-time {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1.3cqh;
+  color: var(--ink-2);
+  letter-spacing: 0.02em;
+}
+/* Override .cell's flex so the task list fills the cell as a block. */
+.sheet.v-clean .clean-cell {
+  display: block;
+  padding: 0.5cqh 0.6cqi;
+  overflow: hidden;
+}
+/* Cells show the LINKED section/room names (the task detail lives in the
+   bottom By-Section list, not duplicated in the cell). */
+.sheet.v-clean .clean-cell-rooms {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4cqh;
+}
+.sheet.v-clean .clean-cell-room {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: 1.6cqh;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6cqi;
+}
+.sheet.v-clean .clean-cell-room::before {
+  content: '';
+  width: 0.9cqh;
+  height: 0.9cqh;
+  background: var(--ink);
+  border-radius: 50%;
+  flex: 0 0 auto;
+  align-self: center;
+}
+
+@media print {
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+  /* Keep the inline pixel sizing on .sheet (set by the renderer at
+     width*96 / height*96) ; it matches @page exactly at 96dpi and gives
+     container queries a definite size to compute cqh/cqi against. */
+  .sheet {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

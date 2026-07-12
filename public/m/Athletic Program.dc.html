@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>(function(){function w(){return (window.matchMedia&&window.matchMedia('(max-width:819px)').matches)||/Android|iPhone|iPod|Windows Phone|BlackBerry|Mobile/i.test(navigator.userAgent);}function g(){try{if(w())location.replace('mobile.html#train');}catch(e){}}g();var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(g,250);});})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0; background:#f5f4f1;}
+  *{box-sizing:border-box;}
+  ::selection{background:#ffd400; color:#211f1b;}
+  .ap-cta{transition:transform .15s ease;}
+  .ap-cta:hover{transform:translateY(-1px);}
+  .ap-ben{transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;}
+  .ap-ben:hover{transform:translateY(-3px); box-shadow:0 1px 3px rgba(28,25,23,.05),0 20px 38px -26px rgba(28,25,23,.5)!important; border-color:#ecd98a!important;}
+</style>
+</helmet>
+<div data-screen-label="Athletic Program page" style="--brand:#ffd400; min-height:100vh; background:#f5f4f1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b;">
+
+  <!-- HEADER -->
+  <dc-import name="SiteHeader" active="train" style="position:sticky; top:0; z-index:50;" hint-size="100%,66px"></dc-import>
+
+  <!-- HERO -->
+  <section style="background:#211f1b; color:#fff; position:relative; overflow:hidden;">
+    <div style="position:absolute; inset:0; background:radial-gradient(720px 380px at 88% -15%, rgba(255,212,0,.14), transparent 70%);"></div>
+    <div style="max-width:1200px; margin:0 auto; padding:60px 24px 56px; position:relative;">
+      <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.16em; text-transform:uppercase; color:var(--brand); margin-bottom:20px;">
+        <span style="width:22px; height:2px; background:var(--brand);"></span>Athletic Program · Serious training
+      </div>
+      <h1 style="font:800 clamp(36px,8.5vw,56px)/1.04 'Archivo',sans-serif; letter-spacing:-.022em; margin:0 0 18px; max-width:760px; text-wrap:balance;">Train like an athlete. Move like one everywhere.</h1>
+      <p style="font:400 16px/1.55 inherit; color:rgba(255,255,255,.72); max-width:620px; margin:0 0 30px;">Our core training stream: two 90-minute coached sessions a week that build strength, speed and agility for any sport — for ages 9–14 and 15+. Explosive and Speed League classes complement it, and membership adds unlimited open gym.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:42px;">
+        <a href="https://www.themonkeyvault.com/product/athletic-program-monthly-membership/NXP3HEIUKLFQXQT6JBVXMIDW" target="_blank" rel="noopener" class="ap-cta" style="display:inline-flex; align-items:center; gap:9px; background:var(--brand); color:#211f1b; font:800 15px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:15px 24px; border-radius:11px;">Join the program <i class="bi bi-arrow-up-right"></i></a>
+        <a href="#program" class="ap-cta" style="display:inline-flex; align-items:center; gap:9px; background:transparent; color:#fff; font:700 15px/1 'Archivo',sans-serif; text-decoration:none; padding:15px 22px; border-radius:11px; border:1.5px solid rgba(255,255,255,.25);">How it works</a>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:0; border-top:1px solid rgba(255,255,255,.14); padding-top:26px;">
+        <sc-for list="{{ heroStats }}" as="s" hint-placeholder-count="4">
+          <div style="padding:0 30px 0 0; margin-right:30px; border-right:1px solid rgba(255,255,255,.14);">
+            <div data-tmv-price-sub="{{ s.priceKey }}" style="font:800 24px/1 'Archivo',sans-serif; color:var(--brand);">{{ s.value }}</div>
+            <div style="font:600 12.5px/1.3 inherit; color:rgba(255,255,255,.6); margin-top:7px;">{{ s.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- JUMP NAV -->
+  <dc-import name="JumpNav" top="66" max-width="1200" items="The Program#program | Class Structure#structure | Schedule#schedule | Join Now#join" actions="Join now#https://www.themonkeyvault.com/product/athletic-program-monthly-membership/NXP3HEIUKLFQXQT6JBVXMIDW#bi bi-trophy" hint-size="100%,52px"></dc-import>
+
+  <main>
+    <!-- 01 — THE PROGRAM -->
+    <section id="program" style="max-width:1200px; margin:0 auto; padding:72px 24px 12px; scroll-margin-top:132px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start;">
+        <div>
+          <dc-import name="SectionHeader" num="01" eyebrow="The program" title="More than parkour — preparation for any sport." style="margin-bottom:16px;" hint-size="100%,80px"></dc-import>
+          <p style="font:400 15px/1.62 inherit; color:#54514b; margin:0 0 16px;">The Athletic Program is built around <strong style="color:#211f1b;">two 90-minute coached sessions each week</strong> — the core of the program — for ages 9–14 and 15+. It's designed to boost real athletic performance: you'll build the strength, speed and control that carry into any sport you choose.</p>
+          <p style="font:400 15px/1.62 inherit; color:#54514b; margin:0 0 16px;">Two complementary classes round it out — <strong style="color:#211f1b;">Explosive</strong> for power and <strong style="color:#211f1b;">Speed League</strong> for speed and agility — so you can train more of what your sport demands.</p>
+          <p style="font:400 15px/1.62 inherit; color:#54514b; margin:0;">Membership includes unlimited open gym to practice at your own pace, plus monthly evaluations with personalized feedback — so progress is tracked, not guessed.</p>
+        </div>
+        <div>
+          <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#e0a800; margin-bottom:16px;">Key benefits</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <sc-for list="{{ benefits }}" as="b" hint-placeholder-count="6">
+              <div class="ap-ben" style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 18px 19px; box-shadow:0 1px 3px rgba(28,25,23,.05),0 12px 28px -26px rgba(28,25,23,.4);">
+                <span style="display:inline-flex; width:36px; height:36px; border-radius:10px; background:color-mix(in srgb,var(--brand) 22%,#fff); align-items:center; justify-content:center; margin-bottom:12px;"><i class="bi {{ b.icon }}" style="font-size:17px; color:#b8870a;"></i></span>
+                <div style="font:800 14.5px/1.18 'Archivo',sans-serif; letter-spacing:-.005em; margin-bottom:6px;">{{ b.title }}</div>
+                <p style="font:400 12px/1.5 inherit; color:#6a6760; margin:0;">{{ b.body }}</p>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 — CLASS STRUCTURE -->
+    <section id="structure" style="max-width:1200px; margin:0 auto; padding:64px 24px 12px; scroll-margin-top:132px;">
+      <div style="margin-bottom:32px;">
+        <dc-import name="SectionHeader" num="02" eyebrow="Class structure" title="How a core session runs" description="Every 90-minute Athletic session follows the same five-part arc — warm up, build, refine, push, recover — so training stays structured and safe." hint-size="100%,130px"></dc-import>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px;">
+        <sc-for list="{{ structure }}" as="st" hint-placeholder-count="5">
+          <div style="position:relative; background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:24px 22px 22px; box-shadow:0 1px 3px rgba(28,25,23,.05),0 14px 30px -28px rgba(28,25,23,.4); display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; gap:11px; margin-bottom:13px;">
+              <span style="flex:none; width:34px; height:34px; border-radius:10px; background:#211f1b; color:var(--brand); display:flex; align-items:center; justify-content:center; font:800 15px/1 'Archivo',sans-serif;">{{ st.n }}</span>
+              <div style="font:800 16px/1.12 'Archivo',sans-serif; letter-spacing:-.01em;">{{ st.title }}</div>
+            </div>
+            <p style="font:400 13px/1.55 inherit; color:#6a6760; margin:0;">{{ st.body }}</p>
+            <sc-if value="{{ st.hasTags }}" hint-placeholder-val="">
+              <div style="margin-top:14px;">
+                <dc-import name="Pill" variant="tinted" color="#e0a800" gap="7" items="{{ st.tags }}" hint-size="100%,32px"></dc-import>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- 03 — SCHEDULE -->
+    <section id="schedule" style="max-width:1200px; margin:0 auto; padding:64px 24px 12px; scroll-margin-top:132px;">
+      <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:8px;">
+        <div>
+          <dc-import name="SectionHeader" num="03" eyebrow="Schedule" title="When we train" hint-size="100%,80px"></dc-import>
+        </div>
+      </div>
+      <p style="font:400 14px/1.55 inherit; color:#6a6760; max-width:640px; margin:0 0 18px;">Classes run Monday–Friday; open gym is available every day. Exact class times live on the real-time schedule — always current, straight from the booking system.</p>
+
+      <!-- weekly cadence — times intentionally not repeated here; Schedule.dc.html is the SSOT -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px;">
+        <sc-for list="{{ classTypes }}" as="ct" hint-placeholder-count="3">
+          <div style="display:flex; align-items:flex-start; gap:13px; background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:16px 18px;">
+            <span style="flex:none; width:14px; height:14px; border-radius:4px; background:{{ ct.color }}; margin-top:2px;"></span>
+            <div>
+              <div style="font:800 15px/1.1 'Archivo',sans-serif; color:#211f1b;">{{ ct.name }}</div>
+              <div style="font:700 12px/1.3 'Archivo',sans-serif; color:#5b5853; margin-top:6px;">{{ ct.days }}</div>
+              <div style="font:500 12px/1.4 inherit; color:#8a877f; margin-top:4px;">{{ ct.note }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:18px;">
+        <div style="font:500 12px/1.5 inherit; color:#9b9890;">Sessions start on the hour · no entry after 15 minutes late · membership includes unlimited open gym.</div>
+        <a href="Schedule.dc.html" class="ap-cta" style="display:inline-flex; align-items:center; gap:9px; background:var(--brand); color:#211f1b; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:13px 20px; border-radius:11px;">View full schedule <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </section>
+
+    <!-- 04 — JOIN NOW -->
+    <section id="join" style="max-width:1200px; margin:0 auto; padding:64px 24px 80px; scroll-margin-top:132px;">
+      <div style="display:grid; grid-template-columns:.95fr 1.05fr; gap:32px; align-items:stretch;">
+        <div>
+          <dc-import name="SectionHeader" num="04" eyebrow="Join now" title="Start any time. Stay as long as you keep growing." description="Sign up for the year-round program and start training right away — you can enroll at any point in the year. For real, visible progress, we recommend committing to at least three months." style="margin-bottom:18px;" hint-size="100%,130px"></dc-import>
+          <div style="display:flex; flex-direction:column; gap:13px;">
+            <sc-for list="{{ joinPoints }}" as="j" hint-placeholder-count="3">
+              <div style="display:flex; align-items:flex-start; gap:12px;">
+                <i class="bi bi-check-circle-fill" style="color:#b8870a; font-size:16px; margin-top:2px; flex:none;"></i>
+                <span style="font:500 14px/1.5 inherit; color:#3a3833;">{{ j }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:16px;">
+        <div style="background:#fff; border:2px solid var(--brand); border-radius:20px; overflow:hidden; box-shadow:0 1px 3px rgba(28,25,23,.05),0 26px 50px -32px rgba(28,25,23,.5); display:flex; flex-direction:column; flex:1;">
+          <div style="background:#211f1b; color:#fff; padding:26px 30px;">
+            <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--brand); margin-bottom:14px;">30-day membership</div>
+            <div style="display:flex; align-items:flex-end; gap:8px;">
+              <span data-tmv-price="athleticMonthly" style="font:800 46px/1 'Archivo',sans-serif; letter-spacing:-.02em;">$150</span>
+              <span style="font:700 15px/1 'Archivo',sans-serif; color:rgba(255,255,255,.6); padding-bottom:7px;">/ month</span>
+            </div>
+            <p style="font:400 12.5px/1.5 inherit; color:rgba(255,255,255,.6); margin:12px 0 0;">Year-round · cancel or renew on your terms · half-price class add-on ($5 instead of $10) to try any other class.</p>
+          </div>
+          <div style="padding:26px 30px 30px; display:flex; flex-direction:column; flex:1;">
+            <div style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#9b9890; margin-bottom:14px;">Two ways to pay</div>
+            <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:24px;">
+              <sc-for list="{{ payOptions }}" as="o" hint-placeholder-count="2">
+                <div style="display:flex; align-items:flex-start; gap:12px; padding:15px 16px; border:1px solid #ebe9e4; border-radius:13px;">
+                  <i class="bi {{ o.icon }}" style="font-size:18px; color:#b8870a; flex:none; margin-top:1px;"></i>
+                  <div>
+                    <div style="font:800 13.5px/1.15 'Archivo',sans-serif; margin-bottom:4px;">{{ o.title }}</div>
+                    <div data-tmv-price-sub="{{ o.priceKey }}" style="font:400 12px/1.5 inherit; color:#6a6760;">{{ o.body }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <a href="https://www.themonkeyvault.com/product/athletic-program-monthly-membership/NXP3HEIUKLFQXQT6JBVXMIDW" target="_blank" rel="noopener" class="ap-cta" style="margin-top:auto; display:inline-flex; align-items:center; justify-content:center; gap:9px; background:#211f1b; color:#fff; font:800 14px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:16px 22px; border-radius:12px;">Sign up &amp; start training <i class="bi bi-arrow-up-right"></i></a>
+            <p style="font:400 11.5px/1.5 inherit; color:#9b9890; margin:13px 0 0; text-align:center;">New here? You'll sign the waiver at sign-up. A coach confirms you're ready before your first session.</p>
+          </div>
+        </div>
+
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:20px 22px; display:flex; align-items:center; gap:18px; box-shadow:0 1px 3px rgba(28,25,23,.05),0 14px 30px -28px rgba(28,25,23,.4);">
+          <div style="flex:1;">
+            <div style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#9b9890; margin-bottom:9px;">Fallback option</div>
+            <div style="font:800 16px/1.12 'Archivo',sans-serif; letter-spacing:-.01em;">10× Class Pass</div>
+            <p style="font:400 12px/1.5 inherit; color:#6a6760; margin:6px 0 0;">For athletes training about once a week — ten classes to use whenever, no membership.</p>
+          </div>
+          <div style="flex:none; text-align:right;">
+            <div data-tmv-price="athleticGear" style="font:800 26px/1 'Archivo',sans-serif; color:#211f1b;">$275</div>
+            <a href="https://www.themonkeyvault.com/s/order" target="_blank" rel="noopener" class="ap-cta" style="display:inline-flex; align-items:center; gap:6px; font:800 11.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; color:#211f1b; text-decoration:none; margin-top:9px; border-bottom:2px solid var(--brand); padding-bottom:3px;">Get the pass <i class="bi bi-arrow-up-right"></i></a>
+          </div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA BAND -->
+    <section style="max-width:1200px; margin:0 auto; padding:0 24px 80px;">
+      <dc-import name="CtaBand" hint-size="100%,130px"></dc-import>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <dc-import name="SiteFooter" hint-size="100%,360px"></dc-import>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    import('./site-config.js').then(m => m.applySiteConfig()).catch(e => console.warn(e));
+  }
+  renderVals() {
+    const EX = '#e23b3b', AT = '#ffd400', SL = '#ef5a4e';
+    return {
+      heroStats: [
+        { value: '2 × 90 min', label: 'core sessions each week' },
+        { value: '9–14 & 15+', label: 'two age groups' },
+        { value: 'Unlimited', label: 'open gym access' },
+        { value: '$150', priceKey: 'athleticMonthly', label: 'per month · year-round' },
+      ],
+      benefits: [
+        { icon: 'bi-arrow-up-circle', title: 'Jumping power', body: 'Jump higher and further — basketball, volleyball, track & field.' },
+        { icon: 'bi-lightning-charge', title: 'Agility & speed', body: 'Quick reflexes and nimble footwork for soccer, tennis, martial arts.' },
+        { icon: 'bi-shield-check', title: 'Body resilience', body: 'A body that absorbs impact, lowering injury risk in any activity.' },
+        { icon: 'bi-fire', title: 'Strength & endurance', body: 'The stamina demanding sports like football, rugby and gymnastics need.' },
+        { icon: 'bi-bullseye', title: 'Coordination', body: 'Sharper body control for dance, skateboarding and climbing.' },
+        { icon: 'bi-graph-up-arrow', title: 'Faster learning', body: 'Skills that make picking up any new sport quicker.' },
+      ],
+      structure: [
+        { n: '1', title: 'Intro / Warm Up', body: 'Dynamic movement and a quick overview of the day to prime body and mind.', tags: '', hasTags: false },
+        { n: '2', title: 'Physical Conditioning', body: 'Strength and endurance work — overall fitness plus parkour-specific power.', tags: '', hasTags: false },
+        { n: '3', title: 'Technical Foundations', body: 'Core parkour technique that builds the base for advanced movement.', tags: '', hasTags: false },
+        { n: '4', title: 'Theme of the Day', body: 'A focused block that rotates each session:', tags: 'Challenges | Speed runs | Acrobatics | Fluidity', hasTags: true },
+        { n: '5', title: 'Stretching / Outro', body: 'Stretching and recovery, plus a preview of what the next class brings.', tags: '', hasTags: false },
+      ],
+      classTypes: [
+        { name: 'Athletic', color: AT, days: 'Tue & Thu evenings · two age brackets', note: 'Core · 2 × 90 min/week · 9–14 & 15+' },
+        { name: 'Explosive', color: EX, days: 'Mon & Fri, late afternoon', note: 'Complementary · power · teens & adults' },
+        { name: 'Speed League', color: SL, days: 'Wed evenings · two age brackets', note: 'Complementary · speed & agility · 9–14 & 15+' },
+      ],
+      joinPoints: [
+        'Enroll at any time — the program runs all year.',
+        'We recommend at least three months to truly see progress.',
+        'Unlimited open gym and monthly evaluations included.',
+'Half-price class add-on — just $5 (normally $10) to drop into any other group class.',
+      ],
+      payOptions: [
+        { icon: 'bi-arrow-repeat', title: 'Automatic monthly', priceKey: 'athleticMonthly', body: 'Set it and forget it — uninterrupted access at $150 / month.' },
+        { icon: 'bi-credit-card', title: 'One-time, renew anytime', body: 'Pay for a month, renew whenever you like. Same price, full flexibility.' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

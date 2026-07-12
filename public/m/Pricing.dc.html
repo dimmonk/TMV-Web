@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>(function(){function w(){return (window.matchMedia&&window.matchMedia('(max-width:819px)').matches)||/Android|iPhone|iPod|Windows Phone|BlackBerry|Mobile/i.test(navigator.userAgent);}function g(){try{if(w())location.replace('mobile.html#pricing');}catch(e){}}g();var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(g,250);});})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="./public/css/price-list-sheet.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://us-central1-tmv-management.cloudfunctions.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0; background:#f5f4f1;}
+  *{box-sizing:border-box;}
+  ::selection{background:var(--brand,#ffd400); color:#211f1b;}
+  .tmv-nav a:hover{color:#fff!important;}
+  .tmv-buy:hover{gap:11px!important;}
+  .tmv-buy{transition:gap .18s ease;}
+  .tmv-foot a:hover{color:var(--brand,#ffd400)!important;}
+  .tmv-soc:hover{background:var(--brand,#ffd400)!important; color:#211f1b!important;}
+
+  /* ══ Production embed chrome — verbatim from TMV-Management
+     public/price-list-embed.html (html/body reset omitted). ══ */
+  .pl-embed-shell {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+  .pl-embed-desktop { width: 100%; }
+  .pl-embed-desktop #pl-embed-root { width: 100%; }
+  .pl-embed-error {
+    padding: 40px;
+    text-align: center;
+    color: #b03030;
+    background: #fff;
+    border-radius: 4px;
+  }
+</style>
+</helmet>
+<div data-screen-label="Pricing page" style="--brand: {{ brand }}; min-height:100vh; background:#f5f4f1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b;">
+
+  <!-- HEADER -->
+  <dc-import name="SiteHeader" active="pricing" style="position:sticky; top:0; z-index:50;" hint-size="100%,66px"></dc-import>
+
+  <!-- HERO -->
+  <section style="background:#211f1b; color:#fff; position:relative; overflow:hidden;">
+    <div style="position:absolute; inset:0; background:radial-gradient(680px 360px at 88% -15%, rgba(255,212,0,.13), transparent 70%);"></div>
+    <div style="max-width:1200px; margin:0 auto; padding:58px 24px 56px; position:relative;">
+      <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--brand,#ffd400); margin-bottom:18px;">
+        <span style="width:22px; height:2px; background:var(--brand,#ffd400);"></span>Passes, packs &amp; memberships
+      </div>
+      <h1 style="font:800 clamp(34px,8vw,54px)/1.02 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 16px; max-width:760px;">One price list. Buy before you arrive.</h1>
+      <p style="font:400 16px/1.55 inherit; color:rgba(255,255,255,.72); max-width:560px; margin:0 0 8px;">Every option below is live from our booking system and checks out securely in our online store. Set up your pass before you get to the gym and skip the front-desk line.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; margin:24px 0 0;">
+        <a href="Store.dc.html" style="display:inline-flex; align-items:center; gap:9px; background:var(--brand,#ffd400); color:#211f1b; font:800 14px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:14px 22px; border-radius:11px;">Buy passes &amp; memberships <i class="bi bi-arrow-right"></i></a>
+        <a href="BookNow.dc.html" style="display:inline-flex; align-items:center; gap:9px; background:transparent; color:#fff; font:700 14px/1 'Archivo',sans-serif; text-decoration:none; padding:14px 20px; border-radius:11px; border:1.5px solid rgba(255,255,255,.25);">Book a session instead</a>
+      </div>
+      <p style="font:500 13px/1.5 inherit; color:rgba(255,255,255,.5); margin:18px 0 0;">All prices in CAD, HST included. Pre-paid packs are valid 10–20 months depending on size.</p>
+    </div>
+  </section>
+
+  <!-- LIVE PRICE LIST — production renderer running natively (no iframe).
+       Same price-list-renderer.js + price-list-sheet.css the members app
+       uses; data from getPublicPriceList (SSOT). -->
+  <main style="max-width:1440px; margin:0 auto; padding:44px 20px 24px;">
+    <div class="pl-embed-shell">
+      <div class="pl-embed-desktop">
+        <div id="pl-embed-root"></div>
+      </div>
+    </div>
+
+    <p style="font:500 12.5px/1.5 inherit; color:#9b9890; text-align:center; margin:16px 0 44px;">
+      <i class="bi bi-arrow-repeat" style="color:var(--brand,#ffd400);"></i>&nbsp; Prices update automatically from our booking system — this is the same list our front desk prints.
+    </p>
+
+    <!-- STORE CTA — where purchase intent peaks -->
+    <section style="max-width:1120px; margin:0 auto 44px;">
+      <dc-import name="CtaBand" brand="{{ brand }}" cards="dark :: Buy before you arrive :: Passes &amp; memberships — online store :: bi-bag-check-fill :: Store.dc.html || light :: Booking a time instead? :: Book a session :: bi-calendar-check :: BookNow.dc.html" hint-size="100%,110px"></dc-import>
+    </section>
+
+    <!-- GIFT CARDS -->
+    <section style="max-width:1120px; margin:0 auto 8px;">
+      <a href="https://squareup.com/gift/4PQGSAK7CK7FB/order" target="_blank" rel="noopener" style="text-decoration:none; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; background:#211f1b; color:#fff; border-radius:18px; padding:34px 38px;">
+        <div style="display:flex; align-items:center; gap:18px;">
+          <span style="flex:none; width:52px; height:52px; border-radius:14px; background:rgba(255,255,255,.1); display:flex; align-items:center; justify-content:center;"><i class="bi bi-gift-fill" style="font-size:24px; color:var(--brand,#ffd400);"></i></span>
+          <div>
+            <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.13em; text-transform:uppercase; color:var(--brand,#ffd400); margin-bottom:8px;">The easy gift</div>
+            <div style="font:800 24px/1.05 'Archivo',sans-serif; letter-spacing:-.012em;">Gift cards — any amount</div>
+          </div>
+        </div>
+        <span class="tmv-buy" style="display:inline-flex; align-items:center; gap:9px; background:var(--brand,#ffd400); color:#211f1b; font:800 13.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; padding:14px 22px; border-radius:11px;">Buy a gift card <i class="bi bi-arrow-up-right"></i></span>
+      </a>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <dc-import name="SiteFooter" hint-size="100%,360px"></dc-import>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;brand&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd400&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ffd400&quot;,&quot;#2196f3&quot;,&quot;#f44336&quot;,&quot;#2e9e4f&quot;,&quot;#8c52ff&quot;]}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    import('./site-config.js').then(m => m.applySiteConfig()).catch(e => console.warn(e));
+    // Production renderer — same module the live iframe page runs. No URL
+    // param overrides passed: the admin's saved priceListDisplay defaults
+    // propagate, exactly like the embed.
+    import('./public/js/standalone/price-list-renderer.js').then(async m => {
+      const root = document.getElementById('pl-embed-root');
+      if (!root) return;
+      try {
+        await m.renderPriceListSheet(root, {});
+      } catch (err) {
+        console.error('[price-list] render failed', err);
+        root.innerHTML = '<div class="pl-embed-error">Unable to load price list. Please refresh.</div>';
+      }
+    }).catch(e => console.error('[price-list] module load failed', e));
+  }
+
+  renderVals() {
+    return { brand: this.props.brand ?? '#ffd400' };
+  }
+}
+</script>
+</body>
+</html>

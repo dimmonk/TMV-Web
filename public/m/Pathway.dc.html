@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>html,body{margin:0;}</style>
+</helmet>
+<div style="--brand: {{ brand }}; background:#211f1b; border-radius:18px; box-shadow:0 1px 3px rgba(28,25,23,.05),0 18px 40px -30px rgba(28,25,23,.4); padding:28px 30px 30px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;">
+  <div style="display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; margin-bottom:8px;">
+    <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#211f1b; background:var(--brand); padding:8px 12px; border-radius:8px;">{{ kicker }}</div>
+    <h3 style="font:800 22px/1.1 'Archivo',sans-serif; letter-spacing:-.01em; margin:0; color:#fff;">{{ title }}</h3>
+    <p style="font:400 13px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#a8a49b; margin:0; flex-basis:100%; max-width:700px;">{{ intro }}</p>
+  </div>
+
+  <div style="display:flex; flex-wrap:wrap; align-items:stretch; gap:16px; margin-top:24px;">
+    <div style="flex:1.5; min-width:250px; display:flex; flex-direction:column;">
+      <div style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#78746c; margin-bottom:10px;">01 · Start here — pick one</div>
+      <div style="display:flex; flex-direction:column; gap:10px; flex:1;">
+        <sc-for list="{{ entries }}" as="e" hint-placeholder-count="2">
+          <sc-if value="{{ e.isCard }}" hint-placeholder-val="{{ true }}">
+            <div style="flex:1; background:#2b2823; border:1px solid #3a3631; border-radius:12px; padding:15px 17px;">
+              <div style="display:flex; align-items:center; gap:9px; margin-bottom:6px;"><span style="width:9px; height:9px; border-radius:50%; background:{{ e.color }}; flex:none;"></span><span style="font:800 15px/1 'Archivo',sans-serif; color:#fff;">{{ e.name }}</span><span style="margin-left:auto; font:700 9px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:color-mix(in srgb,{{ e.color }} 55%,#fff); background:color-mix(in srgb,{{ e.color }} 24%,#2b2823); padding:5px 9px; border-radius:999px;">{{ e.tag }}</span></div>
+              <p style="font:400 12.5px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#9c988f; margin:0;">{{ e.desc }}</p>
+            </div>
+          </sc-if>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="flex:none; display:flex; align-items:center; justify-content:center; color:#5c5851; min-width:36px;">
+      <i class="bi bi-arrow-right" style="font-size:24px;"></i>
+    </div>
+
+    <div style="flex:1.2; min-width:250px; display:flex; flex-direction:column;">
+      <div style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#bb9a45; margin-bottom:10px;">02 · When you're ready</div>
+      <div style="flex:1; background:linear-gradient(180deg,#fffaf0,#fff6e2); border-radius:12px; padding:16px 18px; display:flex; flex-direction:column;">
+        <div style="display:flex; align-items:center; gap:9px; margin-bottom:6px;"><span style="width:9px; height:9px; border-radius:50%; background:{{ destColor }}; flex:none;"></span><span style="font:800 16px/1 'Archivo',sans-serif; color:#211f1b;">{{ destName }}</span><span style="margin-left:auto; font:700 9px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#9a6e00; background:color-mix(in srgb,{{ destColor }} 16%,#fff); padding:5px 9px; border-radius:999px;">{{ destTag }}</span></div>
+        <p style="font:400 12.5px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#6a6760; margin:0;">{{ destDesc }}</p>
+        <div style="display:flex; gap:8px; align-items:flex-start; margin-top:auto; padding-top:10px; border-top:1px solid #f0e2bd;"><i class="bi bi-person-check-fill" style="color:#e0a800; font-size:13px; margin-top:1px; flex:none;"></i><span style="font:600 12.5px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#3a3833;">{{ destNote }}</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {&quot;width&quot;: 980, &quot;height&quot;: 320},
+  &quot;kicker&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;The path&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;title&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Start with the basics, then level up&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;intro&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Almost everyone begins with Recreational or Private. The Athletic Program is the next step for students who want to train seriously — a recommendation, not a locked door.&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;gateLabel&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Build the basics&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;brand&quot;: {&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd400&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ffd400&quot;,&quot;#2196f3&quot;,&quot;#f44336&quot;]}
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props;
+    return {
+      brand: p.brand ?? '#ffd400',
+      kicker: p.kicker ?? 'The path',
+      title: p.title ?? 'Start with the basics, then level up',
+      intro: p.intro ?? 'Almost everyone begins with Recreational or Private. The Athletic Program is the next step for students who want to train seriously — a recommendation, not a locked door.',
+      gateLabel: p.gateLabel ?? 'Build the basics',
+      entries: [
+        { isCard:true, name:'Recreational', tag:'Parkour', color:'#2196f3', desc:'Drop-in play & fundamentals, at your own pace.' },
+        { isCard:true, name:'Private', tag:'1-on-1', color:'#f44336', desc:'Coaching built around you — the fastest way to build a base.' },
+      ],
+      destColor:'#e9a300',
+      destName: p.destName ?? 'Athletic Program',
+      destTag:'Serious training',
+      destDesc: p.destDesc ?? 'Structured, athlete-level coaching for committed students — not a place to just play around.',
+      destNote: p.destNote ?? "Join once you've built a base in Recreational or Private — a coach will let you know when you're ready.",
+    };
+  }
+}
+</script>
+</body>
+</html>

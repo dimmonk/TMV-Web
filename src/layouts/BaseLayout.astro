@@ -13,9 +13,21 @@ interface Props {
   brand?: string;
   /** absolute-or-relative OG image; defaults to the logo */
   ogImage?: string;
+  /** section hash to deep-link into the app-style mobile UI (m/mobile.html#hash) */
+  mobileHash?: string;
 }
 
-const { title, description, active = '', brand = '#ffd400', ogImage } = Astro.props;
+const { title, description, active = '', brand = '#ffd400', ogImage, mobileHash } = Astro.props;
+
+// Phones get the dedicated app-style mobile UI (design tool's mobile.html).
+// Desktop stays on these SEO-rich Astro pages. Deep-link to the matching
+// mobile section where we can.
+const activeToHash: Record<string, string> = {
+  '': 'home', train: 'train', camps: 'camps', events: 'events',
+  pricing: 'pricing', store: 'store', about: 'about',
+};
+const mHash = mobileHash ?? activeToHash[active] ?? 'home';
+const mobileUrl = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/m/mobile.html#${mHash}`;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const image = new URL(ogImage ?? url('assets/tmvlogo.png'), Astro.site).href;
@@ -61,6 +73,22 @@ const jsonLd = {
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <!-- Device switch: phones/narrow viewports get the app-style mobile UI;
+         desktop stays on this SEO-rich page. Runs before render to avoid a flash. -->
+    <script is:inline define:vars={{ mobileUrl }}>
+      (function () {
+        function wantsMobile() {
+          try {
+            return (window.matchMedia && window.matchMedia('(max-width:819px)').matches) ||
+              /Android|iPhone|iPod|Windows Phone|BlackBerry|Mobile/i.test(navigator.userAgent);
+          } catch (e) { return false; }
+        }
+        function go() { if (wantsMobile()) location.replace(mobileUrl); }
+        go();
+        var t;
+        window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(go, 250); });
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />

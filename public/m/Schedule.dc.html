@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>(function(){function w(){return (window.matchMedia&&window.matchMedia('(max-width:819px)').matches)||/Android|iPhone|iPod|Windows Phone|BlackBerry|Mobile/i.test(navigator.userAgent);}function g(){try{if(w())location.replace('mobile.html#schedule');}catch(e){}}g();var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(g,250);});})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="./public/css/print-schedule-sheet.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://us-central1-tmv-management.cloudfunctions.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Oswald:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0; background:#f5f4f1;}
+  *{box-sizing:border-box;}
+  ::selection{background:var(--brand,#ffd400); color:#211f1b;}
+  .tmv-nav a:hover{color:#fff!important;}
+  .tmv-foot a:hover{color:var(--brand,#ffd400)!important;}
+  .tmv-soc:hover{background:var(--brand,#ffd400)!important; color:#211f1b!important;}
+
+  /* ══ Production embed chrome — verbatim from TMV-Management
+     public/schedule-embed-sheet.html (html/body reset omitted;
+     handled by this page). ══ */
+  :root {
+    --emb-ink: #14110f;
+    --emb-ink-2: #3a3530;
+    --emb-paper: #ffffff;
+    --emb-hairline: #d8d2ca;
+    --emb-warm: #faf7f1;
+    --emb-classes: #2196f3;
+    --emb-athletic: #ffb82a;
+    --emb-opengym: #4caf50;
+  }
+  .embed-shell {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 12px;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    color: var(--emb-ink);
+  }
+  .embed-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin: 0 0 14px;
+  }
+  .embed-filter {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1.5px solid var(--emb-paper);
+    background: transparent;
+    color: var(--emb-paper);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .embed-filter:hover { background: rgba(255, 255, 255, 0.10); }
+  .embed-filter.active { background: var(--emb-paper); color: var(--emb-ink); }
+  .embed-filter[data-filter="all"],
+  .embed-filter[data-filter="kids"],
+  .embed-filter[data-filter="teens"],
+  .embed-filter[data-filter="adults"] {
+    border-color: var(--emb-classes);
+    color: var(--emb-classes);
+  }
+  .embed-filter[data-filter="all"]:hover,
+  .embed-filter[data-filter="kids"]:hover,
+  .embed-filter[data-filter="teens"]:hover,
+  .embed-filter[data-filter="adults"]:hover {
+    background: color-mix(in srgb, var(--emb-classes) 22%, transparent);
+  }
+  .embed-filter[data-filter="all"].active,
+  .embed-filter[data-filter="kids"].active,
+  .embed-filter[data-filter="teens"].active,
+  .embed-filter[data-filter="adults"].active {
+    background: var(--emb-classes);
+    border-color: var(--emb-classes);
+    color: #fff;
+  }
+  .embed-filter[data-filter="athletic"] {
+    border-color: var(--emb-athletic);
+    color: var(--emb-athletic);
+  }
+  .embed-filter[data-filter="athletic"]:hover {
+    background: color-mix(in srgb, var(--emb-athletic) 22%, transparent);
+  }
+  .embed-filter[data-filter="athletic"].active {
+    background: var(--emb-athletic);
+    border-color: var(--emb-athletic);
+    color: var(--emb-ink);
+  }
+  .embed-filter[data-filter="open-gym"] {
+    border-color: var(--emb-opengym);
+    color: var(--emb-opengym);
+  }
+  .embed-filter[data-filter="open-gym"]:hover {
+    background: color-mix(in srgb, var(--emb-opengym) 22%, transparent);
+  }
+  .embed-filter[data-filter="open-gym"].active {
+    background: var(--emb-opengym);
+    border-color: var(--emb-opengym);
+    color: #fff;
+  }
+  .embed-desktop {
+    width: 100%;
+    aspect-ratio: 11 / 8.5;
+  }
+  .embed-desktop #embed-desktop-root,
+  .embed-desktop #embed-desktop-root .sheet { width: 100%; height: 100%; }
+  .embed-desktop .sheet .class { transition: outline 0.1s ease; }
+  .embed-desktop .sheet .class:hover { outline: 2px solid var(--emb-ink); outline-offset: -2px; }
+  .embed-mobile { display: none; }
+  .embed-mobile .m-day { margin: 0 0 18px; }
+  .embed-mobile .m-day-name {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--emb-ink); /* light host: the stock embed CSS assumed a dark background */
+    margin: 0 0 8px;
+    padding: 0 0 6px;
+    border-bottom: 1px solid var(--emb-hairline);
+  }
+  .embed-mobile .m-card {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    line-height: 1.3;
+    padding: 14px 16px;
+    margin: 0 0 8px;
+    border: 1.25px solid var(--emb-ink);
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    background: var(--emb-paper);
+    color: var(--emb-ink);
+  }
+  .embed-mobile .m-card:hover { background: var(--emb-warm); }
+  .embed-mobile .m-name {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .embed-mobile .m-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--emb-ink-2);
+  }
+  .embed-mobile .m-time {
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 500;
+  }
+  .embed-mobile .m-dot { opacity: 0.5; }
+  .embed-mobile .m-age {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .embed-mobile .m-tag {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 1px 6px;
+    border-radius: 1px;
+    background: var(--emb-paper);
+    border: 1px solid currentColor;
+  }
+  .embed-mobile .m-tag-new { color: #1f6f3f; }
+  .embed-mobile .m-tag-end { color: #8b1f1f; }
+  .embed-mobile .m-cancelled .m-name { text-decoration: line-through; }
+  .embed-mobile .m-cancelled { opacity: 0.55; }
+  .embed-mobile .m-empty {
+    text-align: center;
+    color: var(--emb-ink-2);
+    font-style: italic;
+    padding: 24px;
+  }
+  .embed-mobile .m-card.m-v-color .m-meta { color: inherit; opacity: 0.85; }
+  .embed-mobile .m-card.m-v-color .m-meta .m-time,
+  .embed-mobile .m-card.m-v-color .m-meta .m-age { color: inherit; }
+  .embed-mobile .m-card.m-v-editorial {
+    background: var(--emb-warm);
+    border-left: 5px solid var(--c, var(--emb-ink));
+  }
+  .embed-mobile .m-card.m-v-bw .m-name { font-weight: 700; }
+  .embed-error {
+    padding: 40px;
+    text-align: center;
+    color: #b03030;
+  }
+  .popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 17, 15, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 9999;
+    animation: popup-fade 0.15s ease;
+  }
+  .popup-overlay.is-open { display: flex; }
+  @keyframes popup-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .popup {
+    background: var(--emb-paper);
+    max-width: 480px;
+    width: 100%;
+    border-radius: 4px;
+    padding: 28px 28px 24px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    position: relative;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    color: var(--emb-ink);
+  }
+  .popup-stripe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    background: var(--emb-ink);
+  }
+  .popup-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: transparent;
+    border: 0;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--emb-ink-2);
+    padding: 4px 8px;
+  }
+  .popup-close:hover { color: var(--emb-ink); }
+  .popup-title {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin: 12px 36px 14px 0;
+  }
+  .popup-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 8px 0;
+    font-size: 14px;
+    color: var(--emb-ink-2);
+  }
+  .popup-row-label {
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--emb-ink-2);
+    min-width: 56px;
+  }
+  .popup-row-value {
+    font-family: 'Roboto', sans-serif;
+    color: var(--emb-ink);
+    font-size: 15px;
+  }
+  .popup-time { font-family: 'Roboto Mono', monospace; }
+  .popup-age {
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .popup-desc-wrap { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--emb-hairline); }
+  .popup-desc {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--emb-ink);
+  }
+  .popup-desc strong { font-weight: 600; color: var(--emb-ink); }
+  .popup-desc em     { font-style: italic; }
+  .popup-desc code   {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    background: var(--emb-warm);
+    border: 1px solid var(--emb-hairline);
+    border-radius: 3px;
+    padding: 1px 5px;
+  }
+  .popup-desc a      {
+    color: var(--emb-classes);
+    text-decoration: underline;
+  }
+  .popup-desc ul     {
+    margin: 6px 0 6px 18px;
+    padding-left: 0;
+  }
+  .popup-desc li     {
+    margin: 2px 0;
+  }
+  @media (max-width: 768px) {
+    .embed-desktop { display: none; }
+    .embed-mobile { display: block; }
+    .embed-shell { padding: 10px; }
+    .embed-filter { padding: 6px 12px; font-size: 12px; }
+  }
+</style>
+</helmet>
+<div data-screen-label="Schedule page" style="--brand: {{ brand }}; min-height:100vh; background:#f5f4f1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b;">
+
+  <!-- HEADER -->
+  <dc-import name="SiteHeader" active="" style="position:sticky; top:0; z-index:50;" hint-size="100%,66px"></dc-import>
+
+  <!-- HERO -->
+  <section style="background:#211f1b; color:#fff; position:relative; overflow:hidden;">
+    <div style="position:absolute; inset:0; background:radial-gradient(680px 360px at 88% -15%, rgba(255,212,0,.13), transparent 70%);"></div>
+    <div style="max-width:1200px; margin:0 auto; padding:58px 24px 50px; position:relative;">
+      <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--brand,#ffd400); margin-bottom:18px;">
+        <span style="width:22px; height:2px; background:var(--brand,#ffd400);"></span>Group classes · live timetable
+      </div>
+      <h1 style="font:800 clamp(34px,8vw,54px)/1.04 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 16px; max-width:760px;">The full class schedule, always up to date.</h1>
+      <p style="font:400 16px/1.55 inherit; color:rgba(255,255,255,.72); max-width:560px; margin:0 0 22px;">Every recreational, specialized and athletic class — straight from our booking system. Find a time that works and reserve your spot in a couple of taps.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:12px;">
+        <a href="Pricing.dc.html" style="display:inline-flex; align-items:center; gap:9px; background:var(--brand,#ffd400); color:#211f1b; font:800 14px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:14px 22px; border-radius:11px;">See the price list <i class="bi bi-arrow-right"></i></a>
+        <a href="Train.dc.html" style="display:inline-flex; align-items:center; gap:9px; background:transparent; color:#fff; font:700 14px/1 'Archivo',sans-serif; text-decoration:none; padding:14px 20px; border-radius:11px; border:1.5px solid rgba(255,255,255,.25);">Explore the classes</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE SCHEDULE — production embed running natively (no iframe).
+       DOM verbatim from TMV-Management public/schedule-embed-sheet.html;
+       rendered by the same print-schedule-sheet.js used for printed PDFs. -->
+  <main style="max-width:1440px; margin:0 auto; padding:40px 20px 20px;">
+    <div class="embed-shell">
+      <div class="embed-filters" id="embed-filters">
+        <button class="embed-filter active" data-filter="all">All Classes</button>
+        <button class="embed-filter" data-filter="kids">Parent &amp; Child &middot; Kids</button>
+        <button class="embed-filter" data-filter="teens">Teens</button>
+        <button class="embed-filter" data-filter="adults">Adults</button>
+        <button class="embed-filter" data-filter="athletic">Athletic Program</button>
+        <button class="embed-filter" data-filter="open-gym">Open Gym</button>
+      </div>
+
+      <!-- Desktop: full sheet, 11:8.5 letter-landscape aspect -->
+      <div class="embed-desktop">
+        <div id="embed-desktop-root"></div>
+      </div>
+
+      <!-- Mobile: day-grouped class list -->
+      <div class="embed-mobile" id="embed-mobile-root"></div>
+    </div>
+
+    <p style="font:500 12.5px/1.5 inherit; color:#9b9890; text-align:center; margin:20px 0 44px;">
+      <i class="bi bi-arrow-repeat" style="color:var(--brand,#ffd400);"></i>&nbsp; Times update automatically from our booking system — the same schedule our front desk runs from.
+    </p>
+  </main>
+
+  <!-- Popup modal (verbatim from the embed page) -->
+  <div class="popup-overlay" id="embed-popup-overlay">
+    <div class="popup" id="embed-popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+      <div class="popup-stripe"></div>
+      <button class="popup-close" type="button" aria-label="Close">&times;</button>
+      <h2 class="popup-title" id="popup-title"></h2>
+      <div class="popup-row">
+        <span class="popup-row-label">Time</span>
+        <span class="popup-row-value popup-time"></span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-row-label">Age</span>
+        <span class="popup-row-value popup-age"></span>
+      </div>
+      <div class="popup-desc-wrap" style="display:none;">
+        <div class="popup-desc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <dc-import name="SiteFooter" hint-size="100%,360px"></dc-import>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;brand&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd400&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ffd400&quot;,&quot;#2196f3&quot;,&quot;#f44336&quot;,&quot;#2e9e4f&quot;,&quot;#8c52ff&quot;]}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    import('./site-config.js').then(m => m.applySiteConfig()).catch(e => console.warn(e));
+    // Production embed controller — same module the live iframe page runs.
+    import('./public/js/standalone/schedule-embed-sheet.js')
+      .then(m => m.initEmbed())
+      .catch(e => console.error('[schedule] embed init failed', e));
+  }
+
+  renderVals() {
+    return { brand: this.props.brand ?? '#ffd400' };
+  }
+}
+</script>
+</body>
+</html>

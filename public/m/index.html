@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Monkey Vault</title>
+<meta name="description" content="The Monkey Vault — Toronto's parkour & movement training centre. Open gym, classes, camps, parties and the Athletic Program.">
+<link rel="icon" href="assets/tmvlogo.png">
+<style>html,body{margin:0;height:100%;background:#211f1b;}</style>
+<script>
+  // Device router: phones/narrow viewports get the mobile UI; everything else
+  // gets the full desktop site. Both live at the same URL.
+  (function () {
+    try {
+      var isPhone = window.matchMedia && window.matchMedia('(max-width: 819px)').matches;
+      var uaPhone = /Android|iPhone|iPod|Windows Phone|BlackBerry|Mobile/i.test(navigator.userAgent);
+      var dest = (isPhone || uaPhone) ? 'mobile.html' : 'Home.dc.html';
+      location.replace(dest);
+    } catch (e) {
+      location.replace('Home.dc.html');
+    }
+  })();
+</script>
+</head>
+<body>
+  <noscript>
+    <div style="font-family:system-ui,sans-serif;color:#fff;text-align:center;padding:40px;">
+      <p>Choose a version:</p>
+      <p><a href="Home.dc.html" style="color:#ffd400;">Desktop site</a> &nbsp;·&nbsp; <a href="mobile.html" style="color:#ffd400;">Mobile site</a></p>
+    </div>
+  </noscript>
+</body>
+</html>

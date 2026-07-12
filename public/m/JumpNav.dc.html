@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  .jn-pill{transition:all .15s ease;}
+  .jn-pill:hover{background:#fff!important; color:#211f1b!important; border-color:#d8d4cc!important;}
+  .jn-act:hover{color:#211f1b!important; gap:8px!important;}
+  .jn-top{transition:transform .15s ease, box-shadow .15s ease;}
+  .jn-top:hover{transform:translateY(-3px); box-shadow:0 16px 32px -10px rgba(28,25,23,.6);}
+</style>
+</helmet>
+<div style="position:sticky; top:{{ topPx }}; z-index:40; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;">
+  <div style="background:rgba(245,244,241,.92); backdrop-filter:saturate(140%) blur(8px); -webkit-backdrop-filter:saturate(140%) blur(8px); border-bottom:1px solid #e7e5df;">
+  <div style="max-width:{{ maxWidthPx }}; margin:0 auto; padding:13px 24px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+    <span style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.13em; text-transform:uppercase; color:#9b9890; margin-right:6px; flex:none;">{{ label }}</span>
+    <sc-for list="{{ items }}" as="it" hint-placeholder-count="4">
+      <a href="#{{ it.anchor }}" onClick="{{ it.onClick }}" class="jn-pill" style="display:inline-flex; align-items:center; gap:7px; font:700 12.5px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; text-decoration:none; padding:7px 13px; border-radius:999px; white-space:nowrap; background:{{ it.bg }}; color:{{ it.fg }}; border:1px solid {{ it.bd }};"><sc-if value="{{ it.hasIcon }}" hint-placeholder-val=""><i class="{{ it.icon }}" style="font-size:12px; color:{{ it.iconColor }};"></i></sc-if>{{ it.label }}</a>
+    </sc-for>
+    <sc-if value="{{ hasActions }}" hint-placeholder-val="">
+      <div style="margin-left:auto; display:flex; gap:18px; flex:none;">
+        <sc-for list="{{ actions }}" as="a" hint-placeholder-count="2">
+          <a href="{{ a.href }}" target="{{ a.target }}" class="jn-act" style="display:inline-flex; align-items:center; gap:6px; font:700 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b; text-decoration:none; transition:gap .15s; white-space:nowrap;"><sc-if value="{{ a.hasIcon }}" hint-placeholder-val=""><i class="{{ a.icon }}" style="color:#e0a800;"></i></sc-if>{{ a.label }}</a>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+  </div>
+  <sc-if value="{{ showTop }}" hint-placeholder-val="">
+    <button class="jn-top" aria-label="Back to top" title="Back to top" onClick="{{ scrollTop }}" style="position:fixed; right:22px; bottom:22px; z-index:60; width:46px; height:46px; border-radius:50%; border:0; cursor:pointer; background:#211f1b; color:#ffd400; display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow:0 10px 26px -8px rgba(28,25,23,.55);"><i class="bi bi-arrow-up"></i></button>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1100,&quot;height&quot;:120},&quot;label&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Jump to&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;items&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Open Gym#opengym | Core Programs#core | Specialized#specialized | Partnerships#partnership&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;active&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;top&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:66,&quot;tsType&quot;:&quot;number&quot;},&quot;maxWidth&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1200,&quot;tsType&quot;:&quot;number&quot;},&quot;spy&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;actions&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { activeId: '', showTop: false };
+
+  split(str) {
+    return (str ?? '').toString().split('|').map(s => s.trim()).filter(Boolean)
+      .map(s => s.split('#').map(t => t.trim()));
+  }
+  parseItems(str) {
+    return this.split(str).map(seg => ({
+      label: seg[0] || '', anchor: (seg[1] || '').replace(/^#/, ''),
+      icon: seg[2] || '', color: seg[3] || '',
+    })).filter(i => i.anchor);
+  }
+  parseActions(str) {
+    return this.split(str).map(seg => {
+      const href = seg[1] || '#';
+      return { label: seg[0] || '', href, icon: seg[2] || '',
+        target: /^https?:/i.test(href) ? '_blank' : '_self' };
+    }).filter(a => a.label);
+  }
+
+  componentDidMount() {
+    const spyOn = !(this.props.spy === false || String(this.props.spy) === 'false');
+    const ids = this.parseItems(this.props.items).map(i => i.anchor);
+    this._els = spyOn ? ids.map(id => document.getElementById(id)).filter(Boolean) : [];
+    const top = parseInt(this.props.top, 10);
+    this._offset = (isNaN(top) ? 66 : top) + 90;
+    this._onScroll = () => {
+      const next = {};
+      // back-to-top button: show after ~2 screens of scroll
+      const showTop = window.scrollY > 700;
+      if (showTop !== this.state.showTop) next.showTop = showTop;
+      if (this._els.length) {
+        let current = this._els[0] ? this._els[0].id : '';
+        for (const el of this._els) {
+          if (el.getBoundingClientRect().top - this._offset <= 0) current = el.id;
+        }
+        if (current !== this.state.activeId) next.activeId = current;
+      }
+      if (Object.keys(next).length) this.setState(next);
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    this._onScroll();
+  }
+  componentWillUnmount() {
+    if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+  }
+
+  renderVals() {
+    const p = this.props;
+    const top = parseInt(p.top, 10);
+    const mw = parseInt(p.maxWidth, 10);
+    const raw = this.parseItems(p.items ?? '');
+    const initial = (p.active ?? '').toString().trim() || (raw[0] && raw[0].anchor) || '';
+    const activeId = this.state.activeId || initial;
+    const items = raw.map(it => {
+      const on = it.anchor === activeId;
+      return {
+        label: it.label, anchor: it.anchor,
+        icon: it.icon, hasIcon: !!it.icon,
+        iconColor: it.color || (on ? '#211f1b' : '#9b9890'),
+        bg: on ? '#fff' : 'transparent',
+        fg: on ? '#211f1b' : '#5b5853',
+        bd: on ? '#e0c64a' : 'transparent',
+        onClick: () => this.setState({ activeId: it.anchor }),
+      };
+    });
+    const actions = this.parseActions(p.actions ?? '');
+    return {
+      label: p.label ?? 'Jump to',
+      topPx: (isNaN(top) ? 66 : top) + 'px',
+      maxWidthPx: (isNaN(mw) ? 1200 : mw) + 'px',
+      items, actions, hasActions: actions.length > 0,
+      showTop: this.state.showTop,
+      scrollTop: () => {
+        // try smooth, fall back to instant where smooth scrollTo is a no-op
+        const y = window.scrollY;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => { if (window.scrollY >= y && y > 0) window.scrollTo(0, 0); }, 250);
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

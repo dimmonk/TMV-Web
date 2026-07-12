@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>(function(){function w(){return (window.matchMedia&&window.matchMedia('(max-width:819px)').matches)||/Android|iPhone|iPod|Windows Phone|BlackBerry|Mobile/i.test(navigator.userAgent);}function g(){try{if(w())location.replace('mobile.html#events');}catch(e){}}g();var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(g,250);});})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0; background:#f5f4f1;}
+  *{box-sizing:border-box;}
+  ::selection{background:var(--brand,#ffd400); color:#211f1b;}
+  .tmv-nav a:hover{color:#fff!important;}
+  .tmv-card{transition:transform .2s ease, box-shadow .2s ease;}
+  .tmv-card:hover{transform:translateY(-4px); box-shadow:0 1px 3px rgba(28,25,23,.05),0 26px 48px -26px rgba(28,25,23,.5)!important;}
+  .tmv-cta:hover{transform:translateY(-1px);}
+  .tmv-foot a:hover{color:var(--brand,#ffd400)!important;}
+  .tmv-soc:hover{background:var(--brand,#ffd400)!important; color:#211f1b!important;}
+  .faq-d summary{list-style:none;}
+  .faq-d summary::-webkit-details-marker{display:none;}
+  .faq-d summary:hover{background:#faf9f6!important;}
+  .faq-d .faq-chev{transition:transform .25s ease;}
+  .faq-d[open] .faq-chev{transform:rotate(180deg);}
+  .faq-d[open] summary{color:#211f1b!important;}
+  @media(max-width:820px){ .pg-2col{grid-template-columns:1fr!important;} }
+</style>
+</helmet>
+<div data-screen-label="Events page" style="--brand: {{ brand }}; min-height:100vh; background:#f5f4f1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b;">
+
+  <!-- HEADER -->
+  <dc-import name="SiteHeader" active="events" style="position:sticky; top:0; z-index:50;" hint-size="100%,66px"></dc-import>
+
+  <!-- HERO -->
+  <section style="background:#211f1b; color:#fff; position:relative; overflow:hidden;">
+    <div style="position:absolute; inset:0; background:radial-gradient(680px 360px at 90% -12%, rgba(255,212,0,.13), transparent 70%);"></div>
+    <div class="pg-2col" style="max-width:1200px; margin:0 auto; padding:60px 24px 66px; display:grid; grid-template-columns:1.05fr .95fr; gap:48px; align-items:center; position:relative;">
+      <div>
+        <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--brand,#ffd400); margin-bottom:20px;">
+          <span style="width:22px; height:2px; background:var(--brand,#ffd400);"></span>Birthdays · Groups · Team events
+        </div>
+        <h1 style="font:800 clamp(38px,9vw,56px)/1.0 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 18px;">Parties &amp; events,<br>they'll flip over.</h1>
+        <p style="font:400 16px/1.55 inherit; color:rgba(255,255,255,.72); max-width:470px; margin:0 0 30px;">Expert-led, adrenaline-packed fun under one big roof — from kids' birthdays to corporate team-building. Pick the format that fits your crew.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
+          <a href="#birthdays" style="display:inline-flex; align-items:center; gap:9px; background:var(--brand,#ffd400); color:#211f1b; font:800 15px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:15px 24px; border-radius:11px;">Birthday parties <i class="bi bi-arrow-down"></i></a>
+          <a href="#groups" style="display:inline-flex; align-items:center; gap:9px; background:transparent; color:#fff; font:700 15px/1 'Archivo',sans-serif; text-decoration:none; padding:15px 22px; border-radius:11px; border:1.5px solid rgba(255,255,255,.25);">Groups &amp; teams</a>
+        </div>
+      </div>
+      <div style="position:relative;">
+        <div style="aspect-ratio:16/9; border-radius:18px; overflow:hidden; box-shadow:0 30px 60px -25px rgba(0,0,0,.7); border:3px solid rgba(255,255,255,.08); background:#000;">
+          <div id="tmv-bday-video" style="width:100%; height:100%;"></div>
+        </div>
+        <div style="position:absolute; bottom:-16px; right:-10px; background:var(--brand,#ffd400); color:#211f1b; font:800 13px/1.2 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; padding:13px 16px; border-radius:12px; box-shadow:0 12px 30px -10px rgba(0,0,0,.5);">Weekends<br>fill fast</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JUMP NAV -->
+  <dc-import name="JumpNav" top="66" max-width="1200" items="Birthdays#birthdays | Birthday FAQ#faq | Groups & Teams#groups" actions="Book a party#https://www.themonkeyvault.com/s/appointments#bi bi-calendar-check" hint-size="100%,52px"></dc-import>
+
+  <main>
+    <!-- BIRTHDAYS -->
+    <section id="birthdays" style="max-width:1200px; margin:0 auto; padding:72px 24px 12px; scroll-margin-top:140px;">
+      <div style="margin-bottom:34px;">
+        <dc-import name="SectionHeader" num="01" eyebrow="Birthdays" title="Two ways to celebrate" description="Go all-in with the full package, or keep it nimble with a Mini party for smaller groups and last-minute plans." hint-size="100%,130px"></dc-import>
+      </div>
+      <div style="display:grid; grid-template-columns:1.15fr .85fr; gap:22px;">
+
+        <!-- FULL PARTY -->
+        <div class="tmv-card" style="display:flex; flex-direction:column; background:#fff; border:2px solid var(--brand,#ffd400); border-radius:20px; overflow:hidden; box-shadow:0 1px 3px rgba(28,25,23,.05),0 18px 40px -30px rgba(28,25,23,.4);">
+          <div style="position:relative; aspect-ratio:16/8; overflow:hidden; background:#1a1815;">
+            <img src="https://97c4ca0509b4c38d26ba.cdn6.editmysite.com/uploads/b/97c4ca0509b4c38d26ba323484b80b964616e1d4454eb6debcf2c66267495c04/045A1402%203_1671609291.JPG?width=1200&optimize=medium" alt="Kids and coaches mid-session on the gym floor" style="width:100%; height:100%; object-fit:cover; display:block;">
+            <span style="position:absolute; top:14px; left:14px; font:700 10px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#211f1b; background:var(--brand,#ffd400); padding:7px 11px; border-radius:999px; box-shadow:0 4px 14px rgba(0,0,0,.3);">Most popular</span>
+          </div>
+          <div style="padding:28px 30px 30px; display:flex; flex-direction:column; flex:1;">
+            <h3 style="font:800 26px/1.08 'Archivo',sans-serif; letter-spacing:-.012em; margin:0 0 8px;">Full Birthday Party</h3>
+            <p style="font:400 13px/1.5 inherit; color:#6a6760; margin:0 0 20px;">Coaches stay with your group the whole time. A private party room, a coached session, and free play — the full experience.</p>
+            <div style="display:flex; flex-direction:column; gap:0; margin-bottom:22px;">
+              <div style="display:flex; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid #f0efea;"><span style="flex:none; width:40px; font:800 15px/1 'Archivo',sans-serif; color:var(--brand,#e0a800);">60′</span><span style="font:600 14px/1.3 inherit; color:#3a3833;">Activities — parkour intro lesson, movement games &amp; requested skills</span></div>
+              <div style="display:flex; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid #f0efea;"><span style="flex:none; width:40px; font:800 15px/1 'Archivo',sans-serif; color:var(--brand,#e0a800);">30′</span><span style="font:600 14px/1.3 inherit; color:#3a3833;">Private party room — food, drinks &amp; celebration</span></div>
+              <div style="display:flex; align-items:center; gap:14px; padding:13px 0;"><span style="flex:none; width:40px; font:800 15px/1 'Archivo',sans-serif; color:var(--brand,#e0a800);">30′</span><span style="font:600 14px/1.3 inherit; color:#3a3833;">Open gym — free play under instructor supervision</span></div>
+            </div>
+            <div style="margin-bottom:22px;">
+              <dc-import name="Pill" variant="light" gap="8" items="Ages 5+ | 2 hrs total | Private room" hint-size="100%,34px"></dc-import>
+            </div>
+            <div style="margin-top:auto; padding-top:20px; border-top:1px solid #f0efea;">
+              <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:20px;">
+                <div>
+                  <div data-tmv-price="partyBase" style="font:800 30px/1 'Archivo',sans-serif; color:#211f1b;">$350</div>
+                  <div style="font:600 12.5px/1.3 inherit; color:#9b9890; margin-top:6px;">base price · up to 8 participants</div>
+                </div>
+                <div style="text-align:right; font:600 12.5px/1.5 inherit; color:#6a6760;">+<span data-tmv-price="partyExtraKid">$25</span> per additional participant<br>+$5 / participant for an extra hour</div>
+              </div>
+              <div style="display:flex; flex-wrap:wrap; gap:12px;">
+                <a href="https://www.themonkeyvault.com/s/appointments" target="_blank" rel="noopener" class="tmv-cta" style="display:inline-flex; align-items:center; gap:9px; background:#211f1b; color:#fff; font:800 14px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:14px 22px; border-radius:11px; transition:transform .15s ease;">Book your party <i class="bi bi-arrow-up-right"></i></a>
+                <a href="https://www.themonkeyvault.com/invitations" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:9px; background:transparent; color:#211f1b; font:700 14px/1 'Archivo',sans-serif; text-decoration:none; padding:14px 20px; border-radius:11px; border:1.5px solid #ddd9d0;">Make an invitation</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MINI PARTY -->
+        <div class="tmv-card" style="display:flex; flex-direction:column; background:#211f1b; color:#fff; border-radius:20px; overflow:hidden; box-shadow:0 18px 40px -28px rgba(0,0,0,.6);">
+          <div style="padding:28px 30px 30px; display:flex; flex-direction:column; flex:1;">
+            <span style="align-self:flex-start; font:700 10px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:var(--brand,#ffd400); background:rgba(255,255,255,.08); padding:7px 11px; border-radius:999px; margin-bottom:16px;">Smaller &amp; last-minute</span>
+            <h3 style="font:800 24px/1.08 'Archivo',sans-serif; letter-spacing:-.012em; margin:0 0 8px;">Mini Birthday Party</h3>
+            <p style="font:400 13px/1.5 inherit; color:rgba(255,255,255,.7); margin:0 0 20px;">Booked solid for the full package? The Mini is the same action-packed one-hour coached parkour session of games and challenges — just a lower minimum so smaller groups and last-minute plans still get in.</p>
+            <div style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:12px;">What's included</div>
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+              <div style="display:flex; align-items:flex-start; gap:10px; font:600 14px/1.6 inherit; color:rgba(255,255,255,.88);"><i class="bi bi-check-circle-fill" style="color:var(--brand,#ffd400); margin-top:2px; flex:none;"></i>One-hour coached parkour session — games &amp; challenges</div>
+              <div style="display:flex; align-items:flex-start; gap:10px; font:600 14px/1.6 inherit; color:rgba(255,255,255,.88);"><i class="bi bi-check-circle-fill" style="color:var(--brand,#ffd400); margin-top:2px; flex:none;"></i>3 participants minimum, up to 15 · ages 8+</div>
+              <div style="display:flex; align-items:flex-start; gap:10px; font:600 14px/1.6 inherit; color:rgba(255,255,255,.88);"><i class="bi bi-check-circle-fill" style="color:var(--brand,#ffd400); margin-top:2px; flex:none;"></i>All-day pass for every kid — open gym after, leave to eat, come back</div>
+            </div>
+            <div style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:12px;">Good to know</div>
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:22px;">
+              <div style="display:flex; align-items:flex-start; gap:10px; font:600 14px/1.6 inherit; color:rgba(255,255,255,.7);"><i class="bi bi-dash-circle" style="color:rgba(255,255,255,.4); margin-top:2px; flex:none;"></i>Coaches lead the session, then kids are on their own in open gym</div>
+              <div style="display:flex; align-items:flex-start; gap:10px; font:600 14px/1.6 inherit; color:rgba(255,255,255,.7);"><i class="bi bi-dash-circle" style="color:rgba(255,255,255,.4); margin-top:2px; flex:none;"></i>No private room — common-area tables are shared, not guaranteed</div>
+            </div>
+            <div style="margin-top:auto; padding-top:18px; border-top:1px solid rgba(255,255,255,.12); display:flex; align-items:flex-end; justify-content:space-between; gap:12px;">
+              <div>
+                <div style="font:800 28px/1 'Archivo',sans-serif; color:var(--brand,#ffd400);">$30</div>
+                <div style="font:600 12.5px/1.3 inherit; color:rgba(255,255,255,.55); margin-top:5px;">per participant</div>
+              </div>
+              <a href="https://www.themonkeyvault.com/s/appointments" target="_blank" rel="noopener" class="tmv-cta" style="display:inline-flex; align-items:center; gap:8px; background:var(--brand,#ffd400); color:#211f1b; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:13px 19px; border-radius:10px; transition:transform .15s ease;">Book mini <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW TO BOOK -->
+    <section style="max-width:1200px; margin:0 auto; padding:56px 24px 12px;">
+      <div style="background:#fff; border:1px solid #ebe9e4; border-radius:20px; padding:38px 40px; box-shadow:0 1px 3px rgba(28,25,23,.05),0 16px 34px -30px rgba(28,25,23,.4);">
+        <div style="display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:26px;">
+          <h3 style="font:800 22px/1.1 'Archivo',sans-serif; letter-spacing:-.01em; margin:0;">How booking works</h3>
+          <p style="font:400 13px/1.5 inherit; color:#6a6760; margin:0;">Your card is never charged at booking — it just holds the slot. You pay in person on the day, based on final headcount.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px;">
+          <sc-for list="{{ steps }}" as="s" hint-placeholder-count="5">
+            <div style="display:flex; flex-direction:column; gap:9px;">
+              <span style="width:34px; height:34px; border-radius:10px; background:#f3f2ee; display:flex; align-items:center; justify-content:center; font:800 14px/1 'Archivo',sans-serif; color:#211f1b;">{{ s.n }}</span>
+              <div style="font:800 14px/1.2 'Archivo',sans-serif;">{{ s.title }}</div>
+              <p style="font:400 12.5px/1.5 inherit; color:#6a6760; margin:0;">{{ s.body }}</p>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" style="max-width:1200px; margin:0 auto; padding:64px 24px 12px; scroll-margin-top:140px;">
+      <div style="display:grid; grid-template-columns:.85fr 1.15fr; gap:40px; align-items:start;">
+        <div style="position:sticky; top:90px;">
+          <div style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3; margin-bottom:10px;">Birthday FAQ</div>
+          <h2 style="font:800 34px/1.04 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 14px;">Good to know before you book</h2>
+          <p style="font:400 15px/1.55 inherit; color:#6a6760; margin:0 0 22px;">Everything parents ask us most — payment, food, timing and the day-of details. Still stuck? We're happy to help.</p>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <a href="mailto:info@themonkeyvault.com" style="display:inline-flex; align-items:center; gap:9px; font:700 14px/1 'Archivo',sans-serif; color:#211f1b; text-decoration:none;"><i class="bi bi-envelope" style="color:#9b9890;"></i> info@themonkeyvault.com</a>
+            <a href="tel:6473501111" style="display:inline-flex; align-items:center; gap:9px; font:700 14px/1 'Archivo',sans-serif; color:#211f1b; text-decoration:none;"><i class="bi bi-telephone" style="color:#9b9890;"></i> (647) 350-1111</a>
+          </div>
+        </div>
+        <div>
+          <sc-for list="{{ faqGroups }}" as="g" hint-placeholder-count="4">
+            <div style="margin-bottom:26px;">
+              <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--brand,#e0a800); margin-bottom:10px;">{{ g.title }}</div>
+              <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; overflow:hidden; box-shadow:0 1px 3px rgba(28,25,23,.05),0 16px 34px -32px rgba(28,25,23,.4);">
+                <sc-for list="{{ g.items }}" as="qa" hint-placeholder-count="3">
+                  <details class="faq-d" style="border-top:1px solid #f0efea;">
+                    <summary style="display:flex; align-items:center; justify-content:space-between; gap:16px; cursor:pointer; padding:17px 20px; font:700 15px/1.35 'Archivo',sans-serif; color:#211f1b; transition:background .15s;">
+                      <span>{{ qa.q }}</span>
+                      <i class="bi bi-chevron-down faq-chev" style="font-size:13px; color:#b0aca3; flex:none;"></i>
+                    </summary>
+                    <div style="padding:0 20px 18px; font:400 14px/1.6 inherit; color:#6a6760;">{{ qa.a }}</div>
+                  </details>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- GROUPS -->
+    <section id="groups" style="max-width:1200px; margin:0 auto; padding:64px 24px 80px; scroll-margin-top:140px;">
+      <div style="margin-bottom:34px;">
+        <dc-import name="SectionHeader" num="02" eyebrow="Groups &amp; organizations" title="Bring your whole group" description="Schools, corporate teams, youth organizations and sports teams — a fun, active way to build teamwork, confidence and skills." hint-size="100%,130px"></dc-import>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px;">
+
+        <div class="tmv-card" style="display:flex; flex-direction:column; background:#fff; border:1px solid #ebe9e4; border-radius:20px; padding:32px 34px; box-shadow:0 1px 3px rgba(28,25,23,.05),0 16px 34px -30px rgba(28,25,23,.4);">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+            <span style="flex:none; width:46px; height:46px; border-radius:12px; background:color-mix(in srgb,#8c52ff 14%,#fff); display:flex; align-items:center; justify-content:center;"><i class="bi bi-people-fill" style="font-size:21px; color:#8c52ff;"></i></span>
+            <div>
+              <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#8c52ff;">Group Events</div>
+              <div style="font:800 21px/1.1 'Archivo',sans-serif; letter-spacing:-.01em; margin-top:5px;">Field trips &amp; team-building</div>
+            </div>
+          </div>
+          <p style="font:400 13px/1.5 inherit; color:#6a6760; margin:0 0 18px;">Two hours total — an hour of guided activities, then an hour of open gym. Intro parkour workshops, team-building obstacle courses, games and skill development for all levels. Great for field trips, teams and community events.</p>
+          <div style="margin-top:auto; padding-top:18px; border-top:1px solid #f0efea;">
+            <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#9b9890; margin-bottom:12px;">Price per participant</div>
+            <div style="display:flex; flex-direction:column; margin-bottom:14px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid #f0efea;"><span style="font:600 14px/1 inherit; color:#3a3833;">Up to 10</span><span style="font:800 13.5px/1 'Archivo',sans-serif; color:#211f1b;">$300 base</span></div>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid #f0efea;"><span style="font:600 14px/1 inherit; color:#3a3833;">11–30</span><span style="font:800 13.5px/1 'Archivo',sans-serif; color:#211f1b;">$27.50 each</span></div>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid #f0efea;"><span style="font:600 14px/1 inherit; color:#3a3833;">31–50</span><span style="font:800 13.5px/1 'Archivo',sans-serif; color:#211f1b;">$25.00 each</span></div>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0;"><span style="font:600 14px/1 inherit; color:#3a3833;">51+</span><span style="font:800 13.5px/1 'Archivo',sans-serif; color:#211f1b;">$22.50 each</span></div>
+            </div>
+            <p style="font:400 12.5px/1.5 inherit; color:#9b9890; margin:0 0 18px;">Minimum 10 participants; smaller groups pay the $300 base. Final total is calculated on event day from the final headcount.</p>
+            <a href="https://www.themonkeyvault.com/s/appointments" target="_blank" rel="noopener" class="tmv-cta" style="display:inline-flex; align-items:center; gap:8px; background:#211f1b; color:#fff; font:800 12.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:13px 18px; border-radius:10px; transition:transform .15s ease;">Plan an event <i class="bi bi-arrow-up-right"></i></a>
+          </div>
+        </div>
+
+        <div class="tmv-card" style="display:flex; flex-direction:column; background:#fff; border:1px solid #ebe9e4; border-radius:20px; padding:32px 34px; box-shadow:0 1px 3px rgba(28,25,23,.05),0 16px 34px -30px rgba(28,25,23,.4);">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+            <span style="flex:none; width:46px; height:46px; border-radius:12px; background:color-mix(in srgb,#2e9e4f 14%,#fff); display:flex; align-items:center; justify-content:center;"><i class="bi bi-sunrise" style="font-size:21px; color:#2e9e4f;"></i></span>
+            <div>
+              <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#2e9e4f;">Early Gym Access</div>
+              <div style="font:800 21px/1.1 'Archivo',sans-serif; letter-spacing:-.01em; margin-top:5px;">The gym, all to yourself</div>
+            </div>
+          </div>
+          <p style="font:400 13px/1.5 inherit; color:#6a6760; margin:0 0 18px;">Reserve The Monkey Vault before we open at 11 AM for exclusive access. Perfect for small groups or focused training with no crowds.</p>
+          <div style="margin-top:auto; padding-top:18px; border-top:1px solid #f0efea; display:flex; align-items:flex-end; justify-content:space-between; gap:12px;">
+            <div><div data-tmv-price-sub="earlyAccessHr" style="font:800 22px/1 'Archivo',sans-serif; color:#211f1b;">From $50/hr</div><div data-tmv-price-sub="openGymDay" style="font:600 12.5px/1.3 inherit; color:#9b9890; margin-top:5px;">+ $25 / person open gym</div></div>
+            <a href="https://www.themonkeyvault.com/s/appointments" target="_blank" rel="noopener" class="tmv-cta" style="display:inline-flex; align-items:center; gap:8px; background:#211f1b; color:#fff; font:800 12.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:13px 18px; border-radius:10px; transition:transform .15s ease;">Reserve time <i class="bi bi-arrow-up-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <p style="font:400 12.5px/1.5 inherit; color:#9b9890; max-width:760px; margin:22px auto 0; text-align:center;">Booking &amp; cancellation: your card isn't charged at booking — payment is made in person based on final headcount. A fee applies for cancellations within 24 hours or no-shows.</p>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <dc-import name="SiteFooter" hint-size="100%,360px"></dc-import>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;brand&quot;: {&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd400&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ffd400&quot;,&quot;#2196f3&quot;,&quot;#f44336&quot;,&quot;#2e9e4f&quot;,&quot;#8c52ff&quot;]}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    import('./site-config.js').then(m => {
+      m.applySiteConfig().catch(e => console.warn(e));
+      m.mountYouTubeHero('tmv-bday-video', 'DH5Clt4pO3o');
+    }).catch(e => console.warn(e));
+  }
+  renderVals() {
+    const p = this.props;
+    return {
+      brand: p.brand ?? '#ffd400',
+      year: new Date().getFullYear(),
+      steps: [
+        { n:'1', title:'Pick the age range', body:'Select the average age of the group.' },
+        { n:'2', title:'Pick group size', body:'You can update the headcount later if it changes.' },
+        { n:'3', title:'Pick date & time', body:'Weekend slots fill fast — the times you see online are all we have.' },
+        { n:'4', title:'Enter payment info', body:'Your card is not charged — it only holds the slot per our policy.' },
+        { n:'5', title:'Check your email', body:'A confirmation lands in your inbox. Peek in spam if you don\u2019t see it.' },
+      ],
+      faqGroups: [
+        { title:'Booking', items:[
+          { q:'When do I pay?', a:'You don\u2019t pay anything upfront. The credit card collected during booking is only for our cancellation policy and won\u2019t be charged. Payment is made in person on the day of the party, based on the final count of participants — so you only pay for who actually shows up.' },
+          { q:'What is the cancellation policy?', a:'A cancellation fee applies if the booking is canceled within 24 hours of the appointment or if there\u2019s a no-show. Full details are provided during the booking process.' },
+          { q:'What if weekend slots are fully booked?', a:'The availability you see online is all we have — we can\u2019t create additional slots. If you have a smaller group, consider the Mini Birthday Party: the same one-hour coached parkour session, with a minimum of just 3 participants ($30 each, max 15), ages 8+. Each kid gets an all-day pass, but it doesn\u2019t include a private room — common-area tables are shared and not guaranteed.' },
+        ]},
+        { title:'Day of the party', items:[
+          { q:'When should we arrive?', a:'The host is welcome to arrive 15 minutes before the scheduled party time. Depending on availability — if there\u2019s no party before yours — the room may be ready a little earlier.' },
+          { q:'Are there age requirements?', a:'To make sure everyone has a great time, we ask that the group be similar in age. Our coaches tailor the activities and difficulty to the group, so mixing very different ages (e.g. a 4-year-old with 7–8 year olds) doesn\u2019t work well.' },
+        ]},
+        { title:'Food & drinks', items:[
+          { q:'What are the food options?', a:'We don\u2019t provide food, drinks or catering — but you\u2019re welcome to bring whatever you\u2019d like (cake, pizza, snacks, drinks) with no restrictions or fees. You can also order delivery; Domino\u2019s and Pizza Nova are within three blocks and know our location well. We recommend ordering on arrival or ahead of time, and we provide a fridge/freezer to store your items during the party.' },
+          { q:'What supplies do you provide?', a:'We provide the party room, tables, and a fridge/freezer for storage. We don\u2019t provide plates, cups, utensils, napkins or serving supplies — the host brings all catering items. You\u2019re also welcome to bring your own decorations.' },
+        ]},
+        { title:'During the party', items:[
+          { q:'Can we extend the open gym time?', a:'Yes — just ask the instructor assigned to your party. It\u2019s $5 per participant for an extra hour. Note that extending gym time does not extend your party-room time: the room must be vacated at the 2-hour mark so we can prep it for the next group.' },
+        ]},
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

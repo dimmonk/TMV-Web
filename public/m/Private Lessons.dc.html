@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>(function(){function w(){return (window.matchMedia&&window.matchMedia('(max-width:819px)').matches)||/Android|iPhone|iPod|Windows Phone|BlackBerry|Mobile/i.test(navigator.userAgent);}function g(){try{if(w())location.replace('mobile.html#book');}catch(e){}}g();var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(g,250);});})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0; background:#f5f4f1;}
+  *{box-sizing:border-box;}
+  ::selection{background:var(--brand,#ffd400); color:#211f1b;}
+  .pc-card image-slot{display:block; width:100%; height:260px;}
+  .pc-card{transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;}
+  .pc-card:hover{transform:translateY(-4px); box-shadow:0 1px 3px rgba(28,25,23,.05),0 26px 46px -26px rgba(28,25,23,.5)!important; border-color:color-mix(in srgb,#f44336 45%,#ebe9e4)!important;}
+  .pc-book{transition:transform .15s ease, gap .15s ease;}
+  .pc-book:hover{transform:translateY(-1px);}
+  .pc-book:hover .pc-arr{transform:translateX(3px);}
+  .way{transition:transform .2s ease, box-shadow .2s ease;}
+  .way:hover{transform:translateY(-3px); box-shadow:0 1px 3px rgba(28,25,23,.05),0 22px 42px -26px rgba(28,25,23,.5)!important;}
+  .way-cta{transition:gap .15s ease, transform .15s ease;}
+  .way:hover .way-cta{gap:11px;}
+</style>
+</helmet>
+<div data-screen-label="Private Lessons page" style="--brand: {{ brand }}; --cat:#f44336; min-height:100vh; background:#f5f4f1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b;">
+
+  <dc-import name="SiteHeader" style="position:sticky; top:0; z-index:50;" hint-size="100%,66px"></dc-import>
+
+  <!-- HERO -->
+  <section style="background:#211f1b; color:#fff; position:relative; overflow:hidden;">
+    <div style="position:absolute; inset:0; background:radial-gradient(680px 360px at 88% -15%, rgba(244,67,54,.16), transparent 70%);"></div>
+    <div style="max-width:1120px; margin:0 auto; padding:58px 24px 54px; position:relative;">
+      <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--cat); margin-bottom:18px;">
+        <span style="width:22px; height:2px; background:var(--cat);"></span>Private · 1-on-1 coaching
+      </div>
+      <h1 style="font:800 clamp(34px,8vw,54px)/1.04 'Archivo',sans-serif; letter-spacing:-.022em; margin:0 0 16px; max-width:760px; text-wrap:balance;">Private lessons, built around you.</h1>
+      <p style="font:400 16px/1.55 inherit; color:rgba(255,255,255,.72); max-width:620px; margin:0 0 0;">One-on-one coaching shaped entirely around your goals and pace — bring your own small group if you like. There are three ways in: start with a discounted intro, book standard sessions with whoever's on, or pick the specific coach you want to train with.</p>
+    </div>
+  </section>
+
+  <!-- JUMP NAV -->
+  <dc-import name="JumpNav" top="66" max-width="1120" items="Three Ways#ways | Choose a Coach#coaches | Good to Know#know" actions="Price List#Pricing.dc.html#bi bi-tag" hint-size="100%,52px"></dc-import>
+
+  <main style="max-width:1120px; margin:0 auto; padding:54px 24px 24px;">
+
+    <!-- THREE WAYS -->
+    <div id="ways" style="scroll-margin-top:132px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3; margin-bottom:18px;">Three ways to train privately</div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px;">
+
+      <!-- WAY 1 — Introduction -->
+      <div class="way" style="display:flex; flex-direction:column; background:#fff; border:1px solid #ebe9e4; border-radius:18px; padding:26px 24px 26px; box-shadow:0 1px 3px rgba(28,25,23,.05),0 14px 32px -24px rgba(28,25,23,.4);">
+        <div style="display:flex; align-items:center; gap:11px; margin-bottom:18px;">
+          <span style="flex:none; width:34px; height:34px; border-radius:10px; background:#f1f0ec; color:#6e6e6e; display:flex; align-items:center; justify-content:center; font:900 16px/1 'Archivo',sans-serif;">1</span>
+          <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#6e6e6e; background:#f1f0ec; border-radius:999px; padding:6px 11px;">Start here</span>
+        </div>
+        <h3 style="font:800 22px/1.1 'Archivo',sans-serif; letter-spacing:-.015em; margin:0 0 12px;">Introduction</h3>
+        <div style="display:flex; align-items:baseline; gap:7px; margin-bottom:4px;">
+          <span data-tmv-price="privateIntro" style="font:800 30px/1 'Archivo',sans-serif; color:#211f1b;">$45</span>
+          <span style="font:600 13px/1 inherit; color:#9b9890;">first session</span>
+        </div>
+        <div style="font:600 12.5px/1.4 inherit; color:#9b9890; margin-bottom:16px;">$35 each for 2 · $30 each for 3+</div>
+        <p style="font:400 13.5px/1.55 inherit; color:#5b5853; margin:0 0 22px;">A one-time lesson on a set beginner curriculum — the best first taste of parkour, and where everyone starts.</p>
+        <a class="way-cta" href="https://www.themonkeyvault.com/s/appointments" target="_blank" rel="noopener" style="margin-top:auto; display:inline-flex; align-items:center; justify-content:center; gap:9px; background:#211f1b; color:#fff; font:800 13.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:14px 18px; border-radius:11px;">Book intro <i class="bi bi-arrow-right" style="color:var(--brand,#ffd400);"></i></a>
+      </div>
+
+      <!-- WAY 2 — Standard private -->
+      <div class="way" style="display:flex; flex-direction:column; background:#fff; border:1px solid #ebe9e4; border-radius:18px; padding:26px 24px 26px; box-shadow:0 1px 3px rgba(28,25,23,.05),0 14px 32px -24px rgba(28,25,23,.4);">
+        <div style="display:flex; align-items:center; gap:11px; margin-bottom:18px;">
+          <span style="flex:none; width:34px; height:34px; border-radius:10px; background:color-mix(in srgb,#f44336 12%,#fff); color:color-mix(in srgb,#f44336 62%,#000); display:flex; align-items:center; justify-content:center; font:900 16px/1 'Archivo',sans-serif;">2</span>
+        </div>
+        <h3 style="font:800 22px/1.1 'Archivo',sans-serif; letter-spacing:-.015em; margin:0 0 12px;">Private Lesson</h3>
+        <div style="display:flex; align-items:baseline; gap:7px; margin-bottom:4px;">
+          <span data-tmv-price-sub="privateKids" style="font:800 30px/1 'Archivo',sans-serif; color:#211f1b;">From $65</span>
+          <span style="font:600 13px/1 inherit; color:#9b9890;">per session</span>
+        </div>
+        <div style="font:600 12.5px/1.4 inherit; color:#9b9890; margin-bottom:16px;">Kids <span data-tmv-price="privateKids">$65</span> · Adults <span data-tmv-price="privateAdults">$85</span> · 5-packs available</div>
+        <p style="font:400 13.5px/1.55 inherit; color:#5b5853; margin:0 0 22px;">Ongoing one-on-one (or your own small group) with whichever coach is on shift. All ages, all levels, flexible scheduling.</p>
+        <a class="way-cta" href="https://www.themonkeyvault.com/s/appointments" target="_blank" rel="noopener" style="margin-top:auto; display:inline-flex; align-items:center; justify-content:center; gap:9px; background:#211f1b; color:#fff; font:800 13.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:14px 18px; border-radius:11px;">Book a private <i class="bi bi-arrow-right" style="color:var(--brand,#ffd400);"></i></a>
+      </div>
+
+      <!-- WAY 3 — Specific coach (featured) -->
+      <div class="way" style="display:flex; flex-direction:column; background:#fff; border:2px solid #f44336; border-radius:18px; padding:25px 23px 25px; box-shadow:0 1px 3px rgba(28,25,23,.05),0 18px 38px -22px rgba(244,67,54,.45);">
+        <div style="display:flex; align-items:center; gap:11px; margin-bottom:18px;">
+          <span style="flex:none; width:34px; height:34px; border-radius:10px; background:var(--cat); color:#fff; display:flex; align-items:center; justify-content:center; font:900 16px/1 'Archivo',sans-serif;">3</span>
+          <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:var(--cat); border-radius:999px; padding:6px 11px;">Ongoing · on demand</span>
+        </div>
+        <h3 style="font:800 22px/1.1 'Archivo',sans-serif; letter-spacing:-.015em; margin:0 0 12px;">Train with a specific coach</h3>
+        <div style="display:flex; align-items:baseline; gap:7px; margin-bottom:4px;">
+          <span style="font:800 30px/1 'Archivo',sans-serif; color:#211f1b;">Coach's rate</span>
+        </div>
+        <div style="font:600 12.5px/1.4 inherit; color:#9b9890; margin-bottom:16px;">Set per coach · ongoing 1-on-1</div>
+        <p style="font:400 13.5px/1.55 inherit; color:#5b5853; margin:0 0 22px;">Pick the coach whose style fits your goals and stick with them — one instructor who follows your whole progress, building each session on the last. They'll come in just for you, even on a day off.</p>
+        <a class="way-cta" href="#coaches" style="margin-top:auto; display:inline-flex; align-items:center; justify-content:center; gap:9px; background:var(--cat); color:#fff; font:800 13.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:14px 18px; border-radius:11px;">Choose a coach <i class="bi bi-arrow-down" style="color:#fff;"></i></a>
+      </div>
+    </div>
+
+    <!-- fine print -->
+    <div style="display:flex; flex-wrap:wrap; gap:8px 22px; margin:20px 2px 0; font:600 12.5px/1.4 inherit; color:#9b9890;">
+      <span style="display:inline-flex; align-items:center; gap:7px;"><i class="bi bi-unlock" style="color:#2e9e4f;"></i>Every session includes open gym that day</span>
+      <span style="display:inline-flex; align-items:center; gap:7px;"><i class="bi bi-receipt" style="color:#2e9e4f;"></i>All prices include tax</span>
+      <span style="display:inline-flex; align-items:center; gap:7px;"><i class="bi bi-people" style="color:#2e9e4f;"></i>Packs can be shared with friends &amp; family</span>
+    </div>
+
+    <!-- COACHES ROSTER -->
+    <section id="coaches" style="scroll-margin-top:132px; margin-top:56px;">
+      <div style="max-width:680px; margin-bottom:26px;">
+        <div style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--cat); margin-bottom:14px;">Choose your coach</div>
+        <h2 style="font:800 34px/1.05 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 12px;">The coaches taking private students</h2>
+        <p style="font:400 15px/1.55 inherit; color:#5b5853; margin:0;">A few of our coaches are building their own roster of private students — the ones taking the initiative to train you one-on-one, on your schedule. Reserve one outside their regular shift and they'll come in just for your session, at their own rate.</p>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); gap:22px;">
+        <sc-for list="{{ coaches }}" as="c" hint-placeholder-count="3">
+          <div class="pc-card" style="display:flex; flex-direction:column; background:#fff; border:1px solid #ebe9e4; border-radius:18px; overflow:hidden; box-shadow:0 1px 3px rgba(28,25,23,.05),0 14px 32px -24px rgba(28,25,23,.4);">
+            <div style="position:relative;">
+              <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="{{ c.slotId }}" shape="rect" placeholder="{{ c.slotHint }}" fit="cover" style="display:block; width:100%; height:260px; background:#ece9e3;" hint-size="100%,260px"></x-import>
+              <span style="position:absolute; top:14px; left:14px; padding:6px 11px; border-radius:999px; background:var(--cat); color:#fff; font:700 10px/1 'Archivo',sans-serif; letter-spacing:.09em; text-transform:uppercase; box-shadow:0 6px 16px -6px rgba(244,67,54,.6);">{{ c.role }}</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:14px; padding:22px 22px 24px; flex:1;">
+              <h3 style="font:800 23px/1.08 'Archivo',sans-serif; letter-spacing:-.015em; color:#211f1b; margin:0;">{{ c.name }}</h3>
+              <p style="font:400 13.5px/1.55 inherit; color:#5b5853; margin:0;">{{ c.bio }}</p>
+              <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:2px;">
+                <sc-for list="{{ c.tags }}" as="t" hint-placeholder-count="3">
+                  <span style="font:600 12px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:color-mix(in srgb,#f44336 62%,#000); background:color-mix(in srgb,#f44336 10%,#fff); border:1px solid color-mix(in srgb,#f44336 24%,#fff); border-radius:999px; padding:6px 11px; white-space:nowrap;">{{ t }}</span>
+                </sc-for>
+              </div>
+              <a class="pc-book" href="{{ c.href }}" target="_blank" rel="noopener" style="margin-top:auto; display:inline-flex; align-items:center; justify-content:center; gap:9px; background:#211f1b; color:#fff; font:800 13.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:14px 18px; border-radius:11px;">{{ c.cta }} <i class="bi bi-arrow-right pc-arr" style="color:var(--brand,#ffd400); transition:transform .15s;"></i></a>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- GOOD TO KNOW -->
+    <section id="know" style="scroll-margin-top:132px; margin-top:56px;">
+      <div style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3; margin-bottom:18px;">Good to know</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="4">
+          <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:24px 24px 26px; box-shadow:0 1px 3px rgba(28,25,23,.05);">
+            <span style="display:flex; width:42px; height:42px; border-radius:12px; background:color-mix(in srgb,#f44336 12%,#fff); align-items:center; justify-content:center; margin-bottom:15px;"><i class="{{ n.icon }}" style="font-size:19px; color:color-mix(in srgb,#f44336 62%,#000);"></i></span>
+            <div style="font:800 16px/1.15 'Archivo',sans-serif; letter-spacing:-.01em; margin-bottom:8px;">{{ n.title }}</div>
+            <p style="font:400 13.5px/1.55 inherit; color:#5b5853; margin:0;">{{ n.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- HELP STRIP -->
+    <section style="background:#211f1b; color:#fff; border-radius:18px; padding:30px 36px; display:flex; align-items:center; justify-content:space-between; gap:22px; flex-wrap:wrap; margin:36px 0 8px;">
+      <div style="display:flex; align-items:center; gap:16px;">
+        <span style="flex:none; width:48px; height:48px; border-radius:13px; background:rgba(255,255,255,.1); display:flex; align-items:center; justify-content:center;"><i class="bi bi-chat-dots-fill" style="font-size:21px; color:var(--brand,#ffd400);"></i></span>
+        <div>
+          <div style="font:800 19px/1.1 'Archivo',sans-serif; letter-spacing:-.01em; margin-bottom:5px;">Not sure who to train with?</div>
+          <div style="font:400 12.5px/1.5 inherit; color:rgba(255,255,255,.66);">Tell us your goals and we'll point you to the right coach. Call (647) 350-1111 or email us.</div>
+        </div>
+      </div>
+      <a href="mailto:info@themonkeyvault.com" style="flex:none; display:inline-flex; align-items:center; gap:9px; background:var(--brand,#ffd400); color:#211f1b; font:800 13.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:14px 22px; border-radius:11px;">Get in touch <i class="bi bi-arrow-up-right"></i></a>
+    </section>
+  </main>
+
+  <dc-import name="SiteFooter" hint-size="100%,360px"></dc-import>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1120,&quot;height&quot;:900},&quot;brand&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd400&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ffd400&quot;,&quot;#2196f3&quot;,&quot;#f44336&quot;,&quot;#2e9e4f&quot;,&quot;#8c52ff&quot;]}}">
+class Component extends DCLogic {
+  state = { cfg: null };
+  componentDidMount() {
+    import('./site-config.js').then(async (m) => {
+      const cfg = await m.applySiteConfig();
+      this.setState({ cfg });   // re-render with per-coach booking links
+    }).catch(e => console.warn(e));
+  }
+  renderVals() {
+    const p = this.props;
+    // Per-coach booking links come from site-config (the members app owns them).
+    // Until a coach's bookingUrl is set, fall back to the general booking page.
+    const cfg = this.state.cfg;
+    const BOOK = (cfg && cfg.squareLinks && cfg.squareLinks.booking) || 'https://www.themonkeyvault.com/s/appointments';
+    const coachUrl = (key) => {
+      const c = cfg && cfg.coaches && cfg.coaches[key];
+      return (c && c.bookingUrl) ? c.bookingUrl : BOOK;
+    };
+    const coaches = [
+      {
+        slotId:'coach-taigh', name:'Taigh Smullen', role:'Manager',
+        slotHint:'Drop in a photo of Taigh',
+        bio:'Trampoline and parkour specialist \u2014 explosive air awareness built on solid fundamentals. Great if you want big, controlled movement.',
+        tags:['Trampoline','Parkour'],
+        cta:'Book with Taigh', href: coachUrl('taigh'),
+      },
+      {
+        slotId:'coach-steven', name:'Steven Leblanc', role:'Manager',
+        slotHint:'Drop in a photo of Steven',
+        bio:'24+ years of parkour and a true all-around mover \u2014 flips, acrobatics and conditioning. Methodical, progression-driven coaching, with an app to track your progress between sessions.',
+        tags:['Parkour','Flips','Acrobatics','Conditioning'],
+        cta:'Book with Steven', href: coachUrl('steven'),
+      },
+      {
+        slotId:'coach-nelson', name:'Nelson Lin', role:'Coach',
+        slotHint:'Drop in a photo of Nelson',
+        bio:'Tricking, calisthenics and gymnastics \u2014 high-energy flips and bodyweight strength. From your first kick to your cleanest combos.',
+        tags:['Tricking','Calisthenics','Flips','Gymnastics'],
+        cta:'Book with Nelson', href: coachUrl('nelson'),
+      },
+    ];
+    const notes = [
+      { icon:'bi bi-graph-up-arrow', title:'One coach, your whole journey', body:'Sticking with a specific coach means continuity \u2014 they know your history, track your progress and build each session on the last.' },
+      { icon:'bi bi-calendar-heart', title:'They come in just for you', body:'Book a specific coach outside their regular shift \u2014 even on their day off \u2014 and they\u2019ll come in only for your session. Coaching on demand, on your schedule.' },
+      { icon:'bi bi-tag', title:'Each coach sets their rate', body:'Because these are private sessions on their own time, each coach sets their own rate \u2014 separate from standard class pricing. The rate shows when you book.' },
+      { icon:'bi bi-clipboard-check', title:'Waiver first', body:'Everyone needs a signed waiver before a first session. New here? Start on the Get Started page, then come back and book.' },
+    ];
+    return {
+      brand: p.brand ?? '#ffd400',
+      coaches,
+      notes,
+    };
+  }
+}
+</script>
+</body>
+</html>

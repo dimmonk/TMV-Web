@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0; background:#e9e7e1;}
+  *{box-sizing:border-box;}
+  ::selection{background:#ffd400; color:#211f1b;}
+  .app-scroll{scrollbar-width:none;}
+  .app-scroll::-webkit-scrollbar{display:none;}
+  .navbtn{transition:transform .12s ease;}
+  .navbtn:active{transform:scale(.9);}
+  .qa:active{transform:scale(.97);}
+  .tile:active{transform:scale(.98);}
+  .shopadd:active{transform:scale(.94);}
+  /* embed mode: strip the concept canvas + phone bezel so the app fills its host */
+  .appcanvas.emb{min-height:0; height:100%; padding:0; background:transparent;}
+  .appcanvas.emb .appwrap{width:100%; height:100%;}
+  .appcanvas.emb .appframe{width:100%; height:100%; border-radius:0; box-shadow:none; border:0;}
+  @keyframes tmv-pulse{0%{box-shadow:0 0 0 0 rgba(95,208,127,.5);}70%{box-shadow:0 0 0 6px rgba(95,208,127,0);}100%{box-shadow:0 0 0 0 rgba(95,208,127,0);}}
+  .tmv-pulse{animation:tmv-pulse 1.6s ease-in-out infinite;}
+</style>
+</helmet>
+<div data-screen-label="Mobile app concept canvas" class="appcanvas {{ embedCls }}" style="min-height:100vh; background:#e9e7e1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b; padding:44px 24px 80px; display:flex; flex-direction:column; align-items:center;">
+
+  <!-- ===== INTRO ===== -->
+  <sc-if value="{{ notEmbed }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:560px; text-align:center; margin-bottom:34px;">
+    <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.16em; text-transform:uppercase; color:#9b8e6a; margin-bottom:16px;"><span style="width:22px; height:2px; background:#ffd400;"></span>Concept · Mobile app</div>
+    <h1 style="font:800 34px/1.08 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 12px;">The Monkey Vault, as an app</h1>
+    <p style="font:400 15px/1.6 inherit; color:#6a6760; margin:0;">Same site, rebuilt around a persistent bottom bar so the things members do most — book, check in, shop — are always one thumb-tap away. <strong style="color:#211f1b;">Tap the bar to move between sections.</strong></p>
+  </div>
+  </sc-if>
+
+  <!-- ===== PHONE ===== -->
+  <div class="appwrap" style="position:relative; width:392px; flex:none;">
+    <div class="appframe" style="position:relative; width:392px; height:812px; background:#f5f4f1; border-radius:46px; overflow:hidden; box-shadow:0 2px 4px rgba(28,25,23,.06), 0 50px 90px -40px rgba(28,25,23,.55); border:1px solid rgba(28,25,23,.08); display:flex; flex-direction:column;">
+
+      <!-- status bar -->
+      <div style="flex:none; height:46px; display:flex; align-items:center; justify-content:space-between; padding:0 26px; position:relative; z-index:20; background:#211f1b;">
+        <span style="font:600 14px/1 -apple-system,system-ui,sans-serif; color:#fff; letter-spacing:.02em; padding-top:4px;">9:41</span>
+        <div style="display:flex; align-items:center; gap:7px; padding-top:4px; color:#fff;">
+          <i class="bi bi-reception-4" style="font-size:12px;"></i>
+          <i class="bi bi-wifi" style="font-size:12px;"></i>
+          <i class="bi bi-battery-full" style="font-size:15px;"></i>
+        </div>
+      </div>
+
+      <!-- app bar (dark, persistent — matches the website header) -->
+      <div style="flex:none; background:#211f1b; border-bottom:1px solid rgba(255,255,255,.08); padding:11px 18px; display:flex; align-items:center; justify-content:space-between; position:relative; z-index:15;">
+        <div style="display:flex; align-items:center; gap:9px;">
+          <img src="assets/tmvlogo.png" alt="" style="width:28px; height:28px; object-fit:contain;">
+          <span style="font:900 13px/1 'Archivo',sans-serif; letter-spacing:.02em; text-transform:uppercase; color:#fff;">The Monkey Vault</span>
+        </div>
+        <span style="width:34px; height:34px; border-radius:50%; background:#ffd400; color:#211f1b; display:flex; align-items:center; justify-content:center; font:800 14px/1 'Archivo',sans-serif;">{{ initial }}</span>
+      </div>
+
+      <!-- scroll region -->
+      <div class="app-scroll" style="flex:1; overflow-y:auto; overflow-x:hidden; position:relative;">
+
+        <!-- ============ HOME ============ -->
+        <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:18px 18px 120px;">
+            <!-- greeting -->
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Hey {{ memberName }}</h2>
+            <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 20px;">Ready to move today?</p>
+
+            <!-- status / membership card -->
+            <div style="background:#211f1b; color:#fff; border-radius:20px; padding:20px 22px; margin-bottom:22px; position:relative; overflow:hidden;">
+              <div style="position:absolute; inset:0; background:radial-gradient(360px 180px at 92% -20%, rgba(255,212,0,.16), transparent 70%);"></div>
+              <div style="position:relative;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                  <span style="display:inline-flex; align-items:center; gap:7px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#5fd07f;"><span class="tmv-pulse" style="width:7px; height:7px; border-radius:50%; background:#5fd07f;"></span>Open now</span>
+                  <span style="font:600 12px/1 inherit; color:rgba(255,255,255,.6);">11 AM – 10 PM</span>
+                </div>
+                <div style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.04em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:7px;">Open Gym Membership</div>
+                <div style="display:flex; align-items:baseline; gap:8px; margin-bottom:12px;"><span style="font:900 26px/1 'Archivo',sans-serif; color:#ffd400;">18 days</span><span style="font:600 12.5px/1 inherit; color:rgba(255,255,255,.6);">left of 30</span></div>
+                <div style="height:6px; border-radius:999px; background:rgba(255,255,255,.14); overflow:hidden;"><div style="width:60%; height:100%; background:#ffd400; border-radius:999px;"></div></div>
+              </div>
+            </div>
+
+            <!-- quick actions -->
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:11px; margin-bottom:28px;">
+              <sc-for list="{{ quickActions }}" as="q" hint-placeholder-count="3">
+                <button class="qa" onClick="{{ q.onClick }}" style="cursor:pointer; background:{{ q.bg }}; border:1px solid {{ q.bd }}; border-radius:16px; padding:16px 8px 14px; display:flex; flex-direction:column; align-items:center; gap:9px; transition:transform .12s ease;">
+                  <i class="bi {{ q.icon }}" style="font-size:20px; color:{{ q.fg }};"></i>
+                  <span style="font:800 11.5px/1 'Archivo',sans-serif; letter-spacing:.02em; color:{{ q.labelColor }};">{{ q.label }}</span>
+                </button>
+              </sc-for>
+            </div>
+
+            <!-- booking now -->
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:13px;">
+              <h3 style="font:800 17px/1 'Archivo',sans-serif; letter-spacing:-.01em; margin:0;">Booking now</h3>
+              <button onClick="{{ goBook }}" style="cursor:pointer; background:none; border:0; font:800 11.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; display:inline-flex; align-items:center; gap:5px;">All <i class="bi bi-arrow-right" style="color:{{ campColor }};"></i></button>
+            </div>
+            <div style="margin-bottom:28px;">
+              <dc-import name="BookingCard" color="{{ campColor }}" duration="9–2 daily" booking-tag="Register" title="Summer Camps 2026" description="A full week of parkour over the break — skills, flips, games and friends." pills="Ages 5+ | Mon–Fri | All levels" price="$350 / week" price-note="booking now" action-label="Reserve" href="#" hint-size="100%,250px"></dc-import>
+            </div>
+
+            <!-- explore -->
+            <h3 style="font:800 17px/1 'Archivo',sans-serif; letter-spacing:-.01em; margin:0 0 13px;">Jump back in</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <sc-for list="{{ programs }}" as="pg" hint-placeholder-count="2">
+                <button class="tile" onClick="{{ pg.onClick }}" style="cursor:pointer; text-align:left; background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:12px; transition:transform .12s ease;">
+                  <span style="width:38px; height:38px; border-radius:11px; background:color-mix(in srgb,{{ pg.color }} 14%,#fff); display:flex; align-items:center; justify-content:center;"><i class="bi {{ pg.icon }}" style="font-size:18px; color:{{ pg.color }};"></i></span>
+                  <div>
+                    <div style="font:800 15px/1.1 'Archivo',sans-serif; letter-spacing:-.005em;">{{ pg.title }}</div>
+                    <div style="font:500 12px/1.35 inherit; color:#8a877f; margin-top:4px;">{{ pg.sub }}</div>
+                  </div>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ CLASSES ============ -->
+        <sc-if value="{{ isClasses }}" hint-placeholder-val="">
+          <div style="padding:6px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Classes</h2>
+            <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 18px;">Every group class, all ages &amp; levels.</p>
+            <div class="app-scroll" style="display:flex; gap:8px; overflow-x:auto; margin:0 -18px 20px; padding:0 18px;">
+              <sc-for list="{{ classFilters }}" as="f" hint-placeholder-count="4">
+                <span style="flex:none; font:700 12.5px/1 -apple-system,system-ui,sans-serif; color:{{ f.fg }}; background:{{ f.bg }}; border:1px solid {{ f.bd }}; border-radius:999px; padding:9px 15px; white-space:nowrap;">{{ f.label }}</span>
+              </sc-for>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <sc-for list="{{ classCards }}" as="cl" hint-placeholder-count="5">
+                <dc-import name="ClassCard" category="{{ cl.category }}" tag="{{ cl.tag }}" title="{{ cl.title }}" description="{{ cl.desc }}" booking-tag="{{ cl.bookingTag }}" pills="{{ cl.pills }}" image="{{ cl.image }}" action-label="View schedule" href="#" back-eyebrow="{{ cl.backEyebrow }}" back-headline="{{ cl.backHeadline }}" back-body="{{ cl.backBody }}" specs="{{ cl.specs }}" hint-size="100%,478px"></dc-import>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ BOOK ============ -->
+        <sc-if value="{{ isBook }}" hint-placeholder-val="">
+          <div style="padding:6px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Book</h2>
+            <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 20px;">What would you like to book?</p>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <sc-for list="{{ bookOptions }}" as="b" hint-placeholder-count="4">
+                <dc-import name="BookingCard" color="{{ b.color }}" booking-tag="{{ b.tag }}" title="{{ b.title }}" description="{{ b.desc }}" pills="{{ b.pills }}" price="{{ b.price }}" price-note="{{ b.note }}" action-label="{{ b.action }}" href="#" hint-size="100%,250px"></dc-import>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ SHOP ============ -->
+        <sc-if value="{{ isShop }}" hint-placeholder-val="">
+          <div style="padding:6px 18px 120px;">
+            <div style="display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:20px;">
+              <div>
+                <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Shop</h2>
+                <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0;">Passes, packs &amp; gear.</p>
+              </div>
+              <span style="position:relative; width:40px; height:40px; border-radius:12px; background:#fff; border:1px solid #ebe9e4; display:flex; align-items:center; justify-content:center;"><i class="bi bi-bag" style="font-size:17px; color:#211f1b;"></i><span style="position:absolute; top:-5px; right:-5px; min-width:18px; height:18px; padding:0 5px; border-radius:999px; background:#f44336; color:#fff; font:800 10px/18px 'Archivo',sans-serif; text-align:center;">2</span></span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <sc-for list="{{ storeProducts }}" as="s" hint-placeholder-count="6">
+                <dc-import name="BookingCard" color="{{ s.color }}" title="{{ s.title }}" description="{{ s.desc }}" pills="{{ s.pills }}" price="{{ s.price }}" price-note="{{ s.note }}" action-label="{{ s.action }}" href="#" hint-size="100%,240px"></dc-import>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ ACCOUNT ============ -->
+        <sc-if value="{{ isAccount }}" hint-placeholder-val="">
+          <div style="padding:6px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 20px;">Account</h2>
+
+            <!-- member card -->
+            <div style="background:#211f1b; color:#fff; border-radius:20px; padding:22px; margin-bottom:16px; position:relative; overflow:hidden;">
+              <div style="position:absolute; inset:0; background:radial-gradient(340px 170px at 90% -20%, rgba(255,212,0,.16), transparent 70%);"></div>
+              <div style="position:relative; display:flex; align-items:center; gap:14px;">
+                <span style="flex:none; width:52px; height:52px; border-radius:50%; background:#ffd400; color:#211f1b; display:flex; align-items:center; justify-content:center; font:900 20px/1 'Archivo',sans-serif;">{{ initial }}</span>
+                <div style="flex:1; min-width:0;">
+                  <div style="font:800 18px/1.1 'Archivo',sans-serif; letter-spacing:-.01em;">{{ memberName }} Rivera</div>
+                  <div style="font:600 12.5px/1.3 inherit; color:rgba(255,255,255,.6); margin-top:4px;">Member since 2023</div>
+                </div>
+                <span style="display:inline-flex; align-items:center; gap:6px; font:700 10px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#5fd07f; background:rgba(95,208,127,.14); border-radius:999px; padding:6px 10px;"><i class="bi bi-patch-check-fill" style="font-size:11px;"></i>Waiver OK</span>
+              </div>
+            </div>
+
+            <!-- check in -->
+            <button class="qa" style="cursor:pointer; width:100%; background:#ffd400; border:0; border-radius:16px; padding:17px; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:24px; font:800 15px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; color:#211f1b; box-shadow:0 10px 22px -12px rgba(255,212,0,.9); transition:transform .12s ease;"><i class="bi bi-qr-code" style="font-size:19px;"></i>Check in at the gym</button>
+
+            <!-- passes -->
+            <h3 style="font:800 15px/1 'Archivo',sans-serif; letter-spacing:.02em; text-transform:uppercase; color:#9b8e6a; margin:0 0 12px;">Your passes</h3>
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:26px;">
+              <sc-for list="{{ passes }}" as="p" hint-placeholder-count="2">
+                <div style="display:flex; align-items:center; gap:13px; background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:15px 16px;">
+                  <span style="flex:none; width:38px; height:38px; border-radius:11px; background:color-mix(in srgb,{{ p.color }} 14%,#fff); display:flex; align-items:center; justify-content:center;"><i class="bi {{ p.icon }}" style="font-size:17px; color:{{ p.color }};"></i></span>
+                  <div style="flex:1; min-width:0;"><div style="font:800 14px/1.15 'Archivo',sans-serif;">{{ p.title }}</div><div style="font:500 12px/1.3 inherit; color:#8a877f; margin-top:3px;">{{ p.sub }}</div></div>
+                  <span style="font:800 13px/1 'Archivo',sans-serif; color:{{ p.color }};">{{ p.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- recent visits -->
+            <h3 style="font:800 15px/1 'Archivo',sans-serif; letter-spacing:.02em; text-transform:uppercase; color:#9b8e6a; margin:0 0 12px;">Recent visits</h3>
+            <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; overflow:hidden; margin-bottom:26px;">
+              <sc-for list="{{ visits }}" as="v" hint-placeholder-count="3">
+                <div style="display:flex; align-items:center; gap:13px; padding:14px 16px; border-bottom:1px solid #f0efea;">
+                  <i class="bi bi-clock-history" style="font-size:15px; color:#b0aca3;"></i>
+                  <div style="flex:1;"><div style="font:700 13.5px/1.15 'Archivo',sans-serif;">{{ v.act }}</div><div style="font:500 12px/1 inherit; color:#8a877f; margin-top:4px;">{{ v.date }}</div></div>
+                  <span style="font:600 12.5px/1 inherit; color:#8a877f;">{{ v.dur }}</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- settings rows -->
+            <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; overflow:hidden;">
+              <sc-for list="{{ settings }}" as="st" hint-placeholder-count="4">
+                <button style="cursor:pointer; width:100%; text-align:left; background:none; border:0; display:flex; align-items:center; gap:13px; padding:15px 16px; border-bottom:1px solid #f0efea;">
+                  <i class="bi {{ st.icon }}" style="font-size:16px; color:#6a6760; width:20px;"></i>
+                  <span style="flex:1; font:600 14px/1 -apple-system,system-ui,sans-serif; color:#211f1b;">{{ st.label }}</span>
+                  <i class="bi bi-chevron-right" style="font-size:12px; color:#c4c0b7;"></i>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+
+      <!-- ===== BOTTOM NAV ===== -->
+      <div style="flex:none; position:relative; z-index:30; background:rgba(28,26,23,.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-top:1px solid rgba(255,255,255,.08); padding:9px 12px 22px; display:flex; align-items:flex-end;">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+          <button class="navbtn" onClick="{{ n.onClick }}" style="flex:1; cursor:pointer; background:none; border:0; padding:0; display:flex; flex-direction:column; align-items:center; gap:5px;">
+            <sc-if value="{{ n.center }}" hint-placeholder-val="">
+              <span style="width:54px; height:54px; margin-top:-30px; border-radius:50%; background:#ffd400; border:4px solid #211f1b; box-shadow:0 10px 20px -6px rgba(255,212,0,.8); display:flex; align-items:center; justify-content:center;"><i class="bi {{ n.icon }}" style="font-size:23px; color:#211f1b;"></i></span>
+              <span style="font:800 10px/1 'Archivo',sans-serif; letter-spacing:.03em; text-transform:uppercase; color:{{ n.fg }};">{{ n.label }}</span>
+            </sc-if>
+            <sc-if value="{{ n.regular }}" hint-placeholder-val="{{ true }}">
+              <i class="bi {{ n.icon }}" style="font-size:21px; color:{{ n.fg }};"></i>
+              <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.02em; color:{{ n.fg }};">{{ n.label }}</span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- caption -->
+  <sc-if value="{{ notEmbed }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:520px; text-align:center; margin-top:30px;">
+    <p style="font:500 13px/1.6 inherit; color:#8a877f; margin:0;">Five destinations, never more. <strong style="color:#211f1b;">Book</strong> is raised and centered as the primary action; everything else stays a flat tap-target. The active tab darkens to ink; the rest sit muted until tapped.</p>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:440,&quot;height&quot;:1000},&quot;memberName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Alex&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;startTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;home&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;classes&quot;,&quot;book&quot;,&quot;shop&quot;,&quot;account&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { tab: null, cats: null };
+
+  setTab = (t) => this.setState({ tab: t });
+
+  componentDidMount() {
+    import('./categories.js')
+      .then((m) => {
+        const map = Object.fromEntries(m.CATEGORIES.map((x) => [x.key, x.color]));
+        this.setState({ cats: map });
+      })
+      .catch((e) => console.warn(e));
+  }
+
+  cat(key, fallback) {
+    return (this.state.cats && this.state.cats[key]) || fallback;
+  }
+
+  renderVals() {
+    const p = this.props;
+    const tab = this.state.tab || (p.startTab ?? 'home');
+    const memberName = (p.memberName ?? 'Alex').toString().trim() || 'Alex';
+
+    const classColor = this.cat('classes', '#2196f3');
+    const campColor = this.cat('camps', '#e27902');
+    const privateColor = this.cat('private', '#f44336');
+    const openGymColor = this.cat('openGym', '#2e9e4f');
+    const partyColor = this.cat('parties', '#ffd400');
+    const athleticColor = this.cat('athletic', '#ffb82a');
+
+    // ---- bottom nav ----
+    const INK = '#211f1b';
+    const MUTE = '#b0aca3';
+    const navDef = [
+      { key: 'home', label: 'Home', icon: 'bi-house-door-fill' },
+      { key: 'classes', label: 'Classes', icon: 'bi-lightning-charge-fill' },
+      { key: 'book', label: 'Book', icon: 'bi-calendar-check-fill', center: true },
+      { key: 'shop', label: 'Shop', icon: 'bi-bag-fill' },
+      { key: 'account', label: 'Account', icon: 'bi-person-fill' },
+    ];
+    const nav = navDef.map((n) => ({
+      ...n,
+      center: !!n.center,
+      regular: !n.center,
+      fg: tab === n.key ? '#fff' : 'rgba(255,255,255,.42)',
+      onClick: () => this.setTab(n.key),
+    }));
+
+    // ---- home quick actions ----
+    const quickActions = [
+      { label: 'Book', icon: 'bi-calendar-check', bg: '#ffd400', bd: '#ffd400', fg: '#211f1b', labelColor: '#211f1b', onClick: () => this.setTab('book') },
+      { label: 'Check in', icon: 'bi-qr-code', bg: '#fff', bd: '#ebe9e4', fg: '#211f1b', labelColor: '#211f1b', onClick: () => this.setTab('account') },
+      { label: 'Schedule', icon: 'bi-calendar3', bg: '#fff', bd: '#ebe9e4', fg: '#211f1b', labelColor: '#211f1b', onClick: () => this.setTab('classes') },
+    ];
+
+    const programs = [
+      { title: 'Recreational', sub: 'Drop-in parkour', icon: 'bi-person-arms-up', color: classColor, onClick: () => this.setTab('classes') },
+      { title: 'Athletic Program', sub: 'Train like an athlete', icon: 'bi-trophy-fill', color: athleticColor, onClick: () => this.setTab('classes') },
+    ];
+
+    // ---- classes ----
+    const classFilters = [
+      { label: 'All', active: true },
+      { label: 'Kids' },
+      { label: 'Teens & adults' },
+      { label: 'Drop-in' },
+      { label: 'Membership' },
+    ].map((f) => ({
+      label: f.label,
+      fg: f.active ? '#fff' : '#3a3833',
+      bg: f.active ? '#211f1b' : '#fff',
+      bd: f.active ? '#211f1b' : '#e6e4dd',
+    }));
+
+    const classCards = [
+      { category: 'Parkour', tag: 'Parkour', title: 'Recreational', desc: 'Parkour & acrobatics at your own pace. All fun, zero pressure.', bookingTag: 'Drop-in', pills: 'All ages | All levels', image: 'assets/recreational.gif', backEyebrow: 'Recreational · Parkour', backHeadline: 'At your own pace, zero pressure', backBody: 'Relaxed, drop-in parkour and acrobatics. Coaches meet you exactly where you are — no commitment, no pressure.', specs: 'Level: All levels || Ages: All ages — Parent & Child (3+) to Adults || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+      { category: 'Flips', tag: 'Flips', title: 'Flip Class', desc: 'Master your flips, safely — from first roll to backflip.', bookingTag: 'Drop-in', pills: 'Ages 7+ | Levels 1–2', image: 'assets/flips.gif', backEyebrow: 'Flips', backHeadline: 'From first roll to backflip', backBody: 'A safe, levelled path from first roll to standing backflip. Always spotted and matted.', specs: 'Level: Levels 1–2 · backflip-only track || Ages: 7+ || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+      { category: 'Strength', tag: 'Strength', title: 'Calisthenics', desc: 'Build serious bodyweight strength and control.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Weekday eves', image: 'assets/calisthenics.gif', backEyebrow: 'Strength', backHeadline: 'Bodyweight strength & control', backBody: 'Bodyweight strength, control and mobility. Stands alone or powers up everything else you train.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Weekday evenings || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+      { category: 'Tricking', tag: 'Tricking', title: 'Tricking', desc: 'Kicks, flips and twists — martial arts meets acrobatics.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Tue & Thu — 7 PM', image: 'assets/tricking.gif', backEyebrow: 'Tricking', backHeadline: 'Martial arts meets acrobatics', backBody: 'Kicks, flips and twists chained into flowing combos. High-energy — and you build your own style.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Tue · Thu — 7 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+      { category: 'Gymnastics', tag: 'Gymnastics', title: 'Gymnastics', desc: 'Strength, flexibility and clean form — the base for everything.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Tue & Fri — 6 PM', image: 'assets/gymnastics.gif', backEyebrow: 'Gymnastics', backHeadline: 'The foundation under everything', backBody: 'Strength, flexibility and clean form — the fundamentals that make everything else safer and sharper.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Tue · Fri — 6 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+    ];
+
+    // ---- book ----
+    const bookOptions = [
+      { color: privateColor, tag: 'By appointment', title: 'Private Lesson', desc: '1-on-1 coaching built around your goals and pace.', pills: 'All ages | Your coach or ours', price: 'From $85', note: '5-packs available', action: 'Book' },
+      { color: openGymColor, tag: 'Drop-in', title: 'Open Gym', desc: 'Drop in any day and stay as long as you like.', pills: 'All ages | No time limit', price: 'From $25', note: '11 AM – 10 PM daily', action: 'Get a pass' },
+      { color: campColor, tag: 'Register', title: 'Weekly Camps', desc: 'A full week of parkour over school breaks.', pills: 'Ages 5+ | Mon–Fri', price: '$350 / week', note: 'late pickup to 4 PM', action: 'See dates' },
+      { color: partyColor, tag: 'By appointment', title: 'Birthday Party', desc: 'A coached session, a private room and free play.', pills: 'Ages 5+ | Private room', price: 'From $350', note: 'up to 15 kids', action: 'Enquire' },
+    ];
+
+    // ---- shop ----
+    // ---- shop (same store products the website Store page sells) ----
+    const storeProducts = [
+      { color: openGymColor, title: 'Day Passes', desc: 'Walk in and train as long as you like — single, or save with a 10 or 20 pack.', pills: 'All ages | No time limit', price: 'From $25', note: 'single pass', action: 'Buy' },
+      { color: openGymColor, title: 'Open Gym Membership', desc: 'Unlimited open gym for whatever stretch suits you — 30 days to a year.', pills: 'Unlimited | 30–360 days', price: 'From $110', note: '30 days', action: 'Buy' },
+      { color: classColor, title: 'Class Passes', desc: 'Good for any group class on the schedule — single or 10/20 pack.', pills: 'Any class | All levels', price: 'From $30', note: 'single class', action: 'Buy' },
+      { color: classColor, title: 'Class Membership', desc: 'Unlimited group classes and open gym for 30 days.', pills: 'Classes + open gym', price: '$180', note: '30 days', action: 'Buy' },
+      { color: privateColor, title: 'Private Class Pack', desc: 'A block of private lessons at a better rate — book each as you go.', pills: '1-on-1 | Book as you go', price: 'From $250', note: '5-pack · kids', action: 'Buy' },
+      { color: athleticColor, title: 'Athletic Membership', desc: 'Unlimited Athletic Program training, monthly.', pills: 'Ages 9+ | Monthly', price: '$150', note: 'per month', action: 'Buy' },
+    ];
+
+    // ---- account ----
+    const passes = [
+      { title: 'Open Gym Membership', sub: 'Renews in 18 days', value: 'Active', icon: 'bi-arrow-repeat', color: openGymColor },
+      { title: 'Class 10-Pack', sub: 'Group classes', value: '6 left', icon: 'bi-ticket-perforated', color: classColor },
+    ];
+    const visits = [
+      { act: 'Open Gym', date: 'Wed · Jul 9', dur: '2h 10m' },
+      { act: 'Recreational Class', date: 'Mon · Jul 7', dur: '1h' },
+      { act: 'Open Gym', date: 'Sat · Jul 5', dur: '1h 40m' },
+    ];
+    const settings = [
+      { label: 'Waiver & documents', icon: 'bi-file-earmark-check' },
+      { label: 'Payment methods', icon: 'bi-credit-card' },
+      { label: 'Notifications', icon: 'bi-bell' },
+      { label: 'Help & contact', icon: 'bi-question-circle' },
+    ];
+
+    return {
+      isHome: tab === 'home',
+      memberName,
+      initial: memberName.charAt(0).toUpperCase(),
+      quickActions,
+      programs,
+      classFilters,
+      classCards,
+      classColor,
+      campColor,
+      bookOptions,
+      storeProducts,
+      passes,
+      visits,
+      settings,
+      isClasses: tab === 'classes',
+      isBook: tab === 'book',
+      isShop: tab === 'shop',
+      isAccount: tab === 'account',
+      embedCls: this.props.embed ? 'emb' : '',
+      notEmbed: !this.props.embed,
+      nav,
+      goBook: () => this.setTab('book'),
+    };
+  }
+}
+</script>
+</body>
+</html>
