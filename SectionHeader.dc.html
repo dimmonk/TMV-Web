@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>html,body{margin:0;}</style>
+</helmet>
+<div style="--ink: {{ ink }}; --muted: {{ muted }}; --body: {{ bodyColor }}; --brand: {{ brand }}; display:flex; flex-direction:column; align-items:{{ alignItems }}; text-align:{{ align }}; gap:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; padding:4px 0;">
+  <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:11px;">
+    <sc-if value="{{ num }}" hint-placeholder-val="01">
+      <span style="font:800 12px/1 'Archivo',sans-serif; color:var(--brand);">{{ num }}</span><span style="width:14px; height:2px; background:var(--brand); border-radius:2px;"></span>
+    </sc-if>
+    {{ eyebrow }}
+  </div>
+  <h2 style="font:800 clamp(23px,5.4vw,34px)/1.06 'Archivo',sans-serif; letter-spacing:-.018em; color:var(--ink); margin:0; max-width:680px; text-wrap:balance;">{{ title }}</h2>
+  <sc-if value="{{ description }}" hint-placeholder-val="Where everyone starts.">
+    <p style="font:400 15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:var(--body); max-width:600px; margin:12px 0 0;">{{ description }}</p>
+  </sc-if>
+  <sc-if value="{{ hasAction }}" hint-placeholder-val="">
+    <a href="{{ href }}" style="display:inline-flex; align-items:center; gap:8px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:var(--ink); text-decoration:none; margin-top:16px; padding-bottom:4px; border-bottom:2px solid var(--brand);">{{ actionLabel }} <i class="bi bi-arrow-right" style="color:var(--brand);"></i></a>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {&quot;width&quot;: 680, &quot;height&quot;: 200},
+  &quot;num&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;01&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;eyebrow&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;The Foundation&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;title&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Core Programs&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;description&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Where everyone starts. Pick your pace \u2014 relaxed and recreational, fully personal, or athlete-level training.&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;align&quot;: {&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;left&quot;,&quot;options&quot;:[&quot;left&quot;,&quot;center&quot;],&quot;tsType&quot;:&quot;string&quot;},
+  &quot;theme&quot;: {&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;light&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;tsType&quot;:&quot;string&quot;},
+  &quot;actionLabel&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;href&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;#&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;brand&quot;: {&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd400&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ffd400&quot;,&quot;#2196f3&quot;,&quot;#f44336&quot;,&quot;#2e9e4f&quot;,&quot;#8c52ff&quot;]}
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props;
+    const theme = (p.theme ?? 'light').toString();
+    const dark = theme === 'dark';
+    const align = (p.align ?? 'left').toString();
+    return {
+      num: (p.num ?? '').toString().trim(),
+      eyebrow: p.eyebrow ?? 'The Foundation',
+      title: p.title ?? 'Core Programs',
+      description: (p.description ?? '').toString().trim(),
+      align,
+      alignItems: align === 'center' ? 'center' : 'flex-start',
+      ink: dark ? '#ffffff' : (p.ink ?? '#211f1b'),
+      body: dark ? 'rgba(255,255,255,.7)' : '#6a6760',
+      bodyColor: dark ? 'rgba(255,255,255,.7)' : '#6a6760',
+      muted: dark ? 'rgba(255,255,255,.5)' : '#b0aca3',
+      brand: p.brand ?? '#ffd400',
+      actionLabel: (p.actionLabel ?? '').toString().trim(),
+      href: p.href ?? '#',
+      hasAction: !!(p.actionLabel && p.actionLabel.toString().trim()),
+    };
+  }
+}
+</script>
+</body>
+</html>

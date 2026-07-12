@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0; background:#f5f4f1;}
+  *{box-sizing:border-box;}
+  ::selection{background:var(--brand,#ffd400); color:#211f1b;}
+  .gs-cta{transition:transform .15s ease;}
+  .gs-cta:hover{transform:translateY(-2px);}
+  .gs-opt{transition:transform .2s ease, box-shadow .2s ease;}
+  .gs-opt:hover{transform:translateY(-4px); box-shadow:0 1px 3px rgba(28,25,23,.05),0 26px 48px -26px rgba(28,25,23,.5)!important;}
+  .gs-go:hover{gap:11px!important;}
+</style>
+</helmet>
+<div data-screen-label="Get Started page" style="--brand: {{ brand }}; min-height:100vh; background:#f5f4f1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b;">
+
+  <dc-import name="SiteHeader" active="get-started" style="position:sticky; top:0; z-index:50;" hint-size="100%,66px"></dc-import>
+
+  <!-- HERO -->
+  <section style="background:#211f1b; color:#fff; position:relative; overflow:hidden;">
+    <div style="position:absolute; inset:0; background:radial-gradient(680px 360px at 88% -14%, rgba(255,212,0,.13), transparent 70%);"></div>
+    <div style="max-width:1000px; margin:0 auto; padding:64px 24px 70px; position:relative; text-align:center;">
+      <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--brand,#ffd400); margin-bottom:22px;">
+        <span style="width:22px; height:2px; background:var(--brand,#ffd400);"></span>New here? Start here<span style="width:22px; height:2px; background:var(--brand,#ffd400);"></span>
+      </div>
+      <h1 style="font:800 clamp(38px,9vw,58px)/1.02 'Archivo',sans-serif; letter-spacing:-.022em; margin:0 0 18px; text-wrap:balance;">Your first visit,<br>in three steps.</h1>
+      <p style="font:400 16px/1.55 inherit; color:rgba(255,255,255,.72); max-width:540px; margin:0 auto;">Never trained with us before? No experience needed. Sign your waiver, pick how you want to start, and show up ready to move — we'll take care of the rest.</p>
+    </div>
+  </section>
+
+  <!-- JUMP NAV -->
+  <dc-import name="JumpNav" top="66" max-width="1100" items="1 · Waiver#step-1 | 2 · First Session#step-2 | 3 · What to Bring#step-3 | Questions#questions" hint-size="100%,52px"></dc-import>
+
+  <main style="max-width:1100px; margin:0 auto; padding:0 24px 80px;">
+
+    <!-- STEP 1 -->
+    <section id="step-1" style="padding:72px 0 0; scroll-margin-top:132px;">
+      <div style="display:grid; grid-template-columns:auto 1fr; gap:26px; align-items:start;">
+        <div style="flex:none; width:56px; height:56px; border-radius:15px; background:#211f1b; color:var(--brand,#ffd400); display:flex; align-items:center; justify-content:center; font:900 24px/1 'Archivo',sans-serif;">1</div>
+        <div>
+          <div style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3; margin-bottom:10px;">Step one</div>
+          <h2 style="font:800 32px/1.05 'Archivo',sans-serif; letter-spacing:-.015em; margin:0 0 12px;">Sign our waiver</h2>
+          <p style="font:400 15px/1.55 inherit; color:#54514b; max-width:620px; margin:0 0 8px;">Everyone needs a signed waiver before their first session — it only takes a couple of minutes online, so you're not filling out forms at the front desk when you arrive.</p>
+          <div style="display:flex; align-items:flex-start; gap:11px; background:#fff; border:1px solid #ebe9e4; border-left:4px solid var(--brand,#ffd400); border-radius:12px; padding:16px 20px; max-width:620px; margin:18px 0 22px;">
+            <i class="bi bi-info-circle-fill" style="font-size:17px; color:#211f1b; margin-top:1px;"></i>
+            <span style="font:600 14px/1.6 inherit; color:#3a3833;">All waivers must be completed by a parent or legal guardian if the participant is <strong>17 or younger</strong>.</span>
+          </div>
+          <a href="https://www.themonkeyvault.com/get-started" target="_blank" rel="noopener" class="gs-cta" style="display:inline-flex; align-items:center; gap:9px; background:#211f1b; color:#fff; font:800 14px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:14px 22px; border-radius:11px;">Sign our waiver <i class="bi bi-box-arrow-up-right"></i></a>
+        </div>
+      </div>
+      <div style="height:1px; background:#e6e4dd; margin:48px 0 0;"></div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section id="step-2" style="padding:48px 0 0; scroll-margin-top:132px;">
+      <div style="display:grid; grid-template-columns:auto 1fr; gap:26px; align-items:start;">
+        <div style="flex:none; width:56px; height:56px; border-radius:15px; background:#211f1b; color:var(--brand,#ffd400); display:flex; align-items:center; justify-content:center; font:900 24px/1 'Archivo',sans-serif;">2</div>
+        <div>
+          <div style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3; margin-bottom:10px;">Step two</div>
+          <h2 style="font:800 32px/1.05 'Archivo',sans-serif; letter-spacing:-.015em; margin:0 0 12px;">Book your first session</h2>
+          <p style="font:400 15px/1.55 inherit; color:#54514b; max-width:640px; margin:0 0 8px;">Four ways to get started — pick whichever fits how you like to learn. Prefer your own pace or a friend group? Reserve an <strong>Introduction</strong> or <strong>Private</strong> class. Happy to jump in with others? Drop into a <strong>Group</strong> class or <strong>Open Gym</strong> anytime — no reservation needed.</p>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; margin-top:30px;">
+        <sc-for list="{{ options }}" as="o" hint-placeholder-count="4">
+          <dc-import name="BookingCard" color="{{ o.color }}" status="{{ o.status }}" status-tone="{{ o.statusTone }}" title="{{ o.title }}" description="{{ o.desc }}" action-label="{{ o.cta }}" href="{{ o.href }}" target="{{ o.target }}" hint-size="100%,230px"></dc-import>
+        </sc-for>
+      </div>
+      <div style="height:1px; background:#e6e4dd; margin:48px 0 0;"></div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section id="step-3" style="padding:48px 0 0; scroll-margin-top:132px;">
+      <div style="display:grid; grid-template-columns:auto 1fr; gap:26px; align-items:start;">
+        <div style="flex:none; width:56px; height:56px; border-radius:15px; background:#211f1b; color:var(--brand,#ffd400); display:flex; align-items:center; justify-content:center; font:900 24px/1 'Archivo',sans-serif;">3</div>
+        <div>
+          <div style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3; margin-bottom:10px;">Step three</div>
+          <h2 style="font:800 32px/1.05 'Archivo',sans-serif; letter-spacing:-.015em; margin:0 0 4px;">Things to know</h2>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:26px;">
+        <!-- before you arrive -->
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:18px; padding:30px 32px; box-shadow:0 1px 3px rgba(28,25,23,.05),0 16px 34px -30px rgba(28,25,23,.4);">
+          <h3 style="font:800 18px/1.1 'Archivo',sans-serif; letter-spacing:-.01em; margin:0 0 18px; display:flex; align-items:center; gap:10px;"><i class="bi bi-bag-check" style="color:var(--brand,#ffd400);"></i>Before you get here</h3>
+          <div style="display:flex; flex-direction:column; gap:15px;">
+            <sc-for list="{{ bring }}" as="b" hint-placeholder-count="3">
+              <div style="display:flex; align-items:flex-start; gap:12px;">
+                <i class="bi bi-check-circle-fill" style="font-size:16px; color:#2e9e4f; margin-top:2px; flex:none;"></i>
+                <span style="font:500 14px/1.6 inherit; color:#3a3833;">{{ b }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <!-- at the gym -->
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:18px; padding:30px 32px; box-shadow:0 1px 3px rgba(28,25,23,.05),0 16px 34px -30px rgba(28,25,23,.4);">
+          <h3 style="font:800 18px/1.1 'Archivo',sans-serif; letter-spacing:-.01em; margin:0 0 18px; display:flex; align-items:center; gap:10px;"><i class="bi bi-geo-alt" style="color:var(--brand,#ffd400);"></i>I'm at the gym. What now?</h3>
+          <div style="display:flex; flex-direction:column; gap:15px;">
+            <sc-for list="{{ arrive }}" as="a" hint-placeholder-count="4">
+              <div style="display:flex; align-items:flex-start; gap:12px;">
+                <span style="flex:none; width:22px; height:22px; border-radius:7px; background:#f3f2ee; display:flex; align-items:center; justify-content:center; font:800 11px/1 'Archivo',sans-serif; color:#211f1b; margin-top:1px;">{{ a.n }}</span>
+                <span style="font:500 14px/1.6 inherit; color:#3a3833;">{{ a.text }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- arrival policy callout -->
+      <div style="display:flex; align-items:flex-start; gap:13px; background:#fff7d6; border:1px solid #f1e4a0; border-radius:14px; padding:18px 22px; margin-top:18px;">
+        <i class="bi bi-clock-history" style="font-size:18px; color:#9a7b00; margin-top:1px;"></i>
+        <span style="font:600 14px/1.6 inherit; color:#5c4d12;">Please arrive <strong>15 minutes early</strong> to sign in. To be fair to those who arrive on time, there's a 15-minute cutoff — anyone more than 15 minutes late can't be admitted to a class.</span>
+      </div>
+
+      <!-- discount callout -->
+      <div style="display:flex; align-items:center; gap:16px; background:#211f1b; color:#fff; border-radius:16px; padding:24px 30px; margin-top:18px; flex-wrap:wrap;">
+        <span style="flex:none; width:46px; height:46px; border-radius:12px; background:rgba(255,212,0,.16); display:flex; align-items:center; justify-content:center;"><i class="bi bi-piggy-bank" style="font-size:22px; color:var(--brand,#ffd400);"></i></span>
+        <div style="flex:1; min-width:240px;">
+          <div style="font:800 17px/1.2 'Archivo',sans-serif; margin-bottom:5px;">Took an Introduction Class? Here's a bonus.</div>
+          <div style="font:500 14px/1.6 inherit; color:rgba(255,255,255,.72);">You get <strong style="color:var(--brand,#ffd400);">15% off</strong> any class or open-gym pass you buy the same day. Just ask the coach at the front desk.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ (shared component, trimmed to what steps 1–3 don't already cover) -->
+    <section id="questions" style="padding:52px 0 0; scroll-margin-top:132px;">
+      <div style="height:1px; background:#e6e4dd; margin:0 0 4px;"></div>
+      <dc-import name="Faq" brand="{{ brand }}" eyebrow="One more thing" heading="A few more questions" subhead="The other things people usually ask before their first visit." faqs="{{ otherFaqs }}" hint-size="100%,560px"></dc-import>
+    </section>
+
+  </main>
+
+  <dc-import name="SiteFooter" hint-size="100%,360px"></dc-import>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {&quot;width&quot;: 1100, &quot;height&quot;: 760},
+  &quot;brand&quot;: {&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd400&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ffd400&quot;,&quot;#2196f3&quot;,&quot;#f44336&quot;,&quot;#2e9e4f&quot;,&quot;#8c52ff&quot;]}
+}">
+class Component extends DCLogic {
+  state = {};
+  componentDidMount() {
+    import('./site-config.js').then(m => m.applySiteConfig({ page: 'getStarted' })).catch(e => console.warn(e));
+    import('./categories.js').then(m => this.setState({ catColor: m.catColor })).catch(e => console.warn(e));
+  }
+  renderVals() {
+    const p = this.props;
+    const BOOK = 'https://www.themonkeyvault.com/s/appointments';
+    const cc = this.state.catColor || (() => '#6e6e6e');
+    return {
+      brand: p.brand ?? '#ffd400',
+      options: [
+        { title:'Introduction Class', color:cc('introduction'), status:'Reservation required', statusTone:'neutral',
+          desc:'A one-on-one intro on a set beginner curriculum — the best place to start.',
+          cta:'Book intro', href:BOOK, target:'_blank' },
+        { title:'Private Class', color:cc('private'), status:'Reservation required', statusTone:'neutral',
+          desc:'One-on-one or your own friend group, fully tailored to your goals.',
+          cta:'Book private', href:BOOK, target:'_blank' },
+        { title:'Group Class', color:cc('classes'), status:'No reservation', statusTone:'go',
+          desc:'Drop into a scheduled class with other beginners — just show up.',
+          cta:'See schedule', href:'Schedule.dc.html', target:'_self' },
+        { title:'Open Gym', color:cc('openGym'), status:'No reservation', statusTone:'go',
+          desc:'Grab a day pass and train on your own, any time.',
+          cta:'Open gym info', href:'Train.dc.html#opengym', target:'_self' },
+      ],
+      bring: [
+        'Comfortable clothes you can move in.',
+        "A second pair of clean indoor shoes — not the ones you arrived in. (Forgot them? You can train barefoot, but shoes are comfier when you're starting out.)",
+        'A water bottle so you can stay hydrated.',
+      ],
+      arrive: [
+        { n:'1', text:'Arrive 15 minutes early to sign in and get set.' },
+        { n:'2', text:'Stash your things in a locker (bring your own lock).' },
+        { n:'3', text:'Read the Rules poster at the entrance.' },
+        { n:'4', text:'Head to the spring floor and join the group warm-up.' },
+      ],
+      otherFaqs: [
+        { q:'Do I need any experience to start?', a:'None at all. Most people who walk in have never done parkour before. Book an Introduction Class or drop into open gym and a coach will start you with the basics at your own pace.' },
+        { q:'What ages do you welcome?', a:'Everyone from age 3 and up. We run youth classes, adult classes, camps for kids 5+, and open gym for all ages. There is a class and a session for every body.' },
+        { q:'Do I have to book, or can I just drop in?', a:'Both work. Open Gym and Group Classes need no reservation \u2014 just check the schedule and show up. Introduction and Private Classes are reserved ahead of time so a coach is set aside for you.' },
+        { q:'Is it safe? What about the kids?', a:'Safety is built into the space \u2014 padded floors, a foam pit, and trained coaches who scale every skill to your level. Read the Rules poster at the entrance and your coach will guide the rest.' },
+        { q:'Can I host a birthday or group event?', a:'Absolutely. We run full and mini birthday parties plus group events for schools, teams and organizations. Weekend slots fill fast, so book early \u2014 see the Events page for details.' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

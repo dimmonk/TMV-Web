@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0; background:#f5f4f1;}
+  *{box-sizing:border-box;}
+  ::selection{background:var(--brand,#ffd400); color:#211f1b;}
+  .tmv-nav a:hover{color:#fff!important;}
+  .tmv-foot a:hover{color:var(--brand,#ffd400)!important;}
+  .tmv-soc:hover{background:var(--brand,#ffd400)!important; color:#211f1b!important;}
+</style>
+</helmet>
+<div data-screen-label="Book Now page" style="--brand: {{ brand }}; min-height:100vh; background:#f5f4f1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b;">
+
+  <!-- HEADER -->
+  <dc-import name="SiteHeader" active="" style="position:sticky; top:0; z-index:50;" hint-size="100%,66px"></dc-import>
+
+  <!-- HERO -->
+  <section style="background:#211f1b; color:#fff; position:relative; overflow:hidden;">
+    <div style="position:absolute; inset:0; background:radial-gradient(680px 360px at 88% -15%, rgba(255,212,0,.13), transparent 70%);"></div>
+    <div style="max-width:1200px; margin:0 auto; padding:58px 24px 52px; position:relative;">
+      <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--brand,#ffd400); margin-bottom:18px;">
+        <span style="width:22px; height:2px; background:var(--brand,#ffd400);"></span>Book online · real-time availability
+      </div>
+      <h1 style="font:800 clamp(34px,8vw,54px)/1.04 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 16px; max-width:780px;">Pick what you want to book.</h1>
+      <p style="font:400 16px/1.55 inherit; color:rgba(255,255,255,.72); max-width:580px; margin:0 0 28px;">Everything you can book or buy, in one place — tap one and you'll land right on its booking or checkout page. For bookings, your card is never charged up front; it just holds the slot.</p>
+    </div>
+  </section>
+
+  <!-- JUMP NAV -->
+  <dc-import name="JumpNav" top="66" max-width="1120" items="{{ jumpItems }}" hint-size="100%,52px"></dc-import>
+
+  <main style="max-width:1120px; margin:0 auto; padding:56px 24px 24px;">
+    <sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+      <section id="{{ g.id }}" style="margin-bottom:54px; scroll-margin-top:132px;">
+        <div style="display:flex; align-items:center; gap:13px; margin-bottom:6px;">
+          <span style="flex:none; width:42px; height:42px; border-radius:12px; background:color-mix(in srgb,{{ g.color }} 14%,#fff); display:flex; align-items:center; justify-content:center;"><i class="{{ g.icon }}" style="font-size:20px; color:{{ g.text }};"></i></span>
+          <h2 style="font:800 28px/1.05 'Archivo',sans-serif; letter-spacing:-.015em; margin:0;">{{ g.title }}</h2>
+        </div>
+        <p style="font:400 14px/1.6 inherit; color:#6a6760; margin:0 0 22px; padding-left:55px;">{{ g.blurb }}</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:18px;">
+          <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+            <dc-import name="BookingCard" color="{{ it.cardColor }}" duration="{{ it.dur }}" booking-tag="{{ it.bookingTag }}" flag="{{ it.flag }}" title="{{ it.title }}" description="{{ it.desc }}" pills="{{ it.pillsStr }}" price="{{ it.price }}" price-key="{{ it.priceKey }}" price-note="{{ it.note }}" action-label="{{ it.cta }}" href="{{ it.href }}" target="{{ it.target }}" hint-size="100%,290px"></dc-import>
+          </sc-for>
+        </div>
+      </section>
+    </sc-for>
+
+    <!-- HELP STRIP -->
+    <section style="background:#211f1b; color:#fff; border-radius:18px; padding:32px 36px; display:flex; align-items:center; justify-content:space-between; gap:22px; flex-wrap:wrap; margin-bottom:8px;">
+      <div style="display:flex; align-items:center; gap:16px;">
+        <span style="flex:none; width:48px; height:48px; border-radius:13px; background:rgba(255,255,255,.1); display:flex; align-items:center; justify-content:center;"><i class="bi bi-chat-dots-fill" style="font-size:21px; color:var(--brand,#ffd400);"></i></span>
+        <div>
+          <div style="font:800 19px/1.1 'Archivo',sans-serif; letter-spacing:-.01em; margin-bottom:5px;">Not sure which to pick?</div>
+          <div style="font:400 12.5px/1.5 inherit; color:rgba(255,255,255,.66);">Call us at (647) 350-1111 or email and we'll help you find the right fit.</div>
+        </div>
+      </div>
+      <a href="mailto:info@themonkeyvault.com" style="flex:none; display:inline-flex; align-items:center; gap:9px; background:var(--brand,#ffd400); color:#211f1b; font:800 13.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:14px 22px; border-radius:11px;">Get in touch <i class="bi bi-arrow-up-right"></i></a>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <dc-import name="SiteFooter" hint-size="100%,360px"></dc-import>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:900},&quot;brand&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd400&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ffd400&quot;,&quot;#2196f3&quot;,&quot;#f44336&quot;,&quot;#2e9e4f&quot;,&quot;#8c52ff&quot;]}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    import('./site-config.js').then(m => m.applySiteConfig()).catch(e => console.warn(e));
+  }
+  renderVals() {
+    const p = this.props;
+    const BOOK = 'https://www.themonkeyvault.com/s/appointments';
+    const ext = (href) => ({ href, target: '_blank' });
+    const internal = (href) => ({ href, target: '_self' });
+    const groups = [
+        { id:'lessons', title:'Private Lessons', icon:'bi bi-person-arms-up', color:'#f44336', text:'#f44336', ink:'#fff',
+          blurb:'One-on-one or small-group coaching, shaped entirely around your goals and pace.',
+          items:[
+            { title:'Introduction', dur:'1 hr', price:'$45', priceKey:'privateIntro', note:'First session \u00b7 groups from $30 each', bookingTag:'By appointment', color:'#6e6e6e', desc:'A one-time private lesson and the best first taste of parkour \u2014 what it is, what you can do with it, and how we coach it.', pills:['All ages','1-on-1'], cta:'Book', ...ext(BOOK) },
+            { title:'Private Lesson', dur:'1 hr', price:'From $65', priceKey:'privateKids', note:'Any coach on shift \u00b7 5-packs available', bookingTag:'By appointment', desc:'Ongoing one-on-one or small-group coaching, built around your goals with flexible scheduling. Pick your age group when you book \u2014 we\u2019ll match a coach.', pills:['1-on-1','All ages'], cta:'Book', ...ext(BOOK) },
+            { title:'Train with a specific coach', flag:'Pick your coach', price:'', note:'Coach sets their own rate', bookingTag:'By appointment', desc:'Pick a coach and stick with them \u2014 one instructor who follows your whole progress and comes in just for your session, even on a day off.', pills:['1-on-1','Your coach'], cta:'Choose a coach', ...internal('Private Lessons.dc.html#coaches') },
+          ] },
+        { id:'birthdays', title:'Birthday Parties', icon:'bi bi-balloon-fill', color:'#ffd400', text:'#c79a00', ink:'#211f1b',
+          blurb:'Coach-led parkour fun for the birthday crew \u2014 go all-in or keep it nimble.',
+          items:[
+            { title:'Full Birthday Party', dur:'2 hrs', price:'$350 base', priceKey:'partyBase', note:'Up to 8 kids \u00b7 +$25/extra kid', flag:'Most popular', bookingTag:'By appointment', desc:'A coached session, a private party room and free play \u2014 coaches with the group the whole time.', pills:['Ages 5+','Private room'], cta:'Book', ...ext(BOOK) },
+            { title:'Mini Birthday Party', dur:'1 hr', price:'$30 / kid', priceKey:'miniPartyKid', note:'3 kids min \u00b7 up to 15', bookingTag:'By appointment', desc:'The same one-hour coached session of games and challenges, with a lower minimum. All-day pass for every kid.', pills:['Ages 8+','3–15 people','All-day pass'], cta:'Book', ...ext(BOOK) },
+          ] },
+        { id:'camps', title:'Camps', icon:'bi bi-sun-fill', color:'#e27902', text:'#e27902', ink:'#fff',
+          blurb:'Full-day parkour camps over school breaks and days off \u2014 coached skills, games and friends, ages 5+.',
+          items:[
+            { title:'Weekly Camps', dur:'9\u20132 daily', price:'$350 / week', priceKey:'campWeekly', note:'late pickup to 4 PM', bookingTag:'Register', desc:'A full week of parkour over Winter, March Break and Summer \u2014 coached skills, flips, games and friends. All levels.', pills:['Ages 5+','Mon\u2013Fri','All levels'], cta:'See camps', ...internal('Camps.dc.html') },
+            { title:'P.A. Day Camp', dur:'9\u20132', price:'$90 / day', priceKey:'campDay', note:'open to the public', bookingTag:'Register', desc:'A single day of parkour on your day off school \u2014 expert coaching and non-stop challenges, start to finish.', pills:['Ages 5+','Single day'], cta:'See dates', ...internal('Camps.dc.html') },
+            { title:'Private Day Camp', dur:'9\u20132', price:'$90 / kid', priceKey:'campDay', note:'5 kids minimum', bookingTag:'By appointment', desc:'Gather your own crew for a private camp day \u2014 your own instructor, parkour, acrobatics, nerf battles and games. Book at least a week ahead.', pills:['Min 5 kids','Your own group'], cta:'Enquire', ...ext(BOOK) },
+          ] },
+        { id:'groups', title:'Groups & Teams', icon:'bi bi-people-fill', color:'#8c52ff', text:'#8c52ff', ink:'#fff',
+          blurb:'A fun, active way to build teamwork, confidence and skills for any organization.',
+          items:[
+            { title:'Group Events', dur:'2 hrs', price:'From $300', priceKey:'groupFrom', note:'10 min \u00b7 tiered per head', bookingTag:'By appointment', desc:'Schools, corporate teams, youth orgs and sports teams \u2014 an hour of guided activities then an hour of open gym. Teamwork, confidence and skills, expert-led.', pills:['Min 10 people','All levels'], cta:'Plan an event', ...ext(BOOK) },
+          ] },
+        { id:'open-gym', title:'Early Gym Access', icon:'bi bi-unlock-fill', color:'#2e9e4f', text:'#2e9e4f', ink:'#fff',
+          blurb:'Reserve The Monkey Vault before we open to the public. (Open gym itself needs no booking \u2014 just drop in.)',
+          items:[
+            { title:'Early Gym Access', dur:'1 hr', price:'From $50 / hr', priceKey:'earlyAccessHr', note:'+ $25 / person open gym', bookingTag:'By appointment', desc:'Reserve The Monkey Vault before we open at 11 AM for exclusive access \u2014 perfect for small groups or focused training with no crowds.', pills:['Your own group','Before 11 AM'], cta:'Reserve', ...ext(BOOK) },
+          ] },
+        { id:'passes', title:'Passes & Memberships', icon:'bi bi-ticket-perforated-fill', color:'#211f1b', text:'#211f1b', ink:'#fff',
+          blurb:'Buying, not booking \u2014 these check out securely with Square and are ready at the front desk when you arrive. Browse the full store for every pack size.',
+          items:[
+            { title:'Passes & pre-paid packs', price:'From $25', priceKey:'openGymDay', note:'day passes \u00b7 visit packs', color:'#2e9e4f', desc:'Open gym day passes and pre-paid visit packs \u2014 valid 10\u201320 months depending on size. Class passes and packs live in the same store.', pills:['All ages','Online store'], cta:'Browse the store', ...internal('Store.dc.html#opengym') },
+            { title:'Athletic Program membership', price:'$150 / month', priceKey:'athleticMonthly', note:'one-time or auto-renew', color:'#ffb82a', desc:'One month of unlimited Athletic Program training \u2014 buy a single month or set up a subscription you can pause or cancel any time.', pills:['Ages 9+','Membership'], cta:'Buy membership', ...internal('Store.dc.html#athletic') },
+            { title:'Gift cards', price:'Any amount', note:'delivered by email', color:'#6e6e6e', desc:'The easy gift \u2014 good for passes, classes, camps and parties. Buy online and send it straight to the recipient.', pills:['No expiry'], cta:'Buy a gift card', ...ext('https://squareup.com/gift/4PQGSAK7CK7FB/order') },
+          ] },
+      ];
+    groups.forEach(g => g.items.forEach(it => { it.pillsStr = (it.pills || []).join(' | '); it.cardColor = it.color || g.color; it.bookingTag = it.bookingTag || ''; }));
+    const jumpItems = groups.map(g => g.title + '#' + g.id).join(' | ');
+    return {
+      brand: p.brand ?? '#ffd400',
+      year: new Date().getFullYear(),
+      groups,
+      jumpItems,
+    };
+  }
+}
+</script>
+</body>
+</html>
