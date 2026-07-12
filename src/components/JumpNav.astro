@@ -1,0 +1,22 @@
+---
+interface Props {
+  items: { label: string; id: string }[];
+  top?: number;      // sticky offset below the header
+}
+const { items, top = 66 } = Astro.props;
+---
+<nav class="jn" style={`--top:${top}px`} aria-label="On this page">
+  <div class="jn-scroll">
+    {items.map((it) => (
+      <a href={`#${it.id}`} class="jn-link">{it.label}</a>
+    ))}
+  </div>
+</nav>
+
+<style>
+  .jn { position: sticky; top: var(--top); z-index: 40; background: rgba(245,244,241,.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .jn-scroll { max-width: 1120px; margin-inline: auto; padding: 0 24px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  .jn-scroll::-webkit-scrollbar { display: none; }
+  .jn-link { flex: none; white-space: nowrap; font: 700 12.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--muted); text-decoration: none; padding: 15px 4px; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; }
+  .jn-link:hover { color: var(--ink); border-bottom-color: var(--brand); }
+</style>

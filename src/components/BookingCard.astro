@@ -1,0 +1,103 @@
+---
+interface Props {
+  color?: string;
+  bookingTag?: string;
+  duration?: string;
+  flag?: string;
+  status?: string;
+  statusTone?: 'neutral' | 'go' | 'info';
+  title: string;
+  description?: string;
+  pills?: string;        // "Ages 5+ | Private room | Coach-led"
+  price?: string;
+  priceNote?: string;
+  actionLabel?: string;
+  href?: string;
+  target?: '_self' | '_blank';
+}
+const {
+  color = '#2196f3', bookingTag = '', duration = '', flag = '', status = '',
+  statusTone = 'neutral', title, description = '', pills = '',
+  price = '', priceNote = '', actionLabel = 'Book', href = '#', target = '_self',
+} = Astro.props;
+
+// readable foreground on the accent (white on dark, ink on light)
+function pickInk(hex: string): string {
+  const h = hex.replace('#', '');
+  if (h.length < 6) return '#fff';
+  const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+  return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? '#211f1b' : '#fff';
+}
+const ink = pickInk(color);
+const catText = ink === '#211f1b' ? `color-mix(in srgb, ${color} 62%, #000)` : color;
+
+const pillList = pills.split('|').map((s) => s.trim()).filter(Boolean);
+const bookingIconMap: Record<string, string> = {
+  'Drop-in': 'bi-door-open', 'By appointment': 'bi-calendar-check',
+  'Membership': 'bi-arrow-repeat', 'Register': 'bi-calendar-event',
+};
+const bookingIcon = bookingIconMap[bookingTag] || 'bi-info-circle';
+const tones = {
+  neutral: { fg: '#211f1b', bg: '#f3f2ee' },
+  go: { fg: '#1b6b2f', bg: '#e6f4ea' },
+  info: { fg: '#3a4a8c', bg: '#eef0f6' },
+};
+const tone = tones[statusTone] ?? tones.neutral;
+const ext = target === '_blank';
+---
+<a
+  class="bk"
+  href={href}
+  {...(ext ? { target: '_blank', rel: 'noopener' } : {})}
+  style={`--cat:${color}; --ink:${ink}; --catText:${catText}; --stBg:${tone.bg}; --stFg:${tone.fg}`}
+>
+  <span class="bk-strip"></span>
+  <div class="bk-body">
+    {(bookingTag || duration || flag || status) && (
+      <div class="bk-tags">
+        {bookingTag && <span class="bk-tag"><i class={`bi ${bookingIcon}`} aria-hidden="true"></i>{bookingTag}</span>}
+        {duration && <span class="bk-dur"><i class="bi bi-clock" aria-hidden="true"></i>{duration}</span>}
+        {flag && <span class="bk-flag">{flag}</span>}
+        {status && <span class="bk-status">{status}</span>}
+      </div>
+    )}
+    <h3 class="bk-title">{title}</h3>
+    {description && <p class="bk-desc">{description}</p>}
+    <div class="bk-bottom">
+      {pillList.length > 0 && (
+        <div class="bk-pills">{pillList.map((p) => <span class="bk-pill">{p}</span>)}</div>
+      )}
+      <div class="bk-foot">
+        <div>
+          {price && <div class="bk-price">{price}</div>}
+          {priceNote && <div class="bk-note">{priceNote}</div>}
+        </div>
+        <span class="bk-act">{actionLabel} <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
+      </div>
+    </div>
+  </div>
+</a>
+
+<style>
+  .bk { position: relative; height: 100%; display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(28,25,23,.05), 0 12px 30px -22px rgba(28,25,23,.4); text-decoration: none; color: inherit; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+  .bk:hover { transform: translateY(-4px); box-shadow: 0 1px 3px rgba(28,25,23,.05), 0 22px 40px -24px rgba(28,25,23,.5); border-color: color-mix(in srgb, var(--cat) 50%, #ebe9e4); }
+  .bk:hover .bk-act { gap: 11px; }
+  .bk-strip { height: 4px; background: var(--cat); flex: none; }
+  .bk-body { display: flex; flex-direction: column; gap: 13px; padding: 20px 20px 22px; flex: 1; }
+  .bk-tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .bk-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; background: var(--cat); color: var(--ink); font: 800 10.5px/1 var(--font-display); letter-spacing: .07em; text-transform: uppercase; }
+  .bk-tag i { font-size: 12px; }
+  .bk-dur { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 999px; background: color-mix(in srgb, var(--cat) 13%, #fff); color: var(--catText); font: 700 10px/1 var(--font-display); letter-spacing: .09em; text-transform: uppercase; }
+  .bk-flag { padding: 5px 10px; border-radius: 999px; background: var(--cat); color: var(--ink); font: 700 10px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; }
+  .bk-status { padding: 5px 10px; border-radius: 999px; background: var(--stBg); color: var(--stFg); font: 700 10px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; }
+  .bk-title { font: 800 20px/1.12 var(--font-display); letter-spacing: -.01em; color: var(--text); margin: 0; }
+  .bk-desc { font: 400 13px/1.5 var(--font-body); color: var(--text-3); margin: 0; }
+  .bk-bottom { margin-top: auto; display: flex; flex-direction: column; gap: 13px; }
+  .bk-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .bk-pill { font: 600 12.5px/1 var(--font-body); color: var(--catText); background: color-mix(in srgb, var(--cat) 10%, #fff); border: 1px solid color-mix(in srgb, var(--cat) 24%, #fff); border-radius: 999px; padding: 5px 10px; white-space: nowrap; }
+  .bk-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; padding-top: 16px; border-top: 1px solid #efeee8; }
+  .bk-price { font: 800 20px/1 var(--font-display); color: var(--text); }
+  .bk-note { font: 600 12.5px/1.3 var(--font-body); color: var(--muted-3); margin-top: 6px; }
+  .bk-act { flex: none; display: inline-flex; align-items: center; gap: 7px; font: 800 13.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--text); transition: gap .15s; }
+  .bk-act i { color: var(--catText); }
+</style>

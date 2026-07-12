@@ -1,0 +1,151 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import JumpNav from '../components/JumpNav.astro';
+import BookingCard from '../components/BookingCard.astro';
+import { seo, cat, site, url } from '../data/site';
+import { sq } from '../data/square-links';
+
+type Item = {
+  title: string; dur?: string; bookingTag?: string; flag?: string; status?: string;
+  desc: string; pills?: string; price?: string; priceNote?: string; cta: string;
+  href: string; target?: '_self' | '_blank'; color?: string;
+};
+type Group = { id: string; title: string; icon: string; color: string; blurb: string; items: Item[] };
+
+const groups: Group[] = [
+  {
+    id: 'lessons', title: 'Private Lessons', icon: 'bi-person-arms-up', color: cat.private,
+    blurb: 'One-on-one or small-group coaching, shaped entirely around your goals and pace.',
+    items: [
+      { title: 'Introduction', dur: '1 hr', price: '$45', priceNote: 'First session · groups from $30 each', bookingTag: 'By appointment', color: cat.intro, desc: 'A one-time private lesson and the best first taste of parkour — what it is, what you can do with it, and how we coach it.', pills: 'All ages | 1-on-1', cta: 'Book', href: sq.book.introduction, target: '_blank' },
+      { title: 'Private Lesson', dur: '1 hr', price: 'From $65', priceNote: 'Any coach on shift · 5-packs available', bookingTag: 'By appointment', desc: 'Ongoing one-on-one or small-group coaching, built around your goals with flexible scheduling. Pick your age group when you book — we’ll match a coach.', pills: '1-on-1 | All ages', cta: 'Book', href: sq.book.privateLesson, target: '_blank' },
+      { title: 'Train with a specific coach', flag: 'Pick your coach', priceNote: 'Coach sets their own rate', bookingTag: 'By appointment', desc: 'Pick a coach and stick with them — one instructor who follows your whole progress and comes in just for your session, even on a day off.', pills: '1-on-1 | Your coach', cta: 'Choose a coach', href: `${url('private-lessons')}#coaches` },
+    ],
+  },
+  {
+    id: 'birthdays', title: 'Birthday Parties', icon: 'bi-balloon-fill', color: cat.parties,
+    blurb: 'Coach-led parkour fun for the birthday crew — go all-in or keep it nimble.',
+    items: [
+      { title: 'Full Birthday Party', dur: '2 hrs', price: '$350 base', priceNote: 'Up to 8 kids · +$25/extra kid', flag: 'Most popular', bookingTag: 'By appointment', desc: 'A coached session, a private party room and free play — coaches with the group the whole time.', pills: 'Ages 5+ | Private room', cta: 'Book', href: sq.book.fullBirthday, target: '_blank' },
+      { title: 'Mini Birthday Party', dur: '1 hr', price: '$30 / kid', priceNote: '3 kids min · up to 15', bookingTag: 'By appointment', desc: 'The same one-hour coached session of games and challenges, with a lower minimum. All-day pass for every kid.', pills: 'Ages 8+ | 3–15 people | All-day pass', cta: 'Book', href: sq.book.miniBirthday, target: '_blank' },
+    ],
+  },
+  {
+    id: 'camps', title: 'Camps', icon: 'bi-sun-fill', color: cat.camps,
+    blurb: 'Full-day parkour camps over school breaks and days off — coached skills, games and friends, ages 5+.',
+    items: [
+      { title: 'Weekly Camps', dur: '9–2 daily', price: '$350 / week', priceNote: 'late pickup to 4 PM', bookingTag: 'Register', desc: 'A full week of parkour over Winter, March Break and Summer — coached skills, flips, games and friends. All levels.', pills: 'Ages 5+ | Mon–Fri | All levels', cta: 'See camps', href: url('camps') },
+      { title: 'P.A. Day Camp', dur: '9–2', price: '$90 / day', priceNote: 'open to the public', bookingTag: 'Register', desc: 'A single day of parkour on your day off school — expert coaching and non-stop challenges, start to finish.', pills: 'Ages 5+ | Single day', cta: 'See dates', href: url('camps') },
+      { title: 'Private Day Camp', dur: '9–2', price: '$90 / kid', priceNote: '5 kids minimum', bookingTag: 'By appointment', desc: 'Gather your own crew for a private camp day — your own instructor, parkour, acrobatics, nerf battles and games. Book at least a week ahead.', pills: 'Min 5 kids | Your own group', cta: 'Enquire', href: sq.book.privateDayCamp, target: '_blank' },
+    ],
+  },
+  {
+    id: 'groups', title: 'Groups & Teams', icon: 'bi-people-fill', color: cat.groups,
+    blurb: 'A fun, active way to build teamwork, confidence and skills for any organization.',
+    items: [
+      { title: 'Group Events', dur: '2 hrs', price: 'From $300', priceNote: '10 min · tiered per head', bookingTag: 'By appointment', desc: 'Schools, corporate teams, youth orgs and sports teams — an hour of guided activities then an hour of open gym. Teamwork, confidence and skills, expert-led.', pills: 'Min 10 people | All levels', cta: 'Plan an event', href: sq.book.groupEvents, target: '_blank' },
+    ],
+  },
+  {
+    id: 'open-gym', title: 'Early Gym Access', icon: 'bi-unlock-fill', color: cat.openGym,
+    blurb: 'Reserve The Monkey Vault before we open to the public. (Open gym itself needs no booking — just drop in.)',
+    items: [
+      { title: 'Early Gym Access', dur: '1 hr', price: 'From $50 / hr', priceNote: '+ $25 / person open gym', bookingTag: 'By appointment', desc: 'Reserve The Monkey Vault before we open at 11 AM for exclusive access — perfect for small groups or focused training with no crowds.', pills: 'Your own group | Before 11 AM', cta: 'Reserve', href: sq.book.earlyGymAccess, target: '_blank' },
+    ],
+  },
+  {
+    id: 'passes', title: 'Passes & Memberships', icon: 'bi-ticket-perforated-fill', color: cat.openGym,
+    blurb: 'Buying, not booking — these check out securely with Square and are ready at the front desk when you arrive. Browse the full store for every pack size.',
+    items: [
+      { title: 'Passes & pre-paid packs', price: 'From $25', priceNote: 'day passes · visit packs', color: cat.openGym, desc: 'Open gym day passes and pre-paid visit packs — valid 10–20 months depending on size. Class passes and packs live in the same store.', pills: 'All ages | Online store', cta: 'Browse the store', href: `${url('store')}#opengym` },
+      { title: 'Athletic Program membership', price: '$150 / month', priceNote: 'one-time or auto-renew', color: cat.athletic, desc: 'One month of unlimited Athletic Program training — buy a single month or set up a subscription you can pause or cancel any time.', pills: 'Ages 9+ | Membership', cta: 'Buy membership', href: `${url('store')}#athletic` },
+      { title: 'Gift cards', price: 'Any amount', priceNote: 'delivered by email', color: cat.intro, desc: 'The easy gift — good for passes, classes, camps and parties. Buy online and send it straight to the recipient.', pills: 'No expiry', cta: 'Buy a gift card', href: sq.book.giftCards, target: '_blank' },
+    ],
+  },
+];
+
+const jumpItems = groups.map((g) => ({ label: g.title, id: g.id }));
+---
+<BaseLayout title={seo.book.title} description={seo.book.description} active="">
+  <section class="pagehero">
+    <div class="pagehero-glow"></div>
+    <div class="container pagehero-inner">
+      <div class="pagehero-kicker"><span class="rule"></span>Book online · real-time availability</div>
+      <h1 class="pagehero-title">Pick what you want to book.</h1>
+      <p class="pagehero-lead">Everything you can book or buy, in one place — tap one and you'll land right on its booking or checkout page. For bookings, your card is never charged up front; it just holds the slot.</p>
+    </div>
+  </section>
+
+  <JumpNav items={jumpItems} top={66} />
+
+  <div class="bookwrap">
+    {groups.map((g) => (
+      <section id={g.id} class="bookgroup">
+        <div class="bookgroup-head">
+          <span class="bookgroup-ic" style={`background:color-mix(in srgb,${g.color} 14%,#fff)`}><i class={`bi ${g.icon}`} style={`color:${g.color}`} aria-hidden="true"></i></span>
+          <h2 class="bookgroup-title">{g.title}</h2>
+        </div>
+        <p class="bookgroup-blurb">{g.blurb}</p>
+        <div class="bookgroup-grid">
+          {g.items.map((it) => (
+            <BookingCard
+              color={it.color ?? g.color}
+              duration={it.dur}
+              bookingTag={it.bookingTag}
+              flag={it.flag}
+              title={it.title}
+              description={it.desc}
+              pills={it.pills}
+              price={it.price}
+              priceNote={it.priceNote}
+              actionLabel={it.cta}
+              href={it.href}
+              target={it.target ?? '_self'}
+            />
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <section class="helpstrip">
+      <div class="helpstrip-left">
+        <span class="helpstrip-ic"><i class="bi bi-chat-dots-fill" aria-hidden="true"></i></span>
+        <div>
+          <div class="helpstrip-title">Not sure which to pick?</div>
+          <div class="helpstrip-sub">Call us at {site.phoneDisplay} or email and we'll help you find the right fit.</div>
+        </div>
+      </div>
+      <a href={`mailto:${site.email}`} class="btn btn-primary">Get in touch <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  /* shared page hero (dark) */
+  .pagehero { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
+  .pagehero-glow { position: absolute; inset: 0; background: radial-gradient(680px 360px at 88% -15%, rgba(255,212,0,.13), transparent 70%); }
+  .pagehero-inner { padding-block: 58px 52px; position: relative; }
+  .pagehero-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 18px; }
+  .pagehero-kicker .rule { width: 22px; height: 2px; background: var(--brand); }
+  .pagehero-title { font: 800 clamp(34px,8vw,54px)/1.04 var(--font-display); letter-spacing: -.02em; margin-bottom: 16px; max-width: 780px; }
+  .pagehero-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 580px; }
+
+  .bookwrap { max-width: 1120px; margin-inline: auto; padding: 56px 24px 24px; }
+  .bookgroup { margin-bottom: 54px; scroll-margin-top: 132px; }
+  .bookgroup-head { display: flex; align-items: center; gap: 13px; margin-bottom: 6px; }
+  .bookgroup-ic { flex: none; width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .bookgroup-title { font: 800 clamp(22px,4vw,28px)/1.05 var(--font-display); letter-spacing: -.015em; margin: 0; }
+  .bookgroup-blurb { font: 400 14px/1.6 var(--font-body); color: var(--muted); margin: 0 0 22px; padding-left: 55px; }
+  .bookgroup-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 18px; }
+
+  .helpstrip { background: var(--ink); color: #fff; border-radius: 18px; padding: 32px 36px; display: flex; align-items: center; justify-content: space-between; gap: 22px; flex-wrap: wrap; }
+  .helpstrip-left { display: flex; align-items: center; gap: 16px; }
+  .helpstrip-ic { flex: none; width: 48px; height: 48px; border-radius: 13px; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; font-size: 21px; color: var(--brand); }
+  .helpstrip-title { font: 800 19px/1.1 var(--font-display); letter-spacing: -.01em; margin-bottom: 5px; }
+  .helpstrip-sub { font: 400 12.5px/1.5 var(--font-body); color: rgba(255,255,255,.66); }
+
+  @media (max-width: 560px) {
+    .bookgroup-blurb { padding-left: 0; }
+    .bookgroup-grid { grid-template-columns: 1fr; }
+  }
+</style>
