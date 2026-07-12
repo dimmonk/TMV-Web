@@ -50,20 +50,20 @@
       <div class="app-scroll" style="flex:1; overflow-y:auto; overflow-x:hidden; position:relative;">
 
         <!-- shared sticky app bar (dark, like the hero) -->
-        <div style="position:sticky; top:0; z-index:15; background:#211f1b; border-bottom:1px solid rgba(255,255,255,.08); padding:11px 18px;">
+        <div style="position:sticky; top:0; z-index:15; background:#211f1b; border-bottom:1px solid rgba(255,255,255,.08); padding:16px 18px;">
           <sc-if value="{{ notSub }}" hint-placeholder-val="{{ true }}">
             <div style="display:flex; align-items:center; justify-content:space-between;">
-              <div style="display:flex; align-items:center; gap:9px;">
-                <img src="assets/tmvlogo.png" alt="" style="width:28px; height:28px; object-fit:contain;">
-                <span style="font:900 13px/1 'Archivo',sans-serif; letter-spacing:.02em; text-transform:uppercase; color:#fff;">The Monkey Vault</span>
+              <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+                <img src="assets/tmvlogo.png" alt="" style="flex:none; width:32px; height:32px; object-fit:contain;">
+                <span style="font:900 14.5px/1 'Archivo',sans-serif; letter-spacing:.01em; text-transform:uppercase; color:#fff; white-space:nowrap;">The Monkey Vault</span>
               </div>
-              <span style="display:inline-flex; align-items:center; gap:6px; font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.05em; text-transform:uppercase; color:{{ status.fg }}; background:{{ status.bg }}; border:1px solid {{ status.bd }}; border-radius:999px; padding:6px 10px;"><span class="{{ status.dotCls }}" style="width:7px; height:7px; border-radius:50%; background:{{ status.dot }};"></span>{{ status.label }}</span>
+              <span style="flex:none; display:inline-flex; align-items:center; gap:6px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.04em; text-transform:uppercase; color:{{ status.fg }}; background:{{ status.bg }}; border:1px solid {{ status.bd }}; border-radius:999px; padding:7px 11px; white-space:nowrap;"><span class="{{ status.dotCls }}" style="flex:none; width:7px; height:7px; border-radius:50%; background:{{ status.dot }};"></span>{{ status.label }}</span>
             </div>
           </sc-if>
           <sc-if value="{{ inSub }}" hint-placeholder-val="">
             <div style="display:flex; align-items:center; justify-content:space-between;">
-              <button onClick="{{ closeSub }}" style="cursor:pointer; background:none; border:0; padding:0; display:inline-flex; align-items:center; gap:4px; font:800 15px/1 'Archivo',sans-serif; letter-spacing:-.01em; color:#fff;"><i class="bi bi-chevron-left" style="font-size:16px; color:#ffd400;"></i>{{ subTitle }}</button>
-              <span style="display:inline-flex; align-items:center; gap:6px; font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.05em; text-transform:uppercase; color:{{ status.fg }}; background:{{ status.bg }}; border:1px solid {{ status.bd }}; border-radius:999px; padding:6px 10px;"><span class="{{ status.dotCls }}" style="width:7px; height:7px; border-radius:50%; background:{{ status.dot }};"></span>{{ status.label }}</span>
+              <button onClick="{{ closeSub }}" style="cursor:pointer; background:none; border:0; padding:0; display:inline-flex; align-items:center; gap:5px; font:800 17px/1 'Archivo',sans-serif; letter-spacing:-.01em; color:#fff; white-space:nowrap;"><i class="bi bi-chevron-left" style="font-size:18px; color:#ffd400;"></i>{{ subTitle }}</button>
+              <span style="flex:none; display:inline-flex; align-items:center; gap:6px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.04em; text-transform:uppercase; color:{{ status.fg }}; background:{{ status.bg }}; border:1px solid {{ status.bd }}; border-radius:999px; padding:7px 11px; white-space:nowrap;"><span class="{{ status.dotCls }}" style="flex:none; width:7px; height:7px; border-radius:50%; background:{{ status.dot }};"></span>{{ status.label }}</span>
             </div>
           </sc-if>
         </div>
