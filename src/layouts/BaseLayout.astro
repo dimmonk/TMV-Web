@@ -74,13 +74,22 @@ const jsonLd = {
   <head>
     <meta charset="utf-8" />
     <!-- Device switch: phones/narrow viewports get the app-style mobile UI;
-         desktop stays on this SEO-rich page. Runs before render to avoid a flash. -->
+         desktop stays on this SEO-rich page. Runs before render to avoid a flash.
+         Phone-UA check: bare "Android" also matches Android TABLETS and an
+         unfolded Fold (they still report "Android" — a folding phone reports
+         itself as a tablet once unfolded), so it can't be the phone signal on
+         its own. Android appends "Mobile" to the UA only in phone form factor;
+         tablets/unfolded omit it. iPhone/iPod/Windows Phone/BlackBerry are
+         already phone-specific tokens. -->
     <script is:inline define:vars={{ mobileUrl }}>
       (function () {
+        function isPhoneUA() {
+          var ua = navigator.userAgent;
+          return /iPhone|iPod|Windows Phone|BlackBerry/i.test(ua) || (/Android/i.test(ua) && /Mobile/i.test(ua));
+        }
         function wantsMobile() {
           try {
-            return (window.matchMedia && window.matchMedia('(max-width:819px)').matches) ||
-              /Android|iPhone|iPod|Windows Phone|BlackBerry|Mobile/i.test(navigator.userAgent);
+            return (window.matchMedia && window.matchMedia('(max-width:599px)').matches) || isPhoneUA();
           } catch (e) { return false; }
         }
         function go() { if (wantsMobile()) location.replace(mobileUrl); }

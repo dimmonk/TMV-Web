@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script>(function(){function p(){return /Android|iPhone|iPod|Windows Phone|BlackBerry|Mobile/i.test(navigator.userAgent);}function d(){return (window.matchMedia&&window.matchMedia('(min-width:820px)').matches)&&!p();}function g(){try{if(d())location.replace('../');}catch(e){}}g();var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(g,250);});})();</script>
+<script>(function(){function p(){var ua=navigator.userAgent;return /iPhone|iPod|Windows Phone|BlackBerry/i.test(ua)||(/Android/i.test(ua)&&/Mobile/i.test(ua));}function d(){return (window.matchMedia&&window.matchMedia('(min-width:600px)').matches)&&!p();}function g(){try{if(d())location.replace('../');}catch(e){}}g();var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(g,250);});})();</script>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#211f1b">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -643,16 +644,16 @@
       </div>
 
       <!-- ===== BOTTOM NAV ===== -->
-      <div style="flex:none; position:relative; z-index:30; background:rgba(28,26,23,.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-top:1px solid rgba(255,255,255,.08); padding:9px 12px calc(14px + env(safe-area-inset-bottom,10px)); display:flex; align-items:flex-end;">
+      <div style="flex:none; position:relative; z-index:30; background:rgba(28,26,23,.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-top:1px solid rgba(255,255,255,.08); padding:14px 12px calc(18px + env(safe-area-inset-bottom,10px)); display:flex; align-items:flex-end;">
         <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
-          <button class="navbtn" onClick="{{ n.onClick }}" style="flex:1; cursor:pointer; background:none; border:0; padding:0; display:flex; flex-direction:column; align-items:center; gap:5px;">
+          <button class="navbtn" onClick="{{ n.onClick }}" style="flex:1; cursor:pointer; background:none; border:0; padding:0; display:flex; flex-direction:column; align-items:center; gap:7px;">
             <sc-if value="{{ n.center }}" hint-placeholder-val="">
-              <span style="width:54px; height:54px; margin-top:-30px; border-radius:50%; background:#ffd400; border:4px solid #211f1b; box-shadow:0 10px 20px -6px rgba(255,212,0,.8); display:flex; align-items:center; justify-content:center;"><i class="bi {{ n.icon }}" style="font-size:23px; color:#211f1b;"></i></span>
-              <span style="font:800 10px/1 'Archivo',sans-serif; letter-spacing:.03em; text-transform:uppercase; color:{{ n.fg }};">{{ n.label }}</span>
+              <span style="width:64px; height:64px; margin-top:-36px; border-radius:50%; background:#ffd400; border:4px solid #211f1b; box-shadow:0 10px 20px -6px rgba(255,212,0,.8); display:flex; align-items:center; justify-content:center;"><i class="bi {{ n.icon }}" style="font-size:29px; color:#211f1b;"></i></span>
+              <span style="font:800 12px/1 'Archivo',sans-serif; letter-spacing:.03em; text-transform:uppercase; color:{{ n.fg }};">{{ n.label }}</span>
             </sc-if>
             <sc-if value="{{ n.regular }}" hint-placeholder-val="{{ true }}">
-              <i class="bi {{ n.icon }}" style="font-size:21px; color:{{ n.fg }};"></i>
-              <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.02em; color:{{ n.fg }};">{{ n.label }}</span>
+              <i class="bi {{ n.icon }}" style="font-size:26px; color:{{ n.fg }};"></i>
+              <span style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.02em; color:{{ n.fg }};">{{ n.label }}</span>
             </sc-if>
           </button>
         </sc-for>
