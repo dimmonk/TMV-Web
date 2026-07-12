@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://us-central1-tmv-management.cloudfunctions.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0; background:#e9e7e1;}
+  *{box-sizing:border-box;}
+  ::selection{background:#ffd400; color:#211f1b;}
+  a{color:#211f1b;}
+  a:hover{color:#8a7a00;}
+  .app-scroll{scrollbar-width:none;}
+  .app-scroll::-webkit-scrollbar{display:none;}
+  .navbtn{transition:transform .12s ease;}
+  .navbtn:active{transform:scale(.9);}
+  .qa:active{transform:scale(.97);}
+  .tile:active{transform:scale(.98);}
+  .rowpress:active{background:#faf9f6;}
+  @keyframes tmv-spin{to{transform:rotate(360deg);}}
+  details.faq{border-top:1px solid #f0efea;}
+  details.faq summary{list-style:none; cursor:pointer;}
+  details.faq summary::-webkit-details-marker{display:none;}
+  details.faq[open] .faq-chev{transform:rotate(180deg);}
+  .faq-chev{transition:transform .2s ease;}
+</style>
+</helmet>
+<div data-screen-label="Mobile website concept canvas" style="min-height:100vh; background:#e9e7e1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b; padding:44px 24px 80px; display:flex; flex-direction:column; align-items:center;">
+
+  <!-- ===== INTRO ===== -->
+  <div style="max-width:580px; text-align:center; margin-bottom:34px;">
+    <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.16em; text-transform:uppercase; color:#9b8e6a; margin-bottom:16px;"><span style="width:22px; height:2px; background:#ffd400;"></span>Concept · Mobile website</div>
+    <h1 style="font:800 34px/1.08 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 12px;">A website built for the phone</h1>
+    <p style="font:400 15px/1.6 inherit; color:#6a6760; margin:0;">Its own mobile IA — the actionable pages (<strong style="color:#211f1b;">book, buy, schedule</strong>) sit front and centre on the bar; the rest folds into <strong style="color:#211f1b;">More</strong>. The Schedule reads the same live class data as the desktop site, filterable by age. Tap the bar to explore.</p>
+  </div>
+
+  <!-- ===== PHONE ===== -->
+  <div style="position:relative; width:392px; flex:none;">
+    <div style="position:relative; width:392px; height:812px; background:#f5f4f1; border-radius:46px; overflow:hidden; box-shadow:0 2px 4px rgba(28,25,23,.06), 0 50px 90px -40px rgba(28,25,23,.55); border:1px solid rgba(28,25,23,.08); display:flex; flex-direction:column;">
+
+      <!-- status bar -->
+      <div style="flex:none; height:46px; display:flex; align-items:center; justify-content:space-between; padding:0 26px; position:relative; z-index:20; background:#211f1b;">
+        <span style="font:600 14px/1 -apple-system,system-ui,sans-serif; color:#fff; letter-spacing:.02em; padding-top:4px;">9:41</span>
+        <div style="display:flex; align-items:center; gap:7px; padding-top:4px; color:#fff;">
+          <i class="bi bi-reception-4" style="font-size:12px;"></i>
+          <i class="bi bi-wifi" style="font-size:12px;"></i>
+          <i class="bi bi-battery-full" style="font-size:15px;"></i>
+        </div>
+      </div>
+
+      <!-- scroll region -->
+      <div class="app-scroll" style="flex:1; overflow-y:auto; overflow-x:hidden; position:relative;">
+
+        <!-- shared sticky app bar (dark, like the hero) -->
+        <div style="position:sticky; top:0; z-index:15; background:#211f1b; border-bottom:1px solid rgba(255,255,255,.08); padding:11px 18px;">
+          <sc-if value="{{ notSub }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:9px;">
+                <img src="assets/tmvlogo.png" alt="" style="width:28px; height:28px; object-fit:contain;">
+                <span style="font:900 13px/1 'Archivo',sans-serif; letter-spacing:.02em; text-transform:uppercase; color:#fff;">The Monkey Vault</span>
+              </div>
+              <span style="display:inline-flex; align-items:center; gap:6px; font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.05em; text-transform:uppercase; color:{{ status.fg }}; background:{{ status.bg }}; border:1px solid {{ status.bd }}; border-radius:999px; padding:6px 10px;"><span style="width:7px; height:7px; border-radius:50%; background:{{ status.dot }};"></span>{{ status.label }}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ inSub }}" hint-placeholder-val="">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <button onClick="{{ closeSub }}" style="cursor:pointer; background:none; border:0; padding:0; display:inline-flex; align-items:center; gap:4px; font:800 15px/1 'Archivo',sans-serif; letter-spacing:-.01em; color:#fff;"><i class="bi bi-chevron-left" style="font-size:16px; color:#ffd400;"></i>{{ subTitle }}</button>
+              <span style="display:inline-flex; align-items:center; gap:6px; font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.05em; text-transform:uppercase; color:{{ status.fg }}; background:{{ status.bg }}; border:1px solid {{ status.bd }}; border-radius:999px; padding:6px 10px;"><span style="width:7px; height:7px; border-radius:50%; background:{{ status.dot }};"></span>{{ status.label }}</span>
+            </div>
+          </sc-if>
+        </div>
+
+        <!-- ============ HOME ============ -->
+        <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:16px 18px 120px;">
+
+            <!-- hero -->
+            <div style="background:#211f1b; color:#fff; border-radius:22px; padding:26px 24px 24px; margin-bottom:26px; position:relative; overflow:hidden;">
+              <div style="position:absolute; inset:0; background:radial-gradient(360px 200px at 92% -20%, rgba(255,212,0,.16), transparent 70%);"></div>
+              <div style="position:relative;">
+                <div style="display:inline-flex; align-items:center; gap:8px; font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#ffd400; margin-bottom:18px;"><span style="width:18px; height:2px; background:#ffd400;"></span>Parkour &amp; movement · Toronto</div>
+                <h2 style="font:800 33px/1.02 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 14px;">Move better.<br>Have more fun.</h2>
+                <p style="font:400 14px/1.55 inherit; color:rgba(255,255,255,.72); margin:0 0 22px;">Drop in to play, book a class, train like an athlete, or throw a party — every age, every level, under one big roof.</p>
+                <button onClick="{{ goBook }}" style="cursor:pointer; width:100%; background:#ffd400; border:0; border-radius:13px; padding:16px; font:800 15px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; color:#211f1b; display:flex; align-items:center; justify-content:center; gap:9px; margin-bottom:18px;">Book a session <i class="bi bi-arrow-right"></i></button>
+                <div style="display:flex; border-top:1px solid rgba(255,255,255,.12); padding-top:16px;">
+                  <div style="flex:1; border-right:1px solid rgba(255,255,255,.12);"><div style="font:800 19px/1 'Archivo',sans-serif; color:#ffd400;">$25</div><div style="font:600 10.5px/1.3 inherit; color:rgba(255,255,255,.6); margin-top:5px;">day pass</div></div>
+                  <div style="flex:1; text-align:center; border-right:1px solid rgba(255,255,255,.12);"><div style="font:800 19px/1 'Archivo',sans-serif; color:#ffd400;">7 days</div><div style="font:600 10.5px/1.3 inherit; color:rgba(255,255,255,.6); margin-top:5px;">11a – 10p</div></div>
+                  <div style="flex:1; text-align:right;"><div style="font:800 19px/1 'Archivo',sans-serif; color:#ffd400;">Ages 3+</div><div style="font:600 10.5px/1.3 inherit; color:rgba(255,255,255,.6); margin-top:5px;">all levels</div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- new here -->
+            <button class="rowpress" onClick="{{ goGetStarted }}" style="cursor:pointer; width:100%; text-align:left; background:#fff; border:1px solid #ebe9e4; border-radius:15px; padding:15px 16px; display:flex; align-items:center; gap:13px; margin-bottom:28px;">
+              <span style="flex:none; width:38px; height:38px; border-radius:11px; background:#fbf3cf; display:flex; align-items:center; justify-content:center;"><i class="bi bi-flag-fill" style="font-size:16px; color:#b78900;"></i></span>
+              <div style="flex:1;"><div style="font:800 14px/1.15 'Archivo',sans-serif;">New here?</div><div style="font:500 12px/1.35 inherit; color:#8a877f; margin-top:3px;">Start with the 3-step first-visit guide.</div></div>
+              <i class="bi bi-chevron-right" style="font-size:13px; color:#c4c0b7;"></i>
+            </button>
+
+            <!-- three ways -->
+            <h3 style="font:800 18px/1 'Archivo',sans-serif; letter-spacing:-.01em; margin:0 0 5px;">Three ways to get moving</h3>
+            <p style="font:500 13px/1.4 inherit; color:#8a877f; margin:0 0 15px;">Pick where to start.</p>
+            <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:30px;">
+              <sc-for list="{{ offerings }}" as="o" hint-placeholder-count="3">
+                <button class="tile" onClick="{{ o.onClick }}" style="cursor:pointer; text-align:left; background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:16px; display:flex; align-items:center; gap:14px; transition:transform .12s ease;">
+                  <span style="flex:none; width:46px; height:46px; border-radius:13px; background:color-mix(in srgb,{{ o.color }} 14%,#fff); display:flex; align-items:center; justify-content:center;"><i class="bi {{ o.icon }}" style="font-size:21px; color:{{ o.color }};"></i></span>
+                  <div style="flex:1; min-width:0;"><div style="font:800 16px/1.1 'Archivo',sans-serif; letter-spacing:-.005em;">{{ o.title }}</div><div style="font:500 12.5px/1.4 inherit; color:#8a877f; margin-top:4px;">{{ o.sub }}</div></div>
+                  <i class="bi bi-arrow-right" style="font-size:15px; color:{{ o.color }};"></i>
+                </button>
+              </sc-for>
+            </div>
+
+            <!-- booking now -->
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:13px;">
+              <h3 style="font:800 18px/1 'Archivo',sans-serif; letter-spacing:-.01em; margin:0;">Booking now</h3>
+              <button onClick="{{ goBook }}" style="cursor:pointer; background:none; border:0; font:800 11.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; display:inline-flex; align-items:center; gap:5px;">All <i class="bi bi-arrow-right" style="color:{{ campColor }};"></i></button>
+            </div>
+            <div style="margin-bottom:30px;">
+              <dc-import name="BookingCard" color="{{ campColor }}" duration="9–2 daily" booking-tag="Register" title="Summer Camps 2026" description="A full week of parkour over the break — skills, flips, games and friends." pills="Ages 5+ | Mon–Fri | All levels" price="$350 / week" price-note="booking now" action-label="Reserve" href="https://www.themonkeyvault.com/product/summer-camps-2026/R2Z7XNZMEXSG6EFR5YQRAFLO" target="_blank" hint-size="100%,250px"></dc-import>
+            </div>
+
+            <!-- reviews strip -->
+            <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:20px; margin-bottom:26px;">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                <span style="font:900 24px/1 'Archivo',sans-serif;">4.9</span>
+                <div><div style="color:#e9a300; font-size:12px; letter-spacing:2px;"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div><div style="font:600 11.5px/1 inherit; color:#8a877f; margin-top:5px;">300+ Google reviews</div></div>
+              </div>
+              <p style="font:500 13.5px/1.5 inherit; color:#3a3833; margin:0;">“Best place for the kids — they beg to go back every week.”</p>
+            </div>
+
+            <!-- find us -->
+            <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:18px 20px;">
+              <div style="display:flex; align-items:center; gap:13px; margin-bottom:15px;">
+                <span style="flex:none; width:40px; height:40px; border-radius:11px; background:#f3f2ee; display:flex; align-items:center; justify-content:center;"><i class="bi bi-geo-alt-fill" style="font-size:17px; color:#211f1b;"></i></span>
+                <div><div style="font:800 14px/1.2 'Archivo',sans-serif;">75 Carl Hall Rd, Unit 15</div><div style="font:600 12px/1.3 inherit; color:#8a877f; margin-top:3px;">Downsview Park · Toronto</div></div>
+              </div>
+              <a href="https://maps.google.com/?q=75+Carl+Hall+Rd+Unit+15+Toronto" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#211f1b; color:#fff; text-decoration:none; border-radius:12px; padding:13px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em;">Get directions <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ TRAIN ============ -->
+        <sc-if value="{{ isTrain }}" hint-placeholder-val="">
+          <div style="padding:18px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Train</h2>
+            <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 20px;">Every way to move at the gym.</p>
+
+            <dc-import name="BookingCard" color="{{ openGymColor }}" booking-tag="Drop-in" duration="No limit" title="Open Gym" description="Drop in any day and stay as long as you like. Sign the waiver, grab a pass, the floor is yours." pills="All ages | 11 AM – 10 PM | No booking" price="From $25" price-note="day pass" action-label="Get a pass" href="https://www.themonkeyvault.com/s/order" target="_blank" hint-size="100%,250px"></dc-import>
+
+            <div style="display:flex; align-items:center; justify-content:space-between; margin:26px 0 13px;">
+              <h3 style="font:800 18px/1 'Archivo',sans-serif; letter-spacing:-.01em; margin:0;">Group classes</h3>
+              <button onClick="{{ goSchedule }}" style="cursor:pointer; background:none; border:0; font:800 11.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; display:inline-flex; align-items:center; gap:5px;">Times <i class="bi bi-calendar3" style="color:{{ classColor }};"></i></button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:26px;">
+              <sc-for list="{{ classes }}" as="cl" hint-placeholder-count="4">
+                <dc-import name="BookingCard" color="{{ classColor }}" booking-tag="{{ cl.tag }}" title="{{ cl.title }}" description="{{ cl.desc }}" pills="{{ cl.pills }}" action-label="View times" href="#schedule" hint-size="100%,190px"></dc-import>
+              </sc-for>
+            </div>
+
+            <h3 style="font:800 18px/1 'Archivo',sans-serif; letter-spacing:-.01em; margin:0 0 13px;">Go further</h3>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <dc-import name="BookingCard" color="{{ athleticColor }}" booking-tag="Membership" title="Athletic Program" description="Train like an athlete — structured coaching and progress tracking, 2× a week." pills="Ages 9+ | Prerequisite | 2×/week" price="$150 / month" action-label="Join" href="https://www.themonkeyvault.com/product/athletic-program-monthly-membership/NXP3HEIUKLFQXQT6JBVXMIDW" target="_blank" hint-size="100%,240px"></dc-import>
+              <dc-import name="BookingCard" color="{{ privateColor }}" booking-tag="By appointment" title="Private Lessons" description="One-on-one coaching built around your goals and pace." pills="All ages | 1-on-1 | Your coach" price="From $85" price-note="intro $45" action-label="Book" href="https://www.themonkeyvault.com/s/appointments" target="_blank" hint-size="100%,240px"></dc-import>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ BOOK ============ -->
+        <sc-if value="{{ isBook }}" hint-placeholder-val="">
+          <div style="padding:18px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Book</h2>
+            <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 20px;">Two ways in — drop by, or reserve online.</p>
+
+            <!-- Drop-in: no booking -->
+            <div style="font:800 12px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#9b8e6a; margin:0 0 12px;">No booking — just show up</div>
+            <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:28px;">
+              <sc-for list="{{ dropIns }}" as="d" hint-placeholder-count="2">
+                <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; overflow:hidden;">
+                  <span style="display:block; height:4px; background:{{ d.color }};"></span>
+                  <div style="padding:18px;">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:11px;">
+                      <span style="display:inline-flex; align-items:center; gap:6px; padding:6px 11px; border-radius:6px; background:{{ d.color }}; color:#fff; font:800 10.5px/1 'Archivo',sans-serif; letter-spacing:.07em; text-transform:uppercase;"><i class="bi bi-door-open-fill" style="font-size:12px;"></i>Drop-in</span>
+                      <h3 style="font:800 20px/1.05 'Archivo',sans-serif; letter-spacing:-.01em; margin:0;">{{ d.title }}</h3>
+                    </div>
+                    <p style="font:400 13px/1.5 inherit; color:#5b5853; margin:0 0 14px;">{{ d.desc }}</p>
+                    <div style="display:flex; align-items:center; gap:13px; background:color-mix(in srgb,{{ d.color }} 10%,#fff); border:1px solid color-mix(in srgb,{{ d.color }} 22%,#fff); border-radius:12px; padding:14px 15px;">
+                      <i class="bi bi-check2-circle" style="font-size:24px; color:{{ d.color }};"></i>
+                      <div style="flex:1; min-width:0;">
+                        <div style="font:800 17px/1.05 'Archivo',sans-serif; letter-spacing:-.01em; color:color-mix(in srgb,{{ d.color }} 58%,#000);">No booking required</div>
+                        <div style="font:600 12px/1.35 inherit; color:#6a6760; margin-top:3px;">{{ d.sub }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- Reserve online -->
+            <div style="font:800 12px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#9b8e6a; margin:0 0 4px;">Reserve online</div>
+            <p style="font:500 12px/1.4 inherit; color:#8a877f; margin:0 0 14px;">Each opens its exact page on Square.</p>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <sc-for list="{{ bookOptions }}" as="b" hint-placeholder-count="3">
+                <dc-import name="BookingCard" color="{{ b.color }}" booking-tag="{{ b.tag }}" title="{{ b.title }}" description="{{ b.desc }}" pills="{{ b.pills }}" price="{{ b.price }}" price-note="{{ b.note }}" action-label="{{ b.action }}" href="{{ b.href }}" target="_blank" hint-size="100%,250px"></dc-import>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ SCHEDULE ============ -->
+        <sc-if value="{{ isSchedule }}" hint-placeholder-val="">
+          <div style="padding:18px 0 120px;">
+            <div style="padding:0 18px;">
+              <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Schedule</h2>
+              <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 16px;">Live from our booking system.</p>
+            </div>
+            <!-- age filter chips -->
+            <div class="app-scroll" style="display:flex; gap:8px; overflow-x:auto; padding:0 18px 18px;">
+              <sc-for list="{{ scheduleChips }}" as="f" hint-placeholder-count="6">
+                <button onClick="{{ f.onClick }}" style="flex:none; cursor:pointer; font:700 12.5px/1 'Archivo',sans-serif; color:{{ f.fg }}; background:{{ f.bg }}; border:1px solid {{ f.bd }}; border-radius:999px; padding:9px 15px; white-space:nowrap;">{{ f.label }}</button>
+              </sc-for>
+            </div>
+
+            <div style="padding:0 18px;">
+              <!-- loading -->
+              <sc-if value="{{ schedLoading }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex; flex-direction:column; align-items:center; gap:14px; padding:60px 0; color:#9b8e6a;">
+                  <span style="width:26px; height:26px; border-radius:50%; border:3px solid #e6e4dd; border-top-color:#211f1b; animation:tmv-spin .8s linear infinite;"></span>
+                  <span style="font:600 13px/1 -apple-system,system-ui,sans-serif;">Loading live schedule…</span>
+                </div>
+              </sc-if>
+
+              <!-- error -->
+              <sc-if value="{{ schedErr }}" hint-placeholder-val="">
+                <div style="text-align:center; padding:50px 20px;">
+                  <i class="bi bi-wifi-off" style="font-size:26px; color:#c4c0b7;"></i>
+                  <p style="font:600 13.5px/1.5 inherit; color:#6a6760; margin:14px 0 16px;">Couldn't reach the booking system.</p>
+                  <button onClick="{{ reloadSchedule }}" style="cursor:pointer; background:#211f1b; color:#fff; border:0; border-radius:11px; padding:12px 20px; font:800 12px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em;">Try again</button>
+                </div>
+              </sc-if>
+
+              <!-- day groups -->
+              <sc-if value="{{ schedReady }}" hint-placeholder-val="">
+                <sc-for list="{{ scheduleDays }}" as="day" hint-placeholder-count="2">
+                  <div style="margin-bottom:22px;">
+                    <div style="font:800 12px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#9b8e6a; margin-bottom:11px;">{{ day.label }}</div>
+                    <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; overflow:hidden;">
+                      <sc-for list="{{ day.sessions }}" as="s" hint-placeholder-count="3">
+                        <div class="rowpress" style="display:flex; gap:13px; padding:14px 16px; border-bottom:1px solid #f0efea; opacity:{{ s.op }};">
+                          <span style="flex:none; width:4px; align-self:stretch; border-radius:2px; background:{{ s.color }};"></span>
+                          <div style="flex:1; min-width:0;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                              <span style="font:800 14.5px/1.15 'Archivo',sans-serif; color:#211f1b; text-decoration:{{ s.deco }};">{{ s.name }}</span>
+                              <sc-if value="{{ s.isNew }}" hint-placeholder-val=""><span style="font:800 9px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#1b6b2f; background:#e6f4ea; border:1px solid #c7e4cf; border-radius:4px; padding:3px 5px;">New</span></sc-if>
+                              <sc-if value="{{ s.isCancelled }}" hint-placeholder-val=""><span style="font:800 9px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#8b1f1f; background:#fbeaea; border:1px solid #ecc6c6; border-radius:4px; padding:3px 5px;">Ending</span></sc-if>
+                            </div>
+                            <div style="font:500 12.5px/1.3 inherit; color:#8a877f; margin-top:4px;">{{ s.range }} · {{ s.age }}</div>
+                          </div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+
+                <sc-if value="{{ schedEmpty }}" hint-placeholder-val="">
+                  <div style="text-align:center; padding:44px 20px; font:500 13.5px/1.5 inherit; color:#8a877f; font-style:italic;">No classes match this filter.</div>
+                </sc-if>
+
+                <div style="display:flex; align-items:center; gap:9px; background:#f3f2ee; border-radius:12px; padding:13px 15px; margin-top:4px;">
+                  <i class="bi bi-arrow-repeat" style="font-size:14px; color:#9b8e6a;"></i>
+                  <span style="font:500 12px/1.4 inherit; color:#6a6760;">Times update automatically — the same schedule our front desk runs from.</span>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ MORE ============ -->
+        <sc-if value="{{ isMore }}" hint-placeholder-val="">
+          <div style="padding:18px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 18px;">More</h2>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:28px;">
+              <sc-for list="{{ moreTiles }}" as="m" hint-placeholder-count="8">
+                <button class="tile" onClick="{{ m.onClick }}" style="cursor:pointer; text-align:left; background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:14px; min-height:104px; transition:transform .12s ease;">
+                  <span style="width:40px; height:40px; border-radius:12px; background:color-mix(in srgb,{{ m.color }} 14%,#fff); display:flex; align-items:center; justify-content:center;"><i class="bi {{ m.icon }}" style="font-size:19px; color:{{ m.color }};"></i></span>
+                  <div><div style="font:800 14.5px/1.1 'Archivo',sans-serif; letter-spacing:-.005em;">{{ m.title }}</div><div style="font:500 11.5px/1.35 inherit; color:#8a877f; margin-top:4px;">{{ m.sub }}</div></div>
+                </button>
+              </sc-for>
+            </div>
+
+            <!-- visit / contact -->
+            <div style="background:#211f1b; color:#fff; border-radius:20px; padding:24px;">
+              <div style="display:flex; align-items:center; gap:9px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#ffd400; margin-bottom:18px;"><span style="width:18px; height:2px; background:#ffd400;"></span>Visit us</div>
+              <div style="display:flex; flex-direction:column; gap:14px;">
+                <div style="display:flex; align-items:flex-start; gap:12px;"><i class="bi bi-geo-alt-fill" style="font-size:15px; color:#ffd400; margin-top:2px;"></i><div><div style="font:700 13.5px/1.3 'Archivo',sans-serif;">75 Carl Hall Rd, Unit 15</div><div style="font:500 12px/1.3 inherit; color:rgba(255,255,255,.6); margin-top:3px;">Downsview Park, Toronto</div></div></div>
+                <div style="display:flex; align-items:flex-start; gap:12px;"><i class="bi bi-clock-fill" style="font-size:15px; color:#ffd400; margin-top:2px;"></i><div><div style="font:700 13.5px/1.3 'Archivo',sans-serif;">Open 7 days · 11 AM – 10 PM</div><div style="font:500 12px/1.3 inherit; color:rgba(255,255,255,.6); margin-top:3px;">Open gym to the public daily</div></div></div>
+                <div style="display:flex; gap:10px; margin-top:6px;">
+                  <a href="#" style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius:11px; padding:12px; color:#fff; text-decoration:none; font:700 12px/1 'Archivo',sans-serif;"><i class="bi bi-instagram"></i> Instagram</a>
+                  <a href="tel:" style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius:11px; padding:12px; color:#fff; text-decoration:none; font:700 12px/1 'Archivo',sans-serif;"><i class="bi bi-telephone-fill"></i> Call us</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ===== SUB: PRICING ===== -->
+        <sc-if value="{{ isPricing }}" hint-placeholder-val="">
+          <div style="padding:18px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Pricing</h2>
+            <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 20px;">All prices in CAD, HST included.</p>
+            <sc-for list="{{ priceGroups }}" as="g" hint-placeholder-count="6">
+              <div style="margin-bottom:20px;">
+                <div style="display:flex; align-items:center; gap:9px; margin-bottom:10px;">
+                  <span style="width:10px; height:10px; border-radius:3px; background:{{ g.color }};"></span>
+                  <div style="font:800 15px/1 'Archivo',sans-serif; letter-spacing:-.005em;">{{ g.title }}</div>
+                </div>
+                <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; overflow:hidden;">
+                  <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 16px; border-bottom:1px solid #f0efea;">
+                      <div style="min-width:0;">
+                        <div style="font:600 14px/1.2 -apple-system,system-ui,sans-serif; color:#211f1b;">{{ r.label }}</div>
+                        <sc-if value="{{ r.note }}" hint-placeholder-val=""><div style="font:500 11.5px/1.3 inherit; color:#9b9890; margin-top:3px;">{{ r.note }}</div></sc-if>
+                      </div>
+                      <span data-tmv-price="{{ r.key }}" style="flex:none; font:800 15px/1 'Archivo',sans-serif; color:#211f1b;">{{ r.val }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+            <button onClick="{{ goStore }}" style="cursor:pointer; width:100%; margin-top:6px; background:#211f1b; color:#fff; border:0; border-radius:13px; padding:15px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; display:flex; align-items:center; justify-content:center; gap:9px;">Buy passes online <i class="bi bi-arrow-right"></i></button>
+          </div>
+        </sc-if>
+
+        <!-- ===== SUB: STORE ===== -->
+        <sc-if value="{{ isStore }}" hint-placeholder-val="">
+          <div style="padding:18px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Store</h2>
+            <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 20px;">Check out on Square — ready at the front desk when you arrive.</p>
+            <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:16px;">
+              <sc-for list="{{ storeProducts }}" as="s" hint-placeholder-count="6">
+                <dc-import name="BookingCard" color="{{ s.color }}" title="{{ s.title }}" description="{{ s.desc }}" pills="{{ s.pills }}" price="{{ s.price }}" price-note="{{ s.note }}" action-label="{{ s.action }}" href="{{ s.href }}" target="_blank" hint-size="100%,240px"></dc-import>
+              </sc-for>
+            </div>
+            <a href="{{ giftHref }}" target="_blank" rel="noopener" style="text-decoration:none; display:flex; align-items:center; gap:14px; background:#211f1b; color:#fff; border-radius:16px; padding:18px 20px;">
+              <span style="flex:none; width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,.1); display:flex; align-items:center; justify-content:center;"><i class="bi bi-gift-fill" style="font-size:20px; color:#ffd400;"></i></span>
+              <div style="flex:1;"><div style="font:800 16px/1.1 'Archivo',sans-serif;">Gift cards</div><div style="font:600 12px/1.3 inherit; color:rgba(255,255,255,.6); margin-top:3px;">Any amount</div></div>
+              <i class="bi bi-arrow-up-right" style="color:#ffd400; font-size:16px;"></i>
+            </a>
+          </div>
+        </sc-if>
+
+        <!-- ===== SUB: GET STARTED ===== -->
+        <sc-if value="{{ isGetStarted }}" hint-placeholder-val="">
+          <div style="padding:18px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Get Started</h2>
+            <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 24px;">New here? Your first visit in three steps.</p>
+
+            <div style="display:flex; gap:13px; margin-bottom:12px;">
+              <span style="flex:none; width:34px; height:34px; border-radius:10px; background:#211f1b; color:#ffd400; display:flex; align-items:center; justify-content:center; font:900 15px/1 'Archivo',sans-serif;">1</span>
+              <div><div style="font:800 18px/1.1 'Archivo',sans-serif; letter-spacing:-.01em;">Sign our waiver</div><p style="font:400 13px/1.5 inherit; color:#6a6760; margin:6px 0 0;">Everyone needs a signed waiver before their first session — a couple of minutes online.</p></div>
+            </div>
+            <div style="display:flex; gap:10px; background:#fff; border:1px solid #ebe9e4; border-left:4px solid #ffd400; border-radius:12px; padding:13px 15px; margin:0 0 14px;">
+              <i class="bi bi-info-circle-fill" style="font-size:15px; color:#211f1b; margin-top:1px;"></i>
+              <span style="font:600 12.5px/1.5 inherit; color:#3a3833;">A parent or guardian must sign for anyone <strong>17 or younger</strong>.</span>
+            </div>
+            <a href="{{ waiverHref }}" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:center; gap:9px; background:#211f1b; color:#fff; text-decoration:none; border-radius:12px; padding:14px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; margin-bottom:28px;">Sign our waiver <i class="bi bi-box-arrow-up-right"></i></a>
+
+            <div style="display:flex; gap:13px; margin-bottom:16px;">
+              <span style="flex:none; width:34px; height:34px; border-radius:10px; background:#211f1b; color:#ffd400; display:flex; align-items:center; justify-content:center; font:900 15px/1 'Archivo',sans-serif;">2</span>
+              <div><div style="font:800 18px/1.1 'Archivo',sans-serif; letter-spacing:-.01em;">Pick how to start</div><p style="font:400 13px/1.5 inherit; color:#6a6760; margin:6px 0 0;">Reserve an intro or private, or just drop into a group class or open gym.</p></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:28px;">
+              <sc-for list="{{ gsOptions }}" as="o" hint-placeholder-count="4">
+                <dc-import name="BookingCard" color="{{ o.color }}" status="{{ o.status }}" status-tone="{{ o.tone }}" title="{{ o.title }}" description="{{ o.desc }}" action-label="{{ o.action }}" href="{{ o.href }}" target="{{ o.target }}" hint-size="100%,190px"></dc-import>
+              </sc-for>
+            </div>
+
+            <div style="display:flex; gap:13px; margin-bottom:16px;">
+              <span style="flex:none; width:34px; height:34px; border-radius:10px; background:#211f1b; color:#ffd400; display:flex; align-items:center; justify-content:center; font:900 15px/1 'Archivo',sans-serif;">3</span>
+              <div><div style="font:800 18px/1.1 'Archivo',sans-serif; letter-spacing:-.01em;">Things to know</div></div>
+            </div>
+            <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:18px 20px; margin-bottom:12px;">
+              <div style="font:800 14px/1.1 'Archivo',sans-serif; margin-bottom:14px; display:flex; align-items:center; gap:9px;"><i class="bi bi-bag-check" style="color:#e0a800;"></i>Before you get here</div>
+              <div style="display:flex; flex-direction:column; gap:11px;">
+                <sc-for list="{{ gsBring }}" as="b" hint-placeholder-count="3">
+                  <div style="display:flex; align-items:flex-start; gap:10px;"><i class="bi bi-check-circle-fill" style="font-size:15px; color:#2e9e4f; margin-top:1px;"></i><span style="font:500 13px/1.5 inherit; color:#3a3833;">{{ b }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:18px 20px; margin-bottom:12px;">
+              <div style="font:800 14px/1.1 'Archivo',sans-serif; margin-bottom:14px; display:flex; align-items:center; gap:9px;"><i class="bi bi-geo-alt" style="color:#e0a800;"></i>When you arrive</div>
+              <div style="display:flex; flex-direction:column; gap:11px;">
+                <sc-for list="{{ gsArrive }}" as="a" hint-placeholder-count="4">
+                  <div style="display:flex; align-items:flex-start; gap:10px;"><span style="flex:none; width:22px; height:22px; border-radius:7px; background:#f3f2ee; display:flex; align-items:center; justify-content:center; font:800 11px/1 'Archivo',sans-serif; color:#211f1b;">{{ a.n }}</span><span style="font:500 13px/1.5 inherit; color:#3a3833; padding-top:2px;">{{ a.text }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex; gap:11px; background:#fff7d6; border:1px solid #f1e4a0; border-radius:14px; padding:15px 17px; margin-bottom:28px;">
+              <i class="bi bi-clock-history" style="font-size:16px; color:#9a7b00; margin-top:1px;"></i>
+              <span style="font:600 12.5px/1.55 inherit; color:#5c4d12;">Arrive <strong>15 minutes early</strong> to sign in. Anyone more than 15 minutes late can't be admitted to a class.</span>
+            </div>
+
+            <div style="font:800 12px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#9b8e6a; margin:0 0 12px;">Common questions</div>
+            <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; overflow:hidden;">
+              <sc-for list="{{ gsFaqs }}" as="qa" hint-placeholder-count="3">
+                <details class="faq">
+                  <summary style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:15px 16px; font:700 14px/1.3 'Archivo',sans-serif; color:#211f1b;"><span>{{ qa.q }}</span><i class="bi bi-chevron-down faq-chev" style="font-size:12px; color:#b0aca3; flex:none;"></i></summary>
+                  <div style="padding:0 16px 16px; font:400 13px/1.6 inherit; color:#6a6760;">{{ qa.a }}</div>
+                </details>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ===== SUB: ABOUT ===== -->
+        <sc-if value="{{ isAbout }}" hint-placeholder-val="">
+          <div style="padding:18px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">About</h2>
+            <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 16px;">Toronto's parkour &amp; movement training centre.</p>
+            <p style="font:400 14px/1.6 inherit; color:#3a3833; margin:0 0 22px;">Built around open gym — a home for dancers, athletes, fitness enthusiasts and anyone who just wants to jump around and have fun. 10,000+ sq ft under one roof.</p>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:26px;">
+              <sc-for list="{{ aboutGallery }}" as="g" hint-placeholder-count="6">
+                <div style="aspect-ratio:1/1; border-radius:14px; overflow:hidden; background:#e9e7e1;"><img src="{{ g }}" alt="Inside The Monkey Vault" loading="lazy" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
+              </sc-for>
+            </div>
+
+            <div style="font:800 12px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#9b8e6a; margin:0 0 12px;">The space</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:26px;">
+              <sc-for list="{{ aboutFacility }}" as="f" hint-placeholder-count="4">
+                <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:16px;">
+                  <span style="display:inline-flex; width:38px; height:38px; border-radius:11px; background:#f3f2ee; align-items:center; justify-content:center; margin-bottom:11px;"><i class="bi {{ f.icon }}" style="font-size:17px; color:#211f1b;"></i></span>
+                  <div style="font:800 14px/1.15 'Archivo',sans-serif; margin-bottom:5px;">{{ f.title }}</div>
+                  <p style="font:400 12px/1.45 inherit; color:#6a6760; margin:0;">{{ f.body }}</p>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="background:#211f1b; color:#fff; border-radius:18px; padding:22px 24px; margin-bottom:16px;">
+              <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#ffd400; margin-bottom:6px;">Hours</div>
+              <div style="font:800 20px/1.1 'Archivo',sans-serif; margin-bottom:16px;">Open 7 days a week</div>
+              <sc-for list="{{ aboutHours }}" as="h" hint-placeholder-count="7">
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:11px 0; border-bottom:1px solid rgba(255,255,255,.1);">
+                  <span style="font:600 13.5px/1 inherit; color:rgba(255,255,255,.82);">{{ h.day }}</span>
+                  <span style="font:600 13.5px/1 inherit; color:rgba(255,255,255,.55);">{{ h.time }}</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="background:#fff; border:1px solid #ebe9e4; border-radius:18px; padding:22px 24px; margin-bottom:16px;">
+              <div style="display:flex; gap:13px; align-items:flex-start; margin-bottom:16px;">
+                <span style="flex:none; width:40px; height:40px; border-radius:11px; background:#f3f2ee; display:flex; align-items:center; justify-content:center;"><i class="bi bi-geo-alt-fill" style="font-size:17px; color:#211f1b;"></i></span>
+                <div style="font:600 14px/1.55 inherit; color:#211f1b;">75 Carl Hall Rd, Unit 15<br>Toronto, Ontario M3K 2B9</div>
+              </div>
+              <div style="display:flex; gap:13px; align-items:flex-start; margin-bottom:18px;">
+                <span style="flex:none; width:40px; height:40px; border-radius:11px; background:#f3f2ee; display:flex; align-items:center; justify-content:center;"><i class="bi bi-telephone-fill" style="font-size:16px; color:#211f1b;"></i></span>
+                <div style="font:600 14px/1.55 inherit; color:#211f1b;"><a href="tel:+16473501111" style="color:#211f1b; text-decoration:none;">(647) 350-1111</a><br><a href="mailto:info@themonkeyvault.com" style="color:#211f1b; text-decoration:none;">info@themonkeyvault.com</a></div>
+              </div>
+              <a href="https://maps.google.com/?q=75+Carl+Hall+Rd+Unit+15+Toronto" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#ffd400; color:#211f1b; text-decoration:none; border-radius:12px; padding:13px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em;">Get directions <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+              <a href="#" aria-label="Instagram" style="flex:1; height:50px; border-radius:13px; background:#211f1b; display:inline-flex; align-items:center; justify-content:center; color:#ffd400; text-decoration:none; font-size:20px;"><i class="bi bi-instagram"></i></a>
+              <a href="#" aria-label="YouTube" style="flex:1; height:50px; border-radius:13px; background:#211f1b; display:inline-flex; align-items:center; justify-content:center; color:#ffd400; text-decoration:none; font-size:20px;"><i class="bi bi-youtube"></i></a>
+              <a href="#" aria-label="Facebook" style="flex:1; height:50px; border-radius:13px; background:#211f1b; display:inline-flex; align-items:center; justify-content:center; color:#ffd400; text-decoration:none; font-size:20px;"><i class="bi bi-facebook"></i></a>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ===== SUB: CAMPS ===== -->
+        <sc-if value="{{ isCamps }}" hint-placeholder-val="">
+          <div style="padding:18px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Camps</h2>
+            <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 20px;">School breaks &amp; days off · Ages 5+ · 9 AM–2 PM.</p>
+            <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:26px;">
+              <sc-for list="{{ campsList }}" as="c" hint-placeholder-count="3">
+                <dc-import name="BookingCard" color="{{ c.color }}" booking-tag="{{ c.tag }}" title="{{ c.title }}" description="{{ c.desc }}" pills="{{ c.pills }}" price="{{ c.price }}" price-note="{{ c.note }}" action-label="{{ c.action }}" href="{{ c.href }}" target="_blank" hint-size="100%,250px"></dc-import>
+              </sc-for>
+            </div>
+            <div style="background:#211f1b; color:#fff; border-radius:18px; padding:22px 24px; margin-bottom:14px;">
+              <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#ffd400; margin-bottom:6px;">A day at camp</div>
+              <div style="font:800 19px/1.1 'Archivo',sans-serif; margin-bottom:16px;">From drop-off to pick-up</div>
+              <sc-for list="{{ campDay }}" as="d" hint-placeholder-count="6">
+                <div style="display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid rgba(255,255,255,.1);">
+                  <span style="flex:none; min-width:92px; font:800 12.5px/1 'Archivo',sans-serif; color:#ffd400;">{{ d.time }}</span>
+                  <span style="font:600 13.5px/1.3 inherit; color:rgba(255,255,255,.85);">{{ d.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <p style="font:400 12px/1.5 inherit; color:#9b9890; margin:0;">Nut-free environment — please pack nut-free and tell us about any allergies. Cancellation: two weeks' written notice for weekly camps.</p>
+          </div>
+        </sc-if>
+
+        <!-- ===== SUB: EVENTS ===== -->
+        <sc-if value="{{ isEvents }}" hint-placeholder-val="">
+          <div style="padding:18px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 20px;">Events</h2>
+
+            <div style="background:#fff; border:2px solid #ffd400; border-radius:18px; overflow:hidden; margin-bottom:14px;">
+              <div style="padding:20px 20px 22px;">
+                <div style="display:flex; align-items:center; gap:9px; margin-bottom:10px;">
+                  <span style="font:800 10px/1 'Archivo',sans-serif; letter-spacing:.07em; text-transform:uppercase; color:#211f1b; background:#ffd400; padding:5px 9px; border-radius:999px;">Most popular</span>
+                  <h3 style="font:800 21px/1.05 'Archivo',sans-serif; letter-spacing:-.01em; margin:0;">Full Birthday Party</h3>
+                </div>
+                <p style="font:400 13px/1.5 inherit; color:#5b5853; margin:0 0 16px;">Coaches stay with your group the whole time — a private room, a coached session and free play.</p>
+                <div style="display:flex; flex-direction:column; margin-bottom:16px;">
+                  <div style="display:flex; gap:13px; padding:10px 0; border-bottom:1px solid #f0efea;"><span style="flex:none; width:34px; font:800 14px/1 'Archivo',sans-serif; color:#e0a800;">60′</span><span style="font:600 13px/1.35 inherit; color:#3a3833;">Coached parkour session &amp; games</span></div>
+                  <div style="display:flex; gap:13px; padding:10px 0; border-bottom:1px solid #f0efea;"><span style="flex:none; width:34px; font:800 14px/1 'Archivo',sans-serif; color:#e0a800;">30′</span><span style="font:600 13px/1.35 inherit; color:#3a3833;">Private party room — food &amp; cake</span></div>
+                  <div style="display:flex; gap:13px; padding:10px 0;"><span style="flex:none; width:34px; font:800 14px/1 'Archivo',sans-serif; color:#e0a800;">30′</span><span style="font:600 13px/1.35 inherit; color:#3a3833;">Open gym free play, supervised</span></div>
+                </div>
+                <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:12px; padding-top:16px; border-top:1px solid #f0efea; margin-bottom:16px;">
+                  <div><div style="font:900 26px/1 'Archivo',sans-serif;">$350</div><div style="font:600 12px/1.3 inherit; color:#9b9890; margin-top:5px;">base · up to 8 kids · +$25 each extra</div></div>
+                  <span style="font:700 11px/1 'Archivo',sans-serif; color:#9b9890;">2 hrs · Ages 5+</span>
+                </div>
+                <a href="https://www.themonkeyvault.com/s/appointments" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:center; gap:9px; background:#211f1b; color:#fff; text-decoration:none; border-radius:12px; padding:14px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em;">Book your party <i class="bi bi-arrow-up-right"></i></a>
+              </div>
+            </div>
+
+            <div style="background:#211f1b; color:#fff; border-radius:18px; padding:20px 22px; margin-bottom:24px;">
+              <div style="display:flex; align-items:center; gap:9px; margin-bottom:10px;">
+                <span style="font:800 10px/1 'Archivo',sans-serif; letter-spacing:.07em; text-transform:uppercase; color:#ffd400; background:rgba(255,255,255,.08); padding:5px 9px; border-radius:999px;">Smaller &amp; last-minute</span>
+              </div>
+              <h3 style="font:800 20px/1.05 'Archivo',sans-serif; letter-spacing:-.01em; margin:0 0 8px;">Mini Birthday Party</h3>
+              <p style="font:400 13px/1.55 inherit; color:rgba(255,255,255,.7); margin:0 0 16px;">The same one-hour coached parkour session — lower minimum, so smaller groups and last-minute plans still get in. All-day pass for every kid. No private room.</p>
+              <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:12px; padding-top:14px; border-top:1px solid rgba(255,255,255,.12);">
+                <div><div style="font:900 24px/1 'Archivo',sans-serif; color:#ffd400;">$30</div><div style="font:600 12px/1.3 inherit; color:rgba(255,255,255,.55); margin-top:5px;">per kid · 3–15 · ages 8+</div></div>
+                <a href="https://www.themonkeyvault.com/s/appointments" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; background:#ffd400; color:#211f1b; text-decoration:none; border-radius:10px; padding:12px 17px; font:800 12.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em;">Book mini <i class="bi bi-arrow-right"></i></a>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:10px; background:#f3f2ee; border-radius:12px; padding:13px 15px; margin-bottom:26px;">
+              <i class="bi bi-shield-lock" style="font-size:14px; color:#9b8e6a; margin-top:1px;"></i>
+              <span style="font:500 12.5px/1.5 inherit; color:#6a6760;">Your card isn't charged at booking — it just holds the slot. You pay in person on the day, by final headcount.</span>
+            </div>
+
+            <div style="font:800 12px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#9b8e6a; margin:0 0 12px;">Party FAQ</div>
+            <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; overflow:hidden; margin-bottom:22px;">
+              <sc-for list="{{ eventFaqs }}" as="qa" hint-placeholder-count="4">
+                <details class="faq">
+                  <summary style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:15px 16px; font:700 14px/1.3 'Archivo',sans-serif; color:#211f1b;"><span>{{ qa.q }}</span><i class="bi bi-chevron-down faq-chev" style="font-size:12px; color:#b0aca3; flex:none;"></i></summary>
+                  <div style="padding:0 16px 16px; font:400 13px/1.6 inherit; color:#6a6760;">{{ qa.a }}</div>
+                </details>
+              </sc-for>
+            </div>
+
+            <button onClick="{{ goGroups }}" style="cursor:pointer; width:100%; background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:16px; display:flex; align-items:center; gap:13px;">
+              <span style="flex:none; width:38px; height:38px; border-radius:11px; background:color-mix(in srgb,#8c52ff 14%,#fff); display:flex; align-items:center; justify-content:center;"><i class="bi bi-people-fill" style="font-size:17px; color:#8c52ff;"></i></span>
+              <div style="flex:1; text-align:left;"><div style="font:800 14px/1.15 'Archivo',sans-serif;">Groups &amp; team events</div><div style="font:500 12px/1.35 inherit; color:#8a877f; margin-top:3px;">Schools, corporate &amp; early access</div></div>
+              <i class="bi bi-chevron-right" style="font-size:13px; color:#c4c0b7;"></i>
+            </button>
+          </div>
+        </sc-if>
+
+        <!-- ===== SUB: GROUPS ===== -->
+        <sc-if value="{{ isGroups }}" hint-placeholder-val="">
+          <div style="padding:18px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Groups &amp; Teams</h2>
+            <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 20px;">Schools, corporate teams &amp; community events.</p>
+
+            <div style="background:#fff; border:1px solid #ebe9e4; border-radius:18px; padding:22px 24px; margin-bottom:14px;">
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                <span style="flex:none; width:44px; height:44px; border-radius:12px; background:color-mix(in srgb,#8c52ff 14%,#fff); display:flex; align-items:center; justify-content:center;"><i class="bi bi-people-fill" style="font-size:20px; color:#8c52ff;"></i></span>
+                <div><div style="font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#8c52ff;">Group Events</div><div style="font:800 19px/1.1 'Archivo',sans-serif; letter-spacing:-.01em; margin-top:5px;">Field trips &amp; team-building</div></div>
+              </div>
+              <p style="font:400 13px/1.55 inherit; color:#6a6760; margin:0 0 16px;">Two hours — an hour of guided activities, then an hour of open gym. Great for field trips, teams and community events, all levels.</p>
+              <div style="font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#9b9890; margin-bottom:10px;">Price per participant</div>
+              <div style="border:1px solid #ebe9e4; border-radius:12px; overflow:hidden; margin-bottom:14px;">
+                <sc-for list="{{ groupTiers }}" as="t" hint-placeholder-count="4">
+                  <div style="display:flex; align-items:center; justify-content:space-between; padding:11px 14px; border-bottom:1px solid #f0efea;"><span style="font:600 13.5px/1 inherit; color:#3a3833;">{{ t.label }}</span><span style="font:800 13.5px/1 'Archivo',sans-serif; color:#211f1b;">{{ t.val }}</span></div>
+                </sc-for>
+              </div>
+              <p style="font:400 12px/1.5 inherit; color:#9b9890; margin:0 0 16px;">Minimum 10; smaller groups pay the $300 base. Final total is calculated on event day.</p>
+              <a href="https://www.themonkeyvault.com/s/appointments" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#211f1b; color:#fff; text-decoration:none; border-radius:12px; padding:13px; font:800 12.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em;">Plan an event <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+
+            <div style="background:#fff; border:1px solid #ebe9e4; border-radius:18px; padding:22px 24px;">
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                <span style="flex:none; width:44px; height:44px; border-radius:12px; background:color-mix(in srgb,#2e9e4f 14%,#fff); display:flex; align-items:center; justify-content:center;"><i class="bi bi-sunrise" style="font-size:20px; color:#2e9e4f;"></i></span>
+                <div><div style="font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#2e9e4f;">Early Access</div><div style="font:800 19px/1.1 'Archivo',sans-serif; letter-spacing:-.01em; margin-top:5px;">The gym, all to yourself</div></div>
+              </div>
+              <p style="font:400 13px/1.55 inherit; color:#6a6760; margin:0 0 16px;">Reserve the gym before we open at 11 AM for exclusive access — perfect for small groups or focused training with no crowds.</p>
+              <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:12px; padding-top:14px; border-top:1px solid #f0efea;">
+                <div><div style="font:800 20px/1 'Archivo',sans-serif; color:#211f1b;">From $50/hr</div><div style="font:600 12px/1.3 inherit; color:#9b9890; margin-top:5px;">+ $25 / person open gym</div></div>
+                <a href="https://www.themonkeyvault.com/s/appointments" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; background:#211f1b; color:#fff; text-decoration:none; border-radius:10px; padding:12px 16px; font:800 12px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em;">Reserve <i class="bi bi-arrow-up-right"></i></a>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ===== SUB: REVIEWS ===== -->
+        <sc-if value="{{ isReviews }}" hint-placeholder-val="">
+          <div style="padding:18px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 18px;">Reviews</h2>
+            <div style="background:#211f1b; color:#fff; border-radius:18px; padding:24px; margin-bottom:20px; display:flex; align-items:center; gap:18px;">
+              <div style="text-align:center;"><div style="font:900 40px/1 'Archivo',sans-serif; color:#ffd400;">4.9</div><div style="color:#ffd400; font-size:12px; letter-spacing:2px; margin-top:6px;"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div></div>
+              <div style="flex:1;"><div style="font:800 16px/1.2 'Archivo',sans-serif;">Loved by the community</div><div style="font:500 12.5px/1.4 inherit; color:rgba(255,255,255,.6); margin-top:5px;">300+ reviews on Google across parents, members and first-timers.</div></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <sc-for list="{{ reviews }}" as="r" hint-placeholder-count="5">
+                <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:18px 20px;">
+                  <div style="color:#e9a300; font-size:11px; letter-spacing:2px; margin-bottom:10px;"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+                  <p style="font:500 13.5px/1.55 inherit; color:#3a3833; margin:0 0 12px;">“{{ r.text }}”</p>
+                  <div style="font:800 12.5px/1 'Archivo',sans-serif; color:#211f1b;">{{ r.name }} <span style="font-weight:600; color:#9b9890;">· {{ r.role }}</span></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+
+      <!-- ===== BOTTOM NAV ===== -->
+      <div style="flex:none; position:relative; z-index:30; background:rgba(255,255,255,.94); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-top:1px solid #e6e4dd; padding:9px 12px 22px; display:flex; align-items:flex-end;">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+          <button class="navbtn" onClick="{{ n.onClick }}" style="flex:1; cursor:pointer; background:none; border:0; padding:0; display:flex; flex-direction:column; align-items:center; gap:5px;">
+            <sc-if value="{{ n.center }}" hint-placeholder-val="">
+              <span style="width:54px; height:54px; margin-top:-30px; border-radius:50%; background:#ffd400; border:4px solid #f5f4f1; box-shadow:0 10px 20px -6px rgba(255,212,0,.8); display:flex; align-items:center; justify-content:center;"><i class="bi {{ n.icon }}" style="font-size:23px; color:#211f1b;"></i></span>
+              <span style="font:800 10px/1 'Archivo',sans-serif; letter-spacing:.03em; text-transform:uppercase; color:{{ n.fg }};">{{ n.label }}</span>
+            </sc-if>
+            <sc-if value="{{ n.regular }}" hint-placeholder-val="{{ true }}">
+              <i class="bi {{ n.icon }}" style="font-size:21px; color:{{ n.fg }};"></i>
+              <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.02em; color:{{ n.fg }};">{{ n.label }}</span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- caption -->
+  <div style="max-width:520px; text-align:center; margin-top:30px;">
+    <p style="font:500 13px/1.6 inherit; color:#8a877f; margin:0;">Every program is the same <strong style="color:#211f1b;">BookingCard</strong> from the desktop site; the Schedule pulls live class data and filters it by age with the site's own logic. <strong style="color:#211f1b;">Book</strong> links straight to each item's Square page.</p>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:440,&quot;height&quot;:1000},&quot;startTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;home&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;train&quot;,&quot;book&quot;,&quot;schedule&quot;,&quot;more&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+const DAY_ORDER = [1, 2, 3, 4, 5, 6, 0]; // Mon..Sun
+const DAY_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const SCHEDULE_API = 'https://us-central1-tmv-management.cloudfunctions.net/getPublicSchedule';
+const SQ = {
+  book: 'https://www.themonkeyvault.com/s/appointments',
+  store: 'https://www.themonkeyvault.com/s/order',
+  summer: 'https://www.themonkeyvault.com/product/summer-camps-2026/R2Z7XNZMEXSG6EFR5YQRAFLO',
+  athletic: 'https://www.themonkeyvault.com/product/athletic-program-monthly-membership/NXP3HEIUKLFQXQT6JBVXMIDW',
+};
+
+class Component extends DCLogic {
+  state = { tab: null, cats: null, filter: 'all', classes: null, schedErr: false, sub: null, cfg: null };
+
+  setTab = (t) => this.setState({ tab: t, sub: null });
+  setFilter = (f) => this.setState({ filter: f });
+  openSub = (s) => { this.setState({ sub: s }); const sc = document.querySelector('.app-scroll'); if (sc) sc.scrollTop = 0; };
+  closeSub = () => this.setState({ sub: null });
+
+  componentWillUnmount() { clearInterval(this._clock); }
+
+  // Live open/closed status in the gym's timezone. Open-gym hours: 11 AM–10 PM
+  // daily, extended to midnight Friday (matches the schedule's open-gym window).
+  getOpenStatus() {
+    let hour = 12, minute = 0, wd = 'Mon';
+    try {
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Toronto', hour12: false, weekday: 'short', hour: '2-digit', minute: '2-digit' }).formatToParts(new Date());
+      const m = Object.fromEntries(parts.map((p) => [p.type, p.value]));
+      hour = parseInt(m.hour, 10) % 24;
+      minute = parseInt(m.minute, 10) || 0;
+      wd = m.weekday;
+    } catch (e) { /* fall back to open */ }
+    const isFri = wd === 'Fri';
+    const mins = hour * 60 + minute;
+    const openAt = 11 * 60;
+    const closeAt = isFri ? 24 * 60 : 22 * 60;
+    const isOpen = mins >= openAt && mins < closeAt;
+    if (isOpen) {
+      return { label: 'Open now', fg: '#5fd07f', bg: 'rgba(95,208,127,.13)', bd: 'rgba(95,208,127,.28)', dot: '#5fd07f' };
+    }
+    return { label: 'Opens 11 AM', fg: 'rgba(255,255,255,.6)', bg: 'rgba(255,255,255,.07)', bd: 'rgba(255,255,255,.15)', dot: 'rgba(255,255,255,.4)' };
+  }
+
+  componentDidMount() {
+    import('./categories.js')
+      .then((m) => {
+        const map = Object.fromEntries(m.CATEGORIES.map((x) => [x.key, x.color]));
+        this.setState({ cats: map });
+      })
+      .catch((e) => console.warn(e));
+
+    // Patch Square links / socials to live site-config (single source of truth).
+    import('./site-config.js').then((m) => m.applySiteConfig()).then((cfg) => this.setState({ cfg })).catch((e) => console.warn(e));
+
+    this._clock = setInterval(() => this.forceUpdate(), 60000);
+    this.loadSchedule();
+  }
+
+  // Read the class SSOT + the site's own filter/time helpers.
+  loadSchedule = () => {
+    this.setState({ schedErr: false, classes: null });
+    Promise.all([
+      import('./public/js/standalone/print-schedule-sheet.js'),
+      fetch(SCHEDULE_API).then((r) => r.json()),
+    ])
+      .then(([mod, json]) => {
+        this._matchesFilter = mod.matchesFilter;
+        this._fmtRange = (s, e) => mod.fmtClassTimeRange(s, e, { suffix: 'long', sep: ' – ' });
+        const classes = (json && json.success && json.data && json.data.classes) || [];
+        this.setState({ classes });
+      })
+      .catch((e) => {
+        console.warn('[schedule] load failed', e);
+        this.setState({ schedErr: true });
+      });
+  };
+
+  // Open Gym isn't in the class feed — it's the gym's operating hours.
+  openGymEntries() {
+    const out = [];
+    DAY_ORDER.forEach((d) => {
+      out.push({ day: d, time: '11', endTime: '22', disciplineName: 'Open Gym', ageGroupName: 'All Ages', color: '#2e9e4f' });
+      if (d === 5) out.push({ day: d, time: '22', endTime: '24', disciplineName: 'Open Gym', ageGroupName: 'Adults Only', color: '#2e7d32' });
+    });
+    return out;
+  }
+
+  buildScheduleDays(filter) {
+    const list = filter === 'open-gym'
+      ? this.openGymEntries()
+      : (this.state.classes || []).filter((c) => this._matchesFilter(c, filter));
+    const today = new Date().getDay();
+    const timeKey = (t) => {
+      const [h, m] = String(t || '').split(':');
+      return (parseInt(h, 10) || 0) * 60 + (parseInt(m || '0', 10) || 0);
+    };
+    const days = [];
+    DAY_ORDER.forEach((d) => {
+      const sessions = list.filter((c) => c.day === d).sort((a, b) => timeKey(a.time) - timeKey(b.time));
+      if (!sessions.length) return;
+      days.push({
+        label: (d === today ? 'Today · ' : '') + DAY_LONG[d],
+        sessions: sessions.map((c) => ({
+          name: c.disciplineName || '',
+          range: this._fmtRange(c.time, c.endTime),
+          age: c.ageGroupName || '',
+          color: c.color || '#2196f3',
+          isNew: !!c.isNew && !c.isCancelled,
+          isCancelled: !!c.isCancelled,
+          deco: c.isCancelled ? 'line-through' : 'none',
+          op: c.isCancelled ? '.55' : '1',
+        })),
+      });
+    });
+    return days;
+  }
+
+  cat(key, fallback) {
+    return (this.state.cats && this.state.cats[key]) || fallback;
+  }
+
+  renderVals() {
+    const p = this.props;
+    const tab = this.state.tab || (p.startTab ?? 'home');
+    const filter = this.state.filter;
+    const sub = this.state.sub;
+
+    const classColor = this.cat('classes', '#2196f3');
+    const campColor = this.cat('camps', '#e27902');
+    const privateColor = this.cat('private', '#f44336');
+    const openGymColor = this.cat('openGym', '#2e9e4f');
+    const partyColor = this.cat('parties', '#ffd400');
+    const athleticColor = this.cat('athletic', '#ffb82a');
+    const groupsColor = this.cat('groups', '#8c52ff');
+
+    // ---- bottom nav ----
+    const INK = '#211f1b';
+    const MUTE = '#b0aca3';
+    const navDef = [
+      { key: 'home', label: 'Home', icon: 'bi-house-door-fill' },
+      { key: 'train', label: 'Train', icon: 'bi-person-arms-up' },
+      { key: 'book', label: 'Book', icon: 'bi-calendar-check-fill', center: true },
+      { key: 'schedule', label: 'Schedule', icon: 'bi-calendar3' },
+      { key: 'more', label: 'More', icon: 'bi-grid-fill' },
+    ];
+    const nav = navDef.map((n) => ({
+      ...n,
+      center: !!n.center,
+      regular: !n.center,
+      fg: tab === n.key ? INK : MUTE,
+      onClick: () => this.setTab(n.key),
+    }));
+
+    // ---- home ----
+    const offerings = [
+      { title: 'Train', sub: 'Open gym, classes & the Athletic Program', icon: 'bi-person-arms-up', color: classColor, onClick: () => this.setTab('train') },
+      { title: 'Camps', sub: 'Weekly, P.A. Day & private day camps', icon: 'bi-sun-fill', color: campColor, onClick: () => this.openSub('camps') },
+      { title: 'Events', sub: 'Birthdays, groups & team events', icon: 'bi-balloon-fill', color: privateColor, onClick: () => this.openSub('events') },
+    ];
+
+    // ---- train / classes ----
+    const classes = [
+      { title: 'Recreational', tag: 'Drop-in', desc: 'Parkour & acrobatics at your own pace. All fun, zero pressure.', pills: 'Ages 3+ | All levels' },
+      { title: 'Flips & Airtime', tag: 'Drop-in', desc: 'Trampolines, foam pit and safe progressions to your first flip.', pills: 'Ages 6+ | Beginner–adv' },
+      { title: 'Calisthenics', tag: 'Membership', desc: 'Bodyweight strength — pull-ups, levers and handstands.', pills: 'Teens & adults' },
+      { title: 'Tricking', tag: 'Drop-in', desc: 'Martial-arts-inspired kicks, twists and combos.', pills: 'Ages 8+ | Some exp.' },
+    ];
+
+    // ---- drop-in (no booking, just show up) ----
+    const dropIns = [
+      { title: 'Open Gym', color: openGymColor, desc: 'Any day, stay as long as you like — 11 AM to 10 PM. Day pass from $25.', sub: 'Just sign the waiver and jump in.' },
+      { title: 'Group Classes', color: classColor, desc: 'Recreational, Flips, Calisthenics, Tricking, Gymnastics & more.', sub: 'Show up at class time — see the Schedule tab for times.' },
+    ];
+
+    // ---- book (each links to its specific Square item) ----
+    const bookOptions = [
+      { color: privateColor, tag: 'By appointment', title: 'Private Lesson', desc: '1-on-1 coaching built around your goals and pace.', pills: 'All ages | Your coach or ours', price: 'From $85', note: '5-packs available', action: 'Book', href: SQ.book },
+      { color: campColor, tag: 'Register', title: 'Weekly Camps', desc: 'A full week of parkour over school breaks.', pills: 'Ages 5+ | Mon–Fri', price: '$350 / week', note: 'late pickup to 4 PM', action: 'See dates', href: SQ.summer },
+      { color: partyColor, tag: 'By appointment', title: 'Birthday Party', desc: 'A coached session, a private room and free play.', pills: 'Ages 5+ | Private room', price: 'From $350', note: 'up to 15 kids', action: 'Enquire', href: SQ.book },
+    ];
+
+    // ---- schedule (live SSOT) ----
+    const FILTERS = [
+      ['all', 'All'], ['kids', 'Kids'], ['teens', 'Teens'],
+      ['adults', 'Adults'], ['athletic', 'Athletic'], ['open-gym', 'Open Gym'],
+    ];
+    const scheduleChips = FILTERS.map(([key, label]) => ({
+      label,
+      active: key === filter,
+      fg: key === filter ? '#fff' : '#3a3833',
+      bg: key === filter ? '#211f1b' : '#fff',
+      bd: key === filter ? '#211f1b' : '#e6e4dd',
+      onClick: () => this.setFilter(key),
+    }));
+    const helpersReady = !!this._matchesFilter;
+    const scheduleDays = helpersReady && this.state.classes ? this.buildScheduleDays(filter) : [];
+    const schedLoading = !this.state.schedErr && (!this.state.classes || !helpersReady);
+    const schedReady = !this.state.schedErr && !schedLoading;
+
+    // ---- more ----
+    const moreTiles = [
+      { title: 'Pricing', sub: 'Passes, packs & memberships', icon: 'bi-tag-fill', color: openGymColor, onClick: () => this.openSub('pricing') },
+      { title: 'Store', sub: 'Buy passes & memberships', icon: 'bi-bag-fill', color: INK, onClick: () => this.openSub('store') },
+      { title: 'Camps', sub: 'School-break day camps', icon: 'bi-sun-fill', color: campColor, onClick: () => this.openSub('camps') },
+      { title: 'Events', sub: 'Birthdays & parties', icon: 'bi-balloon-fill', color: privateColor, onClick: () => this.openSub('events') },
+      { title: 'Groups', sub: 'Schools, teams & corporate', icon: 'bi-people-fill', color: groupsColor, onClick: () => this.openSub('groups') },
+      { title: 'About', sub: 'The space, hours & contact', icon: 'bi-geo-alt-fill', color: classColor, onClick: () => this.openSub('about') },
+      { title: 'Reviews', sub: 'What members say', icon: 'bi-star-fill', color: '#e9a300', onClick: () => this.openSub('reviews') },
+      { title: 'Get Started', sub: 'First-visit guide', icon: 'bi-flag-fill', color: openGymColor, onClick: () => this.openSub('getstarted') },
+    ];
+
+    // ===== subpage data =====
+    const cfg = this.state.cfg;
+    const STORE = (cfg && cfg.squareLinks && cfg.squareLinks.store) || SQ.store;
+    const item = (k) => (cfg && cfg.storeItems && cfg.storeItems[k]) || STORE;
+    const link = (k, fb) => (cfg && cfg.squareLinks && cfg.squareLinks[k]) || fb;
+    const introColor = this.cat('introduction', '#6e6e6e');
+    const waiverHref = link('waiver', 'https://www.themonkeyvault.com/get-started');
+
+    const priceGroups = [
+      { title: 'Open Gym', color: openGymColor, rows: [
+        { label: 'Day pass', key: 'openGymDay', val: '$25', note: 'no time limit' },
+        { label: '10-visit pack', key: 'openGym10x', val: '$225' },
+        { label: 'Membership · 30 days', key: 'membership30', val: '$110' },
+      ]},
+      { title: 'Group Classes', color: classColor, rows: [
+        { label: 'Single class', key: 'groupClass1x', val: '$30' },
+        { label: '10-class pack', key: 'groupClass10x', val: '$275' },
+        { label: 'Class membership · 30 days', key: 'classMembership30', val: '$180', note: 'classes + open gym' },
+      ]},
+      { title: 'Private Lessons', color: privateColor, rows: [
+        { label: 'Intro · one-time', key: 'privateIntro', val: '$45' },
+        { label: 'Kids', key: 'privateKids', val: '$65' },
+        { label: 'Adults', key: 'privateAdults', val: '$85' },
+        { label: '5-pack · kids', key: 'private5xKids', val: '$250' },
+      ]},
+      { title: 'Athletic Program', color: athleticColor, rows: [
+        { label: 'Monthly membership', key: 'athleticMonthly', val: '$150', note: 'per month' },
+      ]},
+      { title: 'Camps', color: campColor, rows: [
+        { label: 'Weekly camp', key: 'campWeekly', val: '$350', note: 'per week' },
+        { label: 'Day / P.A. Day camp', key: 'campDay', val: '$90', note: 'per day' },
+      ]},
+      { title: 'Parties & Groups', color: partyColor, rows: [
+        { label: 'Full party · base', key: 'partyBase', val: '$350', note: 'up to 8 kids' },
+        { label: 'Mini party', key: 'miniPartyKid', val: '$30', note: 'per kid' },
+        { label: 'Early gym access', key: 'earlyAccessHr', val: '$50', note: 'per hour' },
+      ]},
+    ];
+
+    const storeProducts = [
+      { color: openGymColor, title: 'Day Passes', desc: 'Walk in and train as long as you like — single, or save with a 10 or 20 pack.', pills: 'All ages | No time limit', price: 'From $25', note: 'single pass', action: 'Buy', href: item('dayPasses') },
+      { color: openGymColor, title: 'Open Gym Membership', desc: 'Unlimited open gym for whatever stretch suits you — 30 days to a year.', pills: 'Unlimited | 30–360 days', price: 'From $110', note: '30 days', action: 'Buy', href: item('openGymMembership') },
+      { color: classColor, title: 'Class Passes', desc: 'Good for any group class on the schedule — single or 10/20 pack.', pills: 'Any class | All levels', price: 'From $30', note: 'single class', action: 'Buy', href: item('classPasses') },
+      { color: classColor, title: 'Class Membership', desc: 'Unlimited group classes and open gym for 30 days.', pills: 'Classes + open gym', price: '$180', note: '30 days', action: 'Buy', href: item('classMembership') },
+      { color: privateColor, title: 'Private Class Pack', desc: 'A block of private lessons at a better rate — book each as you go.', pills: '1-on-1 | Book as you go', price: 'From $250', note: '5-pack · kids', action: 'Buy', href: item('privateClassPack') },
+      { color: athleticColor, title: 'Athletic Membership', desc: 'Unlimited Athletic Program training, monthly.', pills: 'Ages 9+ | Monthly', price: '$150', note: 'per month', action: 'Buy', href: link('athleticMembership', SQ.athletic) },
+    ];
+    const giftHref = link('giftCard', 'https://squareup.com/gift/4PQGSAK7CK7FB/order');
+
+    const gsOptions = [
+      { color: introColor, status: 'Reservation required', tone: 'neutral', title: 'Introduction Class', desc: 'A one-on-one intro on a beginner curriculum — the best place to start.', action: 'Book intro', href: SQ.book, target: '_blank' },
+      { color: privateColor, status: 'Reservation required', tone: 'neutral', title: 'Private Class', desc: 'One-on-one or your own friend group, fully tailored to your goals.', action: 'Book private', href: SQ.book, target: '_blank' },
+      { color: classColor, status: 'No reservation', tone: 'go', title: 'Group Class', desc: 'Drop into a scheduled class with other beginners — just show up.', action: 'See schedule', href: '#', target: '_self' },
+      { color: openGymColor, status: 'No reservation', tone: 'go', title: 'Open Gym', desc: 'Grab a day pass and train on your own, any time.', action: 'Get a pass', href: SQ.store, target: '_blank' },
+    ];
+    const gsBring = [
+      'Comfortable clothes you can move in.',
+      'A clean pair of indoor shoes (or train barefoot).',
+      'A water bottle to stay hydrated.',
+    ];
+    const gsArrive = [
+      { n: '1', text: 'Arrive 15 minutes early to sign in.' },
+      { n: '2', text: 'Stash your things in a locker (bring a lock).' },
+      { n: '3', text: 'Read the Rules poster at the entrance.' },
+      { n: '4', text: 'Join the group warm-up on the spring floor.' },
+    ];
+    const gsFaqs = [
+      { q: 'Do I need any experience?', a: 'None at all — most first-timers have never done parkour. A coach starts you with the basics at your own pace.' },
+      { q: 'Do I have to book?', a: 'Open Gym and Group Classes need no reservation — just show up. Introduction and Private classes are reserved ahead.' },
+      { q: 'Is it safe for kids?', a: 'Padded floors, a foam pit and trained coaches who scale every skill. Ages 3 and up welcome.' },
+    ];
+
+    const campsList = [
+      { color: campColor, tag: 'Register', title: 'Weekly Camps', desc: 'A full week of parkour over school breaks — skills, flips, games and friends.', pills: 'Ages 5+ | Mon–Fri | All levels', price: '$350 / week', note: 'late pickup to 4 PM', action: 'Reserve', href: SQ.summer },
+      { color: campColor, tag: 'By appointment', title: 'Private Day Camp', desc: 'Gather your crew for a private day — groups of five or more, any day.', pills: 'Min 5 kids | 9 AM–2 PM', price: '$90 / kid', note: 'book a week ahead', action: 'Enquire', href: SQ.book },
+      { color: campColor, tag: 'Register', title: 'P.A. Day Camp', desc: 'A single day of parkour on a day off school — open to the public.', pills: 'Ages 5+ | Single days', price: '$90 / day', note: '9 AM–2 PM', action: 'Reserve', href: link('paDayCamp', 'https://www.themonkeyvault.com/product/pa-day-camps/7PGIQLBT3X2QUL5I4XL2VMK7') },
+    ];
+    const campDay = [
+      { time: '8:45–9:00', label: 'Arrival & check-in' },
+      { time: '9:00–11:00', label: 'Activities' },
+      { time: '11:00–11:30', label: 'Lunch' },
+      { time: '11:30–12:00', label: 'Free time' },
+      { time: '12:00–2:00', label: 'Activities' },
+      { time: '2:00–4:00', label: 'Late pick-up (optional)' },
+    ];
+
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const aboutHours = (cfg && Array.isArray(cfg.hours) && cfg.hours.length) ? cfg.hours : days.map((d) => ({ day: d, time: '11:00 AM – 10:00 PM' }));
+    const GBASE = 'https://97c4ca0509b4c38d26ba.cdn6.editmysite.com/uploads/b/97c4ca0509b4c38d26ba323484b80b964616e1d4454eb6debcf2c66267495c04/';
+    const aboutGallery = ['hero_5_1671600108.jpg', '045A1596_1671044591.JPG', '045A1295_1670786028.jpeg', 'hero_2_1644891308.jpeg', '045A1273_1670786026.jpeg', 'hero_4_1671600111.jpg'].map((f) => GBASE + f + '?width=600&optimize=medium');
+    const aboutFacility = [
+      { icon: 'bi-grid-3x3-gap-fill', title: 'Gymnastics floor', body: 'Sprung floor and tumbling space for flips and clean form.' },
+      { icon: 'bi-box-seam', title: 'Foam pit & mats', body: 'Land big tricks safely — padded throughout.' },
+      { icon: 'bi-bricks', title: 'Obstacles & rigs', body: 'Walls, bars, rails and vaults for parkour.' },
+      { icon: 'bi-heart-pulse', title: 'Weight training', body: 'A strength-and-conditioning section too.' },
+    ];
+
+    const groupTiers = [
+      { label: 'Up to 10', val: '$300 base' },
+      { label: '11–30', val: '$27.50 ea' },
+      { label: '31–50', val: '$25.00 ea' },
+      { label: '51+', val: '$22.50 ea' },
+    ];
+    const eventFaqs = [
+      { q: 'When do I pay?', a: 'Nothing upfront — the card on file is only for the cancellation policy. You pay in person on the day, based on final headcount.' },
+      { q: 'Weekend slots full?', a: 'The availability online is all we have. Smaller groups can book a Mini party (3+ kids, $30 each).' },
+      { q: 'Can we bring food?', a: 'Yes — cake, pizza, snacks, drinks, no fees. We provide the room, tables and a fridge/freezer.' },
+      { q: 'Can we extend open gym?', a: 'Ask your instructor — $5 per participant for an extra hour (room time still ends at 2 hours).' },
+    ];
+
+    const reviews = [
+      { name: 'Sarah M.', role: 'Parent', text: 'Best place for the kids — they beg to go back every week. Coaches are patient and it\u2019s spotless.' },
+      { name: 'Devon R.', role: 'Open gym member', text: 'The facility is huge and the community is so welcoming. I come 3\u00d7 a week and never get bored.' },
+      { name: 'Priya K.', role: 'Parent', text: 'Booked a birthday party here — the coaches ran the whole thing and the kids had a blast.' },
+      { name: 'Marcus T.', role: 'Adult class', text: 'Started with zero experience at 34. Six months in I\u2019m doing things I never thought possible.' },
+      { name: 'Ella W.', role: 'Athletic Program', text: 'The structured training took my tricking to another level. Real coaching, real progress.' },
+    ];
+
+    const SUBTITLES = { pricing: 'Pricing', store: 'Store', getstarted: 'Get Started', about: 'About', camps: 'Camps', events: 'Events', groups: 'Groups & Teams', reviews: 'Reviews' };
+    const status = this.getOpenStatus();
+
+    return {
+      status,
+      isHome: tab === 'home' && !sub,
+      isTrain: tab === 'train' && !sub,
+      isBook: tab === 'book' && !sub,
+      isSchedule: tab === 'schedule' && !sub,
+      isMore: tab === 'more' && !sub,
+      notSub: !sub,
+      inSub: !!sub,
+      subTitle: SUBTITLES[sub] || '',
+      isPricing: sub === 'pricing',
+      isStore: sub === 'store',
+      isGetStarted: sub === 'getstarted',
+      isAbout: sub === 'about',
+      isCamps: sub === 'camps',
+      isEvents: sub === 'events',
+      isGroups: sub === 'groups',
+      isReviews: sub === 'reviews',
+      priceGroups, storeProducts, giftHref,
+      gsOptions, gsBring, gsArrive, gsFaqs, waiverHref,
+      campsList, campDay,
+      aboutFacility, aboutHours, aboutGallery,
+      groupTiers, eventFaqs, reviews,
+      closeSub: this.closeSub,
+      goGetStarted: () => this.openSub('getstarted'),
+      goGroups: () => this.openSub('groups'),
+      goStore: () => this.openSub('store'),
+      nav,
+      offerings,
+      classes,
+      dropIns,
+      bookOptions,
+      scheduleChips,
+      scheduleDays,
+      schedLoading,
+      schedErr: this.state.schedErr,
+      schedReady,
+      schedEmpty: schedReady && scheduleDays.length === 0,
+      reloadSchedule: this.loadSchedule,
+      moreTiles,
+      classColor,
+      campColor,
+      openGymColor,
+      privateColor,
+      athleticColor,
+      goBook: () => this.setTab('book'),
+      goSchedule: () => this.setTab('schedule'),
+      goMore: () => this.setTab('more'),
+    };
+  }
+}
+</script>
+</body>
+</html>
