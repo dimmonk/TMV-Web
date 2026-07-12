@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  html,body{margin:0; background:#e9e7e1;}
+  html,body{margin:0; height:100%; background:#e9e7e1;}
   *{box-sizing:border-box;}
   ::selection{background:#ffd400; color:#211f1b;}
   .app-scroll{scrollbar-width:none;}
@@ -25,9 +25,21 @@
   .tile:active{transform:scale(.98);}
   .shopadd:active{transform:scale(.94);}
   /* embed mode: strip the concept canvas + phone bezel so the app fills its host */
-  .appcanvas.emb{min-height:0; height:100%; padding:0; background:transparent;}
-  .appcanvas.emb .appwrap{width:100%; height:100%;}
-  .appcanvas.emb .appframe{width:100%; height:100%; border-radius:0; box-shadow:none; border:0;}
+  /* !important is load-bearing: .appwrap/.appframe set width/height/border-
+     radius/box-shadow/border as INLINE styles (the phone-bezel mockup
+     dimensions), and inline styles always beat stylesheet rules regardless
+     of selector specificity - without !important these overrides are
+     silently no-ops and the "full-bleed" mode still renders a fixed
+     392x812px phone box instead of actually filling the viewport.
+     height uses dvh, not %, because the dc-runtime's own #dc-root mount div
+     never gets an explicit height (support.js only sets #dc-root{height:100%}
+     when the page has no $preview prop, which this page does) - a % chain
+     through an auto-height ancestor collapses to content size (mobile.html
+     sidesteps the same gap with height:100dvh on its own root, see line 46
+     there). dvh is viewport-absolute so it doesn't need that chain at all. */
+  .appcanvas.emb{min-height:0 !important; height:100dvh !important; padding:0 !important; background:transparent !important;}
+  .appcanvas.emb .appwrap{width:100% !important; height:100% !important;}
+  .appcanvas.emb .appframe{width:100% !important; height:100% !important; border-radius:0 !important; box-shadow:none !important; border:0 !important;}
   @keyframes tmv-pulse{0%{box-shadow:0 0 0 0 rgba(95,208,127,.5);}70%{box-shadow:0 0 0 6px rgba(95,208,127,0);}100%{box-shadow:0 0 0 0 rgba(95,208,127,0);}}
   .tmv-pulse{animation:tmv-pulse 1.6s ease-in-out infinite;}
 </style>
@@ -57,13 +69,24 @@
         </div>
       </div>
 
-      <!-- app bar (dark, persistent — matches the website header) -->
-      <div style="flex:none; background:#211f1b; border-bottom:1px solid rgba(255,255,255,.08); padding:11px 18px; display:flex; align-items:center; justify-content:space-between; position:relative; z-index:15;">
-        <div style="display:flex; align-items:center; gap:9px;">
-          <img src="assets/tmvlogo.png" alt="" style="width:28px; height:28px; object-fit:contain;">
-          <span style="font:900 13px/1 'Archivo',sans-serif; letter-spacing:.02em; text-transform:uppercase; color:#fff;">The Monkey Vault</span>
+      <!-- concept banner: embed mode strips the intro copy that normally
+           explains this is a mockup, so say so here instead — full-bleed
+           mode alone could otherwise read as a real, live account. -->
+      <sc-if value="{{ isEmbed }}" hint-placeholder-val="">
+        <div style="flex:none; background:#3a2f6e; color:#fff; padding:9px 14px; display:flex; align-items:center; gap:8px; position:relative; z-index:16;">
+          <i class="bi bi-cone-striped" style="font-size:13px; color:#c9b8ff; flex:none;"></i>
+          <span style="flex:1; font:600 11.5px/1.3 -apple-system,system-ui,sans-serif;">Concept preview — not a real account</span>
+          <a href="mobile.html" style="flex:none; font:700 11px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; color:#c9b8ff; text-decoration:none; border-bottom:1px solid rgba(201,184,255,.5); padding-bottom:1px;">Back to site</a>
         </div>
-        <span style="width:34px; height:34px; border-radius:50%; background:#ffd400; color:#211f1b; display:flex; align-items:center; justify-content:center; font:800 14px/1 'Archivo',sans-serif;">{{ initial }}</span>
+      </sc-if>
+
+      <!-- app bar (dark, persistent — matches the website header) -->
+      <div style="flex:none; background:#211f1b; border-bottom:1px solid rgba(255,255,255,.08); padding:16px 18px; display:flex; align-items:center; justify-content:space-between; position:relative; z-index:15;">
+        <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+          <img src="assets/tmvlogo.png" alt="" style="flex:none; width:32px; height:32px; object-fit:contain;">
+          <span style="font:900 14.5px/1 'Archivo',sans-serif; letter-spacing:.01em; text-transform:uppercase; color:#fff; white-space:nowrap;">The Monkey Vault</span>
+        </div>
+        <span style="flex:none; width:34px; height:34px; border-radius:50%; background:#ffd400; color:#211f1b; display:flex; align-items:center; justify-content:center; font:800 14px/1 'Archivo',sans-serif;">{{ initial }}</span>
       </div>
 
       <!-- scroll region -->
@@ -235,16 +258,16 @@
       </div>
 
       <!-- ===== BOTTOM NAV ===== -->
-      <div style="flex:none; position:relative; z-index:30; background:rgba(28,26,23,.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-top:1px solid rgba(255,255,255,.08); padding:9px 12px 22px; display:flex; align-items:flex-end;">
+      <div style="flex:none; position:relative; z-index:30; background:rgba(28,26,23,.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-top:1px solid rgba(255,255,255,.08); padding:9px 12px calc(13px + env(safe-area-inset-bottom,10px)); display:flex; align-items:flex-end;">
         <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
-          <button class="navbtn" onClick="{{ n.onClick }}" style="flex:1; cursor:pointer; background:none; border:0; padding:0; display:flex; flex-direction:column; align-items:center; gap:5px;">
+          <button class="navbtn" onClick="{{ n.onClick }}" style="flex:1; cursor:pointer; background:none; border:0; padding:0; display:flex; flex-direction:column; align-items:center; gap:7px;">
             <sc-if value="{{ n.center }}" hint-placeholder-val="">
-              <span style="width:54px; height:54px; margin-top:-30px; border-radius:50%; background:#ffd400; border:4px solid #211f1b; box-shadow:0 10px 20px -6px rgba(255,212,0,.8); display:flex; align-items:center; justify-content:center;"><i class="bi {{ n.icon }}" style="font-size:23px; color:#211f1b;"></i></span>
-              <span style="font:800 10px/1 'Archivo',sans-serif; letter-spacing:.03em; text-transform:uppercase; color:{{ n.fg }};">{{ n.label }}</span>
+              <span style="width:64px; height:64px; margin-top:-36px; border-radius:50%; background:#ffd400; border:4px solid rgba(28,26,23,.92); box-shadow:0 6px 15px -7px rgba(255,212,0,.45); display:flex; align-items:center; justify-content:center;"><i class="bi {{ n.icon }}" style="font-size:29px; color:#211f1b;"></i></span>
+              <span style="font:800 12px/1 'Archivo',sans-serif; letter-spacing:.03em; text-transform:uppercase; color:{{ n.fg }};">{{ n.label }}</span>
             </sc-if>
             <sc-if value="{{ n.regular }}" hint-placeholder-val="{{ true }}">
-              <i class="bi {{ n.icon }}" style="font-size:21px; color:{{ n.fg }};"></i>
-              <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.02em; color:{{ n.fg }};">{{ n.label }}</span>
+              <i class="bi {{ n.icon }}" style="font-size:26px; color:{{ n.fg }};"></i>
+              <span style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.02em; color:{{ n.fg }};">{{ n.label }}</span>
             </sc-if>
           </button>
         </sc-for>
@@ -279,6 +302,19 @@ class Component extends DCLogic {
 
   cat(key, fallback) {
     return (this.state.cats && this.state.cats[key]) || fallback;
+  }
+
+  // The design tool's own preview canvas can set props.embed directly, but a
+  // real browser tab (this page opened standalone from mobile.html's More
+  // tab) has no such mechanism - read the same intent from ?embed=1 so a
+  // real visit can also get the full-bleed "actual app" layout instead of
+  // the concept-canvas preview wrapper (intro copy + padded phone frame).
+  isEmbedRequested() {
+    try {
+      return new URLSearchParams(location.search).get('embed') === '1';
+    } catch (e) {
+      return false;
+    }
   }
 
   renderVals() {
@@ -400,8 +436,9 @@ class Component extends DCLogic {
       isBook: tab === 'book',
       isShop: tab === 'shop',
       isAccount: tab === 'account',
-      embedCls: this.props.embed ? 'emb' : '',
-      notEmbed: !this.props.embed,
+      embedCls: p.embed || this.isEmbedRequested() ? 'emb' : '',
+      notEmbed: !(p.embed || this.isEmbedRequested()),
+      isEmbed: !!(p.embed || this.isEmbedRequested()),
       nav,
       goBook: () => this.setTab('book'),
     };
