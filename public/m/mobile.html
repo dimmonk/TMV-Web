@@ -653,7 +653,7 @@
         <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
           <button class="navbtn" onClick="{{ n.onClick }}" style="flex:1; cursor:pointer; background:none; border:0; padding:0; display:flex; flex-direction:column; align-items:center; gap:7px;">
             <sc-if value="{{ n.center }}" hint-placeholder-val="">
-              <span style="width:64px; height:64px; margin-top:-36px; border-radius:50%; background:#ffd400; border:4px solid #211f1b; box-shadow:0 10px 20px -6px rgba(255,212,0,.8); display:flex; align-items:center; justify-content:center;"><i class="bi {{ n.icon }}" style="font-size:29px; color:#211f1b;"></i></span>
+              <span style="width:64px; height:64px; margin-top:-36px; border-radius:50%; background:#ffd400; border:4px solid rgba(28,26,23,.92); box-shadow:0 10px 20px -6px rgba(255,212,0,.8); display:flex; align-items:center; justify-content:center;"><i class="bi {{ n.icon }}" style="font-size:29px; color:#211f1b;"></i></span>
               <span style="font:800 12px/1 'Archivo',sans-serif; letter-spacing:.03em; text-transform:uppercase; color:{{ n.fg }};">{{ n.label }}</span>
             </sc-if>
             <sc-if value="{{ n.regular }}" hint-placeholder-val="{{ true }}">

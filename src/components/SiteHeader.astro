@@ -62,7 +62,10 @@ const { active = '' } = Astro.props;
   .sh-mlink.on { color: #fff; font-weight: 800; }
   .sh-mlink.accent { color: var(--brand); border-bottom: 0; }
 
-  @media (max-width: 820px) {
+  /* The full nav (brand + 6 links + New here? + Book Now) genuinely doesn't
+     fit until ~925px (measured) — 820px left a real gap where it overflowed
+     the header horizontally. 960px gives a safe margin above that. */
+  @media (max-width: 960px) {
     .sh-nav, .sh-new { display: none; }
     .sh-burger { display: inline-flex; }
     .sh-menu.open { display: flex; }
