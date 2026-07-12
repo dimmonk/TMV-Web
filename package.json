@@ -1,0 +1,17 @@
+{
+  "name": "tmv-web",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Monkey Vault — public website (static, responsive, SEO-first).",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "^4.16.18",
+    "@astrojs/sitemap": "^3.2.1"
+  }
+}

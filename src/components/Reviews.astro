@@ -1,0 +1,108 @@
+---
+import { links } from '../data/site';
+
+interface Review { quote: string; name: string; context: string; stars?: number; }
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  subhead?: string;
+  ratingValue?: string;
+  ratingCount?: string;
+  reviews?: Review[];
+}
+
+const {
+  eyebrow = '04 — What people say',
+  heading = "Don't just take our word for it",
+  subhead = 'Thousands of flips, classes and parties later — here’s what our community has to say.',
+  ratingValue = '4.9',
+  ratingCount = 'Based on 300+ reviews',
+  reviews = [
+    { quote: 'My son has been going for over a year and the change is incredible — confidence, strength, and he counts down the days between visits. The coaches genuinely care.', name: 'Sarah M.', context: 'Parent · Youth Classes' },
+    { quote: "Cleanest, friendliest gym in the city. Open gym is amazing value and there's space for total beginners and seasoned athletes alike. Foam pit never gets old.", name: 'Daniel K.', context: 'Member · Open Gym' },
+    { quote: "Booked a birthday party here and it was the easiest, most fun event we've ever thrown. The kids were buzzing for days and the staff handled everything.", name: 'Priya R.', context: 'Parent · Birthday Party' },
+  ],
+} = Astro.props;
+
+const palette = ['#2196f3', '#e27902', '#f44336', '#2e9e4f', '#8c52ff'];
+const fullStars = Math.round(parseFloat(ratingValue) || 5);
+---
+<section class="rv">
+  <div class="container">
+    <div class="rv-head">
+      <div>
+        <div class="rv-eyebrow">{eyebrow}</div>
+        <h2 class="rv-heading">{heading}</h2>
+        <p class="rv-sub">{subhead}</p>
+      </div>
+      <div class="rv-badge">
+        <div class="rv-score">
+          <div class="rv-num">{ratingValue}</div>
+          <div class="rv-stars">{Array.from({ length: fullStars }).map(() => <i class="bi bi-star-fill" aria-hidden="true"></i>)}</div>
+        </div>
+        <div class="rv-divider"></div>
+        <div>
+          <div class="rv-google"><i class="bi bi-google" aria-hidden="true"></i>Google Reviews</div>
+          <div class="rv-count">{ratingCount}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rv-grid">
+      {reviews.map((r, i) => (
+        <figure class="rv-card">
+          <div class="rv-cardtop">
+            <div class="rv-stars">{Array.from({ length: Math.min(5, r.stars ?? 5) }).map(() => <i class="bi bi-star-fill" aria-hidden="true"></i>)}</div>
+            <i class="bi bi-quote rv-quote" aria-hidden="true"></i>
+          </div>
+          <blockquote class="rv-text">{r.quote}</blockquote>
+          <figcaption class="rv-by">
+            <span class="rv-avatar" style={`background:${palette[i % palette.length]}`}>{r.name.trim().charAt(0).toUpperCase()}</span>
+            <div>
+              <div class="rv-name">{r.name}</div>
+              <div class="rv-context">{r.context}</div>
+            </div>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+
+    <div class="rv-cta">
+      <span>Trained with us? We'd love to hear about it.</span>
+      <a href={links.googleReviews} target="_blank" rel="noopener" class="rv-write"><i class="bi bi-google" aria-hidden="true"></i> Leave a review</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .rv { background: var(--bg); padding-block: clamp(48px, 8vw, 72px); }
+  .rv-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; flex-wrap: wrap; margin-bottom: 36px; }
+  .rv-eyebrow { font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--faint); margin-bottom: 10px; }
+  .rv-heading { font: 800 clamp(26px, 5vw, 36px)/1.04 var(--font-display); letter-spacing: -.018em; margin-bottom: 8px; }
+  .rv-sub { font: 400 15px/1.55 var(--font-body); color: var(--muted); max-width: 520px; }
+
+  .rv-badge { flex: none; display: flex; align-items: center; gap: 18px; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 24px; box-shadow: var(--shadow-sm); }
+  .rv-score { text-align: center; }
+  .rv-num { font: 900 38px/1 var(--font-display); letter-spacing: -.02em; color: var(--ink); }
+  .rv-stars { display: flex; gap: 2px; justify-content: center; margin-top: 6px; color: #ffb400; font-size: 13px; }
+  .rv-divider { width: 1px; height: 46px; background: var(--line); }
+  .rv-google { display: flex; align-items: center; gap: 7px; font: 800 14px/1 var(--font-display); color: var(--ink); }
+  .rv-google i { color: #4285f4; font-size: 15px; }
+  .rv-count { font: 600 12.5px/1.3 var(--font-body); color: var(--muted-3); margin-top: 6px; }
+
+  .rv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .rv-card { margin: 0; display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 28px 28px 24px; box-shadow: var(--shadow-sm); transition: transform .2s ease, box-shadow .2s ease; }
+  .rv-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .rv-cardtop { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+  .rv-quote { font-size: 30px; color: color-mix(in srgb, var(--brand) 70%, #e9e7e1); line-height: .6; }
+  .rv-text { font: 500 15px/1.55 var(--font-body); color: var(--text-2); margin: 0 0 22px; flex: 1; text-wrap: pretty; }
+  .rv-by { display: flex; align-items: center; gap: 13px; padding-top: 18px; border-top: 1px solid var(--line-soft); }
+  .rv-avatar { flex: none; width: 42px; height: 42px; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; font: 800 16px/1 var(--font-display); }
+  .rv-name { font: 800 14.5px/1.1 var(--font-display); color: var(--ink); }
+  .rv-context { font: 600 12.5px/1.3 var(--font-body); color: var(--muted-3); margin-top: 3px; }
+
+  .rv-cta { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 34px; }
+  .rv-cta span { font: 600 14px/1.6 var(--font-body); color: var(--muted); }
+  .rv-write { display: inline-flex; align-items: center; gap: 9px; background: var(--ink); color: #fff; font: 800 13px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; text-decoration: none; padding: 13px 20px; border-radius: 11px; transition: transform .15s ease; }
+  .rv-write:hover { transform: translateY(-1px); }
+</style>

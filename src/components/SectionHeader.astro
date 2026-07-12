@@ -1,0 +1,45 @@
+---
+interface Props {
+  num?: string;
+  eyebrow: string;
+  title: string;
+  description?: string;
+  align?: 'left' | 'center';
+  theme?: 'light' | 'dark';
+  actionLabel?: string;
+  href?: string;
+}
+const {
+  num = '', eyebrow, title, description = '',
+  align = 'left', theme = 'light', actionLabel = '', href = '#',
+} = Astro.props;
+const dark = theme === 'dark';
+---
+<div class:list={['sh2', { center: align === 'center', dark }]}>
+  <div class="sh2-eyebrow">
+    {num && <><span class="num">{num}</span><span class="rule"></span></>}
+    {eyebrow}
+  </div>
+  <h2 class="sh2-title">{title}</h2>
+  {description && <p class="sh2-desc">{description}</p>}
+  {actionLabel && (
+    <a href={href} class="sh2-action">{actionLabel} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+  )}
+</div>
+
+<style>
+  .sh2 { display: flex; flex-direction: column; align-items: flex-start; text-align: left; padding: 4px 0; }
+  .sh2.center { align-items: center; text-align: center; }
+  .sh2-eyebrow { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--faint); margin-bottom: 11px; }
+  .sh2-eyebrow .num { font-weight: 800; color: var(--brand); }
+  .sh2-eyebrow .rule { width: 14px; height: 2px; background: var(--brand); border-radius: 2px; }
+  .sh2-title { font: 800 clamp(23px, 5.4vw, 34px)/1.06 var(--font-display); letter-spacing: -.018em; color: var(--ink); margin: 0; max-width: 680px; text-wrap: balance; }
+  .sh2-desc { font: 400 15px/1.55 var(--font-body); color: var(--muted); max-width: 600px; margin: 12px 0 0; }
+  .sh2-action { display: inline-flex; align-items: center; gap: 8px; font: 800 13px/1 var(--font-display); text-transform: uppercase; letter-spacing: .04em; color: var(--ink); text-decoration: none; margin-top: 16px; padding-bottom: 4px; border-bottom: 2px solid var(--brand); }
+  .sh2-action i { color: var(--brand); }
+
+  .sh2.dark .sh2-title { color: #fff; }
+  .sh2.dark .sh2-desc { color: rgba(255,255,255,.7); }
+  .sh2.dark .sh2-eyebrow { color: rgba(255,255,255,.5); }
+  .sh2.dark .sh2-action { color: #fff; }
+</style>

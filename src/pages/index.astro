@@ -1,0 +1,383 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Pill from '../components/Pill.astro';
+import Reviews from '../components/Reviews.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { seo, links, cat, site, url } from '../data/site';
+
+const offerings = [
+  {
+    title: 'Train', tag: 'Classes · Open Gym', color: cat.classes, href: url('train'),
+    placeholder: 'Athletes training — open gym floor or a class mid-session',
+    desc: 'Drop in for open gym, book a class, or train like an athlete — every age and level.',
+    back: 'How you can train',
+    points: [
+      { icon: 'bi-unlock', text: 'Open Gym — drop in daily, no time limit' },
+      { icon: 'bi-mortarboard', text: 'Group Classes — parkour, flips, calisthenics, tricking & more' },
+      { icon: 'bi-trophy', text: 'Athletic Program — structured, athlete-level coaching' },
+      { icon: 'bi-person-arms-up', text: 'Private — one-on-one, built around your goals' },
+    ],
+  },
+  {
+    title: 'Camps', tag: 'Kids 5+', color: cat.camps, href: url('camps'),
+    placeholder: 'Kids at camp — a group shot or a candid mid-activity photo',
+    desc: 'Full days of skills, flips, games and friends over school breaks and P.A. days.',
+    back: 'Pick your camp',
+    points: [
+      { icon: 'bi-calendar-week', text: 'Weekly Camps — Winter, March & Summer' },
+      { icon: 'bi-people', text: 'Private Day Camp — your own crew, any day' },
+      { icon: 'bi-sun', text: 'P.A. Day Camp — single days, open to all' },
+    ],
+  },
+  {
+    title: 'Events', tag: 'Parties · Groups', color: cat.private, href: url('events'),
+    placeholder: 'A birthday crew mid-celebration — party room or foam pit',
+    desc: 'Birthdays that flip, plus group events for schools, teams and organizations.',
+    back: 'Celebrate with us',
+    points: [
+      { icon: 'bi-balloon', text: 'Full & Mini birthday parties' },
+      { icon: 'bi-people-fill', text: 'Group events — schools, teams, orgs' },
+      { icon: 'bi-sunrise', text: 'Early gym access — the space to yourselves' },
+    ],
+  },
+];
+
+const camps = [
+  {
+    title: 'Summer Camps 2026', badge: 'Summer 2026', color: cat.camps, status: 'Booking now', statusColor: cat.openGym,
+    price: '$350 / week', href: links.summerCamp,
+    rows: [
+      { icon: 'bi-calendar-week', text: 'Weekly sessions · all summer — dates on the booking page' },
+      { icon: 'bi-clock', text: '9 AM – 2 PM · late pickup to 4 PM' },
+      { icon: 'bi-people', text: 'Ages 5+ · all levels' },
+    ],
+  },
+  {
+    title: 'P.A. Day Camps', badge: 'School year', color: cat.camps, status: 'Single days', statusColor: cat.classes,
+    price: '$90 / day', href: links.paDayCamp,
+    rows: [
+      { icon: 'bi-sun', text: 'Single days off school' },
+      { icon: 'bi-clock', text: '9 AM – 2 PM · late pickup to 4 PM' },
+      { icon: 'bi-unlock', text: 'Open to the public' },
+    ],
+  },
+];
+---
+<BaseLayout title={seo.home.title} description={seo.home.description} active="">
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-glow"></div>
+    <div class="hero-inner container">
+      <div>
+        <div class="hero-kicker"><span class="hero-kicker-rule"></span>Parkour &amp; Movement Training Centre · Toronto</div>
+        <h1 class="hero-title">Move better.<br>Have more fun.</h1>
+        <p class="hero-lead">Toronto's home for parkour, flips and movement. Drop in to play, book a class, train like an athlete, or throw a party — every age, every level, under one big roof.</p>
+        <div class="hero-actions">
+          <a href={links.booking} target="_blank" rel="noopener" class="btn btn-primary">Book a session <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+          <a href="#offerings" class="btn btn-ghost-light">Explore the gym</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="hero-statnum">$25</div><div class="hero-statlabel">open gym day pass</div></div>
+          <div class="hero-stat"><div class="hero-statnum">7 days</div><div class="hero-statlabel">open 11 AM – 10 PM</div></div>
+          <div class="hero-stat last"><div class="hero-statnum">Ages 3+</div><div class="hero-statlabel">all levels</div></div>
+        </div>
+        <p class="hero-new">New here? <a href={url('get-started')}>Start with our 3-step first-visit guide →</a></p>
+      </div>
+      <div class="hero-media">
+        <div class="hero-frame">
+          <div class="hero-ph">
+            <i class="bi bi-play-btn-fill" aria-hidden="true"></i>
+            <span class="hero-ph-tag">Hero media needed</span>
+            <span class="hero-ph-desc">A short hero video or a big action shot — an athlete mid-flip on the floor or in the foam pit.</span>
+          </div>
+        </div>
+        <div class="hero-badge">75 Carl Hall Rd<br>Downsview Park</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOK ONLINE STRIP -->
+  <div class="bookstrip">
+    <div class="container bookstrip-inner">
+      <i class="bi bi-calendar-check" aria-hidden="true"></i>
+      <span>Real-time availability for private lessons, parties and more — book online in a few clicks.</span>
+      <a href={links.booking} target="_blank" rel="noopener">Book online <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+    </div>
+  </div>
+
+  <!-- OFFERINGS -->
+  <section id="offerings" class="section container offerings">
+    <div class="offerings-head">
+      <SectionHeader num="01" eyebrow="Where to start" title="Three ways to get moving" description="Drop in to play, book a class, send the kids to camp, or throw a party. Tap a card for what's inside." />
+    </div>
+    <div class="grid-cards">
+      {offerings.map((o) => (
+        <div class="flip" style={`--c:${o.color}`}>
+          <div class="flip-inner">
+            <div class="flip-face flip-front">
+              <div class="flip-media">
+                <div class="flip-ph">
+                  <i class="bi bi-camera" aria-hidden="true"></i>
+                  <span class="flip-ph-tag">Photo needed</span>
+                  <span class="flip-ph-desc">{o.placeholder}</span>
+                </div>
+                <span class="flip-tag" style={`background:${o.color}`}>{o.tag}</span>
+                <button class="flip-btn" type="button" aria-label="Flip card"><i class="bi bi-arrow-repeat" aria-hidden="true"></i></button>
+              </div>
+              <div class="flip-body">
+                <h3 class="flip-title">{o.title}</h3>
+                <p class="flip-desc">{o.desc}</p>
+                <div class="flip-foot">
+                  <span class="flip-hint"><i class="bi bi-arrow-repeat" style={`color:${o.color}`} aria-hidden="true"></i>Tap for full details</span>
+                  <a href={o.href} class="flip-go">Open <i class="bi bi-arrow-right" style={`color:${o.color}`} aria-hidden="true"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="flip-face flip-back">
+              <div class="flip-backhead">
+                <span style={`color:${o.color}`}>{o.title}</span>
+                <button class="flip-back-btn" type="button" aria-label="Flip back"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Back</button>
+              </div>
+              <h3 class="flip-backtitle">{o.back}</h3>
+              <div class="flip-points">
+                {o.points.map((pt) => (
+                  <div class="flip-point">
+                    <span class="flip-point-ic" style={`background:color-mix(in srgb,${o.color} 13%,#fff)`}><i class={`bi ${pt.icon}`} style={`color:${o.color}`} aria-hidden="true"></i></span>
+                    <span>{pt.text}</span>
+                  </div>
+                ))}
+              </div>
+              <a href={o.href} class="flip-go flip-go-back">Explore {o.title} <i class="bi bi-arrow-right" style={`color:${o.color}`} aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- OPEN GYM FEATURE -->
+  <section id="open-gym" class="section container">
+    <div class="feature">
+      <div class="feature-media">
+        <div class="feature-ph">
+          <i class="bi bi-camera" aria-hidden="true"></i>
+          <span class="flip-ph-tag">Photo needed</span>
+          <span class="flip-ph-desc">Open gym in action — a wide shot of the floor, foam pit and people training.</span>
+        </div>
+      </div>
+      <div class="feature-body">
+        <div class="feature-eyebrow">Open Gym</div>
+        <h2 class="feature-title">Come whenever. Stay as long as you want.</h2>
+        <p class="feature-lead">Located in Downsview Park and open to the public every day, 11 AM–10 PM. Sign the waiver, grab a day pass, and the whole facility is yours — no time limit.</p>
+        <div class="feature-pills"><Pill variant="light" gap={9} items="$25 day pass | No time limit | Open to the public | 11 AM – 10 PM daily" /></div>
+        <div class="feature-actions">
+          <a href={`${url('train')}#opengym`} class="btn btn-dark">More information <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+          <a href={links.getStartedWaiver} target="_blank" rel="noopener" class="btn btn-ghost">Sign the waiver</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAMPS BAND -->
+  <section id="camps" class="camps-band">
+    <div class="container">
+      <div class="camps-head">
+        <div>
+          <div class="camps-eyebrow">02 — Booking now</div>
+          <h2 class="camps-title">Camps booking now</h2>
+          <p class="camps-lead">Dated sessions open for registration — Summer weeks and the next P.A. Day. 9 AM–2 PM with a late-pickup option. $350 a week or $90 a single day.</p>
+        </div>
+        <a href={url('camps')} class="camps-all">All camps <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+      </div>
+      <div class="camps-grid">
+        {camps.map((c) => (
+          <div class="camp-card">
+            <div class="camp-strip" style={`background:${c.color}`}></div>
+            <div class="camp-body">
+              <div class="camp-top">
+                <span class="camp-badge" style={`background:${c.color}`}>{c.badge}</span>
+                <span class="camp-status" style={`color:${c.statusColor}`}><span class="dot" style={`background:${c.statusColor}`}></span>{c.status}</span>
+              </div>
+              <h3 class="camp-title">{c.title}</h3>
+              <div class="camp-rows">
+                {c.rows.map((r) => (
+                  <div class="camp-row"><i class={`bi ${r.icon}`} style={`color:${c.color}`} aria-hidden="true"></i>{r.text}</div>
+                ))}
+              </div>
+              <div class="camp-foot">
+                <span class="camp-price" style={`color:${c.color}`}>{c.price}</span>
+                <a href={c.href} target="_blank" rel="noopener" class="camp-resv">Reserve <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- VISIT -->
+  <section id="visit" class="section container">
+    <div class="visit-head"><SectionHeader num="03" eyebrow="How to reach us" title="Find us in Downsview Park" /></div>
+    <div class="visit-card">
+      <div class="visit-left">
+        <span class="visit-ic"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></span>
+        <div>
+          <div class="visit-addr">75 Carl Hall Rd, Unit 15 · Toronto</div>
+          <div class="visit-hours">Open 7 days a week, 11 AM – 10 PM</div>
+        </div>
+      </div>
+      <div class="visit-actions">
+        <a href={site.mapUrl} target="_blank" rel="noopener" class="btn btn-primary">Get directions <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+        <a href={url('about')} class="btn btn-ghost">Visit us — full details <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <Reviews />
+
+  <section class="section container">
+    <CtaBand cards={[
+      { theme: 'dark', eyebrow: 'Passes & memberships', title: 'See the Price List', icon: 'bi-tag-fill', href: url('pricing') },
+      { theme: 'light', eyebrow: 'All classes, one view', title: 'Group Class Schedule', icon: 'bi-calendar3', href: url('schedule') },
+    ]} />
+  </section>
+</BaseLayout>
+
+<style>
+  /* HERO */
+  .hero { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
+  .hero-glow { position: absolute; inset: 0; background: radial-gradient(680px 360px at 90% -12%, rgba(255,212,0,.13), transparent 70%); }
+  .hero-inner { padding-block: 66px 74px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 50px; align-items: center; position: relative; }
+  .hero-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 22px; }
+  .hero-kicker-rule { width: 22px; height: 2px; background: var(--brand); }
+  .hero-title { font: 800 clamp(40px, 9.5vw, 60px)/1 var(--font-display); letter-spacing: -.022em; margin-bottom: 20px; text-wrap: balance; }
+  .hero-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 470px; margin-bottom: 32px; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .hero-actions .btn { padding: 16px 26px; font-size: 15px; border-radius: 12px; }
+  .hero-stats { display: flex; flex-wrap: wrap; margin-top: 36px; border-top: 1px solid rgba(255,255,255,.12); }
+  .hero-stat { padding: 20px 28px 0 0; margin-right: 28px; border-right: 1px solid rgba(255,255,255,.12); }
+  .hero-stat.last { border-right: 0; margin-right: 0; padding-right: 0; }
+  .hero-statnum { font: 800 26px/1 var(--font-display); color: var(--brand); }
+  .hero-statlabel { font: 600 12.5px/1.3 var(--font-body); color: rgba(255,255,255,.6); margin-top: 6px; }
+  .hero-new { font: 500 14px/1.6 var(--font-body); color: rgba(255,255,255,.55); margin-top: 26px; }
+  .hero-new a { color: var(--brand); text-decoration: none; font-weight: 700; }
+  .hero-media { position: relative; }
+  .hero-frame { aspect-ratio: 5/4; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 60px -25px rgba(0,0,0,.7); border: 3px solid rgba(255,255,255,.08); }
+  .hero-ph { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 11px; text-align: center; padding: 26px; background: repeating-linear-gradient(45deg, #2a2724, #2a2724 14px, #252220 14px, #252220 28px); }
+  .hero-ph i { font-size: 32px; color: var(--brand); }
+  .hero-ph-tag { font: 700 10px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); }
+  .hero-ph-desc { font: 500 14px/1.6 var(--font-body); color: rgba(255,255,255,.66); max-width: 250px; }
+  .hero-badge { position: absolute; bottom: -16px; right: -10px; background: var(--brand); color: var(--ink); font: 800 13px/1.2 var(--font-display); text-transform: uppercase; letter-spacing: .03em; padding: 13px 16px; border-radius: 12px; box-shadow: 0 12px 30px -10px rgba(0,0,0,.5); }
+
+  /* BOOK STRIP */
+  .bookstrip { background: var(--ink); }
+  .bookstrip-inner { padding-bottom: 26px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .bookstrip-inner > i { font-size: 20px; color: var(--brand); }
+  .bookstrip-inner span { font: 600 14px/1.6 var(--font-body); color: rgba(255,255,255,.7); }
+  .bookstrip-inner a { margin-left: auto; font: 800 13px/1 var(--font-display); text-transform: uppercase; letter-spacing: .04em; color: var(--brand); text-decoration: none; display: inline-flex; align-items: center; gap: 7px; }
+
+  /* OFFERINGS / FLIP CARDS */
+  .offerings { scroll-margin-top: 80px; }
+  .offerings-head { margin-bottom: 34px; }
+  .flip { position: relative; height: 432px; perspective: 1600px; }
+  .flip-inner { position: relative; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.2,.75,.25,1); transform-style: preserve-3d; }
+  .flip.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: var(--shadow-sm); }
+  .flip:hover .flip-face { box-shadow: var(--shadow-lg); }
+  .flip-front { position: relative; min-height: 100%; display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+  .flip-back { position: absolute; inset: 0; transform: rotateY(180deg); background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 24px 24px 22px; display: flex; flex-direction: column; }
+  .flip-media { position: relative; aspect-ratio: 16/10; overflow: hidden; background: #eceae4; }
+  .flip-ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 18px; background: repeating-linear-gradient(45deg, #f0eee9, #f0eee9 12px, #ebe9e3 12px, #ebe9e3 24px); }
+  .flip-ph i { font-size: 22px; color: #a8a49a; }
+  .flip-ph-tag { font: 700 10px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted-3); }
+  .flip-ph-desc { font: 500 12.5px/1.5 var(--font-body); color: #7a766e; max-width: 230px; }
+  .flip-tag { position: absolute; top: 12px; left: 12px; z-index: 2; font: 700 10px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: #fff; padding: 6px 10px; border-radius: 999px; }
+  .flip-btn { position: absolute; top: 12px; right: 12px; z-index: 2; width: 30px; height: 30px; border-radius: 50%; background: rgba(28,25,23,.5); backdrop-filter: blur(4px); border: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; cursor: pointer; transition: all .15s; }
+  .flip-btn:hover { background: var(--c); }
+  .flip-body { padding: 22px 22px 24px; display: flex; flex-direction: column; flex: 1; }
+  .flip-title { font: 800 22px/1.1 var(--font-display); letter-spacing: -.01em; margin-bottom: 8px; }
+  .flip-desc { font: 400 13px/1.5 var(--font-body); color: var(--text-3); margin-bottom: 16px; }
+  .flip-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line-soft); }
+  .flip-hint { display: inline-flex; align-items: center; gap: 6px; font: 700 12px/1 var(--font-display); letter-spacing: .02em; color: var(--muted-3); }
+  .flip-go { display: inline-flex; align-items: center; gap: 7px; font: 800 13px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); text-decoration: none; transition: gap .15s; }
+  .flip-go:hover { gap: 11px; }
+  .flip-backhead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; font: 700 11px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; }
+  .flip-back-btn { background: none; border: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font: 700 11px/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+  .flip-backtitle { font: 800 20px/1.12 var(--font-display); letter-spacing: -.01em; margin-bottom: 16px; }
+  .flip-points { display: flex; flex-direction: column; gap: 13px; }
+  .flip-point { display: flex; align-items: flex-start; gap: 11px; font: 600 13px/1.3 var(--font-body); color: var(--text-2); }
+  .flip-point-ic { flex: none; width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .flip-point span:last-child { padding-top: 5px; }
+  .flip-go-back { margin-top: auto; padding-top: 16px; }
+
+  /* OPEN GYM FEATURE */
+  .feature { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; display: grid; grid-template-columns: 1fr 1fr; box-shadow: var(--shadow-md); }
+  .feature-media { position: relative; min-height: 320px; background: #eceae4; }
+  .feature-ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; text-align: center; padding: 24px; background: repeating-linear-gradient(45deg, #f0eee9, #f0eee9 14px, #e9e7e1 14px, #e9e7e1 28px); }
+  .feature-ph i { font-size: 26px; color: #a8a49a; }
+  .feature-body { padding: 46px 48px; }
+  .feature-eyebrow { font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--c-opengym); margin-bottom: 14px; }
+  .feature-title { font: 800 clamp(26px,4vw,32px)/1.06 var(--font-display); letter-spacing: -.015em; margin-bottom: 14px; }
+  .feature-lead { font: 400 14px/1.6 var(--font-body); color: var(--muted); margin-bottom: 22px; }
+  .feature-pills { margin-bottom: 26px; }
+  .feature-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  /* CAMPS BAND */
+  .camps-band { background: var(--ink); color: #fff; }
+  .camps-band .container { padding-block: 66px; }
+  .camps-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 34px; }
+  .camps-eyebrow { font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 12px; }
+  .camps-title { font: 800 clamp(28px,5vw,36px)/1.04 var(--font-display); letter-spacing: -.018em; margin-bottom: 8px; }
+  .camps-lead { font: 400 15px/1.55 var(--font-body); color: rgba(255,255,255,.66); max-width: 540px; }
+  .camps-all { font: 800 13px/1 var(--font-display); text-transform: uppercase; letter-spacing: .04em; color: var(--brand); text-decoration: none; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+  .camps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
+  .camp-card { display: flex; flex-direction: column; background: #fff; color: var(--ink); border-radius: 16px; overflow: hidden; box-shadow: 0 18px 44px -28px rgba(0,0,0,.6); }
+  .camp-strip { height: 5px; }
+  .camp-body { padding: 24px 26px 26px; display: flex; flex-direction: column; flex: 1; }
+  .camp-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+  .camp-badge { font: 700 10px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: #fff; padding: 6px 10px; border-radius: 999px; }
+  .camp-status { display: inline-flex; align-items: center; gap: 6px; font: 700 11px/1 var(--font-display); letter-spacing: .04em; text-transform: uppercase; }
+  .camp-status .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .camp-title { font: 800 22px/1.1 var(--font-display); letter-spacing: -.01em; margin-bottom: 16px; }
+  .camp-rows { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .camp-row { display: flex; align-items: flex-start; gap: 10px; font: 600 14px/1.6 var(--font-body); color: var(--text-2); }
+  .camp-row i { margin-top: 2px; flex: none; }
+  .camp-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+  .camp-price { font: 800 18px/1 var(--font-display); }
+  .camp-resv { display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: #fff; font: 800 12.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; text-decoration: none; padding: 12px 18px; border-radius: 10px; transition: gap .18s ease; }
+  .camp-resv:hover { gap: 11px; }
+
+  /* VISIT */
+  .visit-head { margin-bottom: 34px; }
+  .visit-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 26px 30px; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: space-between; gap: 22px; flex-wrap: wrap; }
+  .visit-left { display: flex; align-items: center; gap: 16px; }
+  .visit-ic { flex: none; width: 42px; height: 42px; border-radius: 11px; background: #f3f2ee; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .visit-addr { font: 800 16px/1.2 var(--font-display); }
+  .visit-hours { font: 600 13px/1.4 var(--font-body); color: var(--muted-2); margin-top: 5px; }
+  .visit-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .visit-actions .btn { padding: 13px 20px; font-size: 13px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .hero-media { order: -1; }
+    .feature { grid-template-columns: 1fr; }
+    .feature-media { min-height: 220px; }
+    .feature-body { padding: 32px; }
+  }
+  @media (max-width: 520px) {
+    .hero-stat { padding-right: 18px; margin-right: 18px; }
+    .bookstrip-inner a { margin-left: 0; }
+  }
+</style>
+
+<script>
+  // Flip cards: click the card (not a link) to flip; the flip buttons toggle too.
+  document.querySelectorAll('.flip').forEach((card) => {
+    card.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) return;
+      card.classList.toggle('flipped');
+    });
+  });
+</script>
