@@ -124,7 +124,7 @@
             <!-- three ways -->
             <h3 style="font:800 18px/1 'Archivo',sans-serif; letter-spacing:-.01em; margin:0 0 5px;">Three ways to get moving</h3>
             <p style="font:500 13px/1.4 inherit; color:#8a877f; margin:0 0 15px;">Pick where to start.</p>
-            <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:30px;">
+            <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:30px;">
               <sc-for list="{{ offerings }}" as="o" hint-placeholder-count="3">
                 <dc-import name="OfferingCard" title="{{ o.title }}" tag="{{ o.tag }}" desc="{{ o.desc }}" color="{{ o.color }}" href="{{ o.href }}" back="{{ o.back }}" points="{{ o.points }}" height="360px" media-ratio="16/9" title-size="17px" desc-size="12.5px" back-title-size="18px" pad-front="16px 16px 18px" pad-back="20px 20px 18px" hint-size="100%,360px"></dc-import>
               </sc-for>
