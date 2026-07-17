@@ -176,7 +176,25 @@ const clientConfig = {
                 <div class="m-revstrip-count">{reviews.ratingCount.replace(/^Based on /, '')}</div>
               </div>
             </div>
-            <p class="m-revstrip-quote">“{reviews.items[0].pull ?? reviewItems[0].text}”</p>
+            <div data-carousel>
+              <div class="m-revviewport" data-rev-viewport>
+                <div class="m-revtrack" data-rev-track>
+                  {reviewItems.map((r) => (
+                    <div class="m-hrev">
+                      <p class="m-revstrip-quote">“{r.text}”</p>
+                      <div class="m-hrev-by">{r.name} <span>· {r.role}</span></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div class="m-revnav">
+                <button type="button" class="m-revarrow" data-rev-prev aria-label="Previous review"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+                <div class="m-revdots">
+                  {reviewItems.map((_, i) => <button type="button" class="m-revdot" data-rev-dot={i} aria-label={`Review ${i + 1}`}></button>)}
+                </div>
+                <button type="button" class="m-revarrow" data-rev-next aria-label="Next review"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -501,6 +519,7 @@ const clientConfig = {
             <div class="m-revsum-score"><div class="m-revsum-num">{reviews.ratingValue}</div><div class="m-revsum-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></div></div>
             <div class="m-revsum-txt"><div class="m-revsum-t">{reviews.ratingCount.replace(/^Based on /, '')}</div><div class="m-revsum-s">From parents, open-gym members and first-timers alike.</div></div>
           </div>
+          <div data-carousel>
           <div class="m-revviewport" data-rev-viewport>
             <div class="m-revtrack" data-rev-track>
               {reviewItems.map((r) => (
@@ -518,6 +537,7 @@ const clientConfig = {
               {reviewItems.map((_, i) => <button type="button" class="m-revdot" data-rev-dot={i} aria-label={`Review ${i + 1}`}></button>)}
             </div>
             <button type="button" class="m-revarrow" data-rev-next aria-label="Next review"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+          </div>
           </div>
         </div>
       </section>
@@ -593,6 +613,9 @@ const clientConfig = {
   .m-revstrip-stars { color: #e9a300; font-size: 12px; letter-spacing: 2px; }
   .m-revstrip-count { font: 600 11.5px/1 inherit; color: #8a877f; margin-top: 5px; }
   .m-revstrip-quote { font: 500 13.5px/1.5 inherit; color: #3a3833; margin: 0; }
+  .m-hrev { flex: 0 0 100%; box-sizing: border-box; }
+  .m-hrev-by { font: 800 12.5px/1 'Archivo', sans-serif; color: #211f1b; margin-top: 10px; }
+  .m-hrev-by span { font-weight: 600; color: #9b9890; }
 
   /* book drop-ins */
   .m-dropin { background: #fff; border: 1px solid #ebe9e4; border-radius: 16px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); overflow: hidden; }
@@ -1084,32 +1107,32 @@ const clientConfig = {
   }
   function ensurePricing() { if (priceStarted) return; priceStarted = true; loadPrices(); }
 
-  // ---- reviews carousel: transform-driven switcher (dots / arrows / swipe).
-  // Deliberately NOT a native scroller — iOS Safari's scroll-snap broke both
-  // swipe and programmatic scrollTo, so the track is moved with translateX.
-  const revTrack = document.querySelector<HTMLElement>('[data-rev-track]');
-  if (revTrack) {
-    const revDots = Array.from(document.querySelectorAll<HTMLElement>('[data-rev-dot]'));
-    const revCount = revTrack.children.length;
-    let revIdx = 0;
-    const paintRev = () => {
-      revTrack.style.transform = `translateX(${-100 * revIdx}%)`;
-      revDots.forEach((d, i) => d.classList.toggle('on', i === revIdx));
+  // ---- review carousels (home strip + Reviews screen): transform-driven
+  // switcher — dots / arrows / swipe move a translateX track. Deliberately NOT
+  // a native scroller (scroll-based versions were unreliable across devices).
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-rev-track]');
+    if (!track) return;
+    const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-rev-dot]'));
+    const count = track.children.length;
+    let idx = 0;
+    const paint = () => {
+      track.style.transform = `translateX(${-100 * idx}%)`;
+      dots.forEach((d, i) => d.classList.toggle('on', i === idx));
     };
-    const goRev = (i: number) => { revIdx = Math.max(0, Math.min(revCount - 1, i)); paintRev(); };
-    revDots.forEach((d, i) => d.addEventListener('click', () => goRev(i)));
-    document.querySelector('[data-rev-prev]')?.addEventListener('click', () => goRev(revIdx - 1));
-    document.querySelector('[data-rev-next]')?.addEventListener('click', () => goRev(revIdx + 1));
-    // horizontal swipe (40px threshold; vertical pans pass through via touch-action)
-    const vp = document.querySelector<HTMLElement>('[data-rev-viewport]');
+    const go = (i: number) => { idx = Math.max(0, Math.min(count - 1, i)); paint(); };
+    dots.forEach((d, i) => d.addEventListener('click', () => go(i)));
+    root.querySelector('[data-rev-prev]')?.addEventListener('click', () => go(idx - 1));
+    root.querySelector('[data-rev-next]')?.addEventListener('click', () => go(idx + 1));
+    const vp = root.querySelector<HTMLElement>('[data-rev-viewport]');
     let touchX = 0;
     vp?.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
     vp?.addEventListener('touchend', (e) => {
       const dx = e.changedTouches[0].clientX - touchX;
-      if (Math.abs(dx) > 40) goRev(revIdx + (dx < 0 ? 1 : -1));
+      if (Math.abs(dx) > 40) go(idx + (dx < 0 ? 1 : -1));
     }, { passive: true });
-    paintRev();
-  }
+    paint();
+  });
 
   // Wire events + do the first render LAST — a direct load of #schedule/#pricing
   // calls render() → ensureSchedule/ensurePricing synchronously, which reference
