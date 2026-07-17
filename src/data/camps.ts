@@ -62,3 +62,14 @@ export const camps: Camp[] = [
     hub: { dur: '9–2', desc: 'A single day of parkour on your day off school — expert coaching and non-stop challenges, start to finish.', pills: 'Ages 5+ | Single day', priceNote: 'open to the public', bookingTag: 'Register', cta: 'See dates', href: '' },
   },
 ];
+
+/** A day at camp — SSOT for the desktop Camps 'know' section + the mobile
+ * Camps day-schedule card (same rows on both). */
+export const campDaySchedule = [
+  { time: '8:45 – 9:00', label: 'Arrival & check-in' },
+  { time: '9:00 – 11:00', label: 'Activities' },
+  { time: '11:00 – 11:30', label: 'Lunch' },
+  { time: '11:30 – 12:00', label: 'Free time' },
+  { time: '12:00 – 2:00', label: 'Activities' },
+  { time: '2:00 – 4:00', label: 'Late pick-up (optional)' },
+];

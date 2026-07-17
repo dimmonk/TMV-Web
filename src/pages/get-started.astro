@@ -6,6 +6,8 @@ import Faq from '../components/Faq.astro';
 import { seo, links, url } from '../data/site';
 import { sq } from '../data/square-links';
 import { firstSessionOptions } from '../data/first-session';
+import { firstVisitBring, firstVisitArrive } from '../data/first-visit';
+import { forSurface } from '../data/surface';
 
 // The four options are the shared first-session SSOT; only the href/target
 // (which routes differ per surface) is resolved here for the desktop site.
@@ -13,17 +15,8 @@ const fsHref: Record<string, string> = {
   intro: sq.getStarted.introduction, private: sq.getStarted.privateClass, group: url('schedule'), opengym: `${url('train')}#opengym`,
 };
 const fsTarget = (key: string): '_blank' | '_self' => (key === 'intro' || key === 'private' ? '_blank' : '_self');
-const bring = [
-  'Comfortable clothes you can move in.',
-  "A second pair of clean indoor shoes — not the ones you arrived in. (Forgot them? You can train barefoot, but shoes are comfier when you're starting out.)",
-  'A water bottle so you can stay hydrated.',
-];
-const arrive = [
-  { n: '1', text: 'Arrive 15 minutes early to sign in and get set.' },
-  { n: '2', text: 'Stash your things in a locker (bring your own lock).' },
-  { n: '3', text: 'Read the Rules poster at the entrance.' },
-  { n: '4', text: 'Head to the spring floor and join the group warm-up.' },
-];
+const bring = forSurface(firstVisitBring, 'desktop');
+const arrive = forSurface(firstVisitArrive, 'desktop');
 const otherFaqs = [
   { q: 'Do I need any experience to start?', a: 'None at all. Most people who walk in have never done parkour before. Book an Introduction Class or drop into open gym and a coach will start you with the basics at your own pace.' },
   { q: 'What ages do you welcome?', a: 'Everyone from age 3 and up. We run youth classes, adult classes, camps for kids 5+, and open gym for all ages. There is a class and a session for every body.' },
@@ -84,7 +77,7 @@ const otherFaqs = [
       <div class="gsknow">
         <div class="gscard">
           <h3 class="gscard-title"><i class="bi bi-bag-check" aria-hidden="true"></i>Before you get here</h3>
-          <div class="gslist">{bring.map((b) => <div class="gsli"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>{b}</span></div>)}</div>
+          <div class="gslist">{bring.map((b) => <div class="gsli"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>{b.text}</span></div>)}</div>
         </div>
         <div class="gscard">
           <h3 class="gscard-title"><i class="bi bi-geo-alt" aria-hidden="true"></i>I'm at the gym. What now?</h3>

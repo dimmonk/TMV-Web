@@ -14,9 +14,11 @@ import BookingCard from '../../components/BookingCard.astro';
 import ClassCard from '../../components/ClassCard.astro';
 import { offerings } from '../../data/offerings';
 import { firstSessionOptions } from '../../data/first-session';
-import { camps } from '../../data/camps';
+import { camps, campDaySchedule } from '../../data/camps';
 import { privateWays } from '../../data/private-lessons';
 import { partyHubCards } from '../../data/parties';
+import { facility } from '../../data/facility';
+import { firstVisitBring, firstVisitArrive } from '../../data/first-visit';
 import { groupTiers, eventPricing } from '../../data/events';
 import { coreClasses, specializedClasses, partnershipClasses } from '../../data/classes';
 import type { ClassItem } from '../../data/classes';
@@ -59,17 +61,6 @@ const bookOptions = [
 // first-session options come from data/first-session.ts (shared with desktop)
 const mFsHref: Record<string, string> = { intro: sq.getStarted.introduction, private: sq.getStarted.privateClass, group: '#schedule', opengym: '#train' };
 const mFsTarget = (key: string): '_blank' | '_self' => (key === 'intro' || key === 'private' ? '_blank' : '_self');
-const gsBring = [
-  'Comfortable clothes you can move in.',
-  'A clean pair of indoor shoes (or train barefoot).',
-  'A water bottle to stay hydrated.',
-];
-const gsArrive = [
-  { n: '1', text: 'Arrive 15 minutes early to sign in.' },
-  { n: '2', text: 'Stash your things in a locker (bring a lock).' },
-  { n: '3', text: 'Read the Rules poster at the entrance.' },
-  { n: '4', text: 'Join the group warm-up on the spring floor.' },
-];
 const gsFaqs = [
   { q: 'Do I need any experience?', a: 'None at all — most first-timers have never done parkour. A coach starts you with the basics at your own pace.' },
   { q: 'Do I have to book?', a: 'Open Gym and Group Classes need no reservation — just show up. Introduction and Private classes are reserved ahead.' },
@@ -77,24 +68,8 @@ const gsFaqs = [
 ];
 
 // ---- Camps ----
-const campDay = [
-  { time: '8:45–9:00', label: 'Arrival & check-in' },
-  { time: '9:00–11:00', label: 'Activities' },
-  { time: '11:00–11:30', label: 'Lunch' },
-  { time: '11:30–12:00', label: 'Free time' },
-  { time: '12:00–2:00', label: 'Activities' },
-  { time: '2:00–4:00', label: 'Late pick-up (optional)' },
-];
-
 // ---- About ----
 const aboutGallery = ['gym-01.jpg', 'gym-02.jpg', 'gym-03.jpg', 'gym-04.jpg', 'gym-05.jpg', 'gym-06.jpg'].map((f) => url(`assets/${f}`));
-const aboutFacility = [
-  { icon: 'bi-grid-3x3-gap-fill', title: 'Gymnastics floor', body: 'Sprung floor and tumbling space for flips and clean form.' },
-  { icon: 'bi-box-seam', title: 'Foam pit & mats', body: 'Land big tricks safely — padded throughout.' },
-  { icon: 'bi-bricks', title: 'Obstacles & rigs', body: 'Walls, bars, rails and vaults for parkour.' },
-  { icon: 'bi-heart-pulse', title: 'Weight training', body: 'A strength-and-conditioning section too.' },
-];
-
 // ---- Groups ----
 const eventFaqs = [
   { q: 'When do I pay?', a: 'Nothing upfront — the card on file is only for the cancellation policy. You pay in person on the day, based on final headcount.' },
@@ -350,13 +325,13 @@ const clientConfig = {
           <div class="m-card">
             <div class="m-card-title"><i class="bi bi-bag-check" style="color:#e0a800"></i>Before you get here</div>
             <div class="m-list">
-              {gsBring.map((b) => <div class="m-li"><i class="bi bi-check-circle-fill" style={`color:${cat.openGym}`} aria-hidden="true"></i><span>{b}</span></div>)}
+              {forSurface(firstVisitBring, 'mobile').map((b) => <div class="m-li"><i class="bi bi-check-circle-fill" style={`color:${cat.openGym}`} aria-hidden="true"></i><span>{b.text}</span></div>)}
             </div>
           </div>
           <div class="m-card">
             <div class="m-card-title"><i class="bi bi-geo-alt" style="color:#e0a800"></i>When you arrive</div>
             <div class="m-list">
-              {gsArrive.map((a) => <div class="m-li"><span class="m-lin">{a.n}</span><span>{a.text}</span></div>)}
+              {forSurface(firstVisitArrive, 'mobile').map((a) => <div class="m-li"><span class="m-lin">{a.n}</span><span>{a.text}</span></div>)}
             </div>
           </div>
           <div class="m-warn"><i class="bi bi-clock-history" aria-hidden="true"></i><span>Arrive <strong>15 minutes early</strong> to sign in. Anyone more than 15 minutes late can't be admitted to a class.</span></div>
@@ -384,7 +359,7 @@ const clientConfig = {
           </div>
           <div class="m-label">The space</div>
           <div class="m-facility">
-            {aboutFacility.map((f) => (
+            {forSurface(facility, 'mobile').map((f) => (
               <div class="m-fcard">
                 <span class="m-fic"><i class={`bi ${f.icon}`} aria-hidden="true"></i></span>
                 <div class="m-ft">{f.title}</div>
@@ -421,7 +396,7 @@ const clientConfig = {
           <div class="m-hours">
             <div class="m-hours-label">A day at camp</div>
             <div class="m-hours-title" style="margin-bottom:16px">From drop-off to pick-up</div>
-            {campDay.map((d) => <div class="m-hrow"><span class="m-camptime">{d.time}</span><span class="m-camplabel">{d.label}</span></div>)}
+            {campDaySchedule.map((d) => <div class="m-hrow"><span class="m-camptime">{d.time}</span><span class="m-camplabel">{d.label}</span></div>)}
           </div>
           <p class="m-fine">Nut-free environment — please pack nut-free and tell us about any allergies. Cancellation: two weeks' written notice for weekly camps.</p>
         </div>

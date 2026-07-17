@@ -258,32 +258,37 @@ and the two device redirects verified non-looping.
 
 ## Open findings (ranked)
 
-- **M1 · Book-hub duplication (both surfaces).** Desktop `book.astro` and the
-  mobile Book screen each hand-write condensed copies of items whose domains
-  now have SSOTs (camps, private lessons, birthdays, passes). They share `sq`
-  hrefs now, but the copy is still parallel. Follow-up: make both hubs COMPOSE
-  from the domain modules (with `surface`/hub overrides for the condensed copy).
-- **M2 · Copy-drift pairs to fold into the surface-override pattern:**
-  `aboutFacility` (mobile) vs `about.astro` facility array (same 4 items,
-  wording drift); `campDay` (mobile) vs `camps.astro` schedule (same rows,
-  format drift); `gsBring`/`gsArrive`/`gsFaqs` (mobile) vs get-started
-  `bring`/`arrive`/`otherFaqs` (condensed subsets); `eventFaqs` (mobile, 4) vs
-  events `faqGroups` (8). Subsetting is fine; the risk is policy answers
-  drifting (payment/cancellation copy exists in both).
+- **M1 · Book-hub duplication — RESOLVED (2026-07-17).** New data/private-lessons.ts,
+  data/parties.ts, data/events.ts groupHubCards, and a `hub` variant on
+  data/camps.ts. Desktop book.astro composes all 6 groups from these; the
+  desktop Private Lessons page composes its 3 ways from privateWays; the mobile
+  Book screen composes its quick cards from the same modules. Desktop Book +
+  Private Lessons verified pixel-identical to prod.
+- **M2 · Copy-drift pairs — MOSTLY RESOLVED (2026-07-17).** New data/facility.ts
+  (about) and data/first-visit.ts (bring/arrive), plus campDaySchedule in
+  data/camps.ts — all with the surface-override pattern (desktop canonical,
+  `mobile:{}` shorter variant). Desktop About/Camps/Get-Started verified
+  identical; mobile shows the short variants. STILL per-surface by design: the
+  FAQ sets (get-started `otherFaqs` via the Faq component + mobile `gsFaqs`;
+  events `faqGroups` grouped-by-category ×8 + mobile `eventFaqs` flat ×4) — the
+  desktop groups FAQs by category while mobile shows a short flat curated set,
+  so these are presentation divergence, not duplicate data. Watch policy answers
+  (payment/cancellation) for drift if edited.
 - **M3 · Hours inconsistency — ACCEPTED AS-IS (owner decision 2026-07-17; do not change).** The mobile status
   pill + schedule's synthesized Open Gym rows extend FRIDAY to midnight (with a
   10 PM–12 AM adults-only row), but `site.ts` hours, the About page, and the
   JSON-LD all say 11–10 every day. One of these is wrong. If Friday really runs
   to midnight, `site.ts` hours (and JSON-LD/About) should say so; if not, the
   mobile status/schedule logic should drop the Friday extension.
-- **M4 · Hero/stat literals.** The home-hero stats ($25 · 7 days · Ages 3+) and
-  a few "from $X" marketing literals are independent copy on each surface.
-  Low-value cosmetic SSOT; prices of record already live in the live price list.
+- **M4 · Hero stat tiles — RESOLVED (2026-07-17).** Moved to data/site.ts
+  heroStats (value + label + optional mobileLabel); both heroes map over it.
+  Other scattered marketing "from $X" literals remain low-value cosmetic.
 - **M5 · Home reviews-strip quote** is derived by sentence-splitting review #1
   (`split('. ').slice(0,2)`) — fragile if the review text changes. Consider an
   explicit `pull` field on the reviews SSOT.
-- **M6 · A11y polish.** Bottom-nav tabs could set `aria-current`; screen
-  switches don't manage focus; carousel controls have labels (done).
+- **M6 · A11y — RESOLVED (2026-07-17).** aria-current on the active bottom-nav
+  tab; screen switches move focus to the newly shown screen; carousel controls
+  labelled.
 - **M7 · Known media gap.** 7 specialized-class videos still missing
   (backflip/strength/flexibility/acrodance/handstand/speedleague/explosive) —
   both surfaces show an empty media box until provided (intentional, pending).

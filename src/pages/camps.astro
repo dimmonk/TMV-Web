@@ -4,17 +4,9 @@ import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import Pill from '../components/Pill.astro';
 import { seo, links, cat, url } from '../data/site';
-import { camps } from '../data/camps';
+import { camps, campDaySchedule } from '../data/camps';
 import { forSurface } from '../data/surface';
-
-const schedule = [
-  { time: '8:45 – 9:00', label: 'Arrival & check-in' },
-  { time: '9:00 – 11:00', label: 'Activities' },
-  { time: '11:00 – 11:30', label: 'Lunch' },
-  { time: '11:30 – 12:00', label: 'Free time' },
-  { time: '12:00 – 2:00', label: 'Activities' },
-  { time: '2:00 – 4:00', label: 'Late pick-up (optional)' },
-];
+const schedule = campDaySchedule;
 const facts = [
   { icon: 'bi-clock', title: 'Hours', body: 'Arrival from 8:45 AM, camp runs 9 AM–2 PM. Late pickup to 4 PM — $20 for one day or $75 for five days.' },
   { icon: 'bi-person-badge', title: 'Ages', body: '5 years old and up, all levels.' },
