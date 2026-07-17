@@ -101,6 +101,14 @@ export const reviews = {
   ],
 } as const;
 
+/** Home-hero stat tiles — SSOT for both surfaces (desktop uses `label`, the
+ * narrower mobile hero uses `mobileLabel` where set). */
+export const heroStats = [
+  { value: '$25', label: 'open gym day pass', mobileLabel: 'day pass' },
+  { value: '7 days', label: 'open 11 AM – 10 PM', mobileLabel: '11a – 10p' },
+  { value: 'Ages 3+', label: 'all levels' },
+] as const;
+
 /** Category accent colors (matches the export's categories.js). SSOT — the
  * `--c-*` vars in styles/global.css mirror these; keep both in sync. */
 export const cat = {

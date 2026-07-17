@@ -4,6 +4,10 @@ import JumpNav from '../components/JumpNav.astro';
 import BookingCard from '../components/BookingCard.astro';
 import { seo, cat, site, url } from '../data/site';
 import { sq } from '../data/square-links';
+import { privateWays } from '../data/private-lessons';
+import { partyHubCards } from '../data/parties';
+import { camps } from '../data/camps';
+import { groupHubCards } from '../data/events';
 
 type Item = {
   title: string; dur?: string; bookingTag?: string; flag?: string; status?: string;
@@ -12,47 +16,53 @@ type Item = {
 };
 type Group = { id: string; title: string; icon: string; color: string; blurb: string; items: Item[] };
 
+// The Book page is an aggregation HUB — every card composes from its domain
+// SSOT (privateWays / parties / camps / groupHubCards). The condensed hub copy
+// lives on each module's `hub` field; only hrefs/targets are resolved here.
+const lessonHref = (key: string) =>
+  key === 'intro' ? sq.book.introduction : key === 'private' ? sq.book.privateLesson : `${url('private-lessons')}#coaches`;
+
+const lessonItems: Item[] = privateWays.map((w) => ({
+  title: w.title, color: w.color, dur: w.hub.dur, price: w.hub.price, priceNote: w.hub.priceNote,
+  bookingTag: w.hub.bookingTag, flag: w.hub.flag, desc: w.hub.desc, pills: w.hub.pills,
+  cta: w.key === 'coach' ? w.cta : 'Book',
+  href: lessonHref(w.key), target: (w.key === 'intro' || w.key === 'private' ? '_blank' : '_self'),
+}));
+
+const birthdayItems: Item[] = partyHubCards.map((c) => ({
+  title: c.title, color: c.color, dur: c.dur, price: c.price, priceNote: c.priceNote, flag: c.flag,
+  bookingTag: c.bookingTag, desc: c.desc, pills: c.pills, cta: 'Book', href: c.href, target: '_blank',
+}));
+
+// Book lists camps in Weekly / P.A. Day / Private order (camps.ts is Weekly / Private / P.A. Day).
+const campItems: Item[] = [camps[0], camps[2], camps[1]].map((c) => ({
+  title: c.title, color: cat.camps, dur: c.hub.dur, price: c.price, priceNote: c.hub.priceNote,
+  bookingTag: c.hub.bookingTag, desc: c.hub.desc, pills: c.hub.pills, cta: c.hub.cta,
+  href: c.hub.href || url('camps'), target: (c.hub.href ? '_blank' : '_self'),
+}));
+
+const groupItem = (key: 'groupEvents' | 'earlyAccess', cta: string): Item => {
+  const c = groupHubCards.find((g) => g.key === key)!;
+  return { title: c.title, color: c.color, dur: c.dur, price: c.price, priceNote: c.priceNote,
+    bookingTag: c.bookingTag, desc: c.desc, pills: c.pills, cta, href: c.href, target: '_blank' };
+};
+
 const groups: Group[] = [
-  {
-    id: 'lessons', title: 'Private Lessons', icon: 'bi-person-arms-up', color: cat.private,
+  { id: 'lessons', title: 'Private Lessons', icon: 'bi-person-arms-up', color: cat.private,
     blurb: 'One-on-one or small-group coaching, shaped entirely around your goals and pace.',
-    items: [
-      { title: 'Introduction', dur: '1 hr', price: '$45', priceNote: 'First session · groups from $30 each', bookingTag: 'By appointment', color: cat.intro, desc: 'A one-time private lesson and the best first taste of parkour — what it is, what you can do with it, and how we coach it.', pills: 'All ages | 1-on-1', cta: 'Book', href: sq.book.introduction, target: '_blank' },
-      { title: 'Private Lesson', dur: '1 hr', price: 'From $65', priceNote: 'Any coach on shift · 5-packs available', bookingTag: 'By appointment', desc: 'Ongoing one-on-one or small-group coaching, built around your goals with flexible scheduling. Pick your age group when you book — we’ll match a coach.', pills: '1-on-1 | All ages', cta: 'Book', href: sq.book.privateLesson, target: '_blank' },
-      { title: 'Train with a specific coach', flag: 'Pick your coach', priceNote: 'Coach sets their own rate', bookingTag: 'By appointment', desc: 'Pick a coach and stick with them — one instructor who follows your whole progress and comes in just for your session, even on a day off.', pills: '1-on-1 | Your coach', cta: 'Choose a coach', href: `${url('private-lessons')}#coaches` },
-    ],
-  },
-  {
-    id: 'birthdays', title: 'Birthday Parties', icon: 'bi-balloon-fill', color: cat.parties,
+    items: lessonItems },
+  { id: 'birthdays', title: 'Birthday Parties', icon: 'bi-balloon-fill', color: cat.parties,
     blurb: 'Coach-led parkour fun for the birthday crew — go all-in or keep it nimble.',
-    items: [
-      { title: 'Full Birthday Party', dur: '2 hrs', price: '$350 base', priceNote: 'Up to 8 kids · +$25/extra kid', flag: 'Most popular', bookingTag: 'By appointment', desc: 'A coached session, a private party room and free play — coaches with the group the whole time.', pills: 'Ages 5+ | Private room', cta: 'Book', href: sq.book.fullBirthday, target: '_blank' },
-      { title: 'Mini Birthday Party', dur: '1 hr', price: '$30 / kid', priceNote: '3 kids min · up to 15', bookingTag: 'By appointment', desc: 'The same one-hour coached session of games and challenges, with a lower minimum. All-day pass for every kid.', pills: 'Ages 8+ | 3–15 people | All-day pass', cta: 'Book', href: sq.book.miniBirthday, target: '_blank' },
-    ],
-  },
-  {
-    id: 'camps', title: 'Camps', icon: 'bi-sun-fill', color: cat.camps,
+    items: birthdayItems },
+  { id: 'camps', title: 'Camps', icon: 'bi-sun-fill', color: cat.camps,
     blurb: 'Full-day parkour camps over school breaks and days off — coached skills, games and friends, ages 5+.',
-    items: [
-      { title: 'Weekly Camps', dur: '9–2 daily', price: '$350 / week', priceNote: 'late pickup to 4 PM', bookingTag: 'Register', desc: 'A full week of parkour over Winter, March Break and Summer — coached skills, flips, games and friends. All levels.', pills: 'Ages 5+ | Mon–Fri | All levels', cta: 'See camps', href: url('camps') },
-      { title: 'P.A. Day Camp', dur: '9–2', price: '$90 / day', priceNote: 'open to the public', bookingTag: 'Register', desc: 'A single day of parkour on your day off school — expert coaching and non-stop challenges, start to finish.', pills: 'Ages 5+ | Single day', cta: 'See dates', href: url('camps') },
-      { title: 'Private Day Camp', dur: '9–2', price: '$90 / kid', priceNote: '5 kids minimum', bookingTag: 'By appointment', desc: 'Gather your own crew for a private camp day — your own instructor, parkour, acrobatics, nerf battles and games. Book at least a week ahead.', pills: 'Min 5 kids | Your own group', cta: 'Enquire', href: sq.book.privateDayCamp, target: '_blank' },
-    ],
-  },
-  {
-    id: 'groups', title: 'Groups & Teams', icon: 'bi-people-fill', color: cat.groups,
+    items: campItems },
+  { id: 'groups', title: 'Groups & Teams', icon: 'bi-people-fill', color: cat.groups,
     blurb: 'A fun, active way to build teamwork, confidence and skills for any organization.',
-    items: [
-      { title: 'Group Events', dur: '2 hrs', price: 'From $300', priceNote: '10 min · tiered per head', bookingTag: 'By appointment', desc: 'Schools, corporate teams, youth orgs and sports teams — an hour of guided activities then an hour of open gym. Teamwork, confidence and skills, expert-led.', pills: 'Min 10 people | All levels', cta: 'Plan an event', href: sq.book.groupEvents, target: '_blank' },
-    ],
-  },
-  {
-    id: 'open-gym', title: 'Early Gym Access', icon: 'bi-unlock-fill', color: cat.openGym,
+    items: [groupItem('groupEvents', 'Plan an event')] },
+  { id: 'open-gym', title: 'Early Gym Access', icon: 'bi-unlock-fill', color: cat.openGym,
     blurb: 'Reserve The Monkey Vault before we open to the public. (Open gym itself needs no booking — just drop in.)',
-    items: [
-      { title: 'Early Gym Access', dur: '1 hr', price: 'From $50 / hr', priceNote: '+ $25 / person open gym', bookingTag: 'By appointment', desc: 'Reserve The Monkey Vault before we open at 11 AM for exclusive access — perfect for small groups or focused training with no crowds.', pills: 'Your own group | Before 11 AM', cta: 'Reserve', href: sq.book.earlyGymAccess, target: '_blank' },
-    ],
-  },
+    items: [groupItem('earlyAccess', 'Reserve')] },
   {
     id: 'passes', title: 'Passes & Memberships', icon: 'bi-ticket-perforated-fill', color: cat.openGym,
     blurb: 'Buying, not booking — these check out securely with Square and are ready at the front desk when you arrive. Browse the full store for every pack size.',

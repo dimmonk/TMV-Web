@@ -87,12 +87,20 @@ const jsonLd = {
     {mobileRedirect && (
       <script is:inline define:vars={{ mobileUrl }}>
         (function () {
+          var ua = navigator.userAgent;
+          // Never redirect search-engine / social crawlers: they must index the
+          // SEO-rich desktop pages (this page), not the app-style mobile UI.
+          // Standard practice — bots and users get the same URL; only human
+          // phones are sent to /m/.
+          function isBot() {
+            return /bot|crawl|spider|slurp|bingpreview|googlebot|google-inspectiontool|duckduckbot|baiduspider|yandex|facebookexternalhit|facebot|embedly|quora|whatsapp|telegrambot|twitterbot|linkedinbot|pinterest|applebot|petalbot|semrush|ahrefs|lighthouse|headlesschrome/i.test(ua);
+          }
           function isPhoneUA() {
-            var ua = navigator.userAgent;
             return /iPhone|iPod|Windows Phone|BlackBerry/i.test(ua) || (/Android/i.test(ua) && /Mobile/i.test(ua));
           }
           function wantsMobile() {
             try {
+              if (isBot()) return false;
               return (window.matchMedia && window.matchMedia('(max-width:599px)').matches) || isPhoneUA();
             } catch (e) { return false; }
           }

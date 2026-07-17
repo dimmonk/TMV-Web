@@ -4,7 +4,7 @@ import SectionHeader from '../components/SectionHeader.astro';
 import OfferingCard from '../components/OfferingCard.astro';
 import Reviews from '../components/Reviews.astro';
 import CtaBand from '../components/CtaBand.astro';
-import { seo, links, cat, url } from '../data/site';
+import { seo, links, cat, url, heroStats } from '../data/site';
 import { sq } from '../data/square-links';
 import { offerings } from '../data/offerings';
 
@@ -48,9 +48,9 @@ const camps = [
           <a href="#offerings" class="btn btn-ghost-light">Explore the gym</a>
         </div>
         <div class="hero-stats">
-          <div class="hero-stat"><div class="hero-statnum">$25</div><div class="hero-statlabel">open gym day pass</div></div>
-          <div class="hero-stat"><div class="hero-statnum">7 days</div><div class="hero-statlabel">open 11 AM – 10 PM</div></div>
-          <div class="hero-stat last"><div class="hero-statnum">Ages 3+</div><div class="hero-statlabel">all levels</div></div>
+          {heroStats.map((st, i) => (
+            <div class:list={['hero-stat', { last: i === heroStats.length - 1 }]}><div class="hero-statnum">{st.value}</div><div class="hero-statlabel">{st.label}</div></div>
+          ))}
         </div>
         <p class="hero-new">New here? <a href={url('get-started')}>Start with our 3-step first-visit guide →</a></p>
       </div>

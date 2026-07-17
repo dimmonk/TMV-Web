@@ -3,6 +3,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import JumpNav from '../components/JumpNav.astro';
 import { seo, cat, site, url } from '../data/site';
 import { sq } from '../data/square-links';
+import { privateWays } from '../data/private-lessons';
+
+// Per-way presentation (number/tag style, featured) for the page's 3 columns.
+const wayStyle = [
+  { num: 'grey', tag: 'grey', tagLabel: 'Start here', featured: false },
+  { num: 'red', tag: '', tagLabel: '', featured: false },
+  { num: 'solid', tag: 'solid', tagLabel: 'Ongoing · on demand', featured: true },
+];
+const plHref = (key: string) => key === 'intro' ? sq.privateLessons.introduction : key === 'private' ? sq.privateLessons.privateLesson : '#coaches';
 
 const coaches = [
   { name: 'Taigh Smullen', role: 'Manager', hint: 'Photo of Taigh', bio: 'Trampoline and parkour specialist — explosive air awareness built on solid fundamentals. Great if you want big, controlled movement.', tags: ['Trampoline', 'Parkour'], cta: 'Book with Taigh', href: sq.privateLessons.coachTaigh },
@@ -31,30 +40,20 @@ const notes = [
   <div class="plwrap">
     <div id="ways" class="pl-label" style="scroll-margin-top:120px">Three ways to train privately</div>
     <div class="pl-ways">
-      <div class="pl-way">
-        <div class="pl-wayhead"><span class="pl-waynum grey">1</span><span class="pl-waytag grey">Start here</span></div>
-        <h3 class="pl-waytitle">Introduction</h3>
-        <div class="pl-price"><span class="pl-big">$45</span><span class="pl-per">first session</span></div>
-        <div class="pl-sub">$35 each for 2 · $30 each for 3+</div>
-        <p class="pl-desc">A one-time lesson on a set beginner curriculum — the best first taste of parkour, and where everyone starts.</p>
-        <a href={sq.privateLessons.introduction} target="_blank" rel="noopener" class="pl-book">Book intro <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-      </div>
-      <div class="pl-way">
-        <div class="pl-wayhead"><span class="pl-waynum red">2</span></div>
-        <h3 class="pl-waytitle">Private Lesson</h3>
-        <div class="pl-price"><span class="pl-big">From $65</span><span class="pl-per">per session</span></div>
-        <div class="pl-sub">Kids $65 · Adults $85 · 5-packs available</div>
-        <p class="pl-desc">Ongoing one-on-one (or your own small group) with whichever coach is on shift. All ages, all levels, flexible scheduling.</p>
-        <a href={sq.privateLessons.privateLesson} target="_blank" rel="noopener" class="pl-book">Book a private <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-      </div>
-      <div class="pl-way featured">
-        <div class="pl-wayhead"><span class="pl-waynum solid">3</span><span class="pl-waytag solid">Ongoing · on demand</span></div>
-        <h3 class="pl-waytitle">Train with a specific coach</h3>
-        <div class="pl-price"><span class="pl-big">Coach's rate</span></div>
-        <div class="pl-sub">Set per coach · ongoing 1-on-1</div>
-        <p class="pl-desc">Pick the coach whose style fits your goals and stick with them — one instructor who follows your whole progress, building each session on the last. They'll come in just for you, even on a day off.</p>
-        <a href="#coaches" class="pl-book solid">Choose a coach <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
-      </div>
+      {privateWays.map((w, i) => {
+        const st = wayStyle[i];
+        const internal = w.key === 'coach';
+        return (
+          <div class:list={['pl-way', { featured: st.featured }]}>
+            <div class="pl-wayhead"><span class={`pl-waynum ${st.num}`}>{i + 1}</span>{st.tag && <span class={`pl-waytag ${st.tag}`}>{st.tagLabel}</span>}</div>
+            <h3 class="pl-waytitle">{w.title}</h3>
+            <div class="pl-price"><span class="pl-big">{w.price}</span>{w.per && <span class="pl-per">{w.per}</span>}</div>
+            <div class="pl-sub">{w.sub}</div>
+            <p class="pl-desc">{w.desc}</p>
+            <a href={plHref(w.key)} {...(internal ? {} : { target: '_blank', rel: 'noopener' })} class:list={['pl-book', { solid: st.featured }]}>{w.cta} <i class={`bi ${internal ? 'bi-arrow-down' : 'bi-arrow-right'}`} aria-hidden="true"></i></a>
+          </div>
+        );
+      })}
     </div>
 
     <div class="pl-fine">
