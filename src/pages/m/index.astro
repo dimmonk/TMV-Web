@@ -13,10 +13,12 @@ import OfferingCard from '../../components/OfferingCard.astro';
 import BookingCard from '../../components/BookingCard.astro';
 import ClassCard from '../../components/ClassCard.astro';
 import { offerings } from '../../data/offerings';
+import { firstSessionOptions } from '../../data/first-session';
+import { camps } from '../../data/camps';
 import { coreClasses, specializedClasses, partnershipClasses } from '../../data/classes';
 import type { ClassItem } from '../../data/classes';
 import { cat, links, site, social, hours, reviews, seo, url } from '../../data/site';
-import { sq } from '../../data/square-links';
+import { storeProducts } from '../../data/store';
 
 // Resolve a class's action href for the mobile app. Schedule-linked classes go
 // to the mobile Schedule screen; classes whose desktop page has no mobile
@@ -46,22 +48,11 @@ const bookOptions = [
 ];
 
 // ---- Store (hrefs from the Square link SSOT) ----
-const storeProducts = [
-  { color: cat.openGym, title: 'Day Passes', description: 'Walk in and train as long as you like — single, or save with a 10 or 20 pack.', pills: 'All ages | No time limit', price: 'From $25', priceNote: 'single pass', actionLabel: 'Buy', href: sq.store.dayPasses },
-  { color: cat.openGym, title: 'Open Gym Membership', description: 'Unlimited open gym for whatever stretch suits you — 30 days to a year.', pills: 'Unlimited | 30–360 days', price: 'From $110', priceNote: '30 days', actionLabel: 'Buy', href: sq.store.openGymMembership },
-  { color: cat.classes, title: 'Class Passes', description: 'Good for any group class on the schedule — single or 10/20 pack.', pills: 'Any class | All levels', price: 'From $30', priceNote: 'single class', actionLabel: 'Buy', href: sq.store.classPasses },
-  { color: cat.classes, title: 'Class Membership', description: 'Unlimited group classes and open gym for 30 days.', pills: 'Classes + open gym', price: '$180', priceNote: '30 days', actionLabel: 'Buy', href: sq.store.classMembership },
-  { color: cat.private, title: 'Private Class Pack', description: 'A block of private lessons at a better rate — book each as you go.', pills: '1-on-1 | Book as you go', price: 'From $250', priceNote: '5-pack · kids', actionLabel: 'Buy', href: sq.store.privateClassPack },
-  { color: cat.athletic, title: 'Athletic Membership', description: 'Unlimited Athletic Program training, monthly.', pills: 'Ages 9+ | Monthly', price: '$150', priceNote: 'per month', actionLabel: 'Buy', href: sq.store.athleticMembership },
-];
 
 // ---- Get Started ----
-const gsOptions = [
-  { color: cat.intro, status: 'Reservation required', statusTone: 'neutral' as const, title: 'Introduction Class', description: 'A one-on-one intro on a beginner curriculum — the best place to start.', actionLabel: 'Book intro', href: links.booking, target: '_blank' as const },
-  { color: cat.private, status: 'Reservation required', statusTone: 'neutral' as const, title: 'Private Class', description: 'One-on-one or your own friend group, fully tailored to your goals.', actionLabel: 'Book private', href: links.booking, target: '_blank' as const },
-  { color: cat.classes, status: 'No reservation', statusTone: 'go' as const, title: 'Group Class', description: 'Drop into a scheduled class with other beginners — just show up.', actionLabel: 'See schedule', href: '#schedule', target: '_self' as const },
-  { color: cat.openGym, status: 'No reservation', statusTone: 'go' as const, title: 'Open Gym', description: 'Grab a day pass and train on your own, any time.', actionLabel: 'Get a pass', href: links.store, target: '_blank' as const },
-];
+// first-session options come from data/first-session.ts (shared with desktop)
+const mFsHref: Record<string, string> = { intro: links.booking, private: links.booking, group: '#schedule', opengym: '#train' };
+const mFsTarget = (key: string): '_blank' | '_self' => (key === 'intro' || key === 'private' ? '_blank' : '_self');
 const gsBring = [
   'Comfortable clothes you can move in.',
   'A clean pair of indoor shoes (or train barefoot).',
@@ -80,11 +71,6 @@ const gsFaqs = [
 ];
 
 // ---- Camps ----
-const campsList = [
-  { color: cat.camps, bookingTag: 'Register', title: 'Weekly Camps', description: 'A full week of parkour over school breaks — skills, flips, games and friends.', pills: 'Ages 5+ | Mon–Fri | All levels', price: '$350 / week', priceNote: 'late pickup to 4 PM', actionLabel: 'Reserve', href: links.summerCamp },
-  { color: cat.camps, bookingTag: 'By appointment', title: 'Private Day Camp', description: 'Gather your crew for a private day — groups of five or more, any day.', pills: 'Min 5 kids | 9 AM–2 PM', price: '$90 / kid', priceNote: 'book a week ahead', actionLabel: 'Enquire', href: links.booking },
-  { color: cat.camps, bookingTag: 'Register', title: 'P.A. Day Camp', description: 'A single day of parkour on a day off school — open to the public.', pills: 'Ages 5+ | Single days', price: '$90 / day', priceNote: '9 AM–2 PM', actionLabel: 'Reserve', href: links.paDayCamp },
-];
 const campDay = [
   { time: '8:45–9:00', label: 'Arrival & check-in' },
   { time: '9:00–11:00', label: 'Activities' },
@@ -318,7 +304,7 @@ const clientConfig = {
           <MobileHero eyebrow="Store" title="Buy before you arrive" desc="Check out on Square — your passes are ready at the front desk when you get here." />
           <div style="height:18px"></div>
           <div class="m-stack" style="margin-bottom:16px">
-            {storeProducts.map((s) => <BookingCard {...s} target="_blank" />)}
+            {storeProducts.map((s) => <BookingCard {...s} actionLabel="Buy" target="_blank" />)}
           </div>
           <a href={links.giftCard} target="_blank" rel="noopener" class="m-gift">
             <span class="m-gift-ic"><i class="bi bi-gift-fill" aria-hidden="true"></i></span>
@@ -339,7 +325,7 @@ const clientConfig = {
 
           <div class="m-step"><span class="m-stepn">2</span><div><div class="m-step-t">Pick how to start</div><p class="m-step-p">Reserve an intro or private, or just drop into a group class or open gym.</p></div></div>
           <div class="m-stack" style="margin:4px 0 28px">
-            {gsOptions.map((o) => <BookingCard {...o} />)}
+            {firstSessionOptions.map((o) => <BookingCard color={o.color} status={o.status} statusTone={o.statusTone} title={o.title} description={o.desc} actionLabel={o.cta} href={mFsHref[o.key]} target={mFsTarget(o.key)} />)}
           </div>
 
           <div class="m-step" style="margin-bottom:16px"><span class="m-stepn">3</span><div><div class="m-step-t">Things to know</div></div></div>
@@ -412,7 +398,7 @@ const clientConfig = {
           <MobileHero eyebrow="Camps" title="School-break day camps" desc="A full day of parkour, games and friends. Ages 5+ · 9 AM–2 PM, late pickup available." stats={[{ v: 'Ages 5+', l: 'welcome' }, { v: '9–2', l: 'daily' }, { v: '$350', l: 'per week' }]} />
           <div style="height:18px"></div>
           <div class="m-stack" style="margin-bottom:26px">
-            {campsList.map((c) => <BookingCard {...c} target="_blank" />)}
+            {camps.map((c) => <BookingCard color={cat.camps} bookingTag={c.bookingTag} title={c.title} description={c.desc} pills={c.pills} price={c.price} priceNote={c.priceNote} actionLabel={c.cta} href={c.href} target="_blank" />)}
           </div>
           <div class="m-hours">
             <div class="m-hours-label">A day at camp</div>

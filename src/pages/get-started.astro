@@ -3,14 +3,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import JumpNav from '../components/JumpNav.astro';
 import BookingCard from '../components/BookingCard.astro';
 import Faq from '../components/Faq.astro';
-import { seo, cat, links, url } from '../data/site';
+import { seo, links, url } from '../data/site';
+import { firstSessionOptions } from '../data/first-session';
 
-const options = [
-  { title: 'Introduction Class', color: cat.intro, status: 'Reservation required', statusTone: 'neutral' as const, desc: 'A one-on-one intro on a set beginner curriculum — the best place to start.', cta: 'Book intro', href: links.booking, target: '_blank' as const },
-  { title: 'Private Class', color: cat.private, status: 'Reservation required', statusTone: 'neutral' as const, desc: 'One-on-one or your own friend group, fully tailored to your goals.', cta: 'Book private', href: links.booking, target: '_blank' as const },
-  { title: 'Group Class', color: cat.classes, status: 'No reservation', statusTone: 'go' as const, desc: 'Drop into a scheduled class with other beginners — just show up.', cta: 'See schedule', href: url('schedule'), target: '_self' as const },
-  { title: 'Open Gym', color: cat.openGym, status: 'No reservation', statusTone: 'go' as const, desc: 'Grab a day pass and train on your own, any time.', cta: 'Open gym info', href: `${url('train')}#opengym`, target: '_self' as const },
-];
+// The four options are the shared first-session SSOT; only the href/target
+// (which routes differ per surface) is resolved here for the desktop site.
+const fsHref: Record<string, string> = {
+  intro: links.booking, private: links.booking, group: url('schedule'), opengym: `${url('train')}#opengym`,
+};
+const fsTarget = (key: string): '_blank' | '_self' => (key === 'intro' || key === 'private' ? '_blank' : '_self');
 const bring = [
   'Comfortable clothes you can move in.',
   "A second pair of clean indoor shoes — not the ones you arrived in. (Forgot them? You can train barefoot, but shoes are comfier when you're starting out.)",
@@ -67,8 +68,8 @@ const otherFaqs = [
         </div>
       </div>
       <div class="gsopts">
-        {options.map((o) => (
-          <BookingCard color={o.color} status={o.status} statusTone={o.statusTone} title={o.title} description={o.desc} actionLabel={o.cta} href={o.href} target={o.target} />
+        {firstSessionOptions.map((o) => (
+          <BookingCard color={o.color} status={o.status} statusTone={o.statusTone} title={o.title} description={o.desc} actionLabel={o.cta} href={fsHref[o.key]} target={fsTarget(o.key)} />
         ))}
       </div>
       <div class="gsdiv"></div>
