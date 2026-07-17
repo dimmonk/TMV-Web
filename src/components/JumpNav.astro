@@ -4,12 +4,15 @@ interface Props {
   items: { label: string; id: string }[];
   actions?: Action[];
   top?: number;      // sticky offset below the header
+  /** small uppercase label before the pills (design default: "Jump to") */
+  label?: string;
 }
-const { items, actions = [], top = 66 } = Astro.props;
+const { items, actions = [], top = 66, label = 'Jump to' } = Astro.props;
 const hasActions = actions.length > 0;
 ---
 <nav class="jn" style={`--top:${top}px`} aria-label="On this page" data-ids={items.map((i) => i.id).join(',')}>
   <div class="jn-scroll">
+    <span class="jn-label">{label}</span>
     {items.map((it) => (
       <a href={`#${it.id}`} class="jn-link" data-anchor={it.id}>{it.label}</a>
     ))}
@@ -37,6 +40,7 @@ const hasActions = actions.length > 0;
   .jn { position: sticky; top: var(--top); z-index: 40; background: rgba(245,244,241,.92); backdrop-filter: saturate(140%) blur(8px); -webkit-backdrop-filter: saturate(140%) blur(8px); border-bottom: 1px solid var(--line); }
   .jn-scroll { max-width: 1120px; margin-inline: auto; padding: 13px 24px; display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; }
   .jn-scroll::-webkit-scrollbar { display: none; }
+  .jn-label { flex: none; font: 700 11px/1 var(--font-display); letter-spacing: .13em; text-transform: uppercase; color: var(--muted-3); margin-right: 6px; }
   .jn-link { flex: none; white-space: nowrap; font: 700 12.5px/1 var(--font-display); text-decoration: none; padding: 7px 13px; border-radius: 999px; background: transparent; color: var(--muted); border: 1px solid transparent; transition: all .15s ease; }
   .jn-link:hover { background: #fff; color: var(--ink); border-color: var(--line); }
   .jn-link.active { background: #fff; color: var(--ink); border-color: #e0c64a; }
