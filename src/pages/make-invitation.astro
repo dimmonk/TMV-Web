@@ -4,6 +4,25 @@ import { seo, links, site, url } from '../data/site';
 
 const defaultAddress = `${site.address.street} · ${site.address.locality}`;
 const defaultPhoto = url('assets/invite-default-photo.png');
+
+/** 15-minute time options across the facility's operating hours — a closed
+ * set of valid values so a party time can never be mistyped or malformed. */
+function timeOptions(startHour: number, endHour: number) {
+  const opts: { value: string; label: string }[] = [];
+  for (let h = startHour; h <= endHour; h++) {
+    for (let m = 0; m < 60; m += 15) {
+      if (h === endHour && m > 0) break;
+      const hour12 = ((h + 11) % 12) + 1;
+      const ampm = h < 12 ? 'AM' : 'PM';
+      opts.push({
+        value: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`,
+        label: `${hour12}:${String(m).padStart(2, '0')} ${ampm}`,
+      });
+    }
+  }
+  return opts;
+}
+const timeOpts = timeOptions(11, 22);
 ---
 <BaseLayout title={seo.makeInvitation.title} description={seo.makeInvitation.description} active="events">
   <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js" is:inline></script>
@@ -54,9 +73,18 @@ const defaultPhoto = url('assets/invite-default-photo.png');
             <div><label class="inv-lab" for="inv-age">Turning</label><input id="inv-age" class="inv-in" type="number" min="1" max="18" value="8"></div>
           </div>
           <div><label class="inv-lab" for="inv-hype">Hype line</label><input id="inv-hype" class="inv-in" value="Come flip, climb & fly" placeholder="Come flip, climb & fly"></div>
+          <div><label class="inv-lab" for="inv-date">Date</label><input id="inv-date" type="date" class="inv-in"></div>
           <div class="inv-row2-even">
-            <div><label class="inv-lab" for="inv-date">Date</label><input id="inv-date" class="inv-in" value="Saturday, August 16" placeholder="Saturday, August 16"></div>
-            <div><label class="inv-lab" for="inv-time">Time</label><input id="inv-time" class="inv-in" value="2:00 – 4:00 PM" placeholder="2:00 – 4:00 PM"></div>
+            <div><label class="inv-lab" for="inv-time-start">Start time</label>
+              <select id="inv-time-start" class="inv-in">
+                {timeOpts.map((o) => <option value={o.value} selected={o.value === '14:00'}>{o.label}</option>)}
+              </select>
+            </div>
+            <div><label class="inv-lab" for="inv-time-end">End time</label>
+              <select id="inv-time-end" class="inv-in">
+                {timeOpts.map((o) => <option value={o.value} selected={o.value === '16:00'}>{o.label}</option>)}
+              </select>
+            </div>
           </div>
           <div><label class="inv-lab" for="inv-bring">What to bring <span class="inv-lab-note">— separate with commas</span></label><input id="inv-bring" class="inv-in" value="Clean shoes, Lots of energy" placeholder="Clean shoes, Lots of energy"></div>
           <div><label class="inv-lab" for="inv-rsvp">RSVP contact</label><input id="inv-rsvp" class="inv-in" value="Text Alex · 416-555-0142" placeholder="Text Alex · 416-555-0142"></div>
@@ -242,13 +270,14 @@ const defaultPhoto = url('assets/invite-default-photo.png');
      narrower viewports — set via JS as a CSS custom property. */
   .inv-scale-wrap { transform: scale(var(--inv-scale, 1)); transform-origin: center; transition: transform .15s ease; }
 
-  /* BG picker (Invite style only) */
-  .inv-bg-col { display: flex; flex-direction: column; align-items: center; gap: 10px; flex: none; }
+  /* BG picker (Invite style only) — aligned to the top of the card, level
+     with the photo it controls, instead of centered on the whole row. */
+  .inv-bg-col { display: flex; flex-direction: column; align-items: center; gap: 10px; flex: none; align-self: flex-start; margin-top: 4px; }
   .inv-bg-label { font: 700 9px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: #a29e95; margin-bottom: 2px; }
   .inv-bg-chip { width: 44px; height: 44px; border-radius: 10px; cursor: pointer; font: 800 14px/1 var(--font-display); background: #fffbe6; color: var(--ink); border: 2px solid var(--brand); }
 
-  /* Replace / Remove photo (Invite style only) */
-  .inv-photo-col { display: flex; flex-direction: column; gap: 10px; width: 104px; flex: none; }
+  /* Replace / Remove photo (Invite style only) — same top alignment, same reason. */
+  .inv-photo-col { display: flex; flex-direction: column; gap: 10px; width: 104px; flex: none; align-self: flex-start; margin-top: 4px; }
   .inv-photobtn { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; font: 800 11px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; padding: 13px 8px; border-radius: 10px; background: #fff; color: var(--ink); border: 1px solid #d8d4cc; }
   .inv-photobtn i { font-size: 16px; }
   .inv-photobtn-dark { background: var(--ink); color: #fff; border: 0; }
@@ -370,11 +399,41 @@ const defaultPhoto = url('assets/invite-default-photo.png');
     return fieldVal('inv-bring').split(',').map((s) => s.trim()).filter(Boolean);
   }
 
+  function formatDate(iso) {
+    if (!iso) return '';
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  }
+
+  function formatTimeLabel(hhmm) {
+    const [h, m] = hhmm.split(':').map(Number);
+    const hour12 = ((h + 11) % 12) + 1;
+    const ampm = h < 12 ? 'AM' : 'PM';
+    return `${hour12}:${String(m).padStart(2, '0')} ${ampm}`;
+  }
+
+  function formatTimeRange(startVal, endVal) {
+    if (!startVal || !endVal) return '';
+    const startAmpm = Number(startVal.split(':')[0]) < 12 ? 'AM' : 'PM';
+    const endAmpm = Number(endVal.split(':')[0]) < 12 ? 'AM' : 'PM';
+    const startLabel = formatTimeLabel(startVal);
+    const endLabel = formatTimeLabel(endVal);
+    return startAmpm === endAmpm
+      ? `${startLabel.replace(/ (AM|PM)$/, '')} – ${endLabel}`
+      : `${startLabel} – ${endLabel}`;
+  }
+
+  function nextSaturdayISO() {
+    const d = new Date();
+    d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7));
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
   function render() {
     const name = fieldVal('inv-name') || 'Maya';
     const age = fieldVal('inv-age') || '8';
-    const date = fieldVal('inv-date');
-    const time = fieldVal('inv-time');
+    const date = formatDate(fieldVal('inv-date'));
+    const time = formatTimeRange(fieldVal('inv-time-start'), fieldVal('inv-time-end'));
     const venue = FIXED_VENUE;
     const address = FIXED_ADDRESS;
     const rsvp = fieldVal('inv-rsvp');
@@ -523,9 +582,14 @@ const defaultPhoto = url('assets/invite-default-photo.png');
   document.querySelectorAll('.inv-fin').forEach((btn) => {
     btn.addEventListener('click', () => { state.ink = btn.dataset.finish === 'ink'; render(); });
   });
-  ['inv-name', 'inv-age', 'inv-hype', 'inv-date', 'inv-time', 'inv-bring', 'inv-rsvp'].forEach((id) => {
+  ['inv-name', 'inv-age', 'inv-hype', 'inv-bring', 'inv-rsvp'].forEach((id) => {
     $(id)?.addEventListener('input', render);
   });
+  ['inv-date', 'inv-time-start', 'inv-time-end'].forEach((id) => {
+    $(id)?.addEventListener('change', render);
+  });
+
+  if (!$('inv-date').value) $('inv-date').value = nextSaturdayISO();
 
   // Photo replace / remove
   $('inv-replace-photo')?.addEventListener('click', () => $('inv-photo-input')?.click());
