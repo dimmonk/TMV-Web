@@ -13,27 +13,26 @@ import OfferingCard from '../../components/OfferingCard.astro';
 import BookingCard from '../../components/BookingCard.astro';
 import ClassCard from '../../components/ClassCard.astro';
 import { offerings } from '../../data/offerings';
+import { coreClasses, specializedClasses, partnershipClasses } from '../../data/classes';
+import type { ClassItem } from '../../data/classes';
 import { cat, links, site, social, hours, reviews, seo, url } from '../../data/site';
 import { sq } from '../../data/square-links';
+
+// Resolve a class's action href for the mobile app. Schedule-linked classes go
+// to the mobile Schedule screen; classes whose desktop page has no mobile
+// equivalent fall back to booking; partner classes keep their external link.
+const classHref = (c: ClassItem): string => {
+  if ('external' in c.link) return c.link.external;
+  if (c.link.screen === 'schedule') return '#schedule';
+  if (c.link.screen === 'private-lessons') return links.booking;
+  return links.athleticMembership; // athletic-program
+};
 
 // Compact size props for the mobile OfferingCard variant.
 const OC = {
   height: '360px', mediaRatio: '16/9', titleSize: '17px', descSize: '12.5px',
   backTitleSize: '18px', padFront: '16px 16px 18px', padBack: '20px 20px 18px',
 };
-
-// ---- Train: classes (shared ClassCard component; copy stays mobile-local) ----
-const classCards = [
-  { category: 'Parkour', tag: 'Parkour', title: 'Recreational', description: 'Parkour & acrobatics at your own pace. All fun, zero pressure.', bookingTag: 'Drop-in', pills: 'All ages | All levels', image: 'assets/recreational.gif', actionLabel: 'View schedule', href: '#schedule', backEyebrow: 'Recreational · Parkour', backHeadline: 'At your own pace, zero pressure', backBody: 'Relaxed, drop-in parkour and acrobatics. Coaches meet you exactly where you are — no commitment, no pressure.', specs: 'Level: All levels || Ages: All ages — Parent & Child (3+) to Adults || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { category: 'Flips', tag: 'Flips', title: 'Flip Class', description: 'Master your flips, safely — from first roll to backflip.', bookingTag: 'Drop-in', pills: 'Ages 7+ | Levels 1–2', image: 'assets/flips.mp4', actionLabel: 'View schedule', href: '#schedule', backEyebrow: 'Flips', backHeadline: 'From first roll to backflip', backBody: 'A safe, levelled path from first roll to standing backflip. Always spotted and matted.', specs: 'Level: Levels 1–2 · backflip-only track || Ages: 7+ || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { category: 'Strength', tag: 'Strength', title: 'Calisthenics', description: 'Build serious bodyweight strength and control.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Weekday eves', image: 'assets/calisthenics.mp4', actionLabel: 'View schedule', href: '#schedule', backEyebrow: 'Strength', backHeadline: 'Bodyweight strength & control', backBody: 'Bodyweight strength, control and mobility. Stands alone or powers up everything else you train.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Weekday evenings || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { category: 'Tricking', tag: 'Tricking', title: 'Tricking', description: 'Kicks, flips and twists — martial arts meets acrobatics.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Tue & Thu — 7 PM', image: 'assets/tricking.mp4', actionLabel: 'View schedule', href: '#schedule', backEyebrow: 'Tricking', backHeadline: 'Martial arts meets acrobatics', backBody: 'Kicks, flips and twists chained into flowing combos. High-energy — and you build your own style.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Tue · Thu — 7 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { category: 'Gymnastics', tag: 'Gymnastics', title: 'Gymnastics', description: 'Strength, flexibility and clean form — the base for everything.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Tue & Fri — 6 PM', image: 'assets/gymnastics.mp4', actionLabel: 'View schedule', href: '#schedule', backEyebrow: 'Gymnastics', backHeadline: 'The foundation under everything', backBody: 'Strength, flexibility and clean form — the fundamentals that make everything else safer and sharper.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Tue · Fri — 6 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-];
-const goFurther = [
-  { category: 'Private', tag: 'Private', title: 'Private Lessons', description: 'One-on-one coaching built around your goals and pace.', bookingTag: 'By appointment', pills: '1-on-1 | All ages', image: 'assets/private.mp4', actionLabel: 'See options', href: links.booking, target: '_blank' as const, backEyebrow: 'Private · 1-on-1', backHeadline: 'Three ways to train privately', backBody: 'Start with a one-time Introduction, continue one-on-one at standard rates, or pick a specific coach who follows your whole progress.', specs: 'Level: All levels · built around you || Ages: Kids ≤17 & Adults 18+ || Booking: By appointment · reserve online || Price: Intro $45 · Kids from $65 · Adults from $85' },
-  { category: 'Athletic', tag: 'Athletic', title: 'Athletic Program', description: 'Train like an athlete — structured coaching and progress tracking.', bookingTag: 'Membership', pills: 'Ages 9+ | 2×/week', mediaBadge: 'Serious students only', image: 'assets/athletic.mp4', actionLabel: 'View program', href: links.athleticMembership, target: '_blank' as const, backEyebrow: 'Athletic · Program', backHeadline: 'Build a well-rounded athlete', backBody: 'Train several times a week to build strength, speed and all-round athleticism. Monthly check-ins track your progress.', specs: 'Level: Prerequisite required || Ages: 9+ || Schedule: 2 × 90 min / week || Booking: Membership · join any time || Price: $150 / month · $5 class add-on' },
-];
 
 // ---- Book ----
 const dropIns = [
@@ -207,17 +206,24 @@ const clientConfig = {
           <BookingCard color={cat.openGym} bookingTag="Drop-in" duration="No limit" title="Open Gym" description="Drop in any day and stay as long as you like. Sign the waiver, grab a pass, the floor is yours." pills="All ages | 11 AM – 10 PM | No booking" price="From $25" priceNote="day pass" actionLabel="Get a pass" href={links.store} target="_blank" />
 
           <div class="m-rowhead" style="margin:26px 0 6px">
-            <h3 class="m-h3" style="margin:0">Group classes</h3>
+            <h3 class="m-h3" style="margin:0">Core programs</h3>
             <button type="button" class="m-alllink" data-goto="#schedule">Times <i class="bi bi-calendar3" style={`color:${cat.classes}`} aria-hidden="true"></i></button>
           </div>
           <p class="m-sub" style="margin-bottom:14px">Tap a card to flip it for level, ages, schedule &amp; price.</p>
           <div class="m-stack" style="margin-bottom:30px">
-            {classCards.map((c) => <ClassCard {...c} />)}
+            {coreClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}
           </div>
 
-          <h3 class="m-h3">Go further</h3>
+          <h3 class="m-h3">Specialized classes</h3>
+          <p class="m-sub" style="margin-bottom:14px">Focused, skill-specific sessions for one discipline.</p>
+          <div class="m-stack" style="margin-bottom:30px">
+            {specializedClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}
+          </div>
+
+          <h3 class="m-h3">Partnerships</h3>
+          <p class="m-sub" style="margin-bottom:14px">Run by trusted partner coaches who share our space.</p>
           <div class="m-stack">
-            {goFurther.map((c) => <ClassCard {...c} />)}
+            {partnershipClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}
           </div>
         </div>
       </section>
@@ -260,8 +266,8 @@ const clientConfig = {
 
       <!-- ============ SCHEDULE ============ -->
       <section data-screen="schedule" class="m-screen" hidden>
-        <div style="padding:18px 0 120px">
-          <MobileHero eyebrow="Schedule" title="This week at the gym" desc="Live class times you can filter by age — the same schedule our front desk runs from." />
+        <div style="padding:18px 0 28px">
+          <div style="padding:0 18px 18px"><MobileHero eyebrow="Schedule" title="This week at the gym" desc="Live class times you can filter by age — the same schedule our front desk runs from." /></div>
           <div class="app-scroll m-chips" data-sched-chips></div>
           <div class="m-pad-x" data-sched-body></div>
         </div>
@@ -543,7 +549,7 @@ const clientConfig = {
   .m-app { height: 100dvh; background: #f5f4f1; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: #211f1b; display: flex; flex-direction: column; overflow: hidden; }
   .m-safe { flex: none; background: #211f1b; height: env(safe-area-inset-top, 0px); }
   .m-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; position: relative; }
-  .m-pad { padding: 16px 18px 120px; }
+  .m-pad { padding: 16px 18px 28px; }
   .m-pad-x { padding: 0 18px; }
   .m-stack { display: flex; flex-direction: column; gap: 16px; }
 
@@ -777,7 +783,7 @@ const clientConfig = {
   .m-revsum-t { font: 800 16px/1.2 'Archivo', sans-serif; color: #211f1b; }
   .m-revsum-s { font: 500 12.5px/1.4 inherit; color: #8a877f; margin-top: 5px; }
   .m-revscroll { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; margin: 0 -18px; padding: 0 18px 4px; }
-  .m-revcard { flex: none; min-width: 87%; scroll-snap-align: center; background: #fff; border: 1px solid #ebe9e4; border-radius: 16px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 18px 20px; }
+  .m-revcard { flex: 0 0 87%; scroll-snap-align: center; background: #fff; border: 1px solid #ebe9e4; border-radius: 16px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 18px 20px; }
   .m-revcard-stars { color: #e9a300; font-size: 11px; letter-spacing: 2px; margin-bottom: 10px; }
   .m-revcard-text { font: 500 13.5px/1.55 inherit; color: #3a3833; margin: 0 0 12px; }
   .m-revcard-by { font: 800 12.5px/1 'Archivo', sans-serif; color: #211f1b; }
