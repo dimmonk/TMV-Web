@@ -9,3 +9,7 @@ dist/
 
 # design handoff zips (kept locally, not tracked)
 *.zip
+
+# stray saved webpages
+*.0.html
+*_files/

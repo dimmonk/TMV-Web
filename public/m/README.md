@@ -1,31 +1,18 @@
-# The Monkey Vault — mobile app-style UI (`/m/`)
+# `/m/` — mobile PWA assets
 
-The phone experience of the site. Desktop lives at the repo root as the Astro
-site (`src/pages/*`); phones are redirected here by the layout's device switch,
-and `mobile.html`'s own switch sends desktop-width visitors back to `../`.
+The phone experience now lives at `src/pages/m/index.astro` (native Astro,
+served at `/TMV-Web/m/`). It reuses the same components and SSOT data as the
+desktop site — `OfferingCard`, `BookingCard`, `ClassCard`, `data/site`,
+`data/square-links`, and the `src/lib` schedule/price modules — so a card or
+data change lands on both surfaces at once.
 
-## What ships here (runtime closure only)
+This folder holds only the static PWA assets that page references:
 
-- `mobile.html` — the entire app-style UI (hash-routed screens).
-- `support.js` — the design-tool runtime that renders it.
-- `BookingCard.dc.html`, `ClassCard.dc.html`, `OfferingCard.dc.html` — the only
-  components `mobile.html` dc-imports at runtime.
-- `categories.js`, `site-config.js` + `site-config.json` — category accents and
-  the Square link/config source (repoint `CONFIG_URL` to the live members-app
-  endpoint when it ships).
-- `public/` — the price-list / print-schedule renderer modules + CSS shared
-  with the members app.
-- `assets/`, `manifest.json`, `index.html` (device router).
+- `manifest.json` — installable PWA manifest (`start_url` = `.`, i.e. `/m/`).
+- `assets/` — the manifest's app icons.
 
-The full set of design-tool page mirrors (Home.dc.html, Train.dc.html, …) is
-NOT deployed — those are diff baselines and live in `design-reference/` at the
-repo root. Don't re-add them here; anything shipped under `public/` is publicly
-crawlable and shadows the real site.
-
-## Live data / internet
-
-Loaded from the network at runtime:
-
-- **Class schedule** — `getPublicSchedule` Cloud Function.
-- **Price list** — `getPublicPriceList` Cloud Function.
-- Fonts (Google Fonts) and icons (Bootstrap Icons) via CDN.
+The old design-tool runtime (`mobile.html`, `support.js`, the `*.dc.html`
+component exports, `categories.js`, `site-config.js`, `public/js/**`) was
+retired when the page was rebuilt in Astro — don't re-add it. The design-tool
+component sources remain in `design-reference/` at the repo root as diff
+baselines.

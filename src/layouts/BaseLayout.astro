@@ -13,7 +13,7 @@ interface Props {
   brand?: string;
   /** absolute-or-relative OG image; defaults to the logo */
   ogImage?: string;
-  /** section hash to deep-link into the app-style mobile UI (m/mobile.html#hash) */
+  /** section hash to deep-link into the app-style mobile UI (m/#hash) */
   mobileHash?: string;
   /** false = keep phones on this page (for pages with no mobile-app equivalent,
    * e.g. the invitation maker — the mobile shell has no screen for them) */
@@ -22,7 +22,7 @@ interface Props {
 
 const { title, description, active = '', brand = '#ffd400', ogImage, mobileHash, mobileRedirect = true } = Astro.props;
 
-// Phones get the dedicated app-style mobile UI (design tool's mobile.html).
+// Phones get the dedicated app-style mobile UI (the Astro page at /m/).
 // Desktop stays on these SEO-rich Astro pages. Deep-link to the matching
 // mobile section where we can.
 const activeToHash: Record<string, string> = {
@@ -30,7 +30,7 @@ const activeToHash: Record<string, string> = {
   pricing: 'pricing', store: 'store', about: 'about',
 };
 const mHash = mobileHash ?? activeToHash[active] ?? 'home';
-const mobileUrl = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/m/mobile.html#${mHash}`;
+const mobileUrl = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/m/#${mHash}`;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const image = new URL(ogImage ?? url('assets/tmvlogo.png'), Astro.site).href;

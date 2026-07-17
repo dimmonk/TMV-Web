@@ -1,0 +1,129 @@
+---
+/**
+ * Layout for the app-style mobile page (/m/). Reuses BaseLayout's head pattern
+ * (canonical, OG, JSON-LD, fonts) but ships NO desktop chrome (no SiteHeader /
+ * SiteFooter) — the mobile page renders its own app shell. Includes the PWA
+ * manifest/meta and the desktop-width → `../` redirect (mirror of the desktop
+ * pages' phone redirect, in reverse), so wide viewports bounce to the full site.
+ */
+import '../styles/global.css';
+import { site, social, hours, links, url } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+
+// Canonical points at the desktop home (as the old mobile.html did) so /m/ is
+// not treated as duplicate content.
+const canonical = new URL(Astro.site!).href;
+const image = new URL(url('assets/tmvlogo.png'), Astro.site).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsActivityLocation',
+  name: site.name,
+  legalName: site.legalName,
+  description: site.description,
+  url: canonical,
+  telephone: site.phone,
+  email: site.email,
+  image,
+  logo: image,
+  priceRange: '$$',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    addressLocality: site.address.locality,
+    addressRegion: site.address.region,
+    postalCode: site.address.postalCode,
+    addressCountry: site.address.country,
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng },
+  openingHoursSpecification: hours.map((h) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: h.day,
+    opens: '11:00',
+    closes: '22:00',
+  })),
+  sameAs: [social.instagram, social.facebook, social.youtube].filter(Boolean),
+  hasMap: site.mapUrl,
+  potentialAction: { '@type': 'ReserveAction', target: links.booking },
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Desktop-width viewports (and non-phone UAs) get the full site at the
+         repo root; phones stay here. Runs before render to avoid a flash. -->
+    <script is:inline>
+      (function () {
+        function isPhone() {
+          var ua = navigator.userAgent;
+          return /iPhone|iPod|Windows Phone|BlackBerry/i.test(ua) || (/Android/i.test(ua) && /Mobile/i.test(ua));
+        }
+        function wantsDesktop() {
+          try { return (window.matchMedia && window.matchMedia('(min-width:600px)').matches) && !isPhone(); }
+          catch (e) { return false; }
+        }
+        function go() { if (wantsDesktop()) location.replace('../'); }
+        go();
+        var t;
+        window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(go, 250); });
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#211f1b" />
+    <link rel="icon" href={url('assets/tmvlogo.png')} />
+
+    <!-- PWA -->
+    <link rel="manifest" href={url('m/manifest.json')} />
+    <link rel="apple-touch-icon" href={url('assets/tmvlogo.png')} />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:locale" content="en_CA" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="preconnect" href="https://us-central1-tmv-management.cloudfunctions.net" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  /* The mobile app owns the full viewport — no page scroll on <body>; the app's
+     own .app-scroll region scrolls instead. */
+  html, body { height: 100%; margin: 0; background: #211f1b; }
+  body { overflow: hidden; }
+  /* [hidden] must always win over an explicit `display` set on the same
+     specificity tier (the header rows and screens set display:flex/block), so
+     the JS router's show/hide toggles actually take effect. */
+  [hidden] { display: none !important; }
+</style>
