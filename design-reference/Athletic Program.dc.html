@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script>(function(){function w(){return (window.matchMedia&&window.matchMedia('(max-width:819px)').matches)||/Android|iPhone|iPod|Windows Phone|BlackBerry|Mobile/i.test(navigator.userAgent);}function g(){try{if(w())location.replace('mobile.html#train');}catch(e){}}g();var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(g,250);});})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
@@ -57,10 +56,10 @@
 
   <main>
     <!-- 01 — THE PROGRAM -->
-    <section id="program" style="max-width:1200px; margin:0 auto; padding:72px 24px 12px; scroll-margin-top:132px;">
+    <section id="program" style="max-width:1200px; margin:0 auto; padding:36px 24px 12px; scroll-margin-top:132px;">
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start;">
         <div>
-          <dc-import name="SectionHeader" num="01" eyebrow="The program" title="More than parkour — preparation for any sport." style="margin-bottom:16px;" hint-size="100%,80px"></dc-import>
+          <dc-import name="SectionHeader" num="01" category="athletic" eyebrow="The program" title="More than parkour — preparation for any sport." style="margin-bottom:16px;" hint-size="100%,80px"></dc-import>
           <p style="font:400 15px/1.62 inherit; color:#54514b; margin:0 0 16px;">The Athletic Program is built around <strong style="color:#211f1b;">two 90-minute coached sessions each week</strong> — the core of the program — for ages 9–14 and 15+. It's designed to boost real athletic performance: you'll build the strength, speed and control that carry into any sport you choose.</p>
           <p style="font:400 15px/1.62 inherit; color:#54514b; margin:0 0 16px;">Two complementary classes round it out — <strong style="color:#211f1b;">Explosive</strong> for power and <strong style="color:#211f1b;">Speed League</strong> for speed and agility — so you can train more of what your sport demands.</p>
           <p style="font:400 15px/1.62 inherit; color:#54514b; margin:0;">Membership includes unlimited open gym to practice at your own pace, plus monthly evaluations with personalized feedback — so progress is tracked, not guessed.</p>
@@ -81,9 +80,9 @@
     </section>
 
     <!-- 02 — CLASS STRUCTURE -->
-    <section id="structure" style="max-width:1200px; margin:0 auto; padding:64px 24px 12px; scroll-margin-top:132px;">
+    <section id="structure" style="max-width:1200px; margin:0 auto; padding:48px 24px 12px; scroll-margin-top:132px;">
       <div style="margin-bottom:32px;">
-        <dc-import name="SectionHeader" num="02" eyebrow="Class structure" title="How a core session runs" description="Every 90-minute Athletic session follows the same five-part arc — warm up, build, refine, push, recover — so training stays structured and safe." hint-size="100%,130px"></dc-import>
+        <dc-import name="SectionHeader" num="02" category="athletic" eyebrow="Class structure" title="How a core session runs" description="Every 90-minute Athletic session follows the same five-part arc — warm up, build, refine, push, recover — so training stays structured and safe." hint-size="100%,130px"></dc-import>
       </div>
       <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px;">
         <sc-for list="{{ structure }}" as="st" hint-placeholder-count="5">
@@ -104,10 +103,10 @@
     </section>
 
     <!-- 03 — SCHEDULE -->
-    <section id="schedule" style="max-width:1200px; margin:0 auto; padding:64px 24px 12px; scroll-margin-top:132px;">
+    <section id="schedule" style="max-width:1200px; margin:0 auto; padding:48px 24px 12px; scroll-margin-top:132px;">
       <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:8px;">
         <div>
-          <dc-import name="SectionHeader" num="03" eyebrow="Schedule" title="When we train" hint-size="100%,80px"></dc-import>
+          <dc-import name="SectionHeader" num="03" category="athletic" eyebrow="Schedule" title="When we train" hint-size="100%,80px"></dc-import>
         </div>
       </div>
       <p style="font:400 14px/1.55 inherit; color:#6a6760; max-width:640px; margin:0 0 18px;">Classes run Monday–Friday; open gym is available every day. Exact class times live on the real-time schedule — always current, straight from the booking system.</p>
@@ -133,10 +132,10 @@
     </section>
 
     <!-- 04 — JOIN NOW -->
-    <section id="join" style="max-width:1200px; margin:0 auto; padding:64px 24px 80px; scroll-margin-top:132px;">
+    <section id="join" style="max-width:1200px; margin:0 auto; padding:48px 24px 80px; scroll-margin-top:132px;">
       <div style="display:grid; grid-template-columns:.95fr 1.05fr; gap:32px; align-items:stretch;">
         <div>
-          <dc-import name="SectionHeader" num="04" eyebrow="Join now" title="Start any time. Stay as long as you keep growing." description="Sign up for the year-round program and start training right away — you can enroll at any point in the year. For real, visible progress, we recommend committing to at least three months." style="margin-bottom:18px;" hint-size="100%,130px"></dc-import>
+          <dc-import name="SectionHeader" num="04" category="athletic" eyebrow="Join now" title="Start any time. Stay as long as you keep growing." description="Sign up for the year-round program and start training right away — you can enroll at any point in the year. For real, visible progress, we recommend committing to at least three months." style="margin-bottom:18px;" hint-size="100%,130px"></dc-import>
           <div style="display:flex; flex-direction:column; gap:13px;">
             <sc-for list="{{ joinPoints }}" as="j" hint-placeholder-count="3">
               <div style="display:flex; align-items:flex-start; gap:12px;">

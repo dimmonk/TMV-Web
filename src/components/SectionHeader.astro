@@ -8,14 +8,18 @@ interface Props {
   theme?: 'light' | 'dark';
   actionLabel?: string;
   href?: string;
+  /** Category accent hex (from `cat` in data/site) — overrides the default
+   * brand-yellow number/rule accent so a section carries its true category
+   * colour. Rendered at full strength, no darkening/legibility shading. */
+  color?: string;
 }
 const {
   num = '', eyebrow, title, description = '',
-  align = 'left', theme = 'light', actionLabel = '', href = '#',
+  align = 'left', theme = 'light', actionLabel = '', href = '#', color,
 } = Astro.props;
 const dark = theme === 'dark';
 ---
-<div class:list={['sh2', { center: align === 'center', dark }]}>
+<div class:list={['sh2', { center: align === 'center', dark }]} style={color ? `--accent:${color}` : undefined}>
   <div class="sh2-eyebrow">
     {num && <><span class="num">{num}</span><span class="rule"></span></>}
     {eyebrow}

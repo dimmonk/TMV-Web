@@ -35,19 +35,32 @@
   &quot;num&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;01&quot;,&quot;tsType&quot;:&quot;string&quot;},
   &quot;eyebrow&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;The Foundation&quot;,&quot;tsType&quot;:&quot;string&quot;},
   &quot;title&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Core Programs&quot;,&quot;tsType&quot;:&quot;string&quot;},
-  &quot;description&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Where everyone starts. Pick your pace \u2014 relaxed and recreational, fully personal, or athlete-level training.&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;description&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Where everyone starts. Pick your pace — relaxed and recreational, fully personal, or athlete-level training.&quot;,&quot;tsType&quot;:&quot;string&quot;},
   &quot;align&quot;: {&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;left&quot;,&quot;options&quot;:[&quot;left&quot;,&quot;center&quot;],&quot;tsType&quot;:&quot;string&quot;},
   &quot;theme&quot;: {&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;light&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;tsType&quot;:&quot;string&quot;},
+  &quot;category&quot;: {&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;&quot;,&quot;options&quot;:[&quot;&quot;,&quot;openGym&quot;,&quot;classes&quot;,&quot;private&quot;,&quot;partner&quot;,&quot;athletic&quot;,&quot;camps&quot;,&quot;parties&quot;,&quot;groups&quot;,&quot;introduction&quot;],&quot;tsType&quot;:&quot;string&quot;},
   &quot;actionLabel&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},
   &quot;href&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;#&quot;,&quot;tsType&quot;:&quot;string&quot;},
   &quot;brand&quot;: {&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd400&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ffd400&quot;,&quot;#2196f3&quot;,&quot;#f44336&quot;,&quot;#2e9e4f&quot;,&quot;#8c52ff&quot;]}
 }">
 class Component extends DCLogic {
+  state = { catColorFn: null };
+  componentDidMount() {
+    // categories.js is the SSOT for accents; resolve category -> hex here so
+    // section headers can't drift from the site colour code.
+    import('./categories.js').then(m => this.setState({ catColorFn: m.catColor })).catch(() => {});
+  }
   renderVals() {
     const p = this.props;
     const theme = (p.theme ?? 'light').toString();
     const dark = theme === 'dark';
     const align = (p.align ?? 'left').toString();
+    // If a category is given, its colour code wins over the brand prop.
+    const cat = (p.category ?? '').toString().trim();
+    const catFallback = { openGym:'#2e9e4f', classes:'#2196f3', private:'#f44336', partner:'#0d9488', athletic:'#ffb82a', camps:'#e27902', parties:'#ffd400', groups:'#8c52ff', introduction:'#6e6e6e' };
+    const fn = this.state.catColorFn;
+    const catAccent = cat ? (fn ? fn(cat) : (catFallback[cat] ?? null)) : null;
+    const accent = catAccent || (p.brand ?? '#ffd400');
     return {
       num: (p.num ?? '').toString().trim(),
       eyebrow: p.eyebrow ?? 'The Foundation',
@@ -59,7 +72,7 @@ class Component extends DCLogic {
       body: dark ? 'rgba(255,255,255,.7)' : '#6a6760',
       bodyColor: dark ? 'rgba(255,255,255,.7)' : '#6a6760',
       muted: dark ? 'rgba(255,255,255,.5)' : '#b0aca3',
-      brand: p.brand ?? '#ffd400',
+      brand: accent,
       actionLabel: (p.actionLabel ?? '').toString().trim(),
       href: p.href ?? '#',
       hasAction: !!(p.actionLabel && p.actionLabel.toString().trim()),

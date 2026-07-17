@@ -4,7 +4,7 @@ import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import Pill from '../components/Pill.astro';
 import CtaBand from '../components/CtaBand.astro';
-import { seo, links, url } from '../data/site';
+import { seo, links, url, cat } from '../data/site';
 
 const heroStats = [
   { value: '2 × 90 min', label: 'core sessions each week' },
@@ -63,7 +63,7 @@ const payOptions = [
   <section id="program" class="section container" style="scroll-margin-top:132px">
     <div class="ap-program">
       <div>
-        <div style="margin-bottom:16px"><SectionHeader num="01" eyebrow="The program" title="More than parkour — preparation for any sport." /></div>
+        <div style="margin-bottom:16px"><SectionHeader num="01" eyebrow="The program" title="More than parkour — preparation for any sport." color={cat.athletic} /></div>
         <p class="ap-body">The Athletic Program is built around <strong>two 90-minute coached sessions each week</strong> — the core of the program — for ages 9–14 and 15+. It's designed to boost real athletic performance: you'll build the strength, speed and control that carry into any sport you choose.</p>
         <p class="ap-body">Two complementary classes round it out — <strong>Explosive</strong> for power and <strong>Speed League</strong> for speed and agility — so you can train more of what your sport demands.</p>
         <p class="ap-body">Membership includes unlimited open gym to practice at your own pace, plus monthly evaluations with personalized feedback — so progress is tracked, not guessed.</p>
@@ -80,7 +80,7 @@ const payOptions = [
   </section>
 
   <section id="structure" class="section container" style="scroll-margin-top:132px">
-    <div style="margin-bottom:32px"><SectionHeader num="02" eyebrow="Class structure" title="How a core session runs" description="Every 90-minute Athletic session follows the same five-part arc — warm up, build, refine, push, recover — so training stays structured and safe." /></div>
+    <div style="margin-bottom:32px"><SectionHeader num="02" eyebrow="Class structure" title="How a core session runs" description="Every 90-minute Athletic session follows the same five-part arc — warm up, build, refine, push, recover — so training stays structured and safe." color={cat.athletic} /></div>
     <div class="ap-structure">
       {structure.map((st) => (
         <div class="ap-scard">
@@ -93,7 +93,7 @@ const payOptions = [
   </section>
 
   <section id="schedule" class="section container" style="scroll-margin-top:132px">
-    <div style="margin-bottom:8px"><SectionHeader num="03" eyebrow="Schedule" title="When we train" /></div>
+    <div style="margin-bottom:8px"><SectionHeader num="03" eyebrow="Schedule" title="When we train" color={cat.athletic} /></div>
     <p class="ap-schedlead">Classes run Monday–Friday; open gym is available every day. Exact class times live on the real-time schedule — always current, straight from the booking system.</p>
     <div class="ap-classtypes">
       {classTypes.map((ct) => (
@@ -109,7 +109,7 @@ const payOptions = [
   <section id="join" class="section container" style="scroll-margin-top:132px; padding-bottom:80px">
     <div class="ap-join">
       <div>
-        <div style="margin-bottom:18px"><SectionHeader num="04" eyebrow="Join now" title="Start any time. Stay as long as you keep growing." description="Sign up for the year-round program and start training right away — you can enroll at any point in the year. For real, visible progress, we recommend committing to at least three months." /></div>
+        <div style="margin-bottom:18px"><SectionHeader num="04" eyebrow="Join now" title="Start any time. Stay as long as you keep growing." description="Sign up for the year-round program and start training right away — you can enroll at any point in the year. For real, visible progress, we recommend committing to at least three months." color={cat.athletic} /></div>
         <div class="ap-joinpoints">{joinPoints.map((j) => <div class="ap-jp"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>{j}</span></div>)}</div>
       </div>
       <div class="ap-joincol">

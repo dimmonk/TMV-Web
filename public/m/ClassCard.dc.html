@@ -35,7 +35,12 @@
     <div class="cc-face cc-front" style="display:flex; flex-direction:column; background:#fff; border:1px solid #ebe9e4; border-radius:16px; overflow:hidden; box-shadow:0 1px 3px rgba(28,25,23,.05),0 12px 30px -22px rgba(28,25,23,.4);">
       <div style="height:4px; background:var(--cat); flex:none;"></div>
       <div class="cc-media" style="position:relative; aspect-ratio:16/11; overflow:hidden; background:#211f1b;">
-        <img class="cc-img" src="{{ image }}" alt="{{ title }}" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease;">
+        <sc-if value="{{ isVideo }}" hint-placeholder-val="">
+          <video class="cc-img" ref="{{ videoRef }}" src="{{ image }}" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease;"></video>
+        </sc-if>
+        <sc-if value="{{ isImage }}" hint-placeholder-val="{{ true }}">
+          <img class="cc-img" src="{{ image }}" alt="{{ title }}" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease;">
+        </sc-if>
         <div style="position:absolute; top:12px; left:12px; display:flex; flex-direction:column; align-items:flex-start; gap:7px;">
           <span style="padding:5px 10px; border-radius:999px; background:var(--cat); color: {{ tagText }}; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase; box-shadow:0 3px 10px rgba(0,0,0,.3);">{{ tag }}</span>
           <sc-if value="{{ mediaBadge }}" hint-placeholder-val="">
@@ -81,7 +86,12 @@
     <div class="cc-face cc-front" style="display:grid; grid-template-columns:160px 1fr; background:#fff; border:1px solid #ebe9e4; border-radius:16px; overflow:hidden; box-shadow:0 1px 3px rgba(28,25,23,.05),0 12px 30px -22px rgba(28,25,23,.4);">
       <div style="grid-column:1/-1; height:4px; background:var(--cat);"></div>
       <div class="cc-media" style="position:relative; overflow:hidden; background:#211f1b;">
-        <img class="cc-img" src="{{ image }}" alt="{{ title }}" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease;">
+        <sc-if value="{{ isVideo }}" hint-placeholder-val="">
+          <video class="cc-img" ref="{{ videoRef }}" src="{{ image }}" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease;"></video>
+        </sc-if>
+        <sc-if value="{{ isImage }}" hint-placeholder-val="{{ true }}">
+          <img class="cc-img" src="{{ image }}" alt="{{ title }}" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease;">
+        </sc-if>
         <sc-if value="{{ hasBack }}" hint-placeholder-val="{{ true }}">
           <span class="cc-flipbtn" title="More info" style="position:absolute; top:10px; left:10px; z-index:2; width:28px; height:28px; border-radius:50%; background:rgba(28,25,23,.5); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; transition:all .15s;"><i class="bi bi-arrow-repeat"></i></span>
         </sc-if>
@@ -152,6 +162,12 @@ class Component extends DCLogic {
     const card = e.currentTarget;
     card.setAttribute('aria-pressed', card.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
   };
+  videoRef = (el) => {
+    if (!el) return;
+    el.muted = true; el.defaultMuted = true; el.loop = true; el.playsInline = true; el.autoplay = true;
+    const play = () => el.play().catch(() => {});
+    if (el.readyState >= 2) play(); else el.addEventListener('loadeddata', play, { once: true });
+  };
   renderVals() {
     // Price-list grouping is the source of truth (not per-discipline colors):
     //   Classes (recreational + all specialized) -> categories.js "classes"
@@ -203,6 +219,8 @@ class Component extends DCLogic {
     const chipText = (key === 'athletic') ? 'color-mix(in srgb, ' + catColor + ' 70%, #000)' : catColor;
     const bookingIconMap = { 'Drop-in': 'bi-door-open', 'By appointment': 'bi-calendar-check', 'Membership': 'bi-arrow-repeat', 'Register': 'bi-calendar-event', 'Direct with coach': 'bi-chat-dots' };
     const bookingIcon = bookingIconMap[bookingTag] || 'bi-info-circle';
+    const imageSrc = (p.image ?? '').toString();
+    const isVideo = /\.(mp4|webm|ogv|mov)(\?|$)/i.test(imageSrc);
 
     const bookingTagStyle = (p.bookingTagStyle ?? 'solid').toString();
     const showBookingOnImage = !!bookingTag && bookingTagStyle === 'onImage';
@@ -215,7 +233,7 @@ class Component extends DCLogic {
       title: p.title ?? '',
       description: p.description ?? '',
       target: (p.target ?? '').toString().trim() || '_self',
-      image: p.image ?? '',
+      image: imageSrc, isVideo, isImage: !isVideo, videoRef: this.videoRef,
       mediaBadge: (p.mediaBadge ?? '').toString().trim(),
       actionLabel: p.actionLabel ?? 'View schedule',
       href: p.href ?? '#',

@@ -14,7 +14,10 @@
     <!-- FRONT -->
     <div style="position:relative; min-height:100%; backface-visibility:hidden; -webkit-backface-visibility:hidden; display:flex; flex-direction:column; background:#fff; border:1px solid #ebe9e4; border-radius:18px; overflow:hidden; box-shadow:0 1px 3px rgba(28,25,23,.05),0 16px 34px -30px rgba(28,25,23,.4);">
       <div style="position:relative; aspect-ratio:{{ mediaRatio }}; overflow:hidden; background:#eceae4;">
-        <sc-if value="{{ image }}" hint-placeholder-val="">
+        <sc-if value="{{ isVideo }}" hint-placeholder-val="">
+          <video ref="{{ videoRef }}" src="{{ image }}" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease;"></video>
+        </sc-if>
+        <sc-if value="{{ isImage }}" hint-placeholder-val="">
           <img src="{{ image }}" alt="{{ title }}" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease;">
         </sc-if>
         <sc-if value="{{ placeholderText }}" hint-placeholder-val="{{ true }}">
@@ -67,8 +70,16 @@ class Component extends DCLogic {
     this.setState((s) => ({ flipped: !s.flipped }));
   };
   stop = (e) => e.stopPropagation();
+  videoRef = (el) => {
+    if (!el) return;
+    el.muted = true; el.defaultMuted = true; el.loop = true; el.playsInline = true; el.autoplay = true;
+    const play = () => el.play().catch(() => {});
+    if (el.readyState >= 2) play(); else el.addEventListener('loadeddata', play, { once: true });
+  };
   renderVals() {
     const p = this.props;
+    const imageSrc = (p.image ?? '').toString();
+    const isVideo = /\.(mp4|webm|ogv|mov)(\?|$)/i.test(imageSrc);
     return {
       toggleFlip: this.toggleFlip,
       stop: this.stop,
@@ -78,8 +89,9 @@ class Component extends DCLogic {
       desc: p.desc,
       color: p.color ?? '#211f1b',
       href: p.href ?? '#',
-      image: p.image ?? '',
-      placeholderText: p.placeholder ?? '',
+      image: imageSrc,
+      isVideo, isImage: !!imageSrc && !isVideo, videoRef: this.videoRef,
+      placeholderText: imageSrc ? '' : (p.placeholder ?? ''),
       back: p.back,
       points: p.points ?? [],
       height: p.height ?? '432px',

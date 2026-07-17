@@ -5,7 +5,7 @@ import SectionHeader from '../components/SectionHeader.astro';
 import ClassCard from '../components/ClassCard.astro';
 import Pill from '../components/Pill.astro';
 import CtaBand from '../components/CtaBand.astro';
-import { seo, links, url } from '../data/site';
+import { seo, links, url, cat } from '../data/site';
 
 const core = [
   {
@@ -17,7 +17,7 @@ const core = [
     specs: 'Level: All levels || Ages: All ages — Parent & Child (3+) to Adults || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275',
   },
   {
-    category: 'Private', tag: 'Private', title: 'Private Lessons', image: 'assets/private.gif',
+    category: 'Private', tag: 'Private', title: 'Private Lessons', image: 'assets/private.mp4',
     description: 'Three ways in: a discounted intro, ongoing 1-on-1 at standard rates, or your own specific coach to follow your whole progress.', bookingTag: 'By appointment',
     pills: '1-on-1 | All ages', actionLabel: 'See private options', href: url('private-lessons'),
     backEyebrow: 'Private · 1-on-1', backHeadline: 'Three ways to train privately',
@@ -25,7 +25,7 @@ const core = [
     specs: 'Level: All levels · built around you || Ages: Kids ≤17 & Adults 18+ || Booking: By appointment · reserve online || Price: Intro $45 · Kids from $65 · Adults from $85',
   },
   {
-    category: 'Athletic', tag: 'Athletic', title: 'Athletic Program', image: 'assets/athletic.gif',
+    category: 'Athletic', tag: 'Athletic', title: 'Athletic Program', image: 'assets/athletic.mp4',
     description: 'Train like an athlete with structured coaching and progress tracking.', bookingTag: 'Membership',
     pills: 'Ages 9+ | 90 min', mediaBadge: 'Serious students only', actionLabel: 'View program', href: url('athletic-program'),
     backEyebrow: 'Athletic · Program', backHeadline: 'Build a well-rounded athlete',
@@ -35,15 +35,22 @@ const core = [
 ];
 
 const specialized = [
-  { category: 'Flips', tag: 'Flips', title: 'Flip Class', image: 'assets/flips.gif', description: 'Master your flips, safely — from first roll to backflip.', bookingTag: 'Drop-in', pills: 'Ages 7+ | Levels 1–2', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Flips', backHeadline: 'From first roll to backflip', backBody: 'A safe, levelled path from first roll to standing backflip. Always spotted and matted.', specs: 'Level: Levels 1–2 · backflip-only track || Ages: 7+ || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { category: 'Strength', tag: 'Strength', title: 'Calisthenics', image: 'assets/calisthenics.gif', description: 'Build serious bodyweight strength and control.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Weekday evenings', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Strength', backHeadline: 'Bodyweight strength & control', backBody: 'Bodyweight strength, control and mobility. Stands alone or powers up everything else you train.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Weekday evenings || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { category: 'Tricking', tag: 'Tricking', title: 'Tricking', image: 'assets/tricking.gif', description: 'Kicks, flips and twists — martial arts meets acrobatics.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Tue & Thu — 7 PM', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Tricking', backHeadline: 'Martial arts meets acrobatics', backBody: 'Kicks, flips and twists chained into flowing combos. High-energy — and you build your own style.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Tue · Thu — 7 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { category: 'Gymnastics', tag: 'Gymnastics', title: 'Gymnastics', image: 'assets/gymnastics.gif', description: 'Strength, flexibility and clean form — the base for everything.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Tue & Fri — 6 PM', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Gymnastics', backHeadline: 'The foundation under everything', backBody: 'Strength, flexibility and clean form — the fundamentals that make everything else safer and sharper.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Tue · Fri — 6 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+  { category: 'Flips', tag: 'Flips', title: 'Flip Class', image: 'assets/flips.mp4', description: 'Master your flips, safely — a levelled path from first roll to full aerials.', bookingTag: 'Drop-in', pills: 'Ages 7+ | Levels 1–2', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Flips', backHeadline: 'A levelled path through the air', backBody: 'A safe, progressive route through the flipping fundamentals — Level 1 into Level 2. Always spotted and matted.', specs: 'Level: Levels 1–2 || Ages: 7+ || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+  { category: 'Flips', tag: 'Backflip Only', title: 'Backflip Only', image: 'assets/backflip.mp4', description: 'One goal, one class — land your first standing backflip.', bookingTag: 'Drop-in', pills: 'Adults (18+) | Sat — 12 PM', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Backflip Only', backHeadline: 'Chase the one move', backBody: 'A focused session built around a single skill: the standing backflip. Progressions, spotting and reps until it’s yours — always matted.', specs: 'Level: All levels || Ages: Adults (18+) || Schedule: Sat — 12 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+  { category: 'Strength', tag: 'Strength', title: 'Calisthenics', image: 'assets/calisthenics.mp4', description: 'Build serious bodyweight strength and control.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Weekday evenings', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Strength', backHeadline: 'Bodyweight strength & control', backBody: 'Bodyweight strength, control and mobility. Stands alone or powers up everything else you train.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Weekday evenings · exact times on the schedule || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+  { category: 'Tricking', tag: 'Tricking', title: 'Tricking', image: 'assets/tricking.mp4', description: 'Kicks, flips and twists — martial arts meets acrobatics.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Tue & Thu — 7 PM', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Tricking', backHeadline: 'Martial arts meets acrobatics', backBody: 'Kicks, flips and twists chained into flowing combos. High-energy — and you build your own style.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Tue · Thu — 7 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+  { category: 'Gymnastics', tag: 'Gymnastics', title: 'Gymnastics', image: 'assets/gymnastics.mp4', description: 'Strength, flexibility and clean form — the base for everything.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Tue & Fri — 6 PM', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Gymnastics', backHeadline: 'The foundation under everything', backBody: 'Strength, flexibility and clean form — the fundamentals that make everything else safer and sharper.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Tue · Fri — 6 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+  { category: 'Strength', tag: 'Strength', title: 'Strength', image: 'assets/strength.mp4', description: 'Targeted strength training to build raw power and resilience.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Thu & Fri evenings', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Strength', backHeadline: 'Raw power & resilience', backBody: 'Focused, progressive strength work — heavier loading and conditioning that translates straight into everything else you train.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Thu — 6 PM · Fri — 9 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+  { category: 'Flexibility', tag: 'Flexibility', title: 'Flexibility', image: 'assets/flexibility.mp4', description: 'Open up your range with active mobility and flexibility.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Fri — 7 PM', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Flexibility', backHeadline: 'More range, safer movement', backBody: 'Active mobility and flexibility drills that unlock deeper positions and keep you moving well for the long haul.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Fri — 7 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+  { category: 'Tricking', tag: 'Acro Dance', title: 'Acro Dance', image: 'assets/acrodance.mp4', description: 'Acrobatics for dancers — line, expression and performance-ready flow. Levels 1 & 2.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Mon evenings | Levels 1–2', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Acro Dance', backHeadline: 'Where acrobatics turns into artistry', backBody: 'Acrobatic technique through a dancer’s lens — clean lines, extension and controlled transitions built into expressive, performance-ready sequences. A levelled path: start in Level 1 and grow into Level 2.', specs: 'Level: Levels 1–2 || Ages: Teens & Adults (13+) || Schedule: Mon — 7 PM (L1) · 8 PM (L2) || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+  { category: 'Gymnastics', tag: 'Handstand', title: 'Handstand', image: 'assets/handstand.mp4', description: 'Balance, alignment and the path to a solid handstand.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Thu — 8 PM', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Handstand', backHeadline: 'Find your line, hold it', backBody: 'Wrist prep, alignment and balance drills that build toward a strong, controlled freestanding handstand.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Thu — 8 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+  { category: 'Parkour', tag: 'Speed League', title: 'Speed League', image: 'assets/speedleague.mp4', description: 'Timed parkour runs with coaching feedback — times posted to a public leaderboard.', bookingTag: 'Drop-in', pills: 'Ages 9+ | Wed evenings', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Speed League', backHeadline: 'Run it. Beat the clock.', backBody: 'Timed parkour runs with coaching feedback, times posted to a public leaderboard. Open to everyone as a drop-in class and part of the Athletic Program.', specs: 'Level: All levels || Ages: 9+ · split 9–14 and 15+ || Schedule: Wed — 6 PM (9–14) · 7 PM (15+) || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
+  { category: 'Strength', tag: 'Explosive', title: 'Explosive', image: 'assets/explosive.mp4', description: 'Plyometric, power-based training for explosive strength and speed.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Mon & Fri — 5 PM', actionLabel: 'View schedule', href: url('schedule'), backEyebrow: 'Explosive', backHeadline: 'Power, speed, athletic pop', backBody: 'Plyometric and power-based training to build explosive strength, speed and athletic performance. Open as a drop-in class and part of the Athletic Program.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Mon · Fri — 5 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
 ];
 
 const partnership = [
-  { category: 'Partner', tag: 'Partner', title: 'Stick Fighting Toronto', image: 'assets/stickfighting.gif', description: 'Filipino stick fighting with our partner, coach Peter.', bookingTag: 'Direct with coach', pills: 'Adults (18+) | Saturdays', actionLabel: 'Contact coach', href: 'mailto:coachpeter@stickfightingtoronto.com', backEyebrow: 'Partner · Adults', backHeadline: 'Filipino stick fighting', backBody: 'Footwork, timing and weapon flow with coach Peter. Welcoming adult class — booked directly with the coach.', specs: 'Level: All levels || Ages: Adults (18+) || Schedule: Sat — 10 AM to 12 PM || Booking: Direct with coach Peter || Price: $30 drop-in · $100 / month', backActionLabel: 'Contact coach Peter' },
-  { category: 'Partner', tag: 'Partner', title: 'Martial Arts', image: 'assets/martialarts.gif', description: 'Jiu Jitsu, Wrestling, Boxing & Muay Thai.', bookingTag: 'Direct with coach', pills: 'Ages 16+ | Grappling | Striking', actionLabel: 'Get in touch', href: 'mailto:info@themonkeyvault.com?subject=Martial%20Arts%20classes%20(for%20Ryan)', backEyebrow: 'Partner · Teens 16+ & Adults', backHeadline: 'Grappling & striking', backBody: 'Jiu Jitsu, Wrestling, Boxing and Muay Thai under partner coaches. Beginner to competitor — booked directly via WhatsApp.', specs: 'Level: All levels · beginner to competitor || Ages: 16+ || Booking: Direct via WhatsApp · ask for Ryan || Disciplines: BJJ · Wrestling · Boxing · Muay Thai' },
+  { category: 'Partner', tag: 'Partner', title: 'Stick Fighting Toronto', image: 'assets/stickfighting.mp4', description: 'Filipino stick fighting with our partner, coach Peter.', bookingTag: 'Direct with coach', pills: 'Adults (18+) | Saturdays', actionLabel: 'Contact coach', href: 'mailto:coachpeter@stickfightingtoronto.com', backEyebrow: 'Partner · Adults', backHeadline: 'Filipino stick fighting', backBody: 'Footwork, timing and weapon flow with coach Peter. Welcoming adult class — booked directly with the coach.', specs: 'Level: All levels || Ages: Adults (18+) || Schedule: Sat — 10 AM to 12 PM || Booking: Direct with coach Peter || Price: $30 drop-in · $100 / month', backActionLabel: 'Contact coach Peter' },
+  { category: 'Partner', tag: 'Partner', title: 'Martial Arts', image: 'assets/martialarts.mp4', description: 'Jiu Jitsu, Wrestling, Boxing & Muay Thai.', bookingTag: 'Direct with coach', pills: 'Ages 16+ | Grappling | Striking', actionLabel: 'Get in touch', href: 'mailto:info@themonkeyvault.com?subject=Martial%20Arts%20classes%20(for%20Ryan)', backEyebrow: 'Partner · Teens 16+ & Adults', backHeadline: 'Grappling & striking', backBody: 'Jiu Jitsu, Wrestling, Boxing and Muay Thai under partner coaches. Beginner to competitor — booked directly via WhatsApp.', specs: 'Level: All levels · beginner to competitor || Ages: 16+ || Booking: Direct via WhatsApp · ask for Ryan || Disciplines: BJJ · Wrestling · Boxing · Muay Thai' },
 ];
 
 const jumpItems = [
@@ -78,13 +85,14 @@ const jumpItems = [
     </div>
   </section>
 
-  <JumpNav items={jumpItems} top={66} />
+  <JumpNav items={jumpItems} actions={[{ label: 'Price List', href: url('pricing'), icon: 'bi bi-tag' }, { label: 'Full Schedule', href: url('schedule'), icon: 'bi bi-calendar3' }]} top={66} />
 
   <div class="trainwrap">
     <section id="opengym" class="trainsec">
-      <div class="trainsec-head"><SectionHeader num="00" eyebrow="No commitment" title="Open Gym" description="The simplest way in. Open to the public every day — no class, no booking, no time limit. Just come move." /></div>
+      <div class="trainsec-head"><SectionHeader num="00" eyebrow="No commitment" title="Open Gym" description="The simplest way in. Open to the public every day — no class, no booking, no time limit. Just come move." color={cat.openGym} /></div>
       <div class="og">
         <div class="og-body">
+          <div class="og-eyebrow"><span class="rule"></span>Open Gym · Drop-in, all ages</div>
           <h3 class="og-title">Come whenever. Stay as long as you want.</h3>
           <p class="og-lead">Full run of the gymnastics floor, foam pit, mats, weight-training section and obstacles. Dancers, athletes, families, first-timers — everyone's welcome, all ages mixed.</p>
           <div class="og-pills"><Pill variant="dark" gap={9} items="From $25 / day | No time limit | 11 AM – 10 PM daily | All ages · no prerequisites" /></div>
@@ -109,18 +117,36 @@ const jumpItems = [
       <div class="cc-grid wide">{core.map((c) => <ClassCard {...c} />)}</div>
     </section>
 
-    <section id="specialized" class="trainsec">
-      <div class="trainsec-head"><SectionHeader num="02" eyebrow="Go Deeper" title="Specialized Classes" description="Focused, skill-specific sessions for when you want to chase one discipline hard." /></div>
+    <section id="specialized" class="trainsec trainsec-specialized">
+      <div class="trainsec-head"><SectionHeader num="02" eyebrow="Go Deeper" title="Specialized Classes" description="Focused, skill-specific sessions for when you want to chase one discipline hard." color={cat.classes} /></div>
       <div class="cc-grid">{specialized.map((c) => <ClassCard {...c} />)}</div>
+
+      <div class="membership">
+        <div class="membership-body">
+          <div class="membership-eyebrow"><span class="rule"></span>One membership · all access</div>
+          <h3 class="membership-title">Every blue class, unlimited — open gym included.</h3>
+          <p class="membership-lead">One Class Membership unlocks <strong>every recreational and specialized class on this page</strong> — plus unlimited open gym. No per-class fees, no reservations, just show up.</p>
+          <div class="membership-actions">
+            <a href={`${url('store')}#classes`} class="btn btn-primary">Get the membership <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+            <a href={url('pricing')} class="btn btn-ghost-light">See the price list</a>
+          </div>
+          <p class="membership-fine">Private lessons, the Athletic Program and partner classes are billed separately.</p>
+        </div>
+        <div class="membership-price">
+          <span class="membership-num">$180</span>
+          <span class="membership-term">30 days · unlimited</span>
+          <span class="membership-note">90 / 180 / 360-day terms save more</span>
+        </div>
+      </div>
     </section>
 
-    <section id="partnership" class="trainsec">
-      <div class="trainsec-head"><SectionHeader num="03" eyebrow="With Our Partners" title="Partnership Classes" description="Run by trusted partner coaches who share our space. Booked directly with them." /></div>
+    <section id="partnership" class="trainsec trainsec-partnership">
+      <div class="trainsec-head"><SectionHeader num="03" eyebrow="With Our Partners" title="Partnership Classes" description="Run by trusted partner coaches who share our space. Booked directly with them." color={cat.partner} /></div>
       <div class="cc-grid two">{partnership.map((c) => <ClassCard {...c} />)}</div>
     </section>
   </div>
 
-  <section class="section container">
+  <section class="section container train-final-cta">
     <CtaBand cards={[
       { theme: 'dark', eyebrow: 'Passes & Drop-ins', title: 'See the Price List', icon: 'bi-tag-fill', href: url('pricing') },
       { theme: 'light', eyebrow: 'All classes, one view', title: 'Group Class Schedule', icon: 'bi-calendar3', href: url('schedule') },
@@ -150,6 +176,8 @@ const jumpItems = [
 
   .trainwrap { max-width: 1200px; margin-inline: auto; padding: 64px 24px 24px; }
   .trainsec { scroll-margin-top: 130px; margin-bottom: 72px; }
+  .trainsec-specialized { margin-bottom: 48px; }
+  .trainsec-partnership { margin-bottom: 40px; }
   .trainsec-head { margin-bottom: 30px; }
   .cc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 24px; }
   .cc-grid.wide { grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); }
@@ -157,6 +185,8 @@ const jumpItems = [
 
   .og { background: var(--ink); color: #fff; border-radius: 18px; overflow: hidden; display: grid; grid-template-columns: 1.05fr .95fr; box-shadow: var(--shadow-md); }
   .og-body { padding: 42px 44px; }
+  .og-eyebrow { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: #4caf6a; margin-bottom: 16px; }
+  .og-eyebrow .rule { width: 22px; height: 2px; background: #4caf6a; }
   .og-title { font: 800 27px/1.08 var(--font-display); letter-spacing: -.012em; margin-bottom: 14px; }
   .og-lead { font: 400 14px/1.6 var(--font-body); color: rgba(255,255,255,.7); margin-bottom: 22px; max-width: 430px; }
   .og-pills { margin-bottom: 26px; }
@@ -168,11 +198,27 @@ const jumpItems = [
   .og-ph i { font-size: 26px; color: var(--brand); }
   .og-ph-desc { font: 500 13px/1.5 var(--font-body); color: rgba(255,255,255,.6); max-width: 260px; }
 
+  .membership { margin-top: 28px; background: var(--ink); color: #fff; border-radius: 18px; overflow: hidden; display: grid; grid-template-columns: 1.35fr .65fr; box-shadow: 0 1px 3px rgba(28,25,23,.05), 0 22px 50px -36px rgba(28,25,23,.5); }
+  .membership-body { padding: 40px 44px; }
+  .membership-eyebrow { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: #4aa3f0; margin-bottom: 16px; }
+  .membership-eyebrow .rule { width: 22px; height: 2px; background: #4aa3f0; }
+  .membership-title { font: 800 clamp(24px,3.4vw,30px)/1.08 var(--font-display); letter-spacing: -.015em; margin-bottom: 12px; }
+  .membership-lead { font: 400 14px/1.6 var(--font-body); color: rgba(255,255,255,.7); margin-bottom: 20px; max-width: 480px; }
+  .membership-lead strong { color: #fff; }
+  .membership-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .membership-fine { font: 500 12px/1.5 var(--font-body); color: rgba(255,255,255,.42); margin-top: 18px; max-width: 460px; }
+  .membership-price { position: relative; background: #1a1815; border-left: 1px solid rgba(255,255,255,.08); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 36px 24px; }
+  .membership-num { font: 900 46px/1 var(--font-display); letter-spacing: -.02em; color: #4aa3f0; }
+  .membership-term { font: 700 12px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+  .membership-note { font: 500 12.5px/1.5 var(--font-body); color: rgba(255,255,255,.45); margin-top: 4px; }
+  .train-final-cta { padding-block: 24px 72px; }
+
   @media (max-width: 900px) {
     .hero2 { grid-template-columns: 1fr; gap: 40px; }
     .hero2-media { order: -1; }
     .og { grid-template-columns: 1fr; }
     .og-media { min-height: 220px; }
     .og-body { padding: 32px; }
+    .membership { grid-template-columns: 1fr; }
   }
 </style>

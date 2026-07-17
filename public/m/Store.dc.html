@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script>(function(){function w(){return (window.matchMedia&&window.matchMedia('(max-width:819px)').matches)||/Android|iPhone|iPod|Windows Phone|BlackBerry|Mobile/i.test(navigator.userAgent);}function g(){try{if(w())location.replace('mobile.html#store');}catch(e){}}g();var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(g,250);});})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
@@ -40,14 +39,14 @@
   </section>
 
   <!-- JUMP NAV -->
-  <dc-import name="JumpNav" top="66" max-width="1120" items="Open Gym#opengym | Classes#classes | Athletic#athletic | Gift Cards#gift" actions="Price List#Pricing.dc.html#bi bi-tag" hint-size="100%,52px"></dc-import>
+  <dc-import name="JumpNav" top="66" max-width="1120" items="Open Gym#opengym | Classes#classes | Athletic#athletic | Gift Cards#gift" hint-size="100%,52px"></dc-import>
 
-  <main style="max-width:1120px; margin:0 auto; padding:56px 24px 24px;">
+  <main style="max-width:1120px; margin:0 auto; padding:36px 24px 24px;">
 
     <!-- OPEN GYM -->
-    <section id="opengym" style="margin-bottom:54px; scroll-margin-top:132px;">
+    <section id="opengym" style="margin-bottom:44px; scroll-margin-top:132px;">
       <div style="margin-bottom:24px;">
-        <dc-import name="SectionHeader" num="01" eyebrow="Drop in any day" title="Open Gym" description="Come whenever, stay as long as you want — 11 AM to 10 PM daily." hint-size="100%,110px"></dc-import>
+        <dc-import name="SectionHeader" num="01" category="openGym" eyebrow="Drop in any day" title="Open Gym" description="Come whenever, stay as long as you want — 11 AM to 10 PM daily." hint-size="100%,110px"></dc-import>
       </div>
       <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:18px;">
         <dc-import name="BookingCard" color="#2e9e4f" title="Day Passes" description="Your ticket to the gym — walk in and train as long as you like. Buy one visit, or save with a pack of 10 or 20." pills="All ages | No time limit" price="From $25" price-key="openGymDay" price-note="single pass" action-label="Buy" href="{{ hrefDayPasses }}" target="_blank" hint-size="100%,290px"></dc-import>
@@ -56,9 +55,9 @@
     </section>
 
     <!-- CLASSES -->
-    <section id="classes" style="margin-bottom:54px; scroll-margin-top:132px;">
+    <section id="classes" style="margin-bottom:44px; scroll-margin-top:132px;">
       <div style="margin-bottom:24px;">
-        <dc-import name="SectionHeader" num="02" eyebrow="Passes, memberships &amp; packs" title="Classes" description="Group class passes good for any class on the schedule — plus pre-paid packs for private lessons." hint-size="100%,110px"></dc-import>
+        <dc-import name="SectionHeader" num="02" category="classes" eyebrow="Passes, memberships &amp; packs" title="Classes" description="Group class passes good for any class on the schedule — plus pre-paid packs for private lessons." hint-size="100%,110px"></dc-import>
       </div>
       <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:18px;">
         <dc-import name="BookingCard" color="#2196f3" title="Class Passes" description="Good for any group class on the schedule — no reservation, just show up. Buy one class, or save with a pack of 10 or 20." pills="Any group class | All levels" price="From $30" price-key="groupClass1x" price-note="single class" action-label="Buy" href="{{ hrefClassPasses }}" target="_blank" hint-size="100%,290px"></dc-import>
@@ -68,9 +67,9 @@
     </section>
 
     <!-- ATHLETIC -->
-    <section id="athletic" style="margin-bottom:54px; scroll-margin-top:132px;">
+    <section id="athletic" style="margin-bottom:44px; scroll-margin-top:132px;">
       <div style="margin-bottom:24px;">
-        <dc-import name="SectionHeader" num="03" eyebrow="For enrolled athletes" title="Athletic Program" description="The structured training stream — a coach confirms you're ready before your first session." hint-size="100%,110px"></dc-import>
+        <dc-import name="SectionHeader" num="03" category="athletic" eyebrow="For enrolled athletes" title="Athletic Program" description="The structured training stream — a coach confirms you're ready before your first session." hint-size="100%,110px"></dc-import>
       </div>
       <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:18px;">
         <dc-import name="BookingCard" color="#ffb82a" title="Monthly Membership" description="Unlimited Athletic Program training — grab a single month, or set it to auto-renew and pause or cancel any time." pills="Ages 9+ | One-time or auto-renew" price="$150" price-key="athleticMonthly" price-note="per month" action-label="Buy" href="{{ hrefAthleticMembership }}" target="_blank" hint-size="100%,290px"></dc-import>

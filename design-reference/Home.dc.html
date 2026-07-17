@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script>(function(){function w(){return (window.matchMedia&&window.matchMedia('(max-width:819px)').matches)||/Android|iPhone|iPod|Windows Phone|BlackBerry|Mobile/i.test(navigator.userAgent);}function g(){try{if(w())location.replace('mobile.html#home');}catch(e){}}g();var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(g,250);});})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
@@ -25,17 +24,6 @@
   .tmv-offer:hover .tmv-offer-arrow{transform:translateX(5px);}
   .tmv-offer-arrow{transition:transform .2s ease;}
   .tmv-offer-img img{transition:transform .5s ease;}
-  .hm-flip{cursor:pointer; transition:transform .2s ease;}
-  .hm-flip:hover{transform:translateY(-5px);}
-  .hm-flip-inner{position:relative; width:100%; height:100%; transition:transform .6s cubic-bezier(.2,.75,.25,1); transform-style:preserve-3d;}
-  .hm-flip[aria-pressed="true"] .hm-flip-inner{transform:rotateY(180deg);}
-  .hm-face{backface-visibility:hidden; -webkit-backface-visibility:hidden;}
-  .hm-back{position:absolute; inset:0; transform:rotateY(180deg);}
-  .hm-flip:hover .hm-front,.hm-flip:hover .hm-back{box-shadow:0 1px 3px rgba(28,25,23,.05),0 26px 48px -26px rgba(28,25,23,.5)!important;}
-  .hm-flip:hover .hm-media img{transform:scale(1.06);}
-  .hm-flipbtn:hover{background:var(--c)!important; color:#fff!important;}
-  .hm-flipback:hover{color:#211f1b!important;}
-  .hm-go:hover{gap:11px!important;}
   .tmv-camp:hover{transform:translateY(-4px);}
   .tmv-camp{transition:transform .2s ease;}
   .tmv-camp:hover .tmv-resv{gap:11px!important;}
@@ -86,12 +74,10 @@
         <p style="font:500 14px/1.6 inherit; color:rgba(255,255,255,.55); margin:26px 0 0;">New here? <a href="GetStarted.dc.html" style="color:var(--brand,#ffd400); text-decoration:none; font-weight:700;">Start with our 3-step first-visit guide →</a></p>
       </div>
       <div style="position:relative;">
-        <div style="aspect-ratio:5/4; border-radius:18px; overflow:hidden; box-shadow:0 30px 60px -25px rgba(0,0,0,.7); border:3px solid rgba(255,255,255,.08);">
-          <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:11px; text-align:center; padding:26px; background:repeating-linear-gradient(45deg,#2a2724,#2a2724 14px,#252220 14px,#252220 28px);">
-            <i class="bi bi-play-btn-fill" style="font-size:32px; color:var(--brand,#ffd400);"></i>
-            <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--brand,#ffd400);">Hero media needed</span>
-            <span style="font:500 14px/1.6 inherit; color:rgba(255,255,255,.66); max-width:250px;">A short hero video or a big action shot — an athlete mid-flip on the floor or in the foam pit.</span>
-          </div>
+        <div style="position:relative; aspect-ratio:5/4; border-radius:18px; overflow:hidden; box-shadow:0 30px 60px -25px rgba(0,0,0,.7); border:3px solid rgba(255,255,255,.08); background:#2a2724;">
+          <sc-for list="{{ heroPhotos }}" as="hp" hint-placeholder-count="1">
+            <div style="position:absolute; inset:0; background-image:url('{{ hp.src }}'); background-size:cover; background-position:center; opacity:{{ hp.op }}; transition:opacity 1s ease;"></div>
+          </sc-for>
         </div>
         <div style="position:absolute; bottom:-16px; right:-10px; background:var(--brand,#ffd400); color:#211f1b; font:800 13px/1.2 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; padding:13px 16px; border-radius:12px; box-shadow:0 12px 30px -10px rgba(0,0,0,.5);">75 Carl Hall Rd<br>Downsview Park</div>
       </div>
@@ -110,96 +96,23 @@
   <main>
 
     <!-- ============ OFFERINGS ============ -->
-    <section id="offerings" style="max-width:1200px; margin:0 auto; padding:72px 24px 12px; scroll-margin-top:80px;">
-      <div style="margin-bottom:34px;">
+    <section id="offerings" style="max-width:1200px; margin:0 auto; padding:48px 24px 56px; scroll-margin-top:80px;">
+      <div style="margin-bottom:26px;">
         <dc-import name="SectionHeader" num="01" eyebrow="Where to start" title="Three ways to get moving" description="Drop in to play, book a class, send the kids to camp, or throw a party. Tap a card for what's inside." hint-size="100%,130px"></dc-import>
       </div>
       <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:22px;">
         <sc-for list="{{ offerings }}" as="o" hint-placeholder-count="3">
-          <div class="hm-flip" aria-pressed="false" onClick="{{ toggleFlip }}" style="--c:{{ o.color }}; position:relative; height:432px; perspective:1600px;">
-            <div class="hm-flip-inner">
-
-              <!-- FRONT -->
-              <div class="hm-face hm-front" style="position:relative; min-height:100%; display:flex; flex-direction:column; background:#fff; border:1px solid #ebe9e4; border-radius:18px; overflow:hidden; box-shadow:0 1px 3px rgba(28,25,23,.05),0 16px 34px -30px rgba(28,25,23,.4);">
-                <div class="hm-media" style="position:relative; aspect-ratio:16/10; overflow:hidden; background:#eceae4;">
-                  <sc-if value="{{ o.image }}" hint-placeholder-val="">
-                    <img src="{{ o.image }}" alt="{{ o.title }}" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease;">
-                  </sc-if>
-                  <sc-if value="{{ o.placeholder }}" hint-placeholder-val="">
-                    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; text-align:center; padding:18px; background:repeating-linear-gradient(45deg,#f0eee9,#f0eee9 12px,#ebe9e3 12px,#ebe9e3 24px);">
-                      <i class="bi bi-camera" style="font-size:22px; color:#a8a49a;"></i>
-                      <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#9b9890;">Photo needed</span>
-                      <span style="font:500 12.5px/1.5 inherit; color:#7a766e; max-width:230px;">{{ o.placeholder }}</span>
-                    </div>
-                  </sc-if>
-                  <span style="position:absolute; top:12px; left:12px; z-index:2; font:700 10px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#fff; background:{{ o.color }}; padding:6px 10px; border-radius:999px;">{{ o.tag }}</span>
-                  <span class="hm-flipbtn" title="More info" style="position:absolute; top:12px; right:12px; z-index:2; width:30px; height:30px; border-radius:50%; background:rgba(28,25,23,.5); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; transition:all .15s;"><i class="bi bi-arrow-repeat"></i></span>
-                </div>
-                <div style="padding:22px 22px 24px; display:flex; flex-direction:column; flex:1;">
-                  <h3 style="font:800 22px/1.1 'Archivo',sans-serif; letter-spacing:-.01em; margin:0 0 8px;">{{ o.title }}</h3>
-                  <p style="font:400 13px/1.5 inherit; color:#5b5853; margin:0 0 16px;">{{ o.desc }}</p>
-                  <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:auto; padding-top:14px; border-top:1px solid #f0efea;">
-                    <span style="display:inline-flex; align-items:center; gap:6px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.02em; color:#9b9890;"><i class="bi bi-arrow-repeat" style="color:{{ o.color }};"></i>Tap for full details</span>
-                    <a href="{{ o.href }}" class="hm-go" style="display:inline-flex; align-items:center; gap:7px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; color:#211f1b; text-decoration:none; transition:gap .15s;">Open <i class="bi bi-arrow-right" style="color:{{ o.color }};"></i></a>
-                  </div>
-                </div>
-              </div>
-
-              <!-- BACK -->
-              <div class="hm-face hm-back" style="position:absolute; inset:0; background:#fff; border:1px solid #ebe9e4; border-radius:18px; padding:24px 24px 22px; display:flex; flex-direction:column;">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-                  <span style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:{{ o.color }};">{{ o.title }}</span>
-                  <span class="hm-flipback" style="display:inline-flex; align-items:center; gap:5px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#b0aca3; transition:color .15s;"><i class="bi bi-arrow-counterclockwise"></i> Back</span>
-                </div>
-                <h3 style="font:800 20px/1.12 'Archivo',sans-serif; letter-spacing:-.01em; margin:0 0 16px;">{{ o.back }}</h3>
-                <div style="display:flex; flex-direction:column; gap:13px;">
-                  <sc-for list="{{ o.points }}" as="pt" hint-placeholder-count="3">
-                    <div style="display:flex; align-items:flex-start; gap:11px;">
-                      <span style="flex:none; width:30px; height:30px; border-radius:9px; background:color-mix(in srgb,{{ o.color }} 13%,#fff); display:flex; align-items:center; justify-content:center;"><i class="{{ pt.icon }}" style="font-size:14px; color:{{ o.color }};"></i></span>
-                      <span style="font:600 13px/1.3 inherit; color:#3a3833; padding-top:5px;">{{ pt.text }}</span>
-                    </div>
-                  </sc-for>
-                </div>
-                <a href="{{ o.href }}" class="hm-go" style="margin-top:auto; display:inline-flex; align-items:center; gap:7px; font:800 13.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; color:#211f1b; text-decoration:none; transition:gap .15s; padding-top:16px;">Explore {{ o.title }} <i class="bi bi-arrow-right" style="color:{{ o.color }};"></i></a>
-              </div>
-
-            </div>
-          </div>
+          <dc-import name="OfferingCard" title="{{ o.title }}" tag="{{ o.tag }}" desc="{{ o.desc }}" color="{{ o.color }}" href="{{ o.href }}" image="{{ o.image }}" placeholder="{{ o.placeholder }}" back="{{ o.back }}" points="{{ o.points }}" hint-size="100%,432px"></dc-import>
         </sc-for>
-      </div>
-    </section>
-
-    <!-- ============ OPEN GYM FEATURE ============ -->
-    <section id="open-gym" style="max-width:1200px; margin:0 auto; padding:72px 24px; scroll-margin-top:80px;">
-      <div style="background:#fff; border:1px solid #ebe9e4; border-radius:22px; overflow:hidden; display:grid; grid-template-columns:1fr 1fr; box-shadow:0 1px 3px rgba(28,25,23,.05),0 22px 50px -36px rgba(28,25,23,.4);">
-        <div style="position:relative; min-height:320px; background:#eceae4;">
-          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px; text-align:center; padding:24px; background:repeating-linear-gradient(45deg,#f0eee9,#f0eee9 14px,#e9e7e1 14px,#e9e7e1 28px);">
-            <i class="bi bi-camera" style="font-size:26px; color:#a8a49a;"></i>
-            <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#9b9890;">Photo needed</span>
-            <span style="font:500 13px/1.5 'Archivo',sans-serif; color:#7a766e; max-width:260px;">Open gym in action — a wide shot of the floor, foam pit and people training.</span>
-          </div>
-        </div>
-        <div style="padding:46px 48px;">
-          <div style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#2e9e4f; margin-bottom:14px;">Open Gym</div>
-          <h2 style="font:800 32px/1.06 'Archivo',sans-serif; letter-spacing:-.015em; margin:0 0 14px;">Come whenever. Stay as long as you want.</h2>
-          <p style="font:400 14px/1.6 inherit; color:#6a6760; margin:0 0 22px;">Located in Downsview Park and open to the public every day, 11 AM–10 PM. Sign the waiver, grab a day pass, and the whole facility is yours — no time limit.</p>
-          <div data-tmv-price-sub="openGymDay" style="margin-bottom:26px;">
-            <dc-import name="Pill" variant="light" gap="9" items="$25 day pass | No time limit | Open to the public | 11 AM – 10 PM daily" hint-size="100%,34px"></dc-import>
-          </div>
-          <div style="display:flex; flex-wrap:wrap; gap:12px;">
-            <a href="Train.dc.html#opengym" class="tmv-cta" style="display:inline-flex; align-items:center; gap:9px; background:#211f1b; color:#fff; font:800 14px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:14px 22px; border-radius:11px; transition:transform .15s ease;">More information <i class="bi bi-arrow-right"></i></a>
-            <a href="https://www.themonkeyvault.com/get-started" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:9px; background:transparent; color:#211f1b; font:700 14px/1 'Archivo',sans-serif; text-decoration:none; padding:14px 20px; border-radius:11px; border:1.5px solid #ddd9d0;">Sign the waiver</a>
-          </div>
-        </div>
       </div>
     </section>
 
     <!-- ============ LATEST CAMPS BAND ============ -->
     <section id="camps" class="tmv-band" style="background:#211f1b; color:#fff; scroll-margin-top:70px;">
-      <div style="max-width:1200px; margin:0 auto; padding:66px 24px;">
-        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:34px;">
+      <div style="max-width:1200px; margin:0 auto; padding:48px 24px;">
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:26px;">
           <div>
-            <div style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--brand,#ffd400); margin-bottom:12px;">02 — Booking now</div>
+            <div style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--brand,#ffd400); margin-bottom:12px;">02 — Dated &amp; filling up</div>
             <h2 style="font:800 36px/1.04 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 8px;">Camps booking now</h2>
             <p style="font:400 15px/1.55 inherit; color:rgba(255,255,255,.66); max-width:540px; margin:0;">Dated sessions open for registration — Summer weeks and the next P.A. Day. 9 AM–2 PM with a late-pickup option. $350 a week or $90 a single day.</p>
           </div>
@@ -232,8 +145,8 @@
     </section>
 
     <!-- ============ VISIT US ============ -->
-    <section id="visit" style="max-width:1200px; margin:0 auto; padding:72px 24px; scroll-margin-top:80px;">
-      <div style="margin-bottom:34px;">
+    <section id="visit" style="max-width:1200px; margin:0 auto; padding:48px 24px; scroll-margin-top:80px;">
+      <div style="margin-bottom:26px;">
         <dc-import name="SectionHeader" num="03" eyebrow="How to reach us" title="Find us in Downsview Park" hint-size="100%,80px"></dc-import>
       </div>
       <!-- Full contact + day-by-day hours live on About (and the footer) — this is just a pointer. -->
@@ -256,7 +169,7 @@
     <dc-import name="Reviews" brand="{{ brand }}" hint-size="100%,620px"></dc-import>
 
     <!-- ============ CTA BAND (shared component) ============ -->
-    <section class="tmv-band" style="max-width:1200px; margin:0 auto; padding:48px 24px 80px;">
+    <section class="tmv-band" style="max-width:1200px; margin:0 auto; padding:32px 24px 64px;">
       <dc-import name="CtaBand" brand="{{ brand }}" cards="dark :: Passes &amp; memberships :: See the Price List :: bi-tag-fill :: Pricing.dc.html || light :: All classes, one view :: Group Class Schedule :: bi-calendar3 :: Schedule.dc.html" hint-size="100%,110px"></dc-import>
     </section>
 
@@ -271,23 +184,31 @@
   &quot;brand&quot;: {&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd400&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ffd400&quot;,&quot;#2196f3&quot;,&quot;#f44336&quot;,&quot;#2e9e4f&quot;,&quot;#8c52ff&quot;]}
 }">
 class Component extends DCLogic {
-  toggleFlip = (e) => {
-    if (e.target.closest('a')) return;
-    const card = e.currentTarget;
-    card.setAttribute('aria-pressed', card.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
-  };
+  state = { heroIdx: 0 };
   componentDidMount() {
     import('./site-config.js').then(m => m.applySiteConfig({ page: 'home' })).catch(e => console.warn(e));
+    this._heroTimer = setInterval(() => {
+      this.setState(s => ({ heroIdx: s.heroIdx + 1 }));
+    }, 4000);
   }
+  componentWillUnmount() { clearInterval(this._heroTimer); }
   renderVals() {
     const p = this.props;
+    const heroBase = 'https://97c4ca0509b4c38d26ba.cdn6.editmysite.com/uploads/b/97c4ca0509b4c38d26ba323484b80b964616e1d4454eb6debcf2c66267495c04/';
+    const heroImgs = [
+      'hero_5_1671600108.jpg', '045A1596_1671044591.JPG', '045A1295_1670786028.jpeg',
+      'hero_2_1644891308.jpeg', '045A1297%202_1671044569.JPG', '045A1273_1670786026.jpeg',
+      'hero_4_1671600111.jpg', '045A1283_1670786023.jpeg',
+    ].map(f => heroBase + f + '?width=900&optimize=medium');
+    const heroIdx = this.state.heroIdx % heroImgs.length;
+    const heroPhotos = heroImgs.map((src, i) => ({ src, op: i === heroIdx ? 1 : 0 }));
     const SUMMER = 'https://www.themonkeyvault.com/product/summer-camps-2026/R2Z7XNZMEXSG6EFR5YQRAFLO';
     const PADAY = 'https://www.themonkeyvault.com/product/pa-day-camps/7PGIQLBT3X2QUL5I4XL2VMK7';
     const BOOK = 'https://www.themonkeyvault.com/s/appointments';
     return {
       brand: p.brand ?? '#ffd400',
       year: new Date().getFullYear(),
-      toggleFlip: this.toggleFlip,
+      heroPhotos,
       trust: [
         { icon:'bi bi-patch-check-fill', title:'Trained coaches', sub:'Every class, every level' },
         { icon:'bi bi-shield-check', title:'Padded floors & foam pit', sub:'Safety built into the space' },
@@ -296,7 +217,7 @@ class Component extends DCLogic {
         { icon:'bi bi-credit-card-2-front', title:'Easy online booking', sub:'Secure card payments' },
       ],
       offerings: [
-        { title:'Train', tag:'Classes · Open Gym', color:'#2196f3', image:'', placeholder:'Athletes training — open gym floor or a class mid-session', href:'Train.dc.html',
+        { title:'Train', tag:'Classes · Open Gym', color:'#2196f3', image:'assets/athletic.mp4', placeholder:'Athletes training — open gym floor or a class mid-session', href:'Train.dc.html',
           desc:'Drop in for open gym, book a class, or train like an athlete — every age and level.',
           back:'How you can train', points:[
             { icon:'bi bi-unlock', text:'Open Gym — drop in daily, no time limit' },
@@ -304,7 +225,7 @@ class Component extends DCLogic {
             { icon:'bi bi-trophy', text:'Athletic Program — structured, athlete-level coaching' },
             { icon:'bi bi-person-arms-up', text:'Private — one-on-one, built around your goals' },
           ] },
-        { title:'Camps', tag:'Kids 5+', color:'#e27902', image:'', placeholder:'Kids at camp — a group shot or a candid mid-activity photo', href:'Camps.dc.html',
+        { title:'Camps', tag:'Kids 5+', color:'#e27902', image:'assets/camps-home.png', placeholder:'Kids at camp — a group shot or a candid mid-activity photo', href:'Camps.dc.html',
           desc:'Full days of skills, flips, games and friends over school breaks and P.A. days.',
           back:'Pick your camp', points:[
             { icon:'bi bi-calendar-week', text:'Weekly Camps — Winter, March & Summer' },

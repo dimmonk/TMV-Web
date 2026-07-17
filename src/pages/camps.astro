@@ -77,7 +77,7 @@ const facts = [
   <JumpNav items={[{ label: 'The Camps', id: 'camps' }, { label: 'A Day at Camp', id: 'know' }]} actions={[{ label: 'Price List', href: url('pricing'), icon: 'bi bi-tag' }]} top={66} />
 
   <section id="camps" class="section container" style="scroll-margin-top:132px">
-    <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Pick your camp" title="Three ways to camp with us" description="Book a full week of camp, gather your own crew for a private day, or grab a single P.A. Day spot." /></div>
+    <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Pick your camp" title="Three ways to camp with us" description="Book a full week of camp, gather your own crew for a private day, or grab a single P.A. Day spot." color={cat.camps} /></div>
     <div class="camps-grid">
       {camps.map((c) => (
         <article class="campflip" style={`--c:${cat.camps}`} aria-pressed="false">
@@ -184,7 +184,7 @@ const facts = [
 
   .know { background: #fff; border: 1px solid var(--line); border-radius: 22px; overflow: hidden; box-shadow: var(--shadow-md); display: grid; grid-template-columns: 1fr 1.25fr; }
   .know-left { background: var(--ink); color: #fff; padding: 44px 46px; }
-  .know-eyebrow { font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 14px; }
+  .know-eyebrow { font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: #e27902; margin-bottom: 14px; }
   .know-title { font: 800 30px/1.08 var(--font-display); letter-spacing: -.015em; margin-bottom: 16px; }
   .know-lead { font: 400 13px/1.5 var(--font-body); color: rgba(255,255,255,.66); margin-bottom: 24px; }
   .know-sched { display: flex; flex-direction: column; margin-bottom: 24px; }

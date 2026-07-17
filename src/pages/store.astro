@@ -22,7 +22,7 @@ import { sq } from '../data/square-links';
 
   <div class="storewrap">
     <section id="opengym" class="storesec">
-      <div class="storesec-head"><SectionHeader num="01" eyebrow="Drop in any day" title="Open Gym" description="Come whenever, stay as long as you want — 11 AM to 10 PM daily." /></div>
+      <div class="storesec-head"><SectionHeader num="01" eyebrow="Drop in any day" title="Open Gym" description="Come whenever, stay as long as you want — 11 AM to 10 PM daily." color={cat.openGym} /></div>
       <div class="storegrid">
         <BookingCard color={cat.openGym} title="Day Passes" description="Your ticket to the gym — walk in and train as long as you like. Buy one visit, or save with a pack of 10 or 20." pills="All ages | No time limit" price="From $25" priceNote="single pass" actionLabel="Buy" href={sq.store.dayPasses} target="_blank" />
         <BookingCard color={cat.openGym} title="Open Gym Membership" description="Come every day if you want — unlimited open gym for whatever stretch suits you, 30 days to a full year." pills="Unlimited visits | 30–360 days" price="From $110" priceNote="30 days" actionLabel="Buy" href={sq.store.openGymMembership} target="_blank" />
@@ -30,7 +30,7 @@ import { sq } from '../data/square-links';
     </section>
 
     <section id="classes" class="storesec">
-      <div class="storesec-head"><SectionHeader num="02" eyebrow="Passes, memberships & packs" title="Classes" description="Group class passes good for any class on the schedule — plus pre-paid packs for private lessons." /></div>
+      <div class="storesec-head"><SectionHeader num="02" eyebrow="Passes, memberships & packs" title="Classes" description="Group class passes good for any class on the schedule — plus pre-paid packs for private lessons." color={cat.classes} /></div>
       <div class="storegrid">
         <BookingCard color={cat.classes} title="Class Passes" description="Good for any group class on the schedule — no reservation, just show up. Buy one class, or save with a pack of 10 or 20." pills="Any group class | All levels" price="From $30" priceNote="single class" actionLabel="Buy" href={sq.store.classPasses} target="_blank" />
         <BookingCard color={cat.classes} title="Class Membership" description="Everything drop-in, one flat month — unlimited group classes and unlimited open gym for 30 days." pills="Classes + open gym | Unlimited" price="$180" priceNote="30 days" actionLabel="Buy" href={sq.store.classMembership} target="_blank" />
@@ -39,7 +39,7 @@ import { sq } from '../data/square-links';
     </section>
 
     <section id="athletic" class="storesec">
-      <div class="storesec-head"><SectionHeader num="03" eyebrow="For enrolled athletes" title="Athletic Program" description="The structured training stream — a coach confirms you're ready before your first session." /></div>
+      <div class="storesec-head"><SectionHeader num="03" eyebrow="For enrolled athletes" title="Athletic Program" description="The structured training stream — a coach confirms you're ready before your first session." color={cat.athletic} /></div>
       <div class="storegrid">
         <BookingCard color={cat.athletic} title="Monthly Membership" description="Unlimited Athletic Program training — grab a single month, or set it to auto-renew and pause or cancel any time." pills="Ages 9+ | One-time or auto-renew" price="$150" priceNote="per month" actionLabel="Buy" href={sq.store.athleticMembership} target="_blank" />
       </div>

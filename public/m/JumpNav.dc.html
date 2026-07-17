@@ -18,9 +18,11 @@
   .jn-act:hover{color:#211f1b!important; gap:8px!important;}
   .jn-top{transition:transform .15s ease, box-shadow .15s ease;}
   .jn-top:hover{transform:translateY(-3px); box-shadow:0 16px 32px -10px rgba(28,25,23,.6);}
+  /* dc-import wraps this in a shrink-wrapped .sc-host mount; collapse it so the sticky wrapper's containing block is the tall page, not the 56px mount */
+  .sc-host:has(> .jn-sticky){display:contents;}
 </style>
 </helmet>
-<div style="position:sticky; top:{{ topPx }}; z-index:40; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;">
+<div class="jn-sticky" style="position:sticky; top:{{ topPx }}; z-index:40; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;">
   <div style="background:rgba(245,244,241,.92); backdrop-filter:saturate(140%) blur(8px); -webkit-backdrop-filter:saturate(140%) blur(8px); border-bottom:1px solid #e7e5df;">
   <div style="max-width:{{ maxWidthPx }}; margin:0 auto; padding:13px 24px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
     <span style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.13em; text-transform:uppercase; color:#9b9890; margin-right:6px; flex:none;">{{ label }}</span>

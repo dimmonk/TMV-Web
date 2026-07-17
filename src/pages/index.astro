@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import Pill from '../components/Pill.astro';
 import Reviews from '../components/Reviews.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { seo, links, cat, site, url } from '../data/site';
@@ -9,6 +8,7 @@ import { seo, links, cat, site, url } from '../data/site';
 const offerings = [
   {
     title: 'Train', tag: 'Classes · Open Gym', color: cat.classes, href: url('train'),
+    image: 'assets/athletic.mp4',
     placeholder: 'Athletes training — open gym floor or a class mid-session',
     desc: 'Drop in for open gym, book a class, or train like an athlete — every age and level.',
     back: 'How you can train',
@@ -21,6 +21,7 @@ const offerings = [
   },
   {
     title: 'Camps', tag: 'Kids 5+', color: cat.camps, href: url('camps'),
+    image: 'assets/camps-home.png',
     placeholder: 'Kids at camp — a group shot or a candid mid-activity photo',
     desc: 'Full days of skills, flips, games and friends over school breaks and P.A. days.',
     back: 'Pick your camp',
@@ -42,6 +43,13 @@ const offerings = [
     ],
   },
 ];
+
+const heroBase = 'https://97c4ca0509b4c38d26ba.cdn6.editmysite.com/uploads/b/97c4ca0509b4c38d26ba323484b80b964616e1d4454eb6debcf2c66267495c04/';
+const heroPhotos = [
+  'hero_5_1671600108.jpg', '045A1596_1671044591.JPG', '045A1295_1670786028.jpeg',
+  'hero_2_1644891308.jpeg', '045A1297%202_1671044569.JPG', '045A1273_1670786026.jpeg',
+  'hero_4_1671600111.jpg', '045A1283_1670786023.jpeg',
+].map((f) => `${heroBase}${f}?width=900&optimize=medium`);
 
 const camps = [
   {
@@ -85,12 +93,10 @@ const camps = [
         <p class="hero-new">New here? <a href={url('get-started')}>Start with our 3-step first-visit guide →</a></p>
       </div>
       <div class="hero-media">
-        <div class="hero-frame">
-          <div class="hero-ph">
-            <i class="bi bi-play-btn-fill" aria-hidden="true"></i>
-            <span class="hero-ph-tag">Hero media needed</span>
-            <span class="hero-ph-desc">A short hero video or a big action shot — an athlete mid-flip on the floor or in the foam pit.</span>
-          </div>
+        <div class="hero-frame" id="hero-carousel">
+          {heroPhotos.map((src, i) => (
+            <div class="hero-slide" style={`background-image:url('${src}'); opacity:${i === 0 ? 1 : 0}`}></div>
+          ))}
         </div>
         <div class="hero-badge">75 Carl Hall Rd<br>Downsview Park</div>
       </div>
@@ -117,11 +123,17 @@ const camps = [
           <div class="flip-inner">
             <div class="flip-face flip-front">
               <div class="flip-media">
-                <div class="flip-ph">
-                  <i class="bi bi-camera" aria-hidden="true"></i>
-                  <span class="flip-ph-tag">Photo needed</span>
-                  <span class="flip-ph-desc">{o.placeholder}</span>
-                </div>
+                {o.image ? (
+                  /\.(mp4|webm|ogv|mov)(\?|$)/i.test(o.image)
+                    ? <video class="flip-img" src={url(o.image)} muted autoplay loop playsinline webkit-playsinline></video>
+                    : <img class="flip-img" src={url(o.image)} alt={o.title} loading="lazy" />
+                ) : (
+                  <div class="flip-ph">
+                    <i class="bi bi-camera" aria-hidden="true"></i>
+                    <span class="flip-ph-tag">Photo needed</span>
+                    <span class="flip-ph-desc">{o.placeholder}</span>
+                  </div>
+                )}
                 <span class="flip-tag" style={`background:${o.color}`}>{o.tag}</span>
                 <button class="flip-btn" type="button" aria-label="Flip card"><i class="bi bi-arrow-repeat" aria-hidden="true"></i></button>
               </div>
@@ -153,29 +165,6 @@ const camps = [
           </div>
         </div>
       ))}
-    </div>
-  </section>
-
-  <!-- OPEN GYM FEATURE -->
-  <section id="open-gym" class="section container">
-    <div class="feature">
-      <div class="feature-media">
-        <div class="feature-ph">
-          <i class="bi bi-camera" aria-hidden="true"></i>
-          <span class="flip-ph-tag">Photo needed</span>
-          <span class="flip-ph-desc">Open gym in action — a wide shot of the floor, foam pit and people training.</span>
-        </div>
-      </div>
-      <div class="feature-body">
-        <div class="feature-eyebrow">Open Gym</div>
-        <h2 class="feature-title">Come whenever. Stay as long as you want.</h2>
-        <p class="feature-lead">Located in Downsview Park and open to the public every day, 11 AM–10 PM. Sign the waiver, grab a day pass, and the whole facility is yours — no time limit.</p>
-        <div class="feature-pills"><Pill variant="light" gap={9} items="$25 day pass | No time limit | Open to the public | 11 AM – 10 PM daily" /></div>
-        <div class="feature-actions">
-          <a href={`${url('train')}#opengym`} class="btn btn-dark">More information <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-          <a href={links.getStartedWaiver} target="_blank" rel="noopener" class="btn btn-ghost">Sign the waiver</a>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -217,7 +206,7 @@ const camps = [
   </section>
 
   <!-- VISIT -->
-  <section id="visit" class="section container">
+  <section id="visit" class="section container visit">
     <div class="visit-head"><SectionHeader num="03" eyebrow="How to reach us" title="Find us in Downsview Park" /></div>
     <div class="visit-card">
       <div class="visit-left">
@@ -236,7 +225,7 @@ const camps = [
 
   <Reviews />
 
-  <section class="section container">
+  <section class="section container final-cta">
     <CtaBand cards={[
       { theme: 'dark', eyebrow: 'Passes & memberships', title: 'See the Price List', icon: 'bi-tag-fill', href: url('pricing') },
       { theme: 'light', eyebrow: 'All classes, one view', title: 'Group Class Schedule', icon: 'bi-calendar3', href: url('schedule') },
@@ -263,11 +252,8 @@ const camps = [
   .hero-new { font: 500 14px/1.6 var(--font-body); color: rgba(255,255,255,.55); margin-top: 26px; }
   .hero-new a { color: var(--brand); text-decoration: none; font-weight: 700; }
   .hero-media { position: relative; }
-  .hero-frame { aspect-ratio: 5/4; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 60px -25px rgba(0,0,0,.7); border: 3px solid rgba(255,255,255,.08); }
-  .hero-ph { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 11px; text-align: center; padding: 26px; background: repeating-linear-gradient(45deg, #2a2724, #2a2724 14px, #252220 14px, #252220 28px); }
-  .hero-ph i { font-size: 32px; color: var(--brand); }
-  .hero-ph-tag { font: 700 10px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); }
-  .hero-ph-desc { font: 500 14px/1.6 var(--font-body); color: rgba(255,255,255,.66); max-width: 250px; }
+  .hero-frame { position: relative; aspect-ratio: 5/4; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 60px -25px rgba(0,0,0,.7); border: 3px solid rgba(255,255,255,.08); background: #2a2724; }
+  .hero-slide { position: absolute; inset: 0; background-size: cover; background-position: center; transition: opacity 1s ease; }
   .hero-badge { position: absolute; bottom: -16px; right: -10px; background: var(--brand); color: var(--ink); font: 800 13px/1.2 var(--font-display); text-transform: uppercase; letter-spacing: .03em; padding: 13px 16px; border-radius: 12px; box-shadow: 0 12px 30px -10px rgba(0,0,0,.5); }
 
   /* BOOK STRIP */
@@ -278,8 +264,8 @@ const camps = [
   .bookstrip-inner a { margin-left: auto; font: 800 13px/1 var(--font-display); text-transform: uppercase; letter-spacing: .04em; color: var(--brand); text-decoration: none; display: inline-flex; align-items: center; gap: 7px; }
 
   /* OFFERINGS / FLIP CARDS */
-  .offerings { scroll-margin-top: 80px; }
-  .offerings-head { margin-bottom: 34px; }
+  .offerings { scroll-margin-top: 80px; padding-block: 48px 56px; }
+  .offerings-head { margin-bottom: 26px; }
   .flip { position: relative; height: 432px; perspective: 1600px; }
   .flip-inner { position: relative; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.2,.75,.25,1); transform-style: preserve-3d; }
   .flip.flipped .flip-inner { transform: rotateY(180deg); }
@@ -288,6 +274,8 @@ const camps = [
   .flip-front { position: relative; min-height: 100%; display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
   .flip-back { position: absolute; inset: 0; transform: rotateY(180deg); background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 24px 24px 22px; display: flex; flex-direction: column; }
   .flip-media { position: relative; aspect-ratio: 16/10; overflow: hidden; background: #eceae4; }
+  .flip-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+  .flip:hover .flip-img { transform: scale(1.06); }
   .flip-ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 18px; background: repeating-linear-gradient(45deg, #f0eee9, #f0eee9 12px, #ebe9e3 12px, #ebe9e3 24px); }
   .flip-ph i { font-size: 22px; color: #a8a49a; }
   .flip-ph-tag { font: 700 10px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted-3); }
@@ -311,22 +299,10 @@ const camps = [
   .flip-point span:last-child { padding-top: 5px; }
   .flip-go-back { margin-top: auto; padding-top: 16px; }
 
-  /* OPEN GYM FEATURE */
-  .feature { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; display: grid; grid-template-columns: 1fr 1fr; box-shadow: var(--shadow-md); }
-  .feature-media { position: relative; min-height: 320px; background: #eceae4; }
-  .feature-ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; text-align: center; padding: 24px; background: repeating-linear-gradient(45deg, #f0eee9, #f0eee9 14px, #e9e7e1 14px, #e9e7e1 28px); }
-  .feature-ph i { font-size: 26px; color: #a8a49a; }
-  .feature-body { padding: 46px 48px; }
-  .feature-eyebrow { font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--c-opengym); margin-bottom: 14px; }
-  .feature-title { font: 800 clamp(26px,4vw,32px)/1.06 var(--font-display); letter-spacing: -.015em; margin-bottom: 14px; }
-  .feature-lead { font: 400 14px/1.6 var(--font-body); color: var(--muted); margin-bottom: 22px; }
-  .feature-pills { margin-bottom: 26px; }
-  .feature-actions { display: flex; flex-wrap: wrap; gap: 12px; }
-
   /* CAMPS BAND */
   .camps-band { background: var(--ink); color: #fff; }
-  .camps-band .container { padding-block: 66px; }
-  .camps-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 34px; }
+  .camps-band .container { padding-block: 48px; }
+  .camps-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 26px; }
   .camps-eyebrow { font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 12px; }
   .camps-title { font: 800 clamp(28px,5vw,36px)/1.04 var(--font-display); letter-spacing: -.018em; margin-bottom: 8px; }
   .camps-lead { font: 400 15px/1.55 var(--font-body); color: rgba(255,255,255,.66); max-width: 540px; }
@@ -349,7 +325,9 @@ const camps = [
   .camp-resv:hover { gap: 11px; }
 
   /* VISIT */
-  .visit-head { margin-bottom: 34px; }
+  .visit { padding-block: 48px; }
+  .visit-head { margin-bottom: 26px; }
+  .final-cta { padding-block: 32px 64px; }
   .visit-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 26px 30px; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: space-between; gap: 22px; flex-wrap: wrap; }
   .visit-left { display: flex; align-items: center; gap: 16px; }
   .visit-ic { flex: none; width: 42px; height: 42px; border-radius: 11px; background: #f3f2ee; display: flex; align-items: center; justify-content: center; font-size: 18px; }
@@ -362,9 +340,6 @@ const camps = [
   @media (max-width: 900px) {
     .hero-inner { grid-template-columns: 1fr; gap: 40px; }
     .hero-media { order: -1; }
-    .feature { grid-template-columns: 1fr; }
-    .feature-media { min-height: 220px; }
-    .feature-body { padding: 32px; }
   }
   @media (max-width: 520px) {
     .hero-stat { padding-right: 18px; margin-right: 18px; }
@@ -380,4 +355,18 @@ const camps = [
       card.classList.toggle('flipped');
     });
   });
+
+  // Hero photo carousel: cross-fade through the slides every 4s.
+  const carousel = document.getElementById('hero-carousel');
+  if (carousel) {
+    const slides = Array.from(carousel.querySelectorAll<HTMLElement>('.hero-slide'));
+    let idx = 0;
+    if (slides.length > 1) {
+      setInterval(() => {
+        slides[idx].style.opacity = '0';
+        idx = (idx + 1) % slides.length;
+        slides[idx].style.opacity = '1';
+      }, 4000);
+    }
+  }
 </script>

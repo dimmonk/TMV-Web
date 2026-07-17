@@ -54,13 +54,16 @@ const backAction = backActionLabel.trim() || actionLabel;
 // external links (mailto:, http) open as-is; internal ".dc.html" refs are mapped by callers
 const isExternal = /^(https?:|mailto:)/.test(href);
 const src = image.startsWith('assets/') ? url(image) : image;
+const isVideo = /\.(mp4|webm|ogv|mov)(\?|$)/i.test(image);
 ---
 <article class:list={['cc', { flippable: hasBack }]} style={`--cat:${catColor}; --cat-ink:${catInk}`} aria-pressed="false">
   <div class="cc-inner">
     <div class="cc-face cc-front">
       <div class="cc-strip"></div>
       <div class="cc-media">
-        <img class="cc-img" src={src} alt={title} loading="lazy" />
+        {isVideo
+          ? <video class="cc-img" src={src} muted autoplay loop playsinline webkit-playsinline></video>
+          : <img class="cc-img" src={src} alt={title} loading="lazy" />}
         <div class="cc-tags">
           <span class="cc-tag" style={`color:${tagText}`}>{tagLabel}</span>
           {mediaBadge && <span class="cc-badge"><i class="bi bi-lock-fill" aria-hidden="true"></i>{mediaBadge}</span>}

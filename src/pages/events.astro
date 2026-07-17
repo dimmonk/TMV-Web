@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import Pill from '../components/Pill.astro';
-import { seo, links, site } from '../data/site';
+import { seo, links, site, cat, url } from '../data/site';
 
 const partyImg = 'https://97c4ca0509b4c38d26ba.cdn6.editmysite.com/uploads/b/97c4ca0509b4c38d26ba323484b80b964616e1d4454eb6debcf2c66267495c04/045A1402%203_1671609291.JPG?width=1200&optimize=medium';
 
@@ -60,7 +60,7 @@ const tiers = [
   <JumpNav items={[{ label: 'Birthdays', id: 'birthdays' }, { label: 'Birthday FAQ', id: 'faq' }, { label: 'Groups & Teams', id: 'groups' }]} actions={[{ label: 'Book a party', href: links.booking, icon: 'bi bi-calendar-check' }]} top={66} />
 
   <section id="birthdays" class="section container" style="scroll-margin-top:140px">
-    <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Birthdays" title="Two ways to celebrate" description="Go all-in with the full package, or keep it nimble with a Mini party for smaller groups and last-minute plans." /></div>
+    <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Birthdays" title="Two ways to celebrate" description="Go all-in with the full package, or keep it nimble with a Mini party for smaller groups and last-minute plans." color={cat.parties} /></div>
     <div class="ev-parties">
       <div class="ev-full">
         <div class="ev-full-media"><img src={partyImg} alt="Kids and coaches mid-session on the gym floor" loading="lazy" /><span class="ev-popular">Most popular</span></div>
@@ -80,7 +80,7 @@ const tiers = [
             </div>
             <div class="ev-full-actions">
               <a href={links.booking} target="_blank" rel="noopener" class="btn btn-dark">Book your party <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
-              <a href="https://www.themonkeyvault.com/invitations" target="_blank" rel="noopener" class="btn btn-ghost">Make an invitation</a>
+              <a href={url('make-invitation')} class="btn btn-ghost">Make an invitation</a>
             </div>
           </div>
         </div>
@@ -146,7 +146,7 @@ const tiers = [
   </section>
 
   <section id="groups" class="section container" style="scroll-margin-top:140px; padding-bottom:80px">
-    <div style="margin-bottom:34px"><SectionHeader num="02" eyebrow="Groups & organizations" title="Bring your whole group" description="Schools, corporate teams, youth organizations and sports teams — a fun, active way to build teamwork, confidence and skills." /></div>
+    <div style="margin-bottom:34px"><SectionHeader num="02" eyebrow="Groups & organizations" title="Bring your whole group" description="Schools, corporate teams, youth organizations and sports teams — a fun, active way to build teamwork, confidence and skills." color={cat.groups} /></div>
     <div class="ev-groups">
       <div class="ev-gcard">
         <div class="ev-ghead"><span class="ev-gic" style="background:color-mix(in srgb,#8c52ff 14%,#fff)"><i class="bi bi-people-fill" style="color:#8c52ff" aria-hidden="true"></i></span><div><div class="ev-geyebrow" style="color:#8c52ff">Group Events</div><div class="ev-gtitle">Field trips &amp; team-building</div></div></div>

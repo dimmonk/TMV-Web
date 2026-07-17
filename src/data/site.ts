@@ -73,6 +73,7 @@ export const cat = {
   parties: '#ffd400',
   groups: '#8c52ff',
   intro: '#6e6e6e',
+  partner: '#0d9488',
 } as const;
 
 /** Primary nav — label + route key. Routes resolve through `url()`. */
@@ -112,6 +113,11 @@ export const seo = {
     title: 'Birthday Parties & Group Events | The Monkey Vault Toronto',
     description:
       'Throw an unforgettable parkour birthday party or book a group event for your school, team or organization at The Monkey Vault in Toronto.',
+  },
+  makeInvitation: {
+    title: 'Invitation Maker | The Monkey Vault Toronto',
+    description:
+      "Make a birthday invitation for your Monkey Vault party in seconds — pick a style, fill in the details, and download to text, post or print.",
   },
   pricing: {
     title: 'Passes, Memberships & Pricing | The Monkey Vault',
