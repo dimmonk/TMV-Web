@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import Reviews from '../components/Reviews.astro';
 import CtaBand from '../components/CtaBand.astro';
-import { seo, links, cat, site, url } from '../data/site';
+import { seo, links, cat, url } from '../data/site';
 
 const offerings = [
   {
@@ -205,25 +205,7 @@ const camps = [
     </div>
   </section>
 
-  <!-- VISIT -->
-  <section id="visit" class="section container visit">
-    <div class="visit-head"><SectionHeader num="03" eyebrow="How to reach us" title="Find us in Downsview Park" /></div>
-    <div class="visit-card">
-      <div class="visit-left">
-        <span class="visit-ic"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></span>
-        <div>
-          <div class="visit-addr">75 Carl Hall Rd, Unit 15 · Toronto</div>
-          <div class="visit-hours">Open 7 days a week, 11 AM – 10 PM</div>
-        </div>
-      </div>
-      <div class="visit-actions">
-        <a href={site.mapUrl} target="_blank" rel="noopener" class="btn btn-primary">Get directions <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
-        <a href={url('about')} class="btn btn-ghost">Visit us — full details <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-      </div>
-    </div>
-  </section>
-
-  <Reviews />
+  <Reviews eyebrow="03 — What people say" />
 
   <section class="section container final-cta">
     <CtaBand cards={[
@@ -324,17 +306,7 @@ const camps = [
   .camp-resv { display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: #fff; font: 800 12.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; text-decoration: none; padding: 12px 18px; border-radius: 10px; transition: gap .18s ease; }
   .camp-resv:hover { gap: 11px; }
 
-  /* VISIT */
-  .visit { padding-block: 48px; }
-  .visit-head { margin-bottom: 26px; }
   .final-cta { padding-block: 32px 64px; }
-  .visit-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 26px 30px; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: space-between; gap: 22px; flex-wrap: wrap; }
-  .visit-left { display: flex; align-items: center; gap: 16px; }
-  .visit-ic { flex: none; width: 42px; height: 42px; border-radius: 11px; background: #f3f2ee; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-  .visit-addr { font: 800 16px/1.2 var(--font-display); }
-  .visit-hours { font: 600 13px/1.4 var(--font-body); color: var(--muted-2); margin-top: 5px; }
-  .visit-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .visit-actions .btn { padding: 13px 20px; font-size: 13px; }
 
   /* RESPONSIVE */
   @media (max-width: 900px) {
