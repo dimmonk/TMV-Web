@@ -809,8 +809,12 @@ const clientConfig = {
 </style>
 
 <script>
-  import { matchesFilter, fmtClassTimeRange } from '../../lib/print-schedule-sheet.js';
-  import { PRICE_LIST_SECTIONS, PRICE_LIST_FOOTNOTES, formatPrice } from '../../lib/price-list-layout.js';
+  // The schedule/price helpers are dynamically imported when their screen first
+  // opens (matching the original runtime). This also avoids a static-bundle
+  // module-init ordering (TDZ) issue that only surfaced in the CI-minified build.
+  let _matchesFilter: (c: any, f: string) => boolean;
+  let _fmtRange: (s: string, e: string) => string;
+  let _sections: any[], _footnotes: string[], _formatPrice: (v: any, s?: string) => string;
 
   const cfg = JSON.parse(document.getElementById('m-config')!.textContent || '{}');
   const CAT = cfg.cat || {};
@@ -848,18 +852,6 @@ const clientConfig = {
     if (screen === 'schedule') ensureSchedule();
     if (screen === 'pricing') ensurePricing();
   }
-
-  // nav + goto buttons set the hash; the hashchange handler renders.
-  navBtns.forEach((b) => b.addEventListener('click', () => { location.hash = b.dataset.nav || 'home'; }));
-  document.querySelectorAll<HTMLElement>('[data-goto]').forEach((el) => {
-    el.addEventListener('click', () => { location.hash = el.dataset.goto || ''; });
-  });
-  document.querySelector('[data-back]')?.addEventListener('click', () => {
-    if (history.length > 1) history.back();
-    else location.hash = 'more';
-  });
-  window.addEventListener('hashchange', render);
-  render();
 
   // ---- live status pill (gym timezone, 60s tick) ----
   function formatHour12(totalMinutes: number) {
@@ -916,7 +908,7 @@ const clientConfig = {
     return out;
   }
   function buildDays(filter: string) {
-    const list = filter === 'open-gym' ? openGymEntries() : (schedClasses || []).filter((c) => matchesFilter(c, filter));
+    const list = filter === 'open-gym' ? openGymEntries() : (schedClasses || []).filter((c) => _matchesFilter(c, filter));
     const today = new Date().getDay();
     const key = (t: string) => { const [h, m] = String(t || '').split(':'); return (parseInt(h, 10) || 0) * 60 + (parseInt(m || '0', 10) || 0); };
     const days: any[] = [];
@@ -926,7 +918,7 @@ const clientConfig = {
       days.push({
         label: (d === today ? 'Today · ' : '') + DAY_LONG[d],
         sessions: sessions.map((c) => ({
-          name: c.disciplineName || '', range: fmtClassTimeRange(c.time, c.endTime, { suffix: 'long', sep: ' – ' }),
+          name: c.disciplineName || '', range: _fmtRange(c.time, c.endTime),
           age: c.ageGroupName || '', color: c.color || '#2196f3',
           isNew: !!c.isNew && !c.isCancelled, isCancelled: !!c.isCancelled,
         })),
@@ -969,8 +961,16 @@ const clientConfig = {
   }
   function loadSchedule() {
     schedErr = false; schedClasses = null; renderSchedule();
-    fetch(SCHEDULE_API).then((r) => r.json())
-      .then((json) => { schedClasses = (json && json.success && json.data && json.data.classes) || []; renderSchedule(); })
+    Promise.all([
+      import('../../lib/print-schedule-sheet.js'),
+      fetch(SCHEDULE_API).then((r) => r.json()),
+    ])
+      .then(([mod, json]) => {
+        _matchesFilter = mod.matchesFilter;
+        _fmtRange = (s: string, e: string) => mod.fmtClassTimeRange(s, e, { suffix: 'long', sep: ' – ' });
+        schedClasses = (json && json.success && json.data && json.data.classes) || [];
+        renderSchedule();
+      })
       .catch((e) => { console.warn('[schedule] load failed', e); schedErr = true; renderSchedule(); });
   }
   function ensureSchedule() { if (schedStarted) return; schedStarted = true; renderChips(); loadSchedule(); }
@@ -998,9 +998,9 @@ const clientConfig = {
   function rowsForItems(items: any[]) {
     const rows: any[] = [];
     (items || []).forEach((it) => {
-      if (it.priceKey !== undefined) rows.push({ t: 'normal', label: it.label, val: formatPrice(priceList[it.priceKey], it.suffix) });
+      if (it.priceKey !== undefined) rows.push({ t: 'normal', label: it.label, val: _formatPrice(priceList[it.priceKey], it.suffix) });
       else if (it.label) rows.push({ t: 'head', label: it.label });
-      (it.bullets || []).forEach((b: any) => { if (b.priceKey) rows.push({ t: 'sub', label: b.label || b.priceKey, val: formatPrice(priceList[b.priceKey], b.suffix) }); });
+      (it.bullets || []).forEach((b: any) => { if (b.priceKey) rows.push({ t: 'sub', label: b.label || b.priceKey, val: _formatPrice(priceList[b.priceKey], b.suffix) }); });
     });
     return rows;
   }
@@ -1020,7 +1020,7 @@ const clientConfig = {
       return;
     }
     if (!priceList) { priceBody.innerHTML = `<div class="m-loading"><span class="m-spin"></span><span>Loading live prices…</span></div>`; return; }
-    const groups = PRICE_LIST_SECTIONS.map((s: any) => {
+    const groups = _sections.map((s: any) => {
       const color = PRICE_COLORS[s.id] || '#211f1b';
       return { title: s.title, color, ink: pickInk(color), icon: PRICE_ICONS[s.id] || 'bi-tag-fill', rows: sectionRows(s) };
     });
@@ -1039,15 +1039,38 @@ const clientConfig = {
         </div>
       </div>`).join('')
       + `<div class="m-autonote" style="margin-bottom:16px"><i class="bi bi-arrow-repeat"></i><span>Prices update automatically — the same list our front desk runs from.</span></div>`
-      + `<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px">${(PRICE_LIST_FOOTNOTES || []).map((f: string) => `<div style="display:flex;gap:8px;align-items:flex-start;font:500 12px/1.45 inherit;color:#9b9890"><span style="color:#c9c4b8">•</span>${escapeHtml(f)}</div>`).join('')}</div>`
+      + `<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px">${(_footnotes || []).map((f: string) => `<div style="display:flex;gap:8px;align-items:flex-start;font:500 12px/1.45 inherit;color:#9b9890"><span style="color:#c9c4b8">•</span>${escapeHtml(f)}</div>`).join('')}</div>`
       + `<button type="button" class="m-darkbtn" data-goto="#store">Buy passes online <i class="bi bi-arrow-right"></i></button>`;
     priceBody.querySelector('[data-goto]')?.addEventListener('click', () => { location.hash = 'store'; });
   }
   function loadPrices() {
     priceErr = false; priceList = null; renderPricing();
-    fetch(PRICE_API).then((r) => r.json())
-      .then((json) => { priceList = (json && json.success && json.data && json.data.priceList) || {}; renderPricing(); })
+    Promise.all([
+      import('../../lib/price-list-layout.js'),
+      fetch(PRICE_API).then((r) => r.json()),
+    ])
+      .then(([mod, json]) => {
+        _sections = mod.PRICE_LIST_SECTIONS;
+        _footnotes = mod.PRICE_LIST_FOOTNOTES;
+        _formatPrice = mod.formatPrice;
+        priceList = (json && json.success && json.data && json.data.priceList) || {};
+        renderPricing();
+      })
       .catch((e) => { console.warn('[prices] load failed', e); priceErr = true; renderPricing(); });
   }
   function ensurePricing() { if (priceStarted) return; priceStarted = true; loadPrices(); }
+
+  // Wire events + do the first render LAST — a direct load of #schedule/#pricing
+  // calls render() → ensureSchedule/ensurePricing synchronously, which reference
+  // the module-level state above, so everything must be initialized first.
+  navBtns.forEach((b) => b.addEventListener('click', () => { location.hash = b.dataset.nav || 'home'; }));
+  document.querySelectorAll<HTMLElement>('[data-goto]').forEach((el) => {
+    el.addEventListener('click', () => { location.hash = el.dataset.goto || ''; });
+  });
+  document.querySelector('[data-back]')?.addEventListener('click', () => {
+    if (history.length > 1) history.back();
+    else location.hash = 'more';
+  });
+  window.addEventListener('hashchange', render);
+  render();
 </script>
