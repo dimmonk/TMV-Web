@@ -20,6 +20,7 @@ import { coreClasses, specializedClasses, partnershipClasses } from '../../data/
 import type { ClassItem } from '../../data/classes';
 import { cat, links, site, social, hours, reviews, seo, url } from '../../data/site';
 import { storeProducts } from '../../data/store';
+import { forSurface } from '../../data/surface';
 
 // Resolve a class's action href for the mobile app. Schedule-linked classes go
 // to the mobile Schedule screen; classes whose desktop page has no mobile
@@ -299,7 +300,7 @@ const clientConfig = {
           <MobileHero eyebrow="Store" title="Buy before you arrive" desc="Check out on Square — your passes are ready at the front desk when you get here." />
           <div style="height:18px"></div>
           <div class="m-stack" style="margin-bottom:16px">
-            {storeProducts.map((s) => <BookingCard {...s} actionLabel="Buy" target="_blank" />)}
+            {forSurface(storeProducts, 'mobile').map((s) => <BookingCard {...s} actionLabel="Buy" target="_blank" />)}
           </div>
           <a href={links.giftCard} target="_blank" rel="noopener" class="m-gift">
             <span class="m-gift-ic"><i class="bi bi-gift-fill" aria-hidden="true"></i></span>
@@ -393,7 +394,7 @@ const clientConfig = {
           <MobileHero eyebrow="Camps" title="School-break day camps" desc="A full day of parkour, games and friends. Ages 5+ · 9 AM–2 PM, late pickup available." stats={[{ v: 'Ages 5+', l: 'welcome' }, { v: '9–2', l: 'daily' }, { v: '$350', l: 'per week' }]} />
           <div style="height:18px"></div>
           <div class="m-stack" style="margin-bottom:26px">
-            {camps.map((c) => <BookingCard color={cat.camps} bookingTag={c.bookingTag} title={c.title} description={c.desc} pills={c.pills} price={c.price} priceNote={c.priceNote} actionLabel={c.cta} href={c.href} target="_blank" />)}
+            {forSurface(camps, 'mobile').map((c) => <BookingCard color={cat.camps} bookingTag={c.bookingTag} title={c.title} description={c.desc} pills={c.pills} price={c.price} priceNote={c.priceNote} actionLabel={c.cta} href={c.href} target="_blank" />)}
           </div>
           <div class="m-hours">
             <div class="m-hours-label">A day at camp</div>

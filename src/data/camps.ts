@@ -6,10 +6,11 @@
  * camp once and both update.
  */
 import { links } from './site';
+import type { Surfaced } from './surface';
 
 export interface CampFact { icon: string; text: string; }
 
-export interface Camp {
+export interface Camp extends Surfaced {
   title: string;
   tag: string;
   image: string;      // assets/… (each surface prefixes with url())
@@ -35,6 +36,7 @@ export const camps: Camp[] = [
     back: 'A full week of parkour', included: 'Daily structured lessons, flips, individual skills, games and a cool-down — plus a lunch break. Sessions run over Winter, March Break and Summer.',
     price: '$350 / week', cta: 'Reserve', href: links.summerCamp,
     bookingTag: 'Register', pills: 'Ages 5+ | Mon–Fri | All levels', priceNote: 'late pickup to 4 PM',
+    mobile: { desc: 'A full week of parkour over school breaks — skills, flips, games and friends.' },
   },
   {
     title: 'Private Day Camp', tag: 'Your own group', image: 'assets/camp-private.png',
@@ -43,6 +45,7 @@ export const camps: Camp[] = [
     back: 'Your own private camp day', included: 'Parkour, acrobatics, nerf battles and more with your own instructor, 9 AM–2 PM. Flexible start times; late pickup available.',
     price: '$90 / kid', cta: 'Enquire', href: links.booking,
     bookingTag: 'By appointment', pills: 'Min 5 kids | 9 AM–2 PM', priceNote: 'book a week ahead',
+    mobile: { desc: 'Gather your crew for a private day — groups of five or more, any day.' },
   },
   {
     title: 'P.A. Day Camp', tag: 'Single day · public', image: 'assets/camp-paday.png',
@@ -51,5 +54,6 @@ export const camps: Camp[] = [
     back: 'A day off, well spent', included: 'Expert coaching and non-stop challenges, open to everyone. The next P.A. Day date is always posted on the booking page.',
     price: '$90 / day', cta: 'Reserve', href: links.paDayCamp,
     bookingTag: 'Register', pills: 'Ages 5+ | Single days', priceNote: '9 AM–2 PM',
+    mobile: { desc: 'A single day of parkour on a day off school — open to the public.' },
   },
 ];

@@ -5,6 +5,7 @@ import SectionHeader from '../components/SectionHeader.astro';
 import Pill from '../components/Pill.astro';
 import { seo, links, cat, url } from '../data/site';
 import { camps } from '../data/camps';
+import { forSurface } from '../data/surface';
 
 const schedule = [
   { time: '8:45 – 9:00', label: 'Arrival & check-in' },
@@ -55,7 +56,7 @@ const facts = [
   <section id="camps" class="section container" style="scroll-margin-top:120px">
     <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Pick your camp" title="Three ways to camp with us" description="Book a full week of camp, gather your own crew for a private day, or grab a single P.A. Day spot." color={cat.camps} /></div>
     <div class="camps-grid">
-      {camps.map((c) => (
+      {forSurface(camps, 'desktop').map((c) => (
         <article class="campflip" style={`--c:${cat.camps}`} aria-pressed="false">
           <div class="campflip-inner">
             <div class="campface campfront">

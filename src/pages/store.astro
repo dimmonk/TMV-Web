@@ -6,7 +6,11 @@ import BookingCard from '../components/BookingCard.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { seo, cat, links, url } from '../data/site';
 import { sq } from '../data/square-links';
-import { storeBySection } from '../data/store';
+import { storeProducts } from '../data/store';
+import { forSurface } from '../data/surface';
+
+const desktopStore = forSurface(storeProducts, 'desktop');
+const storeBySection = (s: string) => desktopStore.filter((p) => p.section === s);
 ---
 <BaseLayout title={seo.store.title} description={seo.store.description} active="store">
   <section class="pagehero">
