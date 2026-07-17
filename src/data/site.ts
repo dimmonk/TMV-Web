@@ -75,8 +75,8 @@ export const hours = [
  * update them from the top of the Google page when they move.
  */
 export const reviews = {
-  ratingValue: '4.9',
-  ratingCount: 'Based on 300+ Google reviews',
+  ratingValue: '4.6',
+  ratingCount: 'Based on 449 Google reviews',
   items: [
     {
       quote:
@@ -182,9 +182,9 @@ export const seo = {
       'Structured, athlete-level parkour training at The Monkey Vault. Coached progressions and progress tracking for dedicated movers, ages 9+.',
   },
   reviews: {
-    title: 'Reviews | The Monkey Vault — 4.9★ on Google',
+    title: 'Reviews | The Monkey Vault — 4.6★ on Google',
     description:
-      'See what Toronto families and athletes say about The Monkey Vault — 300+ Google reviews from parents, open-gym members and first-timers.',
+      'See what Toronto families and athletes say about The Monkey Vault — 449 Google reviews from parents, open-gym members and first-timers.',
   },
   book: {
     title: 'Book Now | Classes, Private Lessons & Parties — The Monkey Vault',

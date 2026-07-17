@@ -23,7 +23,12 @@ const {
 } = Astro.props;
 
 const palette = ['#2196f3', '#e27902', '#f44336', '#2e9e4f', '#8c52ff'];
-const fullStars = Math.round(parseFloat(ratingValue) || 5);
+// Badge stars snap to the nearest half so the row matches the number (4.6 →
+// 4½), instead of rounding a 4.6 up to five solid stars and overstating it.
+const roundedHalf = Math.round((parseFloat(ratingValue) || 5) * 2) / 2;
+const badgeStars = Array.from({ length: 5 }, (_, i) =>
+  i + 1 <= roundedHalf ? 'bi-star-fill' : i + 0.5 === roundedHalf ? 'bi-star-half' : 'bi-star',
+);
 ---
 <section class="rv">
   <div class="container">
@@ -36,7 +41,7 @@ const fullStars = Math.round(parseFloat(ratingValue) || 5);
       <div class="rv-badge">
         <div class="rv-score">
           <div class="rv-num">{ratingValue}</div>
-          <div class="rv-stars">{Array.from({ length: fullStars }).map(() => <i class="bi bi-star-fill" aria-hidden="true"></i>)}</div>
+          <div class="rv-stars">{badgeStars.map((s) => <i class={`bi ${s}`} aria-hidden="true"></i>)}</div>
         </div>
         <div class="rv-divider"></div>
         <div>
