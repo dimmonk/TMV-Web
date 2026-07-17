@@ -13,7 +13,7 @@ export const CATEGORIES = [
   { key:'partner',      name:'Partner',      color:'#0d9488', note:'Stick Fighting & Martial Arts — paid with the coach.' },
   { key:'openGym',      name:'Open Gym',     color:'#2e9e4f', note:'Drop-in passes & early gym access.' },
   { key:'camps',        name:'Camps',        color:'#e27902', note:'Weekly, P.A. Day & Private day camps.' },
-  { key:'parties',      name:'Parties',      color:'#ffd400', note:'Birthdays — uses the brand yellow; dark ink.' },
+  { key:'parties',      name:'Parties',      color:'#e5399b', note:'Birthdays — party pink so parties can signal themselves (was brand yellow).' },
   { key:'groups',       name:'Groups',       color:'#8c52ff', note:'Schools, corporate & team events.' },
   { key:'introduction', name:'Introduction', color:'#6e6e6e', note:'First-timer intro lesson — neutral grey, no category yet.' },
 ];

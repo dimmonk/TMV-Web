@@ -71,7 +71,7 @@ export const cat = {
   private: '#f44336',
   openGym: '#2e9e4f',
   camps: '#e27902',
-  parties: '#ffd400',
+  parties: '#e5399b',
   groups: '#8c52ff',
   intro: '#6e6e6e',
   partner: '#0d9488',

@@ -32,7 +32,7 @@
   --c-private: #f44336;
   --c-opengym: #2e9e4f;
   --c-camps: #e27902;
-  --c-parties: #ffd400;
+  --c-parties: #e5399b;
   --c-groups: #8c52ff;
   --c-intro: #6e6e6e;
   --c-partner: #0d9488;
@@ -56,6 +56,11 @@
 /* ---- reset ---- */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
+/* every in-page #anchor (JumpNav pills, hero jump links) scrolls smoothly;
+   scroll-margin-top on the sections keeps the landing offset correct */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
 body { margin: 0; }
 img, picture, video, svg { max-width: 100%; display: block; }
 button, input, select, textarea { font: inherit; color: inherit; }

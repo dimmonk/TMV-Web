@@ -28,7 +28,7 @@ const structure = [
   { n: '5', title: 'Stretching / Outro', body: 'Stretching and recovery, plus a preview of what the next class brings.', tags: '' },
 ];
 const classTypes = [
-  { name: 'Athletic', color: '#ffd400', days: 'Tue & Thu evenings · two age brackets', note: 'Core · 2 × 90 min/week · 9–14 & 15+' },
+  { name: 'Athletic', color: cat.athletic, days: 'Tue & Thu evenings · two age brackets', note: 'Core · 2 × 90 min/week · 9–14 & 15+' },
   { name: 'Explosive', color: '#e23b3b', days: 'Mon & Fri, late afternoon', note: 'Complementary · power · teens & adults' },
   { name: 'Speed League', color: '#ef5a4e', days: 'Wed evenings · two age brackets', note: 'Complementary · speed & agility · 9–14 & 15+' },
 ];
@@ -44,7 +44,7 @@ const payOptions = [
 ];
 ---
 <BaseLayout title={seo.athletic.title} description={seo.athletic.description} active="train">
-  <section class="pagehero">
+  <section class="pagehero" style={`--cat:${cat.athletic}`}>
     <div class="pagehero-glow"></div>
     <div class="ap-hero container">
       <div class="ap-kicker"><span class="rule"></span>Athletic Program · Serious training</div>
@@ -60,7 +60,7 @@ const payOptions = [
 
   <JumpNav items={[{ label: 'The Program', id: 'program' }, { label: 'Class Structure', id: 'structure' }, { label: 'Schedule', id: 'schedule' }, { label: 'Join Now', id: 'join' }]} actions={[{ label: 'Join now', href: links.athleticMembership, icon: 'bi bi-trophy' }]} top={66} />
 
-  <section id="program" class="section container" style="scroll-margin-top:132px">
+  <section id="program" class="section container" style={`scroll-margin-top:120px; --cat:${cat.athletic}`}>
     <div class="ap-program">
       <div>
         <div style="margin-bottom:16px"><SectionHeader num="01" eyebrow="The program" title="More than parkour — preparation for any sport." color={cat.athletic} /></div>
@@ -79,20 +79,20 @@ const payOptions = [
     </div>
   </section>
 
-  <section id="structure" class="section container" style="scroll-margin-top:132px">
+  <section id="structure" class="section container" style={`scroll-margin-top:120px; --cat:${cat.athletic}`}>
     <div style="margin-bottom:32px"><SectionHeader num="02" eyebrow="Class structure" title="How a core session runs" description="Every 90-minute Athletic session follows the same five-part arc — warm up, build, refine, push, recover — so training stays structured and safe." color={cat.athletic} /></div>
     <div class="ap-structure">
       {structure.map((st) => (
         <div class="ap-scard">
           <div class="ap-shead"><span class="ap-snum">{st.n}</span><div class="ap-stitle">{st.title}</div></div>
           <p class="ap-sbody">{st.body}</p>
-          {st.tags && <div style="margin-top:14px"><Pill variant="tinted" color="#e0a800" gap={7} items={st.tags} /></div>}
+          {st.tags && <div style="margin-top:14px"><Pill variant="tinted" color={cat.athletic} gap={7} items={st.tags} /></div>}
         </div>
       ))}
     </div>
   </section>
 
-  <section id="schedule" class="section container" style="scroll-margin-top:132px">
+  <section id="schedule" class="section container" style={`scroll-margin-top:120px; --cat:${cat.athletic}`}>
     <div style="margin-bottom:8px"><SectionHeader num="03" eyebrow="Schedule" title="When we train" color={cat.athletic} /></div>
     <p class="ap-schedlead">Classes run Monday–Friday; open gym is available every day. Exact class times live on the real-time schedule — always current, straight from the booking system.</p>
     <div class="ap-classtypes">
@@ -106,7 +106,7 @@ const payOptions = [
     </div>
   </section>
 
-  <section id="join" class="section container" style="scroll-margin-top:132px; padding-bottom:80px">
+  <section id="join" class="section container" style={`scroll-margin-top:120px; padding-bottom:80px; --cat:${cat.athletic}`}>
     <div class="ap-join">
       <div>
         <div style="margin-bottom:18px"><SectionHeader num="04" eyebrow="Join now" title="Start any time. Stay as long as you keep growing." description="Sign up for the year-round program and start training right away — you can enroll at any point in the year. For real, visible progress, we recommend committing to at least three months." color={cat.athletic} /></div>
@@ -144,35 +144,35 @@ const payOptions = [
 
 <style>
   .pagehero { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
-  .pagehero-glow { position: absolute; inset: 0; background: radial-gradient(720px 380px at 88% -15%, rgba(255,212,0,.14), transparent 70%); }
+  .pagehero-glow { position: absolute; inset: 0; background: radial-gradient(720px 380px at 88% -15%, color-mix(in srgb, var(--cat) 14%, transparent), transparent 70%); }
   .ap-hero { padding-block: 60px 56px; position: relative; }
-  .ap-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .16em; text-transform: uppercase; color: var(--brand); margin-bottom: 20px; }
-  .ap-kicker .rule { width: 22px; height: 2px; background: var(--brand); }
+  .ap-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .16em; text-transform: uppercase; color: var(--cat); margin-bottom: 20px; }
+  .ap-kicker .rule { width: 22px; height: 2px; background: var(--cat); }
   .ap-title { font: 800 clamp(36px,8.5vw,56px)/1.04 var(--font-display); letter-spacing: -.022em; margin-bottom: 18px; max-width: 760px; text-wrap: balance; }
   .ap-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 620px; margin-bottom: 30px; }
   .ap-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 42px; }
   .ap-stats { display: flex; flex-wrap: wrap; gap: 0; border-top: 1px solid rgba(255,255,255,.14); padding-top: 26px; }
   .ap-stat { padding: 0 30px 0 0; margin-right: 30px; border-right: 1px solid rgba(255,255,255,.14); }
   .ap-stat:last-child { border-right: 0; }
-  .ap-stat .n { font: 800 24px/1 var(--font-display); color: var(--brand); }
+  .ap-stat .n { font: 800 24px/1 var(--font-display); color: var(--cat); }
   .ap-stat .l { font: 600 12.5px/1.3 var(--font-body); color: rgba(255,255,255,.6); margin-top: 7px; }
 
   .ap-program { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
   .ap-body { font: 400 15px/1.62 var(--font-body); color: #54514b; margin: 0 0 16px; }
   .ap-body strong { color: var(--ink); }
   .ap-body:last-child { margin-bottom: 0; }
-  .ap-benlabel { font: 700 11px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: #e0a800; margin-bottom: 16px; }
+  .ap-benlabel { font: 700 11px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--cat); margin-bottom: 16px; }
   .ap-bens { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .ap-ben { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow-sm); transition: transform .18s ease, box-shadow .18s ease; }
   .ap-ben:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-  .ap-benic { display: inline-flex; width: 36px; height: 36px; border-radius: 10px; background: color-mix(in srgb,var(--brand) 22%,#fff); align-items: center; justify-content: center; margin-bottom: 12px; font-size: 17px; color: #b8870a; }
+  .ap-benic { display: inline-flex; width: 36px; height: 36px; border-radius: 10px; background: color-mix(in srgb,var(--cat) 22%,#fff); align-items: center; justify-content: center; margin-bottom: 12px; font-size: 17px; color: var(--cat); }
   .ap-bentitle { font: 800 14.5px/1.18 var(--font-display); letter-spacing: -.005em; margin-bottom: 6px; }
   .ap-benbody { font: 400 12px/1.5 var(--font-body); color: var(--muted); margin: 0; }
 
   .ap-structure { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
   .ap-scard { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 24px 22px 22px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
   .ap-shead { display: flex; align-items: center; gap: 11px; margin-bottom: 13px; }
-  .ap-snum { flex: none; width: 34px; height: 34px; border-radius: 10px; background: var(--ink); color: var(--brand); display: flex; align-items: center; justify-content: center; font: 800 15px/1 var(--font-display); }
+  .ap-snum { flex: none; width: 34px; height: 34px; border-radius: 10px; background: var(--ink); color: var(--cat); display: flex; align-items: center; justify-content: center; font: 800 15px/1 var(--font-display); }
   .ap-stitle { font: 800 16px/1.12 var(--font-display); letter-spacing: -.01em; }
   .ap-sbody { font: 400 13px/1.55 var(--font-body); color: var(--muted); margin: 0; }
 
@@ -189,11 +189,11 @@ const payOptions = [
   .ap-join { display: grid; grid-template-columns: .95fr 1.05fr; gap: 32px; align-items: stretch; }
   .ap-joinpoints { display: flex; flex-direction: column; gap: 13px; }
   .ap-jp { display: flex; align-items: flex-start; gap: 12px; font: 500 14px/1.5 var(--font-body); color: var(--text-2); }
-  .ap-jp i { color: #b8870a; font-size: 16px; margin-top: 2px; flex: none; }
+  .ap-jp i { color: var(--cat); font-size: 16px; margin-top: 2px; flex: none; }
   .ap-joincol { display: flex; flex-direction: column; gap: 16px; }
-  .ap-membership { background: #fff; border: 2px solid var(--brand); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; flex: 1; }
+  .ap-membership { background: #fff; border: 2px solid var(--cat); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; flex: 1; }
   .ap-memhead { background: var(--ink); color: #fff; padding: 26px 30px; }
-  .ap-memlabel { font: 700 11px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--brand); margin-bottom: 14px; }
+  .ap-memlabel { font: 700 11px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--cat); margin-bottom: 14px; }
   .ap-memprice { display: flex; align-items: flex-end; gap: 8px; }
   .ap-membig { font: 800 46px/1 var(--font-display); letter-spacing: -.02em; }
   .ap-memper { font: 700 15px/1 var(--font-display); color: rgba(255,255,255,.6); padding-bottom: 7px; }
@@ -202,7 +202,7 @@ const payOptions = [
   .ap-memways { font: 700 10px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted-3); margin-bottom: 14px; }
   .ap-payopts { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
   .ap-pay { display: flex; align-items: flex-start; gap: 12px; padding: 15px 16px; border: 1px solid var(--line); border-radius: 13px; }
-  .ap-pay i { font-size: 18px; color: #b8870a; flex: none; margin-top: 1px; }
+  .ap-pay i { font-size: 18px; color: var(--cat); flex: none; margin-top: 1px; }
   .ap-paytitle { font: 800 13.5px/1.15 var(--font-display); margin-bottom: 4px; }
   .ap-paybody { font: 400 12px/1.5 var(--font-body); color: var(--muted); }
   .ap-memfine { font: 400 11.5px/1.5 var(--font-body); color: var(--muted-3); margin: 13px 0 0; text-align: center; }
@@ -213,7 +213,7 @@ const payOptions = [
   .ap-fbbody { font: 400 12px/1.5 var(--font-body); color: var(--muted); margin: 6px 0 0; }
   .ap-fbright { flex: none; text-align: right; }
   .ap-fbprice { font: 800 26px/1 var(--font-display); color: var(--ink); }
-  .ap-fbget { display: inline-flex; align-items: center; gap: 6px; font: 800 11.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); text-decoration: none; margin-top: 9px; border-bottom: 2px solid var(--brand); padding-bottom: 3px; }
+  .ap-fbget { display: inline-flex; align-items: center; gap: 6px; font: 800 11.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); text-decoration: none; margin-top: 9px; border-bottom: 2px solid var(--cat); padding-bottom: 3px; }
 
   @media (max-width: 900px) {
     .ap-program, .ap-join { grid-template-columns: 1fr; gap: 32px; }
