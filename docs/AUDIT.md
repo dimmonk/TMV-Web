@@ -195,3 +195,81 @@ same-day commit; what's below is the **deferred list** with why.
 - Em-dashes and border-left note callouts come from approved design copy.
 - Hardcoded darkened-brand hexes (JumpNav `#e0c64a`/`#e0a800`, events, about)
   bypass tokens but follow design values; revisit only if the brand changes.
+
+---
+
+# Mobile audit — 2026-07-17 (Fable 5) — post native-Astro rebuild + SSOT shift
+
+Scope: the app-style mobile surface (`src/pages/m/index.astro`, `MobileLayout.astro`,
+`MobileHero.astro`) and its consistency with the SSOT architecture shift (shared
+components + `src/data/*` modules). Full read of the mobile page, the data
+modules, and drift-diffs against the desktop pages.
+
+## Verdict
+
+The architecture is CONSISTENT with the SSOT direction. One language (Astro) on
+both surfaces; the card components (`OfferingCard`, `BookingCard`, `ClassCard`)
+and eight data modules (`offerings`, `classes`, `store`, `camps`,
+`first-session`, `events`, `reviews`+`cat`/`hours`/`social` in `site.ts`, and
+the `sq` Square registry) are each a single source read by both surfaces, with
+the `surface.ts` override pattern (`only:` / `mobile:{}` / `desktop:{}`) for
+per-surface variants. Live schedule/pricing import the canonical `src/lib`
+modules (no copies). PWA manifest (`start_url: "."`), canonical → desktop home,
+and the two device redirects verified non-looping.
+
+## Fixed during this audit (same-day commits)
+
+1. **Square-links pipeline was broken end-to-end** — the members-app's DEPLOYED
+   publish function was a stale revision: an admin link save published the
+   projection with every link EMPTY (doc had the 11 values; CDN JSON didn't).
+   Fixed by running the current publisher against prod + redeploying
+   `onSiteConfigChangePublish` + `republishSiteConfig` by name; verified a doc
+   write now republishes correctly. Separately, many website cards bypassed the
+   `sq` registry with static `links.*` — every bookable card on BOTH surfaces
+   now routes through `sq` (camps, get-started/first-session, events/groups
+   CTAs, home camps band, athletic membership, mobile book options + class
+   links). Reminder: `sq` bakes at BUILD time — an admin link edit still needs
+   a site rebuild to go live (the rebuild trigger from the members app remains
+   an open item from the first audit, needs a PAT decision).
+2. **Reviews carousel unusable on iOS** — swipe-only, and swipe didn't work on
+   the user's device (works in Chromium emulation; iOS-specific). Added
+   server-rendered dots + prev/next arrows with a scroll-synced script; all 3
+   reviews reachable by tap, verified live.
+3. **Dead scoped CSS** — the schedule/loading/error rules existed twice (scoped
+   + `is:global`); the scoped copies could never match the runtime-injected DOM.
+   Deleted (also the redundant scoped `.m-darkbtn`).
+
+## Open findings (ranked)
+
+- **M1 · Book-hub duplication (both surfaces).** Desktop `book.astro` and the
+  mobile Book screen each hand-write condensed copies of items whose domains
+  now have SSOTs (camps, private lessons, birthdays, passes). They share `sq`
+  hrefs now, but the copy is still parallel. Follow-up: make both hubs COMPOSE
+  from the domain modules (with `surface`/hub overrides for the condensed copy).
+- **M2 · Copy-drift pairs to fold into the surface-override pattern:**
+  `aboutFacility` (mobile) vs `about.astro` facility array (same 4 items,
+  wording drift); `campDay` (mobile) vs `camps.astro` schedule (same rows,
+  format drift); `gsBring`/`gsArrive`/`gsFaqs` (mobile) vs get-started
+  `bring`/`arrive`/`otherFaqs` (condensed subsets); `eventFaqs` (mobile, 4) vs
+  events `faqGroups` (8). Subsetting is fine; the risk is policy answers
+  drifting (payment/cancellation copy exists in both).
+- **M3 · Hours inconsistency — needs a business answer.** The mobile status
+  pill + schedule's synthesized Open Gym rows extend FRIDAY to midnight (with a
+  10 PM–12 AM adults-only row), but `site.ts` hours, the About page, and the
+  JSON-LD all say 11–10 every day. One of these is wrong. If Friday really runs
+  to midnight, `site.ts` hours (and JSON-LD/About) should say so; if not, the
+  mobile status/schedule logic should drop the Friday extension.
+- **M4 · Hero/stat literals.** The home-hero stats ($25 · 7 days · Ages 3+) and
+  a few "from $X" marketing literals are independent copy on each surface.
+  Low-value cosmetic SSOT; prices of record already live in the live price list.
+- **M5 · Home reviews-strip quote** is derived by sentence-splitting review #1
+  (`split('. ').slice(0,2)`) — fragile if the review text changes. Consider an
+  explicit `pull` field on the reviews SSOT.
+- **M6 · A11y polish.** Bottom-nav tabs could set `aria-current`; screen
+  switches don't manage focus; carousel controls have labels (done).
+- **M7 · Known media gap.** 7 specialized-class videos still missing
+  (backflip/strength/flexibility/acrodance/handstand/speedleague/explosive) —
+  both surfaces show an empty media box until provided (intentional, pending).
+- **M8 · Informational.** `sq.getStarted.*` admin values are currently empty, so
+  the two get-started reservation cards fall back to the generic booking link —
+  set them in Settings → Website to target them precisely.
