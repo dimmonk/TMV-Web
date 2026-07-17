@@ -6,3 +6,6 @@ dist/
 # os / editor
 .DS_Store
 *.log
+
+# design handoff zips (kept locally, not tracked)
+*.zip

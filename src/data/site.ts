@@ -50,7 +50,7 @@ export const links = {
 export const social = {
   instagram: 'https://www.instagram.com/themonkeyvault',
   facebook: 'https://www.facebook.com/themonkeyvault',
-  youtube: '',
+  youtube: 'https://www.youtube.com/@TheMonkeyVault',
 } as const;
 
 export const hours = [
@@ -63,7 +63,8 @@ export const hours = [
   { day: 'Sunday', time: '11:00 AM – 10:00 PM' },
 ] as const;
 
-/** Category accent colors (matches the export's categories.js). */
+/** Category accent colors (matches the export's categories.js). SSOT — the
+ * `--c-*` vars in styles/global.css mirror these; keep both in sync. */
 export const cat = {
   classes: '#2196f3',
   athletic: '#ffb82a',

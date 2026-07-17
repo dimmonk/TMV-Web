@@ -15,9 +15,12 @@ interface Props {
   ogImage?: string;
   /** section hash to deep-link into the app-style mobile UI (m/mobile.html#hash) */
   mobileHash?: string;
+  /** false = keep phones on this page (for pages with no mobile-app equivalent,
+   * e.g. the invitation maker — the mobile shell has no screen for them) */
+  mobileRedirect?: boolean;
 }
 
-const { title, description, active = '', brand = '#ffd400', ogImage, mobileHash } = Astro.props;
+const { title, description, active = '', brand = '#ffd400', ogImage, mobileHash, mobileRedirect = true } = Astro.props;
 
 // Phones get the dedicated app-style mobile UI (design tool's mobile.html).
 // Desktop stays on these SEO-rich Astro pages. Deep-link to the matching
@@ -81,23 +84,25 @@ const jsonLd = {
          its own. Android appends "Mobile" to the UA only in phone form factor;
          tablets/unfolded omit it. iPhone/iPod/Windows Phone/BlackBerry are
          already phone-specific tokens. -->
-    <script is:inline define:vars={{ mobileUrl }}>
-      (function () {
-        function isPhoneUA() {
-          var ua = navigator.userAgent;
-          return /iPhone|iPod|Windows Phone|BlackBerry/i.test(ua) || (/Android/i.test(ua) && /Mobile/i.test(ua));
-        }
-        function wantsMobile() {
-          try {
-            return (window.matchMedia && window.matchMedia('(max-width:599px)').matches) || isPhoneUA();
-          } catch (e) { return false; }
-        }
-        function go() { if (wantsMobile()) location.replace(mobileUrl); }
-        go();
-        var t;
-        window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(go, 250); });
-      })();
-    </script>
+    {mobileRedirect && (
+      <script is:inline define:vars={{ mobileUrl }}>
+        (function () {
+          function isPhoneUA() {
+            var ua = navigator.userAgent;
+            return /iPhone|iPod|Windows Phone|BlackBerry/i.test(ua) || (/Android/i.test(ua) && /Mobile/i.test(ua));
+          }
+          function wantsMobile() {
+            try {
+              return (window.matchMedia && window.matchMedia('(max-width:599px)').matches) || isPhoneUA();
+            } catch (e) { return false; }
+          }
+          function go() { if (wantsMobile()) location.replace(mobileUrl); }
+          go();
+          var t;
+          window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(go, 250); });
+        })();
+      </script>
+    )}
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />

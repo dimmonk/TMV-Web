@@ -18,7 +18,7 @@ const columns = [
     items: [
       { text: site.address.street, static: true },
       { text: `${site.address.locality}, ${site.address.region}`, static: true },
-      { text: 'Open daily · 11 AM – 10 PM', static: true },
+      { text: site.hoursLabel, static: true },
       { text: 'New here? Get started', href: url('get-started'), accent: true },
     ],
   },

@@ -25,7 +25,8 @@
   --muted-3: #9b9890;
   --faint: #b0aca3;
 
-  /* category accents */
+  /* category accents — CSS mirror of `cat` in src/data/site.ts (the SSOT).
+     Change a colour there first, then here; keys and hex values must match. */
   --c-classes: #2196f3;
   --c-athletic: #ffb82a;
   --c-private: #f44336;
@@ -33,6 +34,8 @@
   --c-camps: #e27902;
   --c-parties: #ffd400;
   --c-groups: #8c52ff;
+  --c-intro: #6e6e6e;
+  --c-partner: #0d9488;
 
   /* type */
   --font-display: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;

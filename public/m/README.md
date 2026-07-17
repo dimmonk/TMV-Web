@@ -1,26 +1,31 @@
-# The Monkey Vault — website (desktop + mobile)
+# The Monkey Vault — mobile app-style UI (`/m/`)
 
-Static site for live testing. `index.html` auto-routes by device:
+The phone experience of the site. Desktop lives at the repo root as the Astro
+site (`src/pages/*`); phones are redirected here by the layout's device switch,
+and `mobile.html`'s own switch sends desktop-width visitors back to `../`.
 
-- **Desktop / wide viewport →** `Home.dc.html` (full desktop site: Home, Train, Schedule, Pricing, Camps, Events, Store, About, Get Started, Private Lessons, Athletic Program, Reviews, Book Now).
-- **Phone / narrow viewport →** `mobile.html` (the mobile-first UI with a bottom bar and full-bleed layout).
+## What ships here (runtime closure only)
 
-## Deploy to GitHub Pages
+- `mobile.html` — the entire app-style UI (hash-routed screens).
+- `support.js` — the design-tool runtime that renders it.
+- `BookingCard.dc.html`, `ClassCard.dc.html`, `OfferingCard.dc.html` — the only
+  components `mobile.html` dc-imports at runtime.
+- `categories.js`, `site-config.js` + `site-config.json` — category accents and
+  the Square link/config source (repoint `CONFIG_URL` to the live members-app
+  endpoint when it ships).
+- `public/` — the price-list / print-schedule renderer modules + CSS shared
+  with the members app.
+- `assets/`, `manifest.json`, `index.html` (device router).
 
-1. Push the **contents of this folder** to a repo (keep the folder structure — `assets/` and `public/` matter).
-2. Repo → **Settings → Pages** → *Deploy from a branch* → pick your branch and **/ (root)**.
-3. Open the Pages URL. `index.html` handles the desktop/mobile split.
-
-Must be served over HTTP(S) — opening the files directly from disk (`file://`) won't work, because pages load components and data at runtime. GitHub Pages (or any static host) is fine.
+The full set of design-tool page mirrors (Home.dc.html, Train.dc.html, …) is
+NOT deployed — those are diff baselines and live in `design-reference/` at the
+repo root. Don't re-add them here; anything shipped under `public/` is publicly
+crawlable and shadows the real site.
 
 ## Live data / internet
 
-These load from the network at runtime (so the host needs internet, which live sites have):
+Loaded from the network at runtime:
 
-- **Class schedule** — `getPublicSchedule` Cloud Function (Schedule page + mobile Schedule tab).
-- **Price list** — `getPublicPriceList` Cloud Function (Pricing page).
-- Fonts (Google Fonts) and icons (Bootstrap Icons) via CDN; gym photos via CDN.
-
-## Editing links & prices in one place
-
-`site-config.js` / `site-config.json` hold the Square booking/store/gift URLs, per-item store links, per-coach booking links, promo bar, hours and social links. Change them there and every page updates.
+- **Class schedule** — `getPublicSchedule` Cloud Function.
+- **Price list** — `getPublicPriceList` Cloud Function.
+- Fonts (Google Fonts) and icons (Bootstrap Icons) via CDN.

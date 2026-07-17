@@ -149,3 +149,49 @@ deploy artifact.
 
 **Not doing:** m-dot/redirect device split, client-render runtime for content,
 inline styles.
+
+---
+
+# Follow-up audit — 2026-07-17 (Fable 5)
+
+Full read of the Astro build (all pages, components, layout, data modules,
+deploy workflow, `/m/` runtime, cross-checked against design-reference).
+Everything fixable without new assets or product decisions was fixed in the
+same-day commit; what's below is the **deferred list** with why.
+
+## Deferred — needs user input / assets
+
+1. **Seven Train videos missing** (`backflip/strength/flexibility/acrodance/
+   handstand/speedleague/explosive.mp4`) — referenced by the design and the
+   port, never included in any export zip. Cards show a dark media box until
+   the design side exports them. *Intentional for now (media list incomplete).*
+2. **Square links intentionally generic** — many `sq.*` entries still fall back
+   to the generic booking/store URL. Deliberately unfinished: the client
+   account-management app will bring this in-house (Square stays as payment
+   backend only).
+3. **Members-app → site rebuild trigger unimplemented** — `square-links.ts`
+   bakes the admin-published JSON at build time, but nothing calls GitHub when
+   an admin saves (no dispatch code in TMV-Members functions, no
+   `repository_dispatch` in deploy.yml). Needs a PAT decision. Until then link
+   edits go live on the next unrelated push.
+4. **Mobile/desktop split vs SEO** — phone UAs (including Googlebot smartphone,
+   i.e. mobile-first indexing) are JS-redirected off every Astro page to
+   `m/mobile.html` (hash-routed shell, one title for all screens). Mitigated
+   same-day (title/description/canonical/lang added to the shell; shadow-site
+   mirrors deleted), but the architectural question — responsive single site vs
+   split — is still open and worth deciding before more mobile investment.
+   Note: `public/robots.txt` is served at `/TMV-Web/robots.txt`, which crawlers
+   never read (robots.txt only works at the origin root) — it's inert on a
+   GitHub project page; sitemap discovery relies on Search Console submission.
+5. **Mobile feature gaps** — the shell has no invitation-maker screen (desktop
+   page now stays accessible on phones via `mobileRedirect={false}`), and its
+   own card data still hotlinks the old Squarespace CDN (design-owned file;
+   fix belongs in the design tool, not here).
+
+## Accepted / by design (checked against design source, not defects)
+
+- Home "Events" offering card is private-red, home eyebrows "02 —"/"04 —" plain
+  text, athletic classTypes dot hexes — all match the design source exactly.
+- Em-dashes and border-left note callouts come from approved design copy.
+- Hardcoded darkened-brand hexes (JumpNav `#e0c64a`/`#e0a800`, events, about)
+  bypass tokens but follow design values; revisit only if the brand changes.

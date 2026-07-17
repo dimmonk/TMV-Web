@@ -44,12 +44,10 @@ const offerings = [
   },
 ];
 
-const heroBase = 'https://97c4ca0509b4c38d26ba.cdn6.editmysite.com/uploads/b/97c4ca0509b4c38d26ba323484b80b964616e1d4454eb6debcf2c66267495c04/';
 const heroPhotos = [
-  'hero_5_1671600108.jpg', '045A1596_1671044591.JPG', '045A1295_1670786028.jpeg',
-  'hero_2_1644891308.jpeg', '045A1297%202_1671044569.JPG', '045A1273_1670786026.jpeg',
-  'hero_4_1671600111.jpg', '045A1283_1670786023.jpeg',
-].map((f) => `${heroBase}${f}?width=900&optimize=medium`);
+  'gym-01.jpg', 'gym-02.jpg', 'gym-03.jpg', 'gym-04.jpg',
+  'gym-05.jpg', 'gym-06.jpg', 'gym-07.jpg', 'gym-08.jpg',
+].map((f) => url(`assets/${f}`));
 
 const camps = [
   {
@@ -95,7 +93,9 @@ const camps = [
       <div class="hero-media">
         <div class="hero-frame" id="hero-carousel">
           {heroPhotos.map((src, i) => (
-            <div class="hero-slide" style={`background-image:url('${src}'); opacity:${i === 0 ? 1 : 0}`}></div>
+            i === 0
+              ? <div class="hero-slide" style={`background-image:url('${src}'); opacity:1`}></div>
+              : <div class="hero-slide" data-bg={src} style="opacity:0"></div>
           ))}
         </div>
         <div class="hero-badge">75 Carl Hall Rd<br>Downsview Park</div>
@@ -125,7 +125,7 @@ const camps = [
               <div class="flip-media">
                 {o.image ? (
                   /\.(mp4|webm|ogv|mov)(\?|$)/i.test(o.image)
-                    ? <video class="flip-img" src={url(o.image)} muted autoplay loop playsinline webkit-playsinline></video>
+                    ? <video class="flip-img" src={url(o.image)} muted loop playsinline webkit-playsinline preload="metadata"></video>
                     : <img class="flip-img" src={url(o.image)} alt={o.title} loading="lazy" />
                 ) : (
                   <div class="flip-ph">
@@ -356,10 +356,32 @@ const camps = [
     });
   });
 
-  // Hero photo carousel: cross-fade through the slides every 4s.
+  // Offering-card videos play only while on screen (saves the up-front download).
+  const flipVids = document.querySelectorAll<HTMLVideoElement>('.flip-media video');
+  if (flipVids.length) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const v = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) v.play().catch(() => {});
+        else v.pause();
+      });
+    }, { rootMargin: '120px' });
+    flipVids.forEach((v) => io.observe(v));
+  }
+
+  // Hero photo carousel: cross-fade every 4s. Only the first slide's photo is
+  // in the initial HTML; the other seven hydrate after the page has loaded so
+  // they never compete with the critical path.
   const carousel = document.getElementById('hero-carousel');
   if (carousel) {
     const slides = Array.from(carousel.querySelectorAll<HTMLElement>('.hero-slide'));
+    const hydrate = () => slides.forEach((s) => {
+      const bg = s.getAttribute('data-bg');
+      if (bg) { s.style.backgroundImage = `url('${bg}')`; s.removeAttribute('data-bg'); }
+    });
+    if (document.readyState === 'complete') hydrate();
+    else window.addEventListener('load', hydrate, { once: true });
+
     let idx = 0;
     if (slides.length > 1) {
       setInterval(() => {

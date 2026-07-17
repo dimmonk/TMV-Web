@@ -8,16 +8,16 @@
 <link rel="icon" href="assets/tmvlogo.png">
 <style>html,body{margin:0;height:100%;background:#211f1b;}</style>
 <script>
-  // Device router: phones/narrow viewports get the mobile UI; everything else
-  // gets the full desktop site. Both live at the same URL.
+  // Device router: phones/narrow viewports get the app-style mobile UI;
+  // everything else goes to the Astro desktop site at the repo root.
   (function () {
     try {
       var isPhone = window.matchMedia && window.matchMedia('(max-width: 819px)').matches;
       var uaPhone = /Android|iPhone|iPod|Windows Phone|BlackBerry|Mobile/i.test(navigator.userAgent);
-      var dest = (isPhone || uaPhone) ? 'mobile.html' : 'Home.dc.html';
+      var dest = (isPhone || uaPhone) ? 'mobile.html' : '../';
       location.replace(dest);
     } catch (e) {
-      location.replace('Home.dc.html');
+      location.replace('../');
     }
   })();
 </script>
@@ -26,7 +26,7 @@
   <noscript>
     <div style="font-family:system-ui,sans-serif;color:#fff;text-align:center;padding:40px;">
       <p>Choose a version:</p>
-      <p><a href="Home.dc.html" style="color:#ffd400;">Desktop site</a> &nbsp;·&nbsp; <a href="mobile.html" style="color:#ffd400;">Mobile site</a></p>
+      <p><a href="../" style="color:#ffd400;">Desktop site</a> &nbsp;·&nbsp; <a href="mobile.html" style="color:#ffd400;">Mobile site</a></p>
     </div>
   </noscript>
 </body>

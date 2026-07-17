@@ -4,21 +4,19 @@ import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { seo, site, social, hours, links, url } from '../data/site';
 
-const base = 'https://97c4ca0509b4c38d26ba.cdn6.editmysite.com/uploads/b/97c4ca0509b4c38d26ba323484b80b964616e1d4454eb6debcf2c66267495c04/';
-const q = '?width=900&optimize=medium';
 const photos = [
-  { file: 'hero_5_1671600108.jpg', alt: 'The Monkey Vault gymnastics floor and training space' },
-  { file: '045A1596_1671044591.JPG', alt: 'Padded landing mats and obstacle ramps' },
-  { file: '045A1295_1670786028.jpeg', alt: 'Athlete launching into the foam pit' },
-  { file: 'hero_2_1644891308.jpeg', alt: 'Parkour blocks and vaults on the training floor' },
-  { file: '045A1297%202_1671044569.JPG', alt: 'Foam blocks and angled walls by the windows' },
-  { file: '045A1273_1670786026.jpeg', alt: 'High bars and rig with crash mat' },
-  { file: 'hero_4_1671600111.jpg', alt: 'Rails, bars and trampoline training zone' },
-  { file: '045A1283_1670786023.jpeg', alt: 'Parkour block course' },
-  { file: '045A1268%202_1671044556.JPG', alt: 'Training walls and crash mats' },
-  { file: '045A1402%203_1671609291.JPG', alt: 'Rails and padded landing area' },
-  { file: '045A1266_1671044553.JPG', alt: 'Concrete walls and vault structures' },
-].map((p) => ({ src: base + p.file + q, alt: p.alt }));
+  { file: 'gym-01.jpg', alt: 'The Monkey Vault gymnastics floor and training space' },
+  { file: 'gym-02.jpg', alt: 'Padded landing mats and obstacle ramps' },
+  { file: 'gym-03.jpg', alt: 'Athlete launching into the foam pit' },
+  { file: 'gym-04.jpg', alt: 'Parkour blocks and vaults on the training floor' },
+  { file: 'gym-05.jpg', alt: 'Foam blocks and angled walls by the windows' },
+  { file: 'gym-06.jpg', alt: 'High bars and rig with crash mat' },
+  { file: 'gym-07.jpg', alt: 'Rails, bars and trampoline training zone' },
+  { file: 'gym-08.jpg', alt: 'Parkour block course' },
+  { file: 'gym-09.jpg', alt: 'Training walls and crash mats' },
+  { file: 'gym-10.jpg', alt: 'Rails and padded landing area' },
+  { file: 'gym-11.jpg', alt: 'Concrete walls and vault structures' },
+].map((p) => ({ src: url(`assets/${p.file}`), alt: p.alt }));
 
 const facility = [
   { icon: 'bi-grid-3x3-gap-fill', title: 'Gymnastics floor', body: 'Sprung floor and tumbling space for flips, acrobatics and clean form work.' },
@@ -28,9 +26,9 @@ const facility = [
 ];
 const socials = [
   { icon: 'bi-instagram', label: 'Instagram', href: social.instagram },
-  { icon: 'bi-youtube', label: 'YouTube', href: social.youtube || social.instagram },
+  { icon: 'bi-youtube', label: 'YouTube', href: social.youtube },
   { icon: 'bi-facebook', label: 'Facebook', href: social.facebook },
-];
+].filter((s) => s.href);
 ---
 <BaseLayout title={seo.about.title} description={seo.about.description} active="about">
   <section class="pagehero">

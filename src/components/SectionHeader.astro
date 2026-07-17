@@ -8,9 +8,10 @@ interface Props {
   theme?: 'light' | 'dark';
   actionLabel?: string;
   href?: string;
-  /** Category accent hex (from `cat` in data/site) — overrides the default
-   * brand-yellow number/rule accent so a section carries its true category
-   * colour. Rendered at full strength, no darkening/legibility shading. */
+  /** Category accent hex (from `cat` in data/site) — scopes `--brand` to this
+   * header (same mechanism as the design source), so the number, rule and
+   * action underline carry the category colour. Rendered at full strength,
+   * no darkening/legibility shading. */
   color?: string;
 }
 const {
@@ -19,7 +20,7 @@ const {
 } = Astro.props;
 const dark = theme === 'dark';
 ---
-<div class:list={['sh2', { center: align === 'center', dark }]} style={color ? `--accent:${color}` : undefined}>
+<div class:list={['sh2', { center: align === 'center', dark }]} style={color ? `--brand:${color}` : undefined}>
   <div class="sh2-eyebrow">
     {num && <><span class="num">{num}</span><span class="rule"></span></>}
     {eyebrow}

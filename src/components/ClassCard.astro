@@ -1,5 +1,5 @@
 ---
-import { url } from '../data/site';
+import { url, cat } from '../data/site';
 interface Props {
   category?: string;
   color?: string;
@@ -28,10 +28,9 @@ const catKeyMap: Record<string, string> = {
   parkour: 'classes', flips: 'classes', strength: 'classes', tricking: 'classes',
   gymnastics: 'classes', private: 'private', athletic: 'athletic', partner: 'partner',
 };
-const palette: Record<string, string> = { classes: '#2196f3', private: '#f44336', athletic: '#ffb82a', partner: '#0d9488' };
 const key = category.toLowerCase();
 const catKey = catKeyMap[key] ?? 'classes';
-const catColor = color.trim() || palette[catKey] || '#2196f3';
+const catColor = color.trim() || (cat as Record<string, string>)[catKey] || cat.classes;
 const isAthletic = key === 'athletic';
 const tagText = isAthletic ? '#2a1e00' : '#ffffff';
 const catInk = isAthletic ? `color-mix(in srgb, ${catColor} 70%, #000)` : catColor;
@@ -62,7 +61,7 @@ const isVideo = /\.(mp4|webm|ogv|mov)(\?|$)/i.test(image);
       <div class="cc-strip"></div>
       <div class="cc-media">
         {isVideo
-          ? <video class="cc-img" src={src} muted autoplay loop playsinline webkit-playsinline></video>
+          ? <video class="cc-img" src={src} muted loop playsinline webkit-playsinline preload="metadata"></video>
           : <img class="cc-img" src={src} alt={title} loading="lazy" />}
         <div class="cc-tags">
           <span class="cc-tag" style={`color:${tagText}`}>{tagLabel}</span>
@@ -152,4 +151,18 @@ const isVideo = /\.(mp4|webm|ogv|mov)(\?|$)/i.test(image);
       card.setAttribute('aria-pressed', card.classList.contains('flipped') ? 'true' : 'false');
     });
   });
+
+  // Card videos play only while on screen — a page like Train has 11 of them,
+  // and autoplaying all at once downloads every file up front.
+  const vids = document.querySelectorAll<HTMLVideoElement>('.cc video');
+  if (vids.length) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const v = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) v.play().catch(() => {});
+        else v.pause();
+      });
+    }, { rootMargin: '120px' });
+    vids.forEach((v) => io.observe(v));
+  }
 </script>
