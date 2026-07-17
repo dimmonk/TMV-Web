@@ -60,7 +60,6 @@ const defaultPhoto = url('assets/invite-default-photo.png');
           </div>
           <div><label class="inv-lab" for="inv-bring">What to bring <span class="inv-lab-note">— separate with commas</span></label><input id="inv-bring" class="inv-in" value="Clean shoes, Lots of energy" placeholder="Clean shoes, Lots of energy"></div>
           <div><label class="inv-lab" for="inv-rsvp">RSVP contact</label><input id="inv-rsvp" class="inv-in" value="Text Alex · 416-555-0142" placeholder="Text Alex · 416-555-0142"></div>
-          <div><label class="inv-lab" for="inv-rsvpurl">QR link <span class="inv-lab-note">— waiver / RSVP</span></label><input id="inv-rsvpurl" class="inv-in" value={links.waiver} placeholder="https://…"></div>
         </div>
       </div>
     </div>
@@ -340,7 +339,7 @@ const defaultPhoto = url('assets/invite-default-photo.png');
   }
 </style>
 
-<script define:vars={{ FIXED_VENUE: site.name, FIXED_ADDRESS: defaultAddress, DEFAULT_PHOTO: defaultPhoto }}>
+<script define:vars={{ FIXED_VENUE: site.name, FIXED_ADDRESS: defaultAddress, DEFAULT_PHOTO: defaultPhoto, FIXED_WAIVER_URL: links.waiver }}>
   const $ = (id) => document.getElementById(id);
   const root = document.documentElement;
 
@@ -357,7 +356,7 @@ const defaultPhoto = url('assets/invite-default-photo.png');
   }
 
   function applyQr() {
-    const qrTarget = qrUrl($('inv-rsvpurl').value);
+    const qrTarget = qrUrl(FIXED_WAIVER_URL);
     document.querySelectorAll('#inv-live-card img[data-qr]').forEach((img) => {
       if (img.src !== qrTarget) img.src = qrTarget;
     });
@@ -524,7 +523,7 @@ const defaultPhoto = url('assets/invite-default-photo.png');
   document.querySelectorAll('.inv-fin').forEach((btn) => {
     btn.addEventListener('click', () => { state.ink = btn.dataset.finish === 'ink'; render(); });
   });
-  ['inv-name', 'inv-age', 'inv-hype', 'inv-date', 'inv-time', 'inv-bring', 'inv-rsvp', 'inv-rsvpurl'].forEach((id) => {
+  ['inv-name', 'inv-age', 'inv-hype', 'inv-date', 'inv-time', 'inv-bring', 'inv-rsvp'].forEach((id) => {
     $(id)?.addEventListener('input', render);
   });
 
