@@ -1,0 +1,144 @@
+---
+/**
+ * Flippable "offering" card — the home "three ways to get moving" cards.
+ * Shared by the desktop home and the mobile home screen. Size knobs are CSS
+ * variables so desktop keeps its 432px / 16:10 look while mobile can pass a
+ * compact 360px / 16:9 variant; the defaults reproduce the desktop card exactly.
+ */
+import { url } from '../data/site';
+
+interface Point { icon: string; text: string; }
+interface Props {
+  title: string;
+  tag: string;
+  color: string;
+  href: string;
+  desc: string;
+  back: string;
+  points: Point[];
+  image?: string;
+  placeholder?: string;
+  /** size variant knobs — defaults = the desktop card */
+  height?: string;
+  mediaRatio?: string;
+  titleSize?: string;
+  descSize?: string;
+  backTitleSize?: string;
+  padFront?: string;
+  padBack?: string;
+}
+const {
+  title, tag, color, href, desc, back, points,
+  image = '', placeholder = '',
+  height = '432px', mediaRatio = '16/10', titleSize = '22px',
+  descSize = '13px', backTitleSize = '20px',
+  padFront = '22px 22px 24px', padBack = '24px 24px 22px',
+} = Astro.props;
+
+const isVideo = /\.(mp4|webm|ogv|mov)(\?|$)/i.test(image);
+const src = image.startsWith('assets/') ? url(image) : image;
+const vars = `--c:${color}; --oc-h:${height}; --oc-ratio:${mediaRatio}; --oc-title:${titleSize}; --oc-desc:${descSize}; --oc-backtitle:${backTitleSize}; --oc-pad-front:${padFront}; --oc-pad-back:${padBack}`;
+---
+<div class="flip" style={vars}>
+  <div class="flip-inner">
+    <div class="flip-face flip-front">
+      <div class="flip-media">
+        {image ? (
+          isVideo
+            ? <video class="flip-img" src={src} muted loop playsinline webkit-playsinline preload="metadata"></video>
+            : <img class="flip-img" src={src} alt={title} loading="lazy" />
+        ) : (
+          <div class="flip-ph">
+            <i class="bi bi-camera" aria-hidden="true"></i>
+            <span class="flip-ph-tag">Photo needed</span>
+            <span class="flip-ph-desc">{placeholder}</span>
+          </div>
+        )}
+        <span class="flip-tag" style={`background:${color}`}>{tag}</span>
+        <button class="flip-btn" type="button" aria-label="Flip card"><i class="bi bi-arrow-repeat" aria-hidden="true"></i></button>
+      </div>
+      <div class="flip-body">
+        <h3 class="flip-title">{title}</h3>
+        <p class="flip-desc">{desc}</p>
+        <div class="flip-foot">
+          <span class="flip-hint"><i class="bi bi-arrow-repeat" style={`color:${color}`} aria-hidden="true"></i>Tap for full details</span>
+          <a href={href} class="flip-go">Open <i class="bi bi-arrow-right" style={`color:${color}`} aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="flip-face flip-back">
+      <div class="flip-backhead">
+        <span style={`color:${color}`}>{title}</span>
+        <button class="flip-back-btn" type="button" aria-label="Flip back"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Back</button>
+      </div>
+      <h3 class="flip-backtitle">{back}</h3>
+      <div class="flip-points">
+        {points.map((pt) => (
+          <div class="flip-point">
+            <span class="flip-point-ic" style={`background:color-mix(in srgb,${color} 13%,#fff)`}><i class={`bi ${pt.icon}`} style={`color:${color}`} aria-hidden="true"></i></span>
+            <span>{pt.text}</span>
+          </div>
+        ))}
+      </div>
+      <a href={href} class="flip-go flip-go-back">Explore {title} <i class="bi bi-arrow-right" style={`color:${color}`} aria-hidden="true"></i></a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .flip { position: relative; height: var(--oc-h); perspective: 1600px; }
+  .flip-inner { position: relative; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.2,.75,.25,1); transform-style: preserve-3d; }
+  .flip.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: var(--shadow-sm); }
+  .flip:hover .flip-face { box-shadow: var(--shadow-lg); }
+  .flip-front { position: relative; min-height: 100%; display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+  .flip-back { position: absolute; inset: 0; transform: rotateY(180deg); background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: var(--oc-pad-back); display: flex; flex-direction: column; }
+  .flip-media { position: relative; aspect-ratio: var(--oc-ratio); overflow: hidden; background: #eceae4; }
+  .flip-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+  .flip:hover .flip-img { transform: scale(1.06); }
+  .flip-ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 18px; background: repeating-linear-gradient(45deg, #f0eee9, #f0eee9 12px, #ebe9e3 12px, #ebe9e3 24px); }
+  .flip-ph i { font-size: 22px; color: #a8a49a; }
+  .flip-ph-tag { font: 700 10px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted-3); }
+  .flip-ph-desc { font: 500 12.5px/1.5 var(--font-body); color: #7a766e; max-width: 230px; }
+  .flip-tag { position: absolute; top: 12px; left: 12px; z-index: 2; font: 700 10px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: #fff; padding: 6px 10px; border-radius: 999px; }
+  .flip-btn { position: absolute; top: 12px; right: 12px; z-index: 2; width: 30px; height: 30px; border-radius: 50%; background: rgba(28,25,23,.5); backdrop-filter: blur(4px); border: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; cursor: pointer; transition: all .15s; }
+  .flip-btn:hover { background: var(--c); }
+  .flip-body { padding: var(--oc-pad-front); display: flex; flex-direction: column; flex: 1; }
+  .flip-title { font: 800 var(--oc-title)/1.1 var(--font-display); letter-spacing: -.01em; margin-bottom: 8px; }
+  .flip-desc { font: 400 var(--oc-desc)/1.5 var(--font-body); color: var(--text-3); margin-bottom: 16px; }
+  .flip-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line-soft); }
+  .flip-hint { display: inline-flex; align-items: center; gap: 6px; font: 700 12px/1 var(--font-display); letter-spacing: .02em; color: var(--muted-3); }
+  .flip-go { display: inline-flex; align-items: center; gap: 7px; font: 800 13px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); text-decoration: none; transition: gap .15s; }
+  .flip-go:hover { gap: 11px; }
+  .flip-backhead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; font: 700 11px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; }
+  .flip-back-btn { background: none; border: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font: 700 11px/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+  .flip-backtitle { font: 800 var(--oc-backtitle)/1.12 var(--font-display); letter-spacing: -.01em; margin-bottom: 16px; }
+  .flip-points { display: flex; flex-direction: column; gap: 13px; }
+  .flip-point { display: flex; align-items: flex-start; gap: 11px; font: 600 13px/1.3 var(--font-body); color: var(--text-2); }
+  .flip-point-ic { flex: none; width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .flip-point span:last-child { padding-top: 5px; }
+  .flip-go-back { margin-top: auto; padding-top: 16px; }
+</style>
+
+<script>
+  // Click the card (not a link) to flip; the flip buttons toggle too.
+  document.querySelectorAll('.flip').forEach((card) => {
+    card.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) return;
+      card.classList.toggle('flipped');
+    });
+  });
+
+  // Card videos play only while on screen (saves the up-front download).
+  const flipVids = document.querySelectorAll<HTMLVideoElement>('.flip-media video');
+  if (flipVids.length) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const v = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) v.play().catch(() => {});
+        else v.pause();
+      });
+    }, { rootMargin: '120px' });
+    flipVids.forEach((v) => io.observe(v));
+  }
+</script>

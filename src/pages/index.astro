@@ -1,48 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
+import OfferingCard from '../components/OfferingCard.astro';
 import Reviews from '../components/Reviews.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { seo, links, cat, url } from '../data/site';
-
-const offerings = [
-  {
-    title: 'Train', tag: 'Classes · Open Gym', color: cat.classes, href: url('train'),
-    image: 'assets/athletic.mp4',
-    placeholder: 'Athletes training — open gym floor or a class mid-session',
-    desc: 'Drop in for open gym, book a class, or train like an athlete — every age and level.',
-    back: 'How you can train',
-    points: [
-      { icon: 'bi-unlock', text: 'Open Gym — drop in daily, no time limit' },
-      { icon: 'bi-mortarboard', text: 'Group Classes — parkour, flips, calisthenics, tricking & more' },
-      { icon: 'bi-trophy', text: 'Athletic Program — structured, athlete-level coaching' },
-      { icon: 'bi-person-arms-up', text: 'Private — one-on-one, built around your goals' },
-    ],
-  },
-  {
-    title: 'Camps', tag: 'Kids 5+', color: cat.camps, href: url('camps'),
-    image: 'assets/camps-home.png',
-    placeholder: 'Kids at camp — a group shot or a candid mid-activity photo',
-    desc: 'Full days of skills, flips, games and friends over school breaks and P.A. days.',
-    back: 'Pick your camp',
-    points: [
-      { icon: 'bi-calendar-week', text: 'Weekly Camps — Winter, March & Summer' },
-      { icon: 'bi-people', text: 'Private Day Camp — your own crew, any day' },
-      { icon: 'bi-sun', text: 'P.A. Day Camp — single days, open to all' },
-    ],
-  },
-  {
-    title: 'Events', tag: 'Parties · Groups', color: cat.parties, href: url('events'),
-    placeholder: 'A birthday crew mid-celebration — party room or foam pit',
-    desc: 'Birthdays that flip, plus group events for schools, teams and organizations.',
-    back: 'Celebrate with us',
-    points: [
-      { icon: 'bi-balloon', text: 'Full & Mini birthday parties' },
-      { icon: 'bi-people-fill', text: 'Group events — schools, teams, orgs' },
-      { icon: 'bi-sunrise', text: 'Early gym access — the space to yourselves' },
-    ],
-  },
-];
+import { offerings } from '../data/offerings';
 
 const heroPhotos = [
   'gym-01.jpg', 'gym-02.jpg', 'gym-03.jpg', 'gym-04.jpg',
@@ -118,53 +81,7 @@ const camps = [
       <SectionHeader num="01" eyebrow="Where to start" title="Three ways to get moving" description="Drop in to play, book a class, send the kids to camp, or throw a party. Tap a card for what's inside." />
     </div>
     <div class="grid-cards">
-      {offerings.map((o) => (
-        <div class="flip" style={`--c:${o.color}`}>
-          <div class="flip-inner">
-            <div class="flip-face flip-front">
-              <div class="flip-media">
-                {o.image ? (
-                  /\.(mp4|webm|ogv|mov)(\?|$)/i.test(o.image)
-                    ? <video class="flip-img" src={url(o.image)} muted loop playsinline webkit-playsinline preload="metadata"></video>
-                    : <img class="flip-img" src={url(o.image)} alt={o.title} loading="lazy" />
-                ) : (
-                  <div class="flip-ph">
-                    <i class="bi bi-camera" aria-hidden="true"></i>
-                    <span class="flip-ph-tag">Photo needed</span>
-                    <span class="flip-ph-desc">{o.placeholder}</span>
-                  </div>
-                )}
-                <span class="flip-tag" style={`background:${o.color}`}>{o.tag}</span>
-                <button class="flip-btn" type="button" aria-label="Flip card"><i class="bi bi-arrow-repeat" aria-hidden="true"></i></button>
-              </div>
-              <div class="flip-body">
-                <h3 class="flip-title">{o.title}</h3>
-                <p class="flip-desc">{o.desc}</p>
-                <div class="flip-foot">
-                  <span class="flip-hint"><i class="bi bi-arrow-repeat" style={`color:${o.color}`} aria-hidden="true"></i>Tap for full details</span>
-                  <a href={o.href} class="flip-go">Open <i class="bi bi-arrow-right" style={`color:${o.color}`} aria-hidden="true"></i></a>
-                </div>
-              </div>
-            </div>
-            <div class="flip-face flip-back">
-              <div class="flip-backhead">
-                <span style={`color:${o.color}`}>{o.title}</span>
-                <button class="flip-back-btn" type="button" aria-label="Flip back"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Back</button>
-              </div>
-              <h3 class="flip-backtitle">{o.back}</h3>
-              <div class="flip-points">
-                {o.points.map((pt) => (
-                  <div class="flip-point">
-                    <span class="flip-point-ic" style={`background:color-mix(in srgb,${o.color} 13%,#fff)`}><i class={`bi ${pt.icon}`} style={`color:${o.color}`} aria-hidden="true"></i></span>
-                    <span>{pt.text}</span>
-                  </div>
-                ))}
-              </div>
-              <a href={o.href} class="flip-go flip-go-back">Explore {o.title} <i class="bi bi-arrow-right" style={`color:${o.color}`} aria-hidden="true"></i></a>
-            </div>
-          </div>
-        </div>
-      ))}
+      {offerings.map((o) => <OfferingCard {...o} href={url(o.key)} />)}
     </div>
   </section>
 
@@ -245,41 +162,9 @@ const camps = [
   .bookstrip-inner span { font: 600 14px/1.6 var(--font-body); color: rgba(255,255,255,.7); }
   .bookstrip-inner a { margin-left: auto; font: 800 13px/1 var(--font-display); text-transform: uppercase; letter-spacing: .04em; color: var(--brand); text-decoration: none; display: inline-flex; align-items: center; gap: 7px; }
 
-  /* OFFERINGS / FLIP CARDS */
+  /* OFFERINGS (flip cards live in OfferingCard.astro) */
   .offerings { scroll-margin-top: 80px; padding-block: 48px 56px; }
   .offerings-head { margin-bottom: 26px; }
-  .flip { position: relative; height: 432px; perspective: 1600px; }
-  .flip-inner { position: relative; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.2,.75,.25,1); transform-style: preserve-3d; }
-  .flip.flipped .flip-inner { transform: rotateY(180deg); }
-  .flip-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: var(--shadow-sm); }
-  .flip:hover .flip-face { box-shadow: var(--shadow-lg); }
-  .flip-front { position: relative; min-height: 100%; display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
-  .flip-back { position: absolute; inset: 0; transform: rotateY(180deg); background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 24px 24px 22px; display: flex; flex-direction: column; }
-  .flip-media { position: relative; aspect-ratio: 16/10; overflow: hidden; background: #eceae4; }
-  .flip-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
-  .flip:hover .flip-img { transform: scale(1.06); }
-  .flip-ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 18px; background: repeating-linear-gradient(45deg, #f0eee9, #f0eee9 12px, #ebe9e3 12px, #ebe9e3 24px); }
-  .flip-ph i { font-size: 22px; color: #a8a49a; }
-  .flip-ph-tag { font: 700 10px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted-3); }
-  .flip-ph-desc { font: 500 12.5px/1.5 var(--font-body); color: #7a766e; max-width: 230px; }
-  .flip-tag { position: absolute; top: 12px; left: 12px; z-index: 2; font: 700 10px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: #fff; padding: 6px 10px; border-radius: 999px; }
-  .flip-btn { position: absolute; top: 12px; right: 12px; z-index: 2; width: 30px; height: 30px; border-radius: 50%; background: rgba(28,25,23,.5); backdrop-filter: blur(4px); border: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; cursor: pointer; transition: all .15s; }
-  .flip-btn:hover { background: var(--c); }
-  .flip-body { padding: 22px 22px 24px; display: flex; flex-direction: column; flex: 1; }
-  .flip-title { font: 800 22px/1.1 var(--font-display); letter-spacing: -.01em; margin-bottom: 8px; }
-  .flip-desc { font: 400 13px/1.5 var(--font-body); color: var(--text-3); margin-bottom: 16px; }
-  .flip-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line-soft); }
-  .flip-hint { display: inline-flex; align-items: center; gap: 6px; font: 700 12px/1 var(--font-display); letter-spacing: .02em; color: var(--muted-3); }
-  .flip-go { display: inline-flex; align-items: center; gap: 7px; font: 800 13px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); text-decoration: none; transition: gap .15s; }
-  .flip-go:hover { gap: 11px; }
-  .flip-backhead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; font: 700 11px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; }
-  .flip-back-btn { background: none; border: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font: 700 11px/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
-  .flip-backtitle { font: 800 20px/1.12 var(--font-display); letter-spacing: -.01em; margin-bottom: 16px; }
-  .flip-points { display: flex; flex-direction: column; gap: 13px; }
-  .flip-point { display: flex; align-items: flex-start; gap: 11px; font: 600 13px/1.3 var(--font-body); color: var(--text-2); }
-  .flip-point-ic { flex: none; width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-  .flip-point span:last-child { padding-top: 5px; }
-  .flip-go-back { margin-top: auto; padding-top: 16px; }
 
   /* CAMPS BAND */
   .camps-band { background: var(--ink); color: #fff; }
@@ -320,27 +205,6 @@ const camps = [
 </style>
 
 <script>
-  // Flip cards: click the card (not a link) to flip; the flip buttons toggle too.
-  document.querySelectorAll('.flip').forEach((card) => {
-    card.addEventListener('click', (e) => {
-      if ((e.target as HTMLElement).closest('a')) return;
-      card.classList.toggle('flipped');
-    });
-  });
-
-  // Offering-card videos play only while on screen (saves the up-front download).
-  const flipVids = document.querySelectorAll<HTMLVideoElement>('.flip-media video');
-  if (flipVids.length) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const v = entry.target as HTMLVideoElement;
-        if (entry.isIntersecting) v.play().catch(() => {});
-        else v.pause();
-      });
-    }, { rootMargin: '120px' });
-    flipVids.forEach((v) => io.observe(v));
-  }
-
   // Hero photo carousel: cross-fade every 4s. Only the first slide's photo is
   // in the initial HTML; the other seven hydrate after the page has loaded so
   // they never compete with the critical path.
