@@ -15,6 +15,7 @@ import ClassCard from '../../components/ClassCard.astro';
 import { offerings } from '../../data/offerings';
 import { firstSessionOptions } from '../../data/first-session';
 import { camps } from '../../data/camps';
+import { groupTiers, eventPricing } from '../../data/events';
 import { coreClasses, specializedClasses, partnershipClasses } from '../../data/classes';
 import type { ClassItem } from '../../data/classes';
 import { cat, links, site, social, hours, reviews, seo, url } from '../../data/site';
@@ -90,12 +91,6 @@ const aboutFacility = [
 ];
 
 // ---- Groups ----
-const groupTiers = [
-  { label: 'Up to 10', val: '$300 base' },
-  { label: '11–30', val: '$27.50 ea' },
-  { label: '31–50', val: '$25.00 ea' },
-  { label: '51+', val: '$22.50 ea' },
-];
 const eventFaqs = [
   { q: 'When do I pay?', a: 'Nothing upfront — the card on file is only for the cancellation policy. You pay in person on the day, based on final headcount.' },
   { q: 'Weekend slots full?', a: 'The availability online is all we have. Smaller groups can book a Mini party (3+ kids, $30 each).' },
@@ -426,7 +421,7 @@ const clientConfig = {
               <div class="m-ev-tlrow last"><span class="m-ev-tlt">30′</span><span>Open gym free play, supervised</span></div>
             </div>
             <div class="m-ev-price">
-              <div><div class="m-ev-big">$350</div><div class="m-ev-sub">base · up to 8 kids · +$25 each extra</div></div>
+              <div><div class="m-ev-big">{eventPricing.fullBirthdayBase}</div><div class="m-ev-sub">base · up to 8 kids · +$25 each extra</div></div>
               <span class="m-ev-meta">2 hrs · Ages 5+</span>
             </div>
             <a href={links.booking} target="_blank" rel="noopener" class="m-darkbtn">Book your party <i class="bi bi-arrow-up-right"></i></a>
@@ -437,7 +432,7 @@ const clientConfig = {
             <h3 class="m-ev-minititle">Mini Birthday Party</h3>
             <p class="m-ev-minidesc">The same one-hour coached parkour session — lower minimum, so smaller groups and last-minute plans still get in. All-day pass for every kid. No private room.</p>
             <div class="m-ev-minifoot">
-              <div><div class="m-ev-minibig">$30</div><div class="m-ev-minisub">per kid · 3–15 · ages 8+</div></div>
+              <div><div class="m-ev-minibig">{eventPricing.miniBirthdayPerKid}</div><div class="m-ev-minisub">per kid · 3–15 · ages 8+</div></div>
               <a href={links.booking} target="_blank" rel="noopener" class="m-brandbtn-sm">Book mini <i class="bi bi-arrow-right"></i></a>
             </div>
           </div>
@@ -488,7 +483,7 @@ const clientConfig = {
             </div>
             <p class="m-gdesc">Reserve the gym before we open at 11 AM for exclusive access — perfect for small groups or focused training with no crowds.</p>
             <div class="m-gfoot2">
-              <div><div class="m-gbig">From $50/hr</div><div class="m-gsub">+ $25 / person open gym</div></div>
+              <div><div class="m-gbig">{eventPricing.earlyAccessFrom}</div><div class="m-gsub">+ $25 / person open gym</div></div>
               <a href={links.booking} target="_blank" rel="noopener" class="m-darkbtn-sm">Reserve <i class="bi bi-arrow-up-right"></i></a>
             </div>
           </div>

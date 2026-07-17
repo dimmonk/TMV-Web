@@ -4,6 +4,7 @@ import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import Pill from '../components/Pill.astro';
 import { seo, links, site, cat, url } from '../data/site';
+import { groupTiers, eventPricing } from '../data/events';
 
 const partyImg = url('assets/invite-default-photo.png');
 
@@ -31,10 +32,6 @@ const faqGroups = [
   { title: 'During the party', items: [
     { q: 'Can we extend the open gym time?', a: "Yes — just ask the instructor assigned to your party. It's $5 per participant for an extra hour. Note that extending gym time does not extend your party-room time: the room must be vacated at the 2-hour mark so we can prep it for the next group." },
   ] },
-];
-const tiers = [
-  { label: 'Up to 10', val: '$300 base' }, { label: '11–30', val: '$27.50 each' },
-  { label: '31–50', val: '$25.00 each' }, { label: '51+', val: '$22.50 each' },
 ];
 ---
 <BaseLayout title={seo.events.title} description={seo.events.description} active="events">
@@ -75,7 +72,7 @@ const tiers = [
           <div style="margin-bottom:22px"><Pill variant="light" gap={8} items="Ages 5+ | 2 hrs total | Private room" /></div>
           <div class="ev-full-foot">
             <div class="ev-full-price">
-              <div><div class="ev-big">$350</div><div class="ev-sub">base price · up to 8 participants</div></div>
+              <div><div class="ev-big">{eventPricing.fullBirthdayBase}</div><div class="ev-sub">base price · up to 8 participants</div></div>
               <div class="ev-extra">+$25 per additional participant<br>+$5 / participant for an extra hour</div>
             </div>
             <div class="ev-full-actions">
@@ -102,7 +99,7 @@ const tiers = [
           <div class="ev-mini-li no"><i class="bi bi-dash-circle" aria-hidden="true"></i>No private room — common-area tables are shared, not guaranteed</div>
         </div>
         <div class="ev-mini-foot">
-          <div><div class="ev-mini-price">$30</div><div class="ev-mini-per">per participant</div></div>
+          <div><div class="ev-mini-price">{eventPricing.miniBirthdayPerKid}</div><div class="ev-mini-per">per participant</div></div>
           <a href={links.booking} target="_blank" rel="noopener" class="btn btn-primary">Book mini <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
         </div>
       </div>
@@ -153,7 +150,7 @@ const tiers = [
         <p class="ev-gdesc">Two hours total — an hour of guided activities, then an hour of open gym. Intro parkour workshops, team-building obstacle courses, games and skill development for all levels. Great for field trips, teams and community events.</p>
         <div class="ev-gfoot">
           <div class="ev-glabel">Price per participant</div>
-          <div class="ev-tiers">{tiers.map((t) => <div class="ev-tier"><span>{t.label}</span><span class="ev-tier-v">{t.val}</span></div>)}</div>
+          <div class="ev-tiers">{groupTiers.map((t) => <div class="ev-tier"><span>{t.label}</span><span class="ev-tier-v">{t.val}</span></div>)}</div>
           <p class="ev-gfine">Minimum 10 participants; smaller groups pay the $300 base. Final total is calculated on event day from the final headcount.</p>
           <a href={links.booking} target="_blank" rel="noopener" class="btn btn-dark">Plan an event <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
         </div>
@@ -162,7 +159,7 @@ const tiers = [
         <div class="ev-ghead"><span class="ev-gic" style="background:color-mix(in srgb,#2e9e4f 14%,#fff)"><i class="bi bi-sunrise" style="color:#2e9e4f" aria-hidden="true"></i></span><div><div class="ev-geyebrow" style="color:#2e9e4f">Early Gym Access</div><div class="ev-gtitle">The gym, all to yourself</div></div></div>
         <p class="ev-gdesc">Reserve The Monkey Vault before we open at 11 AM for exclusive access. Perfect for small groups or focused training with no crowds.</p>
         <div class="ev-gfoot2">
-          <div><div class="ev-big2">From $50/hr</div><div class="ev-sub">+ $25 / person open gym</div></div>
+          <div><div class="ev-big2">{eventPricing.earlyAccessFrom}</div><div class="ev-sub">+ $25 / person open gym</div></div>
           <a href={links.booking} target="_blank" rel="noopener" class="btn btn-dark">Reserve time <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
         </div>
       </div>
