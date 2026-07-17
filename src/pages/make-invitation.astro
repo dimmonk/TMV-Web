@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { seo, links, site, url } from '../data/site';
 
 const defaultAddress = `${site.address.street} · ${site.address.locality}`;
+const defaultPhoto = url('assets/invite-default-photo.png');
 ---
 <BaseLayout title={seo.makeInvitation.title} description={seo.makeInvitation.description} active="events">
   <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js" is:inline></script>
@@ -57,8 +58,6 @@ const defaultAddress = `${site.address.street} · ${site.address.locality}`;
             <div><label class="inv-lab" for="inv-date">Date</label><input id="inv-date" class="inv-in" value="Saturday, August 16" placeholder="Saturday, August 16"></div>
             <div><label class="inv-lab" for="inv-time">Time</label><input id="inv-time" class="inv-in" value="2:00 – 4:00 PM" placeholder="2:00 – 4:00 PM"></div>
           </div>
-          <div><label class="inv-lab" for="inv-venue">Location name</label><input id="inv-venue" class="inv-in" value="The Monkey Vault" placeholder="The Monkey Vault"></div>
-          <div><label class="inv-lab" for="inv-address">Address</label><input id="inv-address" class="inv-in" value={defaultAddress} placeholder={defaultAddress}></div>
           <div><label class="inv-lab" for="inv-bring">What to bring <span class="inv-lab-note">— separate with commas</span></label><input id="inv-bring" class="inv-in" value="Clean shoes, Lots of energy" placeholder="Clean shoes, Lots of energy"></div>
           <div><label class="inv-lab" for="inv-rsvp">RSVP contact</label><input id="inv-rsvp" class="inv-in" value="Text Alex · 416-555-0142" placeholder="Text Alex · 416-555-0142"></div>
           <div><label class="inv-lab" for="inv-rsvpurl">QR link <span class="inv-lab-note">— waiver / RSVP</span></label><input id="inv-rsvpurl" class="inv-in" value={links.waiver} placeholder="https://…"></div>
@@ -74,96 +73,108 @@ const defaultAddress = `${site.address.street} · ${site.address.locality}`;
       </div>
 
       <div class="inv-stage">
-        <div class="inv-stage-row">
-          <div id="inv-live-card">
-            <!-- PORTRAIT -->
-            <div id="inv-card-portrait" class="inv-p-card">
-              <div id="inv-p-photohead" class="inv-p-photohead">
-                <img id="inv-p-photo" class="inv-p-photoimg" src={url('assets/invite-default-photo.png')} alt="" />
-                <div id="inv-p-badge" class="inv-p-badge">You're invited!</div>
-              </div>
-              <div id="inv-p-inkhead" class="inv-p-inkhead" hidden>
-                <div id="inv-p-inkbadge" class="inv-p-badge">You're invited!</div>
-                <img src={url('assets/tmvlogo.png')} alt="The Monkey Vault" class="inv-p-inklogo" />
-              </div>
-              <div class="inv-p-body">
-                <div class="inv-p-eyebrow">A parkour birthday party for</div>
-                <h2 id="inv-p-name" class="inv-p-name">Maya</h2>
-                <div class="inv-p-turning">is turning <span id="inv-p-age" class="inv-p-age">8</span></div>
-                <div id="inv-p-hype" class="inv-p-hype">"Come flip, climb & fly"</div>
-                <div class="inv-p-meta">
-                  <div class="inv-p-metarow"><i class="bi bi-calendar-event" aria-hidden="true"></i><div><div id="inv-p-date" class="inv-p-metamain">Saturday, August 16</div><div id="inv-p-time" class="inv-p-metasub">2:00 – 4:00 PM</div></div></div>
-                  <div class="inv-p-metarow"><i class="bi bi-geo-alt" aria-hidden="true"></i><div><div id="inv-p-venue" class="inv-p-metamain">The Monkey Vault</div><div id="inv-p-address" class="inv-p-metasub">{defaultAddress}</div></div></div>
-                </div>
-                <div class="inv-p-bring">
-                  <span class="inv-p-bringlabel">Bring</span>
-                  <div id="inv-p-bringlist" class="inv-p-bringlist"></div>
-                </div>
-                <div class="inv-p-rsvprow">
-                  <div class="inv-p-rsvpcol">
-                    <div class="inv-p-rsvplabel">Please RSVP</div>
-                    <div id="inv-p-rsvp" class="inv-p-rsvpval">Text Alex · 416-555-0142</div>
-                    <div class="inv-p-scan"><i class="bi bi-qr-code-scan" aria-hidden="true"></i>Scan to sign the waiver first</div>
-                  </div>
-                  <div class="inv-p-qrbox"><img class="inv-qr-img" data-qr alt="Sign the waiver first" /></div>
-                </div>
-              </div>
-            </div>
+        <div class="inv-stage-row" id="inv-stage-row">
+          <div id="inv-bg-col" class="inv-bg-col">
+            <div class="inv-bg-label">BG</div>
+            <button type="button" class="inv-bg-chip active" data-bg="1" title="Background 1">1</button>
+          </div>
 
-            <!-- TICKET -->
-            <div id="inv-card-ticket" class="inv-t-card" hidden>
-              <div id="inv-t-body" class="inv-t-body">
-                <div id="inv-t-glow" class="inv-t-glow"></div>
-                <div class="inv-t-brand"><img src={url('assets/tmvlogo.png')} alt="" class="inv-t-logo" /><span id="inv-t-eyebrow" class="inv-t-eyebrow">Admit One · Birthday Bash</span></div>
-                <div class="inv-t-main">
-                  <div id="inv-t-of" class="inv-t-of">The party of</div>
-                  <h2 id="inv-t-name" class="inv-t-name">Maya</h2>
-                  <div id="inv-t-turns" class="inv-t-turns">turns 8 — Come flip, climb & fly</div>
-                  <div class="inv-t-chips">
-                    <span id="inv-t-chip-date" class="inv-t-chip"><i class="bi bi-calendar-event" aria-hidden="true"></i><span id="inv-t-date">Saturday, August 16</span></span>
-                    <span id="inv-t-chip-time" class="inv-t-chip"><i class="bi bi-clock" aria-hidden="true"></i><span id="inv-t-time">2:00 – 4:00 PM</span></span>
-                    <span id="inv-t-chip-venue" class="inv-t-chip"><i class="bi bi-geo-alt" aria-hidden="true"></i><span id="inv-t-venue">The Monkey Vault</span></span>
+          <div id="inv-scale-wrap" class="inv-scale-wrap">
+            <div id="inv-live-card">
+              <!-- PORTRAIT -->
+              <div id="inv-card-portrait" class="inv-p-card">
+                <div id="inv-p-photohead" class="inv-p-photohead">
+                  <img id="inv-p-photo" class="inv-p-photoimg" src={defaultPhoto} alt="" />
+                  <div class="inv-p-badge">You're invited!</div>
+                </div>
+                <div id="inv-p-inkhead" class="inv-p-inkhead" hidden>
+                  <div class="inv-p-badge">You're invited!</div>
+                  <img src={url('assets/tmvlogo.png')} alt="The Monkey Vault" class="inv-p-inklogo" />
+                </div>
+                <div class="inv-p-body">
+                  <div class="inv-p-eyebrow">A parkour birthday party for</div>
+                  <h2 id="inv-p-name" class="inv-p-name">Maya</h2>
+                  <div class="inv-p-turning">is turning <span id="inv-p-age" class="inv-p-age">8</span></div>
+                  <div id="inv-p-hype" class="inv-p-hype">"Come flip, climb & fly"</div>
+                  <div class="inv-p-meta">
+                    <div class="inv-p-metarow"><i class="bi bi-calendar-event" aria-hidden="true"></i><div><div id="inv-p-date" class="inv-p-metamain">Saturday, August 16</div><div id="inv-p-time" class="inv-p-metasub">2:00 – 4:00 PM</div></div></div>
+                    <div class="inv-p-metarow"><i class="bi bi-geo-alt" aria-hidden="true"></i><div><div class="inv-p-metamain">{site.name}</div><div class="inv-p-metasub">{defaultAddress}</div></div></div>
                   </div>
-                  <div id="inv-t-bring" class="inv-t-bring"><strong>Bring:</strong> <span id="inv-t-bringline">Clean shoes, Lots of energy</span></div>
+                  <div class="inv-p-bring">
+                    <span class="inv-p-bringlabel">Bring</span>
+                    <div id="inv-p-bringlist" class="inv-p-bringlist"></div>
+                  </div>
+                  <div class="inv-p-rsvprow">
+                    <div class="inv-p-rsvpcol">
+                      <div class="inv-p-rsvplabel">Please RSVP</div>
+                      <div id="inv-p-rsvp" class="inv-p-rsvpval">Text Alex · 416-555-0142</div>
+                      <div class="inv-p-scan"><i class="bi bi-qr-code-scan" aria-hidden="true"></i>Scan to sign the waiver first</div>
+                    </div>
+                    <div class="inv-p-qrbox"><img class="inv-qr-img" data-qr alt="Sign the waiver first" /></div>
+                  </div>
                 </div>
               </div>
-              <div class="inv-t-perf"></div>
-              <div id="inv-t-stub" class="inv-t-stub">
-                <div class="inv-t-stublabel">Your invite</div>
-                <div class="inv-t-qrbox"><img class="inv-qr-img" data-qr alt="Sign the waiver first" /></div>
-                <div class="inv-t-stubtitle">Sign the waiver first</div>
-                <div id="inv-t-rsvp" class="inv-t-stubrsvp">Text Alex · 416-555-0142</div>
-                <div id="inv-t-stubaddr" class="inv-t-stubaddr">{defaultAddress}</div>
-              </div>
-            </div>
 
-            <!-- SQUARE -->
-            <div id="inv-card-square" class="inv-sq-card" hidden>
-              <div id="inv-sq-stripe" class="inv-sq-stripe" hidden></div>
-              <div id="inv-sq-agebg" class="inv-sq-agebg">8</div>
-              <div class="inv-sq-flag">You're invited!</div>
-              <div class="inv-sq-brand"><img src={url('assets/tmvlogo.png')} alt="" class="inv-sq-logo" /><span>The Monkey Vault</span></div>
-              <div class="inv-sq-main">
-                <div class="inv-sq-tag">It's a parkour party!</div>
-                <h2 class="inv-sq-name">Turns <span id="inv-sq-age">8</span></h2>
-                <div id="inv-sq-nameline" class="inv-sq-nameline">Maya</div>
-                <div id="inv-sq-hype" class="inv-sq-hype">Come flip, climb & fly</div>
-                <div class="inv-sq-rows">
-                  <div class="inv-sq-row"><i class="bi bi-calendar-event" aria-hidden="true"></i><span id="inv-sq-datetime">Saturday, August 16 · 2:00 – 4:00 PM</span></div>
-                  <div class="inv-sq-row"><i class="bi bi-geo-alt" aria-hidden="true"></i><span id="inv-sq-venueaddr">The Monkey Vault · {defaultAddress}</span></div>
-                  <div class="inv-sq-row"><i class="bi bi-bag-check" aria-hidden="true"></i><span id="inv-sq-bring">Bring Clean shoes, Lots of energy</span></div>
+              <!-- TICKET -->
+              <div id="inv-card-ticket" class="inv-t-card" hidden>
+                <div id="inv-t-body" class="inv-t-body">
+                  <div id="inv-t-glow" class="inv-t-glow"></div>
+                  <div class="inv-t-brand"><img src={url('assets/tmvlogo.png')} alt="" class="inv-t-logo" /><span id="inv-t-eyebrow" class="inv-t-eyebrow">Admit One · Birthday Bash</span></div>
+                  <div class="inv-t-main">
+                    <div id="inv-t-of" class="inv-t-of">The party of</div>
+                    <h2 id="inv-t-name" class="inv-t-name">Maya</h2>
+                    <div id="inv-t-turns" class="inv-t-turns">turns 8 — Come flip, climb & fly</div>
+                    <div class="inv-t-chips">
+                      <span id="inv-t-chip-date" class="inv-t-chip"><i class="bi bi-calendar-event" aria-hidden="true"></i><span id="inv-t-date">Saturday, August 16</span></span>
+                      <span id="inv-t-chip-time" class="inv-t-chip"><i class="bi bi-clock" aria-hidden="true"></i><span id="inv-t-time">2:00 – 4:00 PM</span></span>
+                      <span id="inv-t-chip-venue" class="inv-t-chip"><i class="bi bi-geo-alt" aria-hidden="true"></i><span>{site.name}</span></span>
+                    </div>
+                    <div id="inv-t-bring" class="inv-t-bring"><span id="inv-t-bringlabel" class="inv-t-bringlabel">Bring:</span> <span id="inv-t-bringline">Clean shoes, Lots of energy</span></div>
+                  </div>
+                </div>
+                <div class="inv-t-perf"></div>
+                <div id="inv-t-stub" class="inv-t-stub">
+                  <div class="inv-t-stublabel">Your invite</div>
+                  <div class="inv-t-qrbox"><img class="inv-qr-img" data-qr alt="Sign the waiver first" /></div>
+                  <div class="inv-t-stubtitle">Sign the waiver first</div>
+                  <div id="inv-t-rsvp" class="inv-t-stubrsvp">Text Alex · 416-555-0142</div>
+                  <div class="inv-t-stubaddr">{defaultAddress}</div>
                 </div>
               </div>
-              <div class="inv-sq-foot">
-                <div class="inv-sq-qrbox"><img class="inv-qr-img" data-qr alt="Sign the waiver first" /></div>
-                <div>
-                  <div class="inv-sq-footlabel">Sign the waiver first</div>
-                  <div id="inv-sq-rsvp" class="inv-sq-footrsvp">Text Alex · 416-555-0142</div>
+
+              <!-- SQUARE -->
+              <div id="inv-card-square" class="inv-sq-card" hidden>
+                <div id="inv-sq-stripe" class="inv-sq-stripe" hidden></div>
+                <div id="inv-sq-agebg" class="inv-sq-agebg">8</div>
+                <div class="inv-sq-flag">You're invited!</div>
+                <div class="inv-sq-brand"><img src={url('assets/tmvlogo.png')} alt="" class="inv-sq-logo" /><span>{site.name}</span></div>
+                <div class="inv-sq-main">
+                  <div class="inv-sq-tag">It's a parkour party!</div>
+                  <h2 class="inv-sq-name">Maya<br>turns <span id="inv-sq-age">8</span></h2>
+                  <div id="inv-sq-hype" class="inv-sq-hype">Come flip, climb & fly</div>
+                  <div class="inv-sq-rows">
+                    <div class="inv-sq-row"><i class="bi bi-calendar-event" aria-hidden="true"></i><span id="inv-sq-datetime">Saturday, August 16 · 2:00 – 4:00 PM</span></div>
+                    <div class="inv-sq-row"><i class="bi bi-geo-alt" aria-hidden="true"></i><span id="inv-sq-venueaddr">{site.name} · {defaultAddress}</span></div>
+                    <div class="inv-sq-row"><i class="bi bi-bag-check" aria-hidden="true"></i><span id="inv-sq-bring">Bring Clean shoes, Lots of energy</span></div>
+                  </div>
                 </div>
-                <span class="inv-sq-handle">@themonkeyvault</span>
+                <div class="inv-sq-foot">
+                  <div class="inv-sq-qrbox"><img class="inv-qr-img" data-qr alt="Sign the waiver first" /></div>
+                  <div>
+                    <div class="inv-sq-footlabel">Sign the waiver first</div>
+                    <div id="inv-sq-rsvp" class="inv-sq-footrsvp">Text Alex · 416-555-0142</div>
+                  </div>
+                  <span class="inv-sq-handle">@themonkeyvault</span>
+                </div>
               </div>
             </div>
           </div>
+
+          <div id="inv-photo-col" class="inv-photo-col">
+            <button type="button" id="inv-replace-photo" class="inv-photobtn inv-photobtn-dark"><i class="bi bi-upload" aria-hidden="true"></i>Replace</button>
+            <button type="button" id="inv-remove-photo" class="inv-photobtn"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>Remove</button>
+          </div>
+          <input type="file" id="inv-photo-input" accept="image/*" hidden />
         </div>
       </div>
       <p class="inv-hint"><i class="bi bi-info-circle" aria-hidden="true"></i><span id="inv-hint-text">Download a high-res PNG to text or post to your story, or print it. In the print dialog you can scale it or fit several per page.</span></p>
@@ -210,19 +221,39 @@ const defaultAddress = `${site.address.street} · ${site.address.locality}`;
   .inv-in { width: 100%; font: 600 14px/1.3 -apple-system, system-ui, sans-serif; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; outline: none; transition: border-color .12s, box-shadow .12s; }
   .inv-in:focus { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(33,31,27,.08); }
 
-  .inv-preview { position: sticky; top: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .inv-preview { position: sticky; top: 20px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
   .inv-preview-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
   .inv-preview-title { font: 800 15px/1 var(--font-display); }
   .inv-preview-sub { font: 600 12.5px/1 var(--font-body); color: var(--muted-3); }
-  .inv-stage { background: #eceae5; border: 1px solid #e3e0d8; border-radius: 18px; padding: 44px 36px; min-height: 680px; display: flex; align-items: center; justify-content: center; overflow: auto; background-image: radial-gradient(rgba(33,31,27,.05) 1px, transparent 1px); background-size: 16px 16px; }
-  .inv-stage-row { display: flex; align-items: center; gap: 20px; }
+  .inv-stage { background: #eceae5; border: 1px solid #e3e0d8; border-radius: 18px; padding: 44px 36px; min-height: 680px; display: flex; align-items: center; justify-content: center; background-image: radial-gradient(rgba(33,31,27,.05) 1px, transparent 1px); background-size: 16px 16px; overflow: hidden; }
+  .inv-stage-row { display: flex; align-items: center; gap: 20px; max-width: 100%; }
   .inv-hint { display: flex; align-items: flex-start; gap: 9px; font: 500 12.5px/1.5 var(--font-body); color: var(--muted-3); }
   .inv-hint i { margin-top: 2px; color: #b3b0a8; }
 
-  /* [hidden] must win over the display:flex these three card classes set below
-     — equal-specificity author rules beat the UA [hidden]{display:none} rule
-     by source order otherwise, so the "inactive" card still renders. */
-  .inv-p-card[hidden], .inv-t-card[hidden], .inv-sq-card[hidden] { display: none; }
+  /* [hidden] must always win, full stop. Several elements on this page set
+     an explicit `display` (flex/block) at the same specificity tier as the
+     browser's own [hidden]{display:none} UA rule, so source order (not the
+     hidden state) decides which one applies — every one of those toggles
+     silently stayed visible until this was added. !important removes the
+     specificity race entirely instead of chasing it element by element. */
+  [hidden] { display: none !important; }
+
+  /* Scale the whole card down to fit the available stage width instead of
+     letting the fixed-px cards (440/660/470) force horizontal scroll on
+     narrower viewports — set via JS as a CSS custom property. */
+  .inv-scale-wrap { transform: scale(var(--inv-scale, 1)); transform-origin: center; transition: transform .15s ease; }
+
+  /* BG picker (Invite style only) */
+  .inv-bg-col { display: flex; flex-direction: column; align-items: center; gap: 10px; flex: none; }
+  .inv-bg-label { font: 700 9px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: #a29e95; margin-bottom: 2px; }
+  .inv-bg-chip { width: 44px; height: 44px; border-radius: 10px; cursor: pointer; font: 800 14px/1 var(--font-display); background: #fffbe6; color: var(--ink); border: 2px solid var(--brand); }
+
+  /* Replace / Remove photo (Invite style only) */
+  .inv-photo-col { display: flex; flex-direction: column; gap: 10px; width: 104px; flex: none; }
+  .inv-photobtn { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; font: 800 11px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; padding: 13px 8px; border-radius: 10px; background: #fff; color: var(--ink); border: 1px solid #d8d4cc; }
+  .inv-photobtn i { font-size: 16px; }
+  .inv-photobtn-dark { background: var(--ink); color: #fff; border: 0; }
+  .inv-photobtn-dark i { color: var(--brand); }
 
   /* PORTRAIT */
   .inv-p-card { width: 440px; min-height: 616px; background: #fff; border: 0; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 4px rgba(28,25,23,.06), 0 40px 70px -40px rgba(28,25,23,.55); display: flex; flex-direction: column; }
@@ -266,13 +297,12 @@ const defaultAddress = `${site.address.street} · ${site.address.locality}`;
   .inv-t-eyebrow { font: 900 11px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--inv-accent, #ffd400); }
   .inv-t-main { position: relative; }
   .inv-t-of { font: 700 11px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: 7px; }
-  .inv-t-name { font: 900 38px/.9 var(--font-display); letter-spacing: -.03em; margin: 0 0 4px; color: #fff; }
-  .inv-t-turns { font: 800 16px/1 var(--font-display); color: #fff; margin-bottom: 16px; }
+  .inv-t-name { font: 900 38px/.9 var(--font-display); letter-spacing: -.03em; margin: 0 0 4px; }
+  .inv-t-turns { font: 800 16px/1 var(--font-display); margin-bottom: 16px; }
   .inv-t-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .inv-t-chip { display: inline-flex; align-items: center; gap: 6px; font: 700 11px/1 var(--font-body); color: #fff; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.14); border-radius: 8px; padding: 8px 11px; }
-  .inv-t-chip i { color: var(--inv-accent, #ffd400); }
-  .inv-t-bring { font: 600 11.5px/1.4 var(--font-body); color: rgba(255,255,255,.6); margin-top: 12px; }
-  .inv-t-bring strong { color: #fff; font-weight: 800; }
+  .inv-t-chip { display: inline-flex; align-items: center; gap: 6px; font: 700 11px/1 var(--font-body); border-radius: 8px; padding: 8px 11px; }
+  .inv-t-bring { font: 600 11.5px/1.4 var(--font-body); margin-top: 12px; }
+  .inv-t-bringlabel { font-weight: 800; }
   .inv-t-perf { width: 2px; flex: none; background-image: radial-gradient(circle at center, transparent 5px, #eceae5 5px, #eceae5 6.5px, transparent 6.5px); background-size: 100% 15px; background-repeat: repeat-y; }
   .inv-t-stub { flex: none; width: 186px; background: var(--inv-accent, #ffd400); color: var(--ink); padding: 22px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
   .inv-t-stublabel { font: 900 10px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 14px; }
@@ -292,7 +322,6 @@ const defaultAddress = `${site.address.street} · ${site.address.locality}`;
   .inv-sq-main { position: relative; }
   .inv-sq-tag { font: 800 15px/1 var(--font-display); letter-spacing: .02em; margin-bottom: 2px; }
   .inv-sq-name { font: 900 58px/.86 var(--font-display); letter-spacing: -.035em; margin: 0 0 6px; }
-  .inv-sq-nameline { display: none; }
   .inv-sq-hype { font: 700 14px/1.35 var(--font-body); margin: 0 0 18px; max-width: 300px; }
   .inv-sq-rows { display: flex; flex-direction: column; gap: 6px; font: 700 13px/1.3 var(--font-body); }
   .inv-sq-row { display: flex; align-items: center; gap: 9px; }
@@ -311,30 +340,31 @@ const defaultAddress = `${site.address.street} · ${site.address.locality}`;
   }
 </style>
 
-<script>
-  const $ = (id: string) => document.getElementById(id);
+<script define:vars={{ FIXED_VENUE: site.name, FIXED_ADDRESS: defaultAddress, DEFAULT_PHOTO: defaultPhoto }}>
+  const $ = (id) => document.getElementById(id);
   const root = document.documentElement;
 
   const state = {
     style: 'portrait',
     ink: false,
     accent: '#ffd400',
+    photoSrc: DEFAULT_PHOTO,
   };
 
-  function qrUrl(data: string) {
+  function qrUrl(data) {
     return 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=0&data=' +
       encodeURIComponent(data) + '&color=211f1b&bgcolor=ffffff';
   }
 
   function applyQr() {
-    const url = qrUrl(($('inv-rsvpurl') as HTMLInputElement).value);
-    document.querySelectorAll<HTMLImageElement>('#inv-live-card img[data-qr]').forEach((img) => {
-      if (img.src !== url) img.src = url;
+    const qrTarget = qrUrl($('inv-rsvpurl').value);
+    document.querySelectorAll('#inv-live-card img[data-qr]').forEach((img) => {
+      if (img.src !== qrTarget) img.src = qrTarget;
     });
   }
 
-  function fieldVal(id: string) {
-    return ($(id) as HTMLInputElement)?.value ?? '';
+  function fieldVal(id) {
+    return $(id)?.value ?? '';
   }
 
   function bringList() {
@@ -346,115 +376,144 @@ const defaultAddress = `${site.address.street} · ${site.address.locality}`;
     const age = fieldVal('inv-age') || '8';
     const date = fieldVal('inv-date');
     const time = fieldVal('inv-time');
-    const venue = fieldVal('inv-venue');
-    const address = fieldVal('inv-address');
+    const venue = FIXED_VENUE;
+    const address = FIXED_ADDRESS;
     const rsvp = fieldVal('inv-rsvp');
     const hype = fieldVal('inv-hype');
     const bring = bringList();
     const bringLine = bring.join(', ');
 
     root.style.setProperty('--inv-accent', state.accent);
+    $('inv-p-photo').src = state.photoSrc;
 
     // Portrait
-    $('inv-p-name')!.textContent = name;
-    $('inv-p-age')!.textContent = age;
-    $('inv-p-hype')!.textContent = `"${hype}"`;
-    $('inv-p-date')!.textContent = date;
-    $('inv-p-time')!.textContent = time;
-    $('inv-p-venue')!.textContent = venue;
-    $('inv-p-address')!.textContent = address;
-    $('inv-p-rsvp')!.textContent = rsvp;
-    const bringWrap = $('inv-p-bringlist')!;
-    bringWrap.innerHTML = '<span class="inv-p-bringlabel">Bring</span>' +
-      bring.map((b) => `<span class="inv-p-bringitem"><i class="bi bi-check2"></i>${b}</span>`).join('');
+    $('inv-p-name').textContent = name;
+    $('inv-p-age').textContent = age;
+    $('inv-p-hype').textContent = `"${hype}"`;
+    $('inv-p-date').textContent = date;
+    $('inv-p-time').textContent = time;
+    $('inv-p-rsvp').textContent = rsvp;
+    $('inv-p-bringlist').innerHTML = bring.map((b) => `<span class="inv-p-bringitem"><i class="bi bi-check2"></i>${b}</span>`).join('');
 
     // Ticket
-    $('inv-t-name')!.textContent = name;
-    $('inv-t-turns')!.textContent = `turns ${age} — ${hype}`;
-    $('inv-t-date')!.textContent = date;
-    $('inv-t-time')!.textContent = time;
-    $('inv-t-venue')!.textContent = venue;
-    $('inv-t-bringline')!.textContent = bringLine;
-    $('inv-t-rsvp')!.textContent = rsvp;
-    $('inv-t-stubaddr')!.textContent = address;
+    $('inv-t-name').textContent = name;
+    $('inv-t-turns').textContent = `turns ${age} — ${hype}`;
+    $('inv-t-date').textContent = date;
+    $('inv-t-time').textContent = time;
+    $('inv-t-bringline').textContent = bringLine;
+    $('inv-t-rsvp').textContent = rsvp;
 
     // Square
-    $('inv-sq-age')!.textContent = age;
-    $('inv-sq-nameline')!.textContent = name;
-    $('inv-sq-hype')!.textContent = hype;
-    $('inv-sq-datetime')!.textContent = `${date} · ${time}`;
-    $('inv-sq-venueaddr')!.textContent = `${venue} · ${address}`;
-    $('inv-sq-bring')!.textContent = `Bring ${bringLine}`;
-    $('inv-sq-rsvp')!.textContent = rsvp;
-    $('inv-sq-agebg')!.textContent = age;
-
-    // Square headline uses "Name turns Age" — swap the h2 text (age span stays)
+    $('inv-sq-age').textContent = age;
+    $('inv-sq-hype').textContent = hype;
+    $('inv-sq-datetime').textContent = `${date} · ${time}`;
+    $('inv-sq-venueaddr').textContent = `${venue} · ${address}`;
+    $('inv-sq-bring').textContent = `Bring ${bringLine}`;
+    $('inv-sq-rsvp').textContent = rsvp;
+    $('inv-sq-agebg').textContent = age;
     const sqNameH2 = document.querySelector('.inv-sq-name');
     if (sqNameH2) sqNameH2.innerHTML = `${name}<br>turns <span id="inv-sq-age">${age}</span>`;
 
     applyQr();
     applyFinish();
     applyStyle();
+    fitScale();
   }
 
   function applyStyle() {
-    $('inv-card-portrait')!.hidden = state.style !== 'portrait';
-    $('inv-card-ticket')!.hidden = state.style !== 'ticket';
-    $('inv-card-square')!.hidden = state.style !== 'square';
-    document.querySelectorAll<HTMLButtonElement>('.inv-style').forEach((btn) => {
+    $('inv-card-portrait').hidden = state.style !== 'portrait';
+    $('inv-card-ticket').hidden = state.style !== 'ticket';
+    $('inv-card-square').hidden = state.style !== 'square';
+    $('inv-bg-col').hidden = state.style !== 'portrait';
+    $('inv-photo-col').hidden = state.style !== 'portrait';
+    document.querySelectorAll('.inv-style').forEach((btn) => {
       btn.classList.toggle('active', btn.dataset.style === state.style);
     });
   }
 
   function applyFinish() {
     const ink = state.ink;
-    document.querySelectorAll<HTMLButtonElement>('.inv-fin').forEach((btn) => {
+    const accent = state.accent;
+    document.querySelectorAll('.inv-fin').forEach((btn) => {
       btn.classList.toggle('active', (btn.dataset.finish === 'ink') === ink);
     });
-    $('inv-finish-label')!.textContent = ink ? '· Ink-friendly' : '· Full colour';
-    $('inv-hint-text')!.textContent = ink
+    $('inv-finish-label').textContent = ink ? '· Ink-friendly' : '· Full colour';
+    $('inv-hint-text').textContent = ink
       ? 'Ink-friendly swaps the heavy backgrounds for white with accent detailing — far less ink at home. Download a PNG to text or post, or print and arrange as many per page as you like in your print dialog.'
-      : 'Download a high-res PNG to text or post to your story, or print it. In the print dialog you can scale it or fit several per page.';
+      : 'Download a high-res PNG to text or post to your story, or print it. In the print dialog you can scale it or fit several per page. Drop a photo into the Invite style first.';
 
     // portrait
-    $('inv-p-photohead')!.hidden = ink;
-    $('inv-p-inkhead')!.hidden = !ink;
-    ($('inv-card-portrait') as HTMLElement).style.border = ink ? '1px solid #e6e4dd' : '0';
+    $('inv-p-photohead').hidden = ink;
+    $('inv-p-inkhead').hidden = !ink;
+    $('inv-card-portrait').style.border = ink ? '1px solid #e6e4dd' : '0';
 
     // ticket
-    const tBody = $('inv-t-body') as HTMLElement;
-    tBody.style.background = ink ? '#ffffff' : '#211f1b';
-    tBody.style.color = ink ? '#211f1b' : '#ffffff';
+    const tkBodyBg = ink ? '#ffffff' : '#211f1b';
+    const tkBodyText = ink ? '#211f1b' : '#ffffff';
+    const tkEyebrow = ink ? '#211f1b' : accent;
+    const tkMuted = ink ? '#a29e95' : 'rgba(255,255,255,.5)';
+    const tkChipBg = ink ? '#f3f2ee' : 'rgba(255,255,255,.09)';
+    const tkChipBorder = ink ? '#e6e4dd' : 'rgba(255,255,255,.14)';
+    const tkIcon = ink ? '#211f1b' : accent;
+    const tkBring = ink ? '#6a6760' : 'rgba(255,255,255,.6)';
+    const tkStubBg = ink ? '#ffffff' : accent;
+
+    const tBody = $('inv-t-body');
+    tBody.style.background = tkBodyBg;
+    tBody.style.color = tkBodyText;
     tBody.style.border = ink ? '1px solid #e0ddd5' : '0';
-    (tBody.style as any).borderRight = ink ? '0' : '';
-    $('inv-t-glow')!.style.background = ink ? 'transparent'
-      : `radial-gradient(460px 220px at 100% -20%, color-mix(in srgb, ${state.accent} 22%, transparent), transparent 70%)`;
-    $('inv-t-eyebrow')!.style.color = ink ? '#211f1b' : state.accent;
+    tBody.style.borderRight = ink ? '0' : '';
+    $('inv-t-glow').style.background = ink ? 'transparent'
+      : `radial-gradient(460px 220px at 100% -20%, color-mix(in srgb, ${accent} 22%, transparent), transparent 70%)`;
+    $('inv-t-eyebrow').style.color = tkEyebrow;
+    $('inv-t-of').style.color = tkMuted;
+    $('inv-t-name').style.color = tkBodyText;
+    $('inv-t-turns').style.color = tkBodyText;
+    $('inv-t-bringlabel').style.color = tkBodyText;
+    $('inv-t-bring').style.color = tkBring;
     document.querySelectorAll('.inv-t-chip').forEach((chip) => {
-      (chip as HTMLElement).style.background = ink ? '#f3f2ee' : 'rgba(255,255,255,.09)';
-      (chip as HTMLElement).style.borderColor = ink ? '#e6e4dd' : 'rgba(255,255,255,.14)';
-      (chip as HTMLElement).style.color = ink ? '#211f1b' : '#fff';
+      chip.style.color = tkBodyText;
+      chip.style.background = tkChipBg;
+      chip.style.borderColor = tkChipBorder;
+      chip.style.borderWidth = '1px';
+      chip.style.borderStyle = 'solid';
     });
-    document.querySelectorAll('.inv-t-chip i').forEach((ic) => { (ic as HTMLElement).style.color = ink ? '#211f1b' : state.accent; });
-    $('inv-t-bring')!.style.color = ink ? '#6a6760' : 'rgba(255,255,255,.6)';
-    const stub = $('inv-t-stub') as HTMLElement;
-    stub.style.background = ink ? '#ffffff' : state.accent;
+    document.querySelectorAll('.inv-t-chip i').forEach((ic) => { ic.style.color = tkIcon; });
+    const stub = $('inv-t-stub');
+    stub.style.background = tkStubBg;
     stub.style.border = ink ? '1px solid #e0ddd5' : '0';
-    stub.style.borderLeft = ink ? `3px solid ${state.accent}` : '';
-    ($('inv-t-qrbox' ) as HTMLElement)?.style && (($('inv-t-stub')!.querySelector('.inv-t-qrbox') as HTMLElement).style.boxShadow = ink ? 'none' : '0 8px 18px -10px rgba(0,0,0,.4)');
+    stub.style.borderLeft = ink ? `3px solid ${accent}` : '';
+    stub.querySelector('.inv-t-qrbox').style.boxShadow = ink ? 'none' : '0 8px 18px -10px rgba(0,0,0,.4)';
+    stub.querySelector('.inv-t-qrbox').style.border = ink ? '1px solid #e6e4dd' : '0';
 
     // square
-    const sqCard = $('inv-card-square') as HTMLElement;
-    sqCard.style.background = ink ? '#ffffff' : state.accent;
+    const sqCard = $('inv-card-square');
+    sqCard.style.background = ink ? '#ffffff' : accent;
     sqCard.style.border = ink ? '1px solid #e6e4dd' : '0';
-    $('inv-sq-stripe')!.hidden = !ink;
+    $('inv-sq-stripe').hidden = !ink;
+  }
+
+  // Scale the whole preview card down to fit the stage without ever needing
+  // horizontal scroll (the ticket layout, at 660px plus the BG/photo side
+  // columns, is wider than the available column on laptop-size viewports).
+  function fitScale() {
+    const stageRow = $('inv-stage-row');
+    const wrap = $('inv-scale-wrap');
+    if (!stageRow || !wrap) return;
+    wrap.style.setProperty('--inv-scale', '1');
+    // measure natural (unscaled) width of the whole row against the stage's content box
+    const stage = stageRow.parentElement;
+    const available = stage.clientWidth - 72; // minus .inv-stage's own horizontal padding
+    const natural = stageRow.scrollWidth;
+    const scale = natural > available ? Math.max(0.5, available / natural) : 1;
+    wrap.style.setProperty('--inv-scale', String(scale));
   }
 
   // ---- wiring ----
-  document.querySelectorAll<HTMLButtonElement>('.inv-style').forEach((btn) => {
+  document.querySelectorAll('.inv-style').forEach((btn) => {
     btn.addEventListener('click', () => { state.style = btn.dataset.style || 'portrait'; render(); });
   });
-  document.querySelectorAll<HTMLButtonElement>('.inv-sw').forEach((btn) => {
+  document.querySelectorAll('.inv-sw').forEach((btn) => {
     btn.addEventListener('click', () => {
       state.accent = btn.dataset.color || '#ffd400';
       document.querySelectorAll('.inv-sw').forEach((b) => b.classList.remove('active'));
@@ -462,25 +521,41 @@ const defaultAddress = `${site.address.street} · ${site.address.locality}`;
       render();
     });
   });
-  document.querySelectorAll<HTMLButtonElement>('.inv-fin').forEach((btn) => {
+  document.querySelectorAll('.inv-fin').forEach((btn) => {
     btn.addEventListener('click', () => { state.ink = btn.dataset.finish === 'ink'; render(); });
   });
-  ['inv-name', 'inv-age', 'inv-hype', 'inv-date', 'inv-time', 'inv-venue', 'inv-address', 'inv-bring', 'inv-rsvp', 'inv-rsvpurl'].forEach((id) => {
+  ['inv-name', 'inv-age', 'inv-hype', 'inv-date', 'inv-time', 'inv-bring', 'inv-rsvp', 'inv-rsvpurl'].forEach((id) => {
     $(id)?.addEventListener('input', render);
   });
 
+  // Photo replace / remove
+  $('inv-replace-photo')?.addEventListener('click', () => $('inv-photo-input')?.click());
+  $('inv-photo-input')?.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { state.photoSrc = String(reader.result); render(); };
+    reader.readAsDataURL(file);
+  });
+  $('inv-remove-photo')?.addEventListener('click', () => { state.photoSrc = DEFAULT_PHOTO; render(); });
+
+  window.addEventListener('resize', fitScale);
+
   $('inv-download')?.addEventListener('click', () => {
     const el = $('inv-live-card');
-    const w = window as any;
-    if (!el || !w.htmlToImage) return;
-    w.htmlToImage.toPng(el, { pixelRatio: 2, cacheBust: true })
-      .then((dataUrl: string) => {
+    if (!el || !window.htmlToImage) return;
+    const wrap = $('inv-scale-wrap');
+    const prevScale = wrap.style.getPropertyValue('--inv-scale');
+    wrap.style.setProperty('--inv-scale', '1'); // export at full resolution, not the fitted-to-screen scale
+    window.htmlToImage.toPng(el, { pixelRatio: 2, cacheBust: true })
+      .then((dataUrl) => {
         const a = document.createElement('a');
         a.download = 'monkey-vault-invitation.png';
         a.href = dataUrl;
         a.click();
       })
-      .catch((err: unknown) => console.warn('PNG export failed', err));
+      .catch((err) => console.warn('PNG export failed', err))
+      .finally(() => wrap.style.setProperty('--inv-scale', prevScale));
   });
 
   render();
