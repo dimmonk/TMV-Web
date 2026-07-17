@@ -229,8 +229,10 @@ and the two device redirects verified non-looping.
    now routes through `sq` (camps, get-started/first-session, events/groups
    CTAs, home camps band, athletic membership, mobile book options + class
    links). Reminder: `sq` bakes at BUILD time — an admin link edit still needs
-   a site rebuild to go live (the rebuild trigger from the members app remains
-   an open item from the first audit, needs a PAT decision).
+   a site rebuild to go live. RESOLVED DIRECTION (2026-07-17): hosting moves to
+   Firebase (GitHub Pages is development-only), so no GitHub-token trigger will
+   be built — the publish→rebuild flow will be designed as part of the Firebase
+   hosting migration.
 2. **Reviews carousel unusable on iOS** — swipe-only, and swipe didn't work on
    the user's device (works in Chromium emulation; iOS-specific). Added
    server-rendered dots + prev/next arrows with a scroll-synced script; all 3
@@ -238,6 +240,21 @@ and the two device redirects verified non-looping.
 3. **Dead scoped CSS** — the schedule/loading/error rules existed twice (scoped
    + `is:global`); the scoped copies could never match the runtime-injected DOM.
    Deleted (also the redundant scoped `.m-darkbtn`).
+4. **OfferingCard fixed-height overlap (MAJOR).** `.flip` had a hard height
+   (432px desktop / 360px mobile); whenever content outgrew it (narrow phones,
+   wide/landscape screens where the 16:9 media grows tall) the card bled over
+   the next one with no vertical spacing. Rebuilt as a grid-stacked flip (both
+   faces share one grid cell, card sizes to its tallest face, `--oc-h` is now a
+   minimum). Fixes mobile stacking AND the same latent overlap on narrow
+   desktop widths.
+5. **Reviews carousel root cause finally isolated: iOS Safari scroll-snap.**
+   Both finger-swipe and programmatic `scrollTo` are unreliable on a
+   `scroll-snap-type: x mandatory` container on iOS (fine in Chromium — which
+   is why two scroll-based fixes verified locally and failed on-device).
+   Rebuilt as a transform-driven track (`translateX` switched by dots / arrows
+   / a touch handler) — no native scrolling left to break. Also: `aria-current`
+   on the bottom-nav tabs and an explicit `pull` excerpt on the featured review
+   (replacing fragile sentence-splitting).
 
 ## Open findings (ranked)
 
@@ -253,7 +270,7 @@ and the two device redirects verified non-looping.
   `bring`/`arrive`/`otherFaqs` (condensed subsets); `eventFaqs` (mobile, 4) vs
   events `faqGroups` (8). Subsetting is fine; the risk is policy answers
   drifting (payment/cancellation copy exists in both).
-- **M3 · Hours inconsistency — needs a business answer.** The mobile status
+- **M3 · Hours inconsistency — ACCEPTED AS-IS (owner decision 2026-07-17; do not change).** The mobile status
   pill + schedule's synthesized Open Gym rows extend FRIDAY to midnight (with a
   10 PM–12 AM adults-only row), but `site.ts` hours, the About page, and the
   JSON-LD all say 11–10 every day. One of these is wrong. If Friday really runs

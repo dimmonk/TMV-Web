@@ -81,6 +81,8 @@ export const reviews = {
     {
       quote:
         'My kids love it. They really felt safe and inspired by other peers which helped them break out of their own comfort zones and ended up literally taking big leaps. If you want a place to have fun and connect to a cool community, The Monkey Vault is the place for all ages.',
+      /** short excerpt for tight surfaces (mobile home strip) */
+      pull: 'My kids love it. They really felt safe and inspired by other peers.',
       name: 'Tim N.',
       context: 'Parent · Open Gym',
     },

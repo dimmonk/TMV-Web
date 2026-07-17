@@ -176,7 +176,7 @@ const clientConfig = {
                 <div class="m-revstrip-count">{reviews.ratingCount.replace(/^Based on /, '')}</div>
               </div>
             </div>
-            <p class="m-revstrip-quote">“{reviewItems[0].text.split('. ').slice(0, 2).join('. ')}.”</p>
+            <p class="m-revstrip-quote">“{reviews.items[0].pull ?? reviewItems[0].text}”</p>
           </div>
         </div>
       </section>
@@ -501,14 +501,16 @@ const clientConfig = {
             <div class="m-revsum-score"><div class="m-revsum-num">{reviews.ratingValue}</div><div class="m-revsum-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></div></div>
             <div class="m-revsum-txt"><div class="m-revsum-t">{reviews.ratingCount.replace(/^Based on /, '')}</div><div class="m-revsum-s">From parents, open-gym members and first-timers alike.</div></div>
           </div>
-          <div class="app-scroll m-revscroll">
-            {reviewItems.map((r) => (
-              <div class="m-revcard">
-                <div class="m-revcard-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
-                <p class="m-revcard-text">“{r.text}”</p>
-                <div class="m-revcard-by">{r.name} <span>· {r.role}</span></div>
-              </div>
-            ))}
+          <div class="m-revviewport" data-rev-viewport>
+            <div class="m-revtrack" data-rev-track>
+              {reviewItems.map((r) => (
+                <div class="m-revcard">
+                  <div class="m-revcard-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+                  <p class="m-revcard-text">“{r.text}”</p>
+                  <div class="m-revcard-by">{r.name} <span>· {r.role}</span></div>
+                </div>
+              ))}
+            </div>
           </div>
           <div class="m-revnav">
             <button type="button" class="m-revarrow" data-rev-prev aria-label="Previous review"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
@@ -754,8 +756,13 @@ const clientConfig = {
   .m-revsum-txt { flex: 1; }
   .m-revsum-t { font: 800 16px/1.2 'Archivo', sans-serif; color: #211f1b; }
   .m-revsum-s { font: 500 12.5px/1.4 inherit; color: #8a877f; margin-top: 5px; }
-  .m-revscroll { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; margin: 0 -18px; padding: 0 18px 4px; }
-  .m-revcard { flex: 0 0 87%; scroll-snap-align: center; background: #fff; border: 1px solid #ebe9e4; border-radius: 16px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 18px 20px; }
+  /* Transform-driven carousel — NO native scroll/snap. iOS Safari's snap
+     handling broke both swiping and programmatic scrollTo here; a translateX
+     track switched by the dots/arrows (plus a touch handler) works everywhere. */
+  .m-revviewport { overflow: hidden; touch-action: pan-y; }
+  .m-revtrack { display: flex; transition: transform .35s ease; }
+  .m-revcard { flex: 0 0 100%; box-sizing: border-box; background: #fff; border: 1px solid #ebe9e4; border-radius: 16px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 18px 20px; }
+  .m-revcard + .m-revcard { margin-left: 0; }
   .m-revcard-stars { color: #e9a300; font-size: 11px; letter-spacing: 2px; margin-bottom: 10px; }
   .m-revcard-text { font: 500 13.5px/1.55 inherit; color: #3a3833; margin: 0 0 12px; }
   .m-revcard-by { font: 800 12.5px/1 'Archivo', sans-serif; color: #211f1b; }
@@ -858,7 +865,11 @@ const clientConfig = {
     else if (SUBS.indexOf(h) >= 0) { screen = h; tab = 'more'; isSub = true; }
 
     screens.forEach((s) => { s.hidden = s.dataset.screen !== screen; });
-    navBtns.forEach((b) => b.classList.toggle('active', b.dataset.nav === tab));
+    navBtns.forEach((b) => {
+      const on = b.dataset.nav === tab;
+      b.classList.toggle('active', on);
+      if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    });
     if (headMain && headSub) { headMain.hidden = isSub; headSub.hidden = !isSub; }
     if (isSub && subtitleEl) subtitleEl.textContent = SUBTITLES[screen] || '';
     if (scroll) scroll.scrollTop = 0;
@@ -1073,22 +1084,31 @@ const clientConfig = {
   }
   function ensurePricing() { if (priceStarted) return; priceStarted = true; loadPrices(); }
 
-  // ---- reviews carousel: explicit dot/arrow switching (swipe still works) ----
-  const revScroll = document.querySelector<HTMLElement>('.m-revscroll');
-  if (revScroll) {
+  // ---- reviews carousel: transform-driven switcher (dots / arrows / swipe).
+  // Deliberately NOT a native scroller — iOS Safari's scroll-snap broke both
+  // swipe and programmatic scrollTo, so the track is moved with translateX.
+  const revTrack = document.querySelector<HTMLElement>('[data-rev-track]');
+  if (revTrack) {
     const revDots = Array.from(document.querySelectorAll<HTMLElement>('[data-rev-dot]'));
-    const step = () => {
-      const card = revScroll.querySelector<HTMLElement>('.m-revcard');
-      return card ? card.getBoundingClientRect().width + 12 : revScroll.clientWidth;
+    const revCount = revTrack.children.length;
+    let revIdx = 0;
+    const paintRev = () => {
+      revTrack.style.transform = `translateX(${-100 * revIdx}%)`;
+      revDots.forEach((d, i) => d.classList.toggle('on', i === revIdx));
     };
-    const revIdx = () => Math.max(0, Math.min(revDots.length - 1, Math.round(revScroll.scrollLeft / step())));
-    const paintDots = () => revDots.forEach((d, i) => d.classList.toggle('on', i === revIdx()));
-    const goRev = (i: number) => revScroll.scrollTo({ left: Math.max(0, Math.min(revDots.length - 1, i)) * step(), behavior: 'smooth' });
+    const goRev = (i: number) => { revIdx = Math.max(0, Math.min(revCount - 1, i)); paintRev(); };
     revDots.forEach((d, i) => d.addEventListener('click', () => goRev(i)));
-    document.querySelector('[data-rev-prev]')?.addEventListener('click', () => goRev(revIdx() - 1));
-    document.querySelector('[data-rev-next]')?.addEventListener('click', () => goRev(revIdx() + 1));
-    revScroll.addEventListener('scroll', () => requestAnimationFrame(paintDots), { passive: true });
-    paintDots();
+    document.querySelector('[data-rev-prev]')?.addEventListener('click', () => goRev(revIdx - 1));
+    document.querySelector('[data-rev-next]')?.addEventListener('click', () => goRev(revIdx + 1));
+    // horizontal swipe (40px threshold; vertical pans pass through via touch-action)
+    const vp = document.querySelector<HTMLElement>('[data-rev-viewport]');
+    let touchX = 0;
+    vp?.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+    vp?.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 40) goRev(revIdx + (dx < 0 ? 1 : -1));
+    }, { passive: true });
+    paintRev();
   }
 
   // Wire events + do the first render LAST — a direct load of #schedule/#pricing
