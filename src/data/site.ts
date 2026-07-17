@@ -63,6 +63,42 @@ export const hours = [
   { day: 'Sunday', time: '11:00 AM – 10:00 PM' },
 ] as const;
 
+/**
+ * Featured customer reviews — SSOT for the Reviews component on both the Home
+ * page and /reviews. These are real, hand-curated 5-star Google reviews from
+ * the Business Profile (https://maps.app.goo.gl/JB5P5xV6kNPPTfeXA), picked
+ * across distinct subjects (families/open gym, birthday parties, adult skills).
+ *
+ * To refresh: open the Google reviews, copy the strongest recent 5-star ones,
+ * and swap the entries below (verbatim excerpts, first name + last initial).
+ * `ratingValue`/`ratingCount` are the headline figures shown in the badge —
+ * update them from the top of the Google page when they move.
+ */
+export const reviews = {
+  ratingValue: '4.9',
+  ratingCount: 'Based on 300+ Google reviews',
+  items: [
+    {
+      quote:
+        'My kids love it. They really felt safe and inspired by other peers which helped them break out of their own comfort zones and ended up literally taking big leaps. If you want a place to have fun and connect to a cool community, The Monkey Vault is the place for all ages.',
+      name: 'Tim N.',
+      context: 'Parent · Open Gym',
+    },
+    {
+      quote:
+        "Hosted our daughter's birthday party here and were overall very pleased with the experience. Our guide was very friendly and patient with the kids and took his time to teach them safe ways to enjoy the space. Price was also very reasonable.",
+      name: 'Leila',
+      context: 'Parent · Birthday Party',
+    },
+    {
+      quote:
+        'Super fun place for kids and adults to learn new skills and burn off energy. Classes are a great way to get introduced to new skills, and the 1:1 sessions are a perfect opportunity to really refine them. Such a cool, one-of-a-kind place!',
+      name: 'Bronte L.',
+      context: 'Member · Classes & 1-on-1',
+    },
+  ],
+} as const;
+
 /** Category accent colors (matches the export's categories.js). SSOT — the
  * `--c-*` vars in styles/global.css mirror these; keep both in sync. */
 export const cat = {

@@ -1,5 +1,5 @@
 ---
-import { links } from '../data/site';
+import { links, reviews as reviewData } from '../data/site';
 
 interface Review { quote: string; name: string; context: string; stars?: number; }
 interface Props {
@@ -11,17 +11,15 @@ interface Props {
   reviews?: Review[];
 }
 
+// Defaults come from the reviews SSOT in data/site.ts — real curated Google
+// reviews. Pages can still override any prop (e.g. the /reviews page's copy).
 const {
   eyebrow = '04 — What people say',
   heading = "Don't just take our word for it",
   subhead = 'Thousands of flips, classes and parties later — here’s what our community has to say.',
-  ratingValue = '4.9',
-  ratingCount = 'Based on 300+ reviews',
-  reviews = [
-    { quote: 'My son has been going for over a year and the change is incredible — confidence, strength, and he counts down the days between visits. The coaches genuinely care.', name: 'Sarah M.', context: 'Parent · Youth Classes' },
-    { quote: "Cleanest, friendliest gym in the city. Open gym is amazing value and there's space for total beginners and seasoned athletes alike. Foam pit never gets old.", name: 'Daniel K.', context: 'Member · Open Gym' },
-    { quote: "Booked a birthday party here and it was the easiest, most fun event we've ever thrown. The kids were buzzing for days and the staff handled everything.", name: 'Priya R.', context: 'Parent · Birthday Party' },
-  ],
+  ratingValue = reviewData.ratingValue,
+  ratingCount = reviewData.ratingCount,
+  reviews = reviewData.items as unknown as Review[],
 } = Astro.props;
 
 const palette = ['#2196f3', '#e27902', '#f44336', '#2e9e4f', '#8c52ff'];
