@@ -20,6 +20,7 @@ import { coreClasses, specializedClasses, partnershipClasses } from '../../data/
 import type { ClassItem } from '../../data/classes';
 import { cat, links, site, social, hours, reviews, seo, url } from '../../data/site';
 import { storeProducts } from '../../data/store';
+import { sq } from '../../data/square-links';
 import { forSurface } from '../../data/surface';
 
 // Resolve a class's action href for the mobile app. Schedule-linked classes go
@@ -28,8 +29,8 @@ import { forSurface } from '../../data/surface';
 const classHref = (c: ClassItem): string => {
   if ('external' in c.link) return c.link.external;
   if (c.link.screen === 'schedule') return '#schedule';
-  if (c.link.screen === 'private-lessons') return links.booking;
-  return links.athleticMembership; // athletic-program
+  if (c.link.screen === 'private-lessons') return sq.book.privateLesson;
+  return sq.athletic.membership; // athletic-program
 };
 
 // Compact size props for the mobile OfferingCard variant.
@@ -44,16 +45,16 @@ const dropIns = [
   { title: 'Group Classes', color: cat.classes, desc: 'Recreational, Flips, Calisthenics, Tricking, Gymnastics & more.', sub: 'Show up at class time — see the Schedule tab for times.' },
 ];
 const bookOptions = [
-  { color: cat.private, bookingTag: 'By appointment', title: 'Private Lesson', description: '1-on-1 coaching built around your goals and pace.', pills: 'All ages | Your coach or ours', price: 'From $85', priceNote: '5-packs available', actionLabel: 'Book', href: links.booking },
-  { color: cat.camps, bookingTag: 'Register', title: 'Weekly Camps', description: 'A full week of parkour over school breaks.', pills: 'Ages 5+ | Mon–Fri', price: '$350 / week', priceNote: 'late pickup to 4 PM', actionLabel: 'See dates', href: links.summerCamp },
-  { color: cat.parties, bookingTag: 'By appointment', title: 'Birthday Party', description: 'A coached session, a private room and free play.', pills: 'Ages 5+ | Private room', price: 'From $350', priceNote: 'up to 15 kids', actionLabel: 'Enquire', href: links.booking },
+  { color: cat.private, bookingTag: 'By appointment', title: 'Private Lesson', description: '1-on-1 coaching built around your goals and pace.', pills: 'All ages | Your coach or ours', price: 'From $85', priceNote: '5-packs available', actionLabel: 'Book', href: sq.book.privateLesson },
+  { color: cat.camps, bookingTag: 'Register', title: 'Weekly Camps', description: 'A full week of parkour over school breaks.', pills: 'Ages 5+ | Mon–Fri', price: '$350 / week', priceNote: 'late pickup to 4 PM', actionLabel: 'See dates', href: sq.camps.weeklyCamps },
+  { color: cat.parties, bookingTag: 'By appointment', title: 'Birthday Party', description: 'A coached session, a private room and free play.', pills: 'Ages 5+ | Private room', price: 'From $350', priceNote: 'up to 15 kids', actionLabel: 'Enquire', href: sq.book.fullBirthday },
 ];
 
 // ---- Store (hrefs from the Square link SSOT) ----
 
 // ---- Get Started ----
 // first-session options come from data/first-session.ts (shared with desktop)
-const mFsHref: Record<string, string> = { intro: links.booking, private: links.booking, group: '#schedule', opengym: '#train' };
+const mFsHref: Record<string, string> = { intro: sq.getStarted.introduction, private: sq.getStarted.privateClass, group: '#schedule', opengym: '#train' };
 const mFsTarget = (key: string): '_blank' | '_self' => (key === 'intro' || key === 'private' ? '_blank' : '_self');
 const gsBring = [
   'Comfortable clothes you can move in.',
@@ -164,7 +165,7 @@ const clientConfig = {
             <button type="button" class="m-alllink" data-goto="#book">All <i class="bi bi-arrow-right" style={`color:${cat.camps}`} aria-hidden="true"></i></button>
           </div>
           <div style="margin-bottom:30px">
-            <BookingCard color={cat.camps} duration="9–2 daily" bookingTag="Register" title="Summer Camps 2026" description="A full week of parkour over the break — skills, flips, games and friends." pills="Ages 5+ | Mon–Fri | All levels" price="$350 / week" priceNote="booking now" actionLabel="Reserve" href={links.summerCamp} target="_blank" />
+            <BookingCard color={cat.camps} duration="9–2 daily" bookingTag="Register" title="Summer Camps 2026" description="A full week of parkour over the break — skills, flips, games and friends." pills="Ages 5+ | Mon–Fri | All levels" price="$350 / week" priceNote="booking now" actionLabel="Reserve" href={sq.home.summerCamps} target="_blank" />
           </div>
 
           <div class="m-revstrip">
@@ -425,7 +426,7 @@ const clientConfig = {
               <div><div class="m-ev-big">{eventPricing.fullBirthdayBase}</div><div class="m-ev-sub">base · up to 8 kids · +$25 each extra</div></div>
               <span class="m-ev-meta">2 hrs · Ages 5+</span>
             </div>
-            <a href={links.booking} target="_blank" rel="noopener" class="m-darkbtn">Book your party <i class="bi bi-arrow-up-right"></i></a>
+            <a href={sq.book.fullBirthday} target="_blank" rel="noopener" class="m-darkbtn">Book your party <i class="bi bi-arrow-up-right"></i></a>
           </div>
 
           <div class="m-ev-mini">
@@ -434,7 +435,7 @@ const clientConfig = {
             <p class="m-ev-minidesc">The same one-hour coached parkour session — lower minimum, so smaller groups and last-minute plans still get in. All-day pass for every kid. No private room.</p>
             <div class="m-ev-minifoot">
               <div><div class="m-ev-minibig">{eventPricing.miniBirthdayPerKid}</div><div class="m-ev-minisub">per kid · 3–15 · ages 8+</div></div>
-              <a href={links.booking} target="_blank" rel="noopener" class="m-brandbtn-sm">Book mini <i class="bi bi-arrow-right"></i></a>
+              <a href={sq.book.miniBirthday} target="_blank" rel="noopener" class="m-brandbtn-sm">Book mini <i class="bi bi-arrow-right"></i></a>
             </div>
           </div>
 
@@ -474,7 +475,7 @@ const clientConfig = {
               {groupTiers.map((t) => <div class="m-gtier"><span>{t.label}</span><span class="m-gtier-v">{t.val}</span></div>)}
             </div>
             <p class="m-gfine">Minimum 10; smaller groups pay the $300 base. Final total is calculated on event day.</p>
-            <a href={links.booking} target="_blank" rel="noopener" class="m-darkbtn">Plan an event <i class="bi bi-arrow-up-right"></i></a>
+            <a href={sq.book.groupEvents} target="_blank" rel="noopener" class="m-darkbtn">Plan an event <i class="bi bi-arrow-up-right"></i></a>
           </div>
 
           <div class="m-gcard">
@@ -485,7 +486,7 @@ const clientConfig = {
             <p class="m-gdesc">Reserve the gym before we open at 11 AM for exclusive access — perfect for small groups or focused training with no crowds.</p>
             <div class="m-gfoot2">
               <div><div class="m-gbig">{eventPricing.earlyAccessFrom}</div><div class="m-gsub">+ $25 / person open gym</div></div>
-              <a href={links.booking} target="_blank" rel="noopener" class="m-darkbtn-sm">Reserve <i class="bi bi-arrow-up-right"></i></a>
+              <a href={sq.book.earlyGymAccess} target="_blank" rel="noopener" class="m-darkbtn-sm">Reserve <i class="bi bi-arrow-up-right"></i></a>
             </div>
           </div>
         </div>
@@ -508,6 +509,13 @@ const clientConfig = {
                 <div class="m-revcard-by">{r.name} <span>· {r.role}</span></div>
               </div>
             ))}
+          </div>
+          <div class="m-revnav">
+            <button type="button" class="m-revarrow" data-rev-prev aria-label="Previous review"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+            <div class="m-revdots">
+              {reviewItems.map((_, i) => <button type="button" class="m-revdot" data-rev-dot={i} aria-label={`Review ${i + 1}`}></button>)}
+            </div>
+            <button type="button" class="m-revarrow" data-rev-next aria-label="Next review"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
           </div>
         </div>
       </section>
@@ -770,6 +778,13 @@ const clientConfig = {
   .m-revcard-text { font: 500 13.5px/1.55 inherit; color: #3a3833; margin: 0 0 12px; }
   .m-revcard-by { font: 800 12.5px/1 'Archivo', sans-serif; color: #211f1b; }
   .m-revcard-by span { font-weight: 600; color: #9b9890; }
+  .m-revnav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 14px; }
+  .m-revarrow { cursor: pointer; width: 40px; height: 40px; border-radius: 50%; background: #fff; border: 1px solid #e6e4dd; color: #211f1b; font-size: 15px; display: flex; align-items: center; justify-content: center; }
+  .m-revarrow:disabled { opacity: .35; }
+  .m-revdots { display: flex; gap: 4px; }
+  .m-revdot { cursor: pointer; background: none; border: 0; padding: 8px 4px; display: flex; }
+  .m-revdot::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #d8d4cc; transition: background .15s, transform .15s; }
+  .m-revdot.on::before { background: #211f1b; transform: scale(1.25); }
 
   /* bottom nav */
   .m-nav { flex: none; position: relative; z-index: 30; background: rgba(28,26,23,.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid rgba(255,255,255,.08); padding: 9px 12px calc(13px + env(safe-area-inset-bottom, 10px)); display: flex; align-items: flex-end; }
@@ -1075,6 +1090,24 @@ const clientConfig = {
       .catch((e) => { console.warn('[prices] load failed', e); priceErr = true; renderPricing(); });
   }
   function ensurePricing() { if (priceStarted) return; priceStarted = true; loadPrices(); }
+
+  // ---- reviews carousel: explicit dot/arrow switching (swipe still works) ----
+  const revScroll = document.querySelector<HTMLElement>('.m-revscroll');
+  if (revScroll) {
+    const revDots = Array.from(document.querySelectorAll<HTMLElement>('[data-rev-dot]'));
+    const step = () => {
+      const card = revScroll.querySelector<HTMLElement>('.m-revcard');
+      return card ? card.getBoundingClientRect().width + 12 : revScroll.clientWidth;
+    };
+    const revIdx = () => Math.max(0, Math.min(revDots.length - 1, Math.round(revScroll.scrollLeft / step())));
+    const paintDots = () => revDots.forEach((d, i) => d.classList.toggle('on', i === revIdx()));
+    const goRev = (i: number) => revScroll.scrollTo({ left: Math.max(0, Math.min(revDots.length - 1, i)) * step(), behavior: 'smooth' });
+    revDots.forEach((d, i) => d.addEventListener('click', () => goRev(i)));
+    document.querySelector('[data-rev-prev]')?.addEventListener('click', () => goRev(revIdx() - 1));
+    document.querySelector('[data-rev-next]')?.addEventListener('click', () => goRev(revIdx() + 1));
+    revScroll.addEventListener('scroll', () => requestAnimationFrame(paintDots), { passive: true });
+    paintDots();
+  }
 
   // Wire events + do the first render LAST — a direct load of #schedule/#pricing
   // calls render() → ensureSchedule/ensurePricing synchronously, which reference

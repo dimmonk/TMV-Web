@@ -5,7 +5,7 @@
  * union of both layouts' fields; each surface reads what it renders. Edit a
  * camp once and both update.
  */
-import { links } from './site';
+import { sq } from './square-links';
 import type { Surfaced } from './surface';
 
 export interface CampFact { icon: string; text: string; }
@@ -34,7 +34,7 @@ export const camps: Camp[] = [
     desc: 'A full week of parkour adventure over school breaks — skill-building, games, friendship and unforgettable memories.',
     facts: [{ icon: 'bi-calendar-week', text: 'Mon–Fri, full weeks' }, { icon: 'bi-people', text: 'Ages 5+, all levels' }, { icon: 'bi-stopwatch', text: '9 AM–2 PM · late pickup to 4 PM' }],
     back: 'A full week of parkour', included: 'Daily structured lessons, flips, individual skills, games and a cool-down — plus a lunch break. Sessions run over Winter, March Break and Summer.',
-    price: '$350 / week', cta: 'Reserve', href: links.summerCamp,
+    price: '$350 / week', cta: 'Reserve', href: sq.camps.weeklyCamps,
     bookingTag: 'Register', pills: 'Ages 5+ | Mon–Fri | All levels', priceNote: 'late pickup to 4 PM',
     mobile: { desc: 'A full week of parkour over school breaks — skills, flips, games and friends.' },
   },
@@ -43,7 +43,7 @@ export const camps: Camp[] = [
     desc: 'Gather your crew for a private day — tailored activities and personal coaching for groups of five or more, any day of the week.',
     facts: [{ icon: 'bi-people-fill', text: 'Minimum 5 kids' }, { icon: 'bi-calendar-check', text: 'Book at least a week ahead' }, { icon: 'bi-stars', text: 'Birthdays, homeschool, friends' }],
     back: 'Your own private camp day', included: 'Parkour, acrobatics, nerf battles and more with your own instructor, 9 AM–2 PM. Flexible start times; late pickup available.',
-    price: '$90 / kid', cta: 'Enquire', href: links.booking,
+    price: '$90 / kid', cta: 'Enquire', href: sq.camps.privateDayCamp,
     bookingTag: 'By appointment', pills: 'Min 5 kids | 9 AM–2 PM', priceNote: 'book a week ahead',
     mobile: { desc: 'Gather your crew for a private day — groups of five or more, any day.' },
   },
@@ -52,7 +52,7 @@ export const camps: Camp[] = [
     desc: 'A single day of parkour excitement on your day off school. Open to the public — fun challenges and expert coaching, start to finish.',
     facts: [{ icon: 'bi-sun', text: 'One-day sessions' }, { icon: 'bi-unlock', text: 'Open to the general public' }, { icon: 'bi-clock-history', text: '9 AM–2 PM · late pickup to 4 PM' }],
     back: 'A day off, well spent', included: 'Expert coaching and non-stop challenges, open to everyone. The next P.A. Day date is always posted on the booking page.',
-    price: '$90 / day', cta: 'Reserve', href: links.paDayCamp,
+    price: '$90 / day', cta: 'Reserve', href: sq.camps.paDayCamp,
     bookingTag: 'Register', pills: 'Ages 5+ | Single days', priceNote: '9 AM–2 PM',
     mobile: { desc: 'A single day of parkour on a day off school — open to the public.' },
   },

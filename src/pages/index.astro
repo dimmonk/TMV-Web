@@ -5,6 +5,7 @@ import OfferingCard from '../components/OfferingCard.astro';
 import Reviews from '../components/Reviews.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { seo, links, cat, url } from '../data/site';
+import { sq } from '../data/square-links';
 import { offerings } from '../data/offerings';
 
 const heroPhotos = [
@@ -15,7 +16,7 @@ const heroPhotos = [
 const camps = [
   {
     title: 'Summer Camps 2026', badge: 'Summer 2026', color: cat.camps, status: 'Booking now', statusColor: cat.openGym,
-    price: '$350 / week', href: links.summerCamp,
+    price: '$350 / week', href: sq.home.summerCamps,
     rows: [
       { icon: 'bi-calendar-week', text: 'Weekly sessions · all summer — dates on the booking page' },
       { icon: 'bi-clock', text: '9 AM – 2 PM · late pickup to 4 PM' },
@@ -24,7 +25,7 @@ const camps = [
   },
   {
     title: 'P.A. Day Camps', badge: 'School year', color: cat.camps, status: 'Single days', statusColor: cat.classes,
-    price: '$90 / day', href: links.paDayCamp,
+    price: '$90 / day', href: sq.home.paDayCamps,
     rows: [
       { icon: 'bi-sun', text: 'Single days off school' },
       { icon: 'bi-clock', text: '9 AM – 2 PM · late pickup to 4 PM' },

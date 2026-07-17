@@ -5,6 +5,7 @@ import SectionHeader from '../components/SectionHeader.astro';
 import Pill from '../components/Pill.astro';
 import { seo, links, site, cat, url } from '../data/site';
 import { groupTiers, eventPricing } from '../data/events';
+import { sq } from '../data/square-links';
 
 const partyImg = url('assets/invite-default-photo.png');
 
@@ -76,7 +77,7 @@ const faqGroups = [
               <div class="ev-extra">+$25 per additional participant<br>+$5 / participant for an extra hour</div>
             </div>
             <div class="ev-full-actions">
-              <a href={links.booking} target="_blank" rel="noopener" class="btn btn-dark">Book your party <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+              <a href={sq.book.fullBirthday} target="_blank" rel="noopener" class="btn btn-dark">Book your party <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
               <a href={url('make-invitation')} class="btn btn-ghost">Make an invitation</a>
             </div>
           </div>
@@ -100,7 +101,7 @@ const faqGroups = [
         </div>
         <div class="ev-mini-foot">
           <div><div class="ev-mini-price">{eventPricing.miniBirthdayPerKid}</div><div class="ev-mini-per">per participant</div></div>
-          <a href={links.booking} target="_blank" rel="noopener" class="btn btn-primary">Book mini <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+          <a href={sq.book.miniBirthday} target="_blank" rel="noopener" class="btn btn-primary">Book mini <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
         </div>
       </div>
     </div>
@@ -152,7 +153,7 @@ const faqGroups = [
           <div class="ev-glabel">Price per participant</div>
           <div class="ev-tiers">{groupTiers.map((t) => <div class="ev-tier"><span>{t.label}</span><span class="ev-tier-v">{t.val}</span></div>)}</div>
           <p class="ev-gfine">Minimum 10 participants; smaller groups pay the $300 base. Final total is calculated on event day from the final headcount.</p>
-          <a href={links.booking} target="_blank" rel="noopener" class="btn btn-dark">Plan an event <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+          <a href={sq.book.groupEvents} target="_blank" rel="noopener" class="btn btn-dark">Plan an event <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
         </div>
       </div>
       <div class="ev-gcard">
@@ -160,7 +161,7 @@ const faqGroups = [
         <p class="ev-gdesc">Reserve The Monkey Vault before we open at 11 AM for exclusive access. Perfect for small groups or focused training with no crowds.</p>
         <div class="ev-gfoot2">
           <div><div class="ev-big2">{eventPricing.earlyAccessFrom}</div><div class="ev-sub">+ $25 / person open gym</div></div>
-          <a href={links.booking} target="_blank" rel="noopener" class="btn btn-dark">Reserve time <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+          <a href={sq.book.earlyGymAccess} target="_blank" rel="noopener" class="btn btn-dark">Reserve time <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
         </div>
       </div>
     </div>

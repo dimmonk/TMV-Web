@@ -5,6 +5,7 @@ import SectionHeader from '../components/SectionHeader.astro';
 import Pill from '../components/Pill.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { seo, links, url, cat } from '../data/site';
+import { sq } from '../data/square-links';
 
 const heroStats = [
   { value: '2 × 90 min', label: 'core sessions each week' },
@@ -51,7 +52,7 @@ const payOptions = [
       <h1 class="ap-title">Train like an athlete. Move like one everywhere.</h1>
       <p class="ap-lead">Our core training stream: two 90-minute coached sessions a week that build strength, speed and agility for any sport — for ages 9–14 and 15+. Explosive and Speed League classes complement it, and membership adds unlimited open gym.</p>
       <div class="ap-actions">
-        <a href={links.athleticMembership} target="_blank" rel="noopener" class="btn btn-primary">Join the program <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+        <a href={sq.athletic.membership} target="_blank" rel="noopener" class="btn btn-primary">Join the program <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
         <a href="#program" class="btn btn-ghost-light">How it works</a>
       </div>
       <div class="ap-stats">{heroStats.map((s) => <div class="ap-stat"><div class="n">{s.value}</div><div class="l">{s.label}</div></div>)}</div>
@@ -122,7 +123,7 @@ const payOptions = [
           <div class="ap-membody">
             <div class="ap-memways">Two ways to pay</div>
             <div class="ap-payopts">{payOptions.map((o) => <div class="ap-pay"><i class={`bi ${o.icon}`} aria-hidden="true"></i><div><div class="ap-paytitle">{o.title}</div><div class="ap-paybody">{o.body}</div></div></div>)}</div>
-            <a href={links.athleticMembership} target="_blank" rel="noopener" class="btn btn-dark" style="justify-content:center">Sign up &amp; start training <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+            <a href={sq.athletic.membership} target="_blank" rel="noopener" class="btn btn-dark" style="justify-content:center">Sign up &amp; start training <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
             <p class="ap-memfine">New here? You'll sign the waiver at sign-up. A coach confirms you're ready before your first session.</p>
           </div>
         </div>

@@ -4,12 +4,13 @@ import JumpNav from '../components/JumpNav.astro';
 import BookingCard from '../components/BookingCard.astro';
 import Faq from '../components/Faq.astro';
 import { seo, links, url } from '../data/site';
+import { sq } from '../data/square-links';
 import { firstSessionOptions } from '../data/first-session';
 
 // The four options are the shared first-session SSOT; only the href/target
 // (which routes differ per surface) is resolved here for the desktop site.
 const fsHref: Record<string, string> = {
-  intro: links.booking, private: links.booking, group: url('schedule'), opengym: `${url('train')}#opengym`,
+  intro: sq.getStarted.introduction, private: sq.getStarted.privateClass, group: url('schedule'), opengym: `${url('train')}#opengym`,
 };
 const fsTarget = (key: string): '_blank' | '_self' => (key === 'intro' || key === 'private' ? '_blank' : '_self');
 const bring = [
