@@ -305,8 +305,6 @@ const timeOpts = timeOptions(11, 22);
   .inv-p-bring { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: auto; }
   .inv-p-bringlist { display: flex; flex-wrap: wrap; gap: 6px; }
   .inv-p-bringlabel { font: 700 10px/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: #a29e95; width: 100%; margin-bottom: 2px; }
-  .inv-p-bringitem { display: inline-flex; align-items: center; gap: 5px; font: 700 11px/1 var(--font-body); color: var(--ink); background: #f3f2ee; border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; }
-  .inv-p-bringitem i { font-size: 12px; color: #1b6b2f; }
   .inv-p-rsvprow { display: flex; align-items: center; gap: 14px; margin-top: 18px; padding-top: 16px; border-top: 1px dashed #d8d4cc; }
   .inv-p-rsvpcol { flex: 1; min-width: 0; }
   .inv-p-rsvplabel { font: 800 11px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); margin-bottom: 5px; }
@@ -366,6 +364,15 @@ const timeOpts = timeOptions(11, 22);
   @media (max-width: 520px) {
     .inv-stage { padding: 24px 16px; }
   }
+</style>
+
+<!-- The bring pills are injected at runtime via innerHTML, so they never get
+     Astro's data-astro-cid attribute and scoped rules can't match them. These
+     two rules must be global; the #inv-p-bringlist anchor keeps them from
+     leaking anywhere else. -->
+<style is:global>
+  #inv-p-bringlist .inv-p-bringitem { display: inline-flex; align-items: center; gap: 5px; font: 700 11px/1 var(--font-body); color: var(--ink); background: #f3f2ee; border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; }
+  #inv-p-bringlist .inv-p-bringitem i { font-size: 12px; color: #1b6b2f; }
 </style>
 
 <script define:vars={{ FIXED_VENUE: site.name, FIXED_ADDRESS: defaultAddress, DEFAULT_PHOTO: defaultPhoto, FIXED_WAIVER_URL: links.waiver }}>
