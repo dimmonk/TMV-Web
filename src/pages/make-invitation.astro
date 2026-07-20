@@ -704,41 +704,28 @@ const timeOpts = timeOptions(11, 22);
 
   window.addEventListener('resize', fitScale);
 
+  const CARD_ID = { portrait: 'inv-card-portrait', ticket: 'inv-card-ticket', square: 'inv-card-square' };
+
   $('inv-download')?.addEventListener('click', async () => {
-    const el = $('inv-live-card');
-    if (!el || !window.htmlToImage) return;
-    const wrap = $('inv-scale-wrap');
-    // Fetch the font first (async), so the card is only reset to full size for
-    // the brief synchronous capture below — no visible flash while it loads.
-    const fontEmbedCSS = await iconFontEmbedCss();
-    // Export at the card's natural resolution: clear BOTH the fit-to-screen
-    // scale AND the box sizing fitScale set. The capture target (#inv-live-card)
-    // is an auto-width wrapper, so while the wrap is pinned to the shrunk width
-    // the card overflows it and only the middle strip gets captured — cutting
-    // off both sides. Resetting all three lets it lay out at its design width.
-    const prev = {
-      scale: wrap.style.getPropertyValue('--inv-scale'),
-      width: wrap.style.width,
-      height: wrap.style.height,
-    };
-    wrap.style.setProperty('--inv-scale', '1');
-    wrap.style.width = '';
-    wrap.style.height = '';
+    // Capture the active card element directly. Its width is explicit
+    // (440/660/470), so html-to-image measures it at full design size even
+    // while the preview wrapper is scaled down to fit the screen — no need to
+    // resize the live card first (which used to make it visibly zoom in before
+    // the capture). The transform on the ancestor wrap doesn't affect the
+    // cloned card, so nothing on screen changes.
+    const card = $(CARD_ID[state.style] || 'inv-card-portrait');
+    if (!card || !window.htmlToImage) return;
     try {
+      const fontEmbedCSS = await iconFontEmbedCss();
       const opts = { pixelRatio: 2, cacheBust: true };
       if (fontEmbedCSS) opts.fontEmbedCSS = fontEmbedCSS;
-      const dataUrl = await window.htmlToImage.toPng(el, opts);
+      const dataUrl = await window.htmlToImage.toPng(card, opts);
       const a = document.createElement('a');
       a.download = 'monkey-vault-invitation.png';
       a.href = dataUrl;
       a.click();
     } catch (err) {
       console.warn('PNG export failed', err);
-    } finally {
-      wrap.style.setProperty('--inv-scale', prev.scale);
-      wrap.style.width = prev.width;
-      wrap.style.height = prev.height;
-      fitScale(); // re-fit to the current viewport after the full-size capture
     }
   });
 
