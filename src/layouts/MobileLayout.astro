@@ -8,6 +8,7 @@
  */
 import '../styles/global.css';
 import { site, social, hours, links, url } from '../data/site';
+import { deviceSwitchScript } from '../lib/device-switch';
 
 interface Props {
   title: string;
@@ -56,24 +57,12 @@ const jsonLd = {
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <!-- Desktop-width viewports (and non-phone UAs) get the full site at the
-         repo root; phones stay here. Runs before render to avoid a flash. -->
-    <script is:inline>
-      (function () {
-        function isPhone() {
-          var ua = navigator.userAgent;
-          return /iPhone|iPod|Windows Phone|BlackBerry/i.test(ua) || (/Android/i.test(ua) && /Mobile/i.test(ua));
-        }
-        function wantsDesktop() {
-          try { return (window.matchMedia && window.matchMedia('(min-width:600px)').matches) && !isPhone(); }
-          catch (e) { return false; }
-        }
-        function go() { if (wantsDesktop()) location.replace('../'); }
-        go();
-        var t;
-        window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(go, 250); });
-      })();
-    </script>
+    <!-- Mirror of the desktop pages' switch: anything that does NOT prefer the
+         app UI (desktop, tablets, unfolded foldables, crawlers) bounces to the
+         full site at the repo root; phones stay here. Runs before render to
+         avoid a flash. Decision logic is the single source of truth in
+         src/lib/device-switch.ts. -->
+    <script is:inline set:html={deviceSwitchScript({ to: 'desktop', target: '../' })} />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
