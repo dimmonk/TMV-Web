@@ -391,6 +391,56 @@ const timeOpts = timeOptions(11, 22);
       encodeURIComponent(data) + '&color=211f1b&bgcolor=ffffff';
   }
 
+  // ---- Icon font embedding for PNG export ----
+  // html-to-image inlines web fonts by reading document.styleSheets, but the
+  // Bootstrap Icons sheet is served cross-origin from jsdelivr with no
+  // `crossorigin` attribute, so the CSSOM throws when it reads those rules and
+  // the icon @font-face is silently skipped — every `bi-*` glyph exports as an
+  // empty box. We sidestep the scan entirely by handing toPng an explicit
+  // `fontEmbedCSS` string with the woff2 inlined as a data URI plus the glyph
+  // rules for exactly the icons the card renders. Built once, then cached.
+  // Version pinned to BaseLayout.astro's Bootstrap Icons stylesheet (1.11.3).
+  const ICON_FONT_WOFF2 = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff2';
+  const ICON_GLYPHS = {
+    'calendar-event': '\\f1e8',
+    'geo-alt': '\\f3e8',
+    'qr-code-scan': '\\f6ad',
+    'check2': '\\f272',
+    'clock': '\\f293',
+    'bag-check': '\\f171',
+  };
+  let iconFontCssPromise = null;
+  function iconFontEmbedCss() {
+    if (iconFontCssPromise) return iconFontCssPromise;
+    iconFontCssPromise = fetch(ICON_FONT_WOFF2)
+      .then((r) => {
+        if (!r.ok) throw new Error(`icon font ${r.status}`);
+        return r.blob();
+      })
+      .then((blob) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result)); // "data:font/woff2;base64,…"
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(blob);
+      }))
+      .then((dataUri) => {
+        const glyphs = Object.entries(ICON_GLYPHS)
+          .map(([name, code]) => `.bi-${name}::before{content:"${code}";}`)
+          .join('');
+        return `@font-face{font-family:"bootstrap-icons";font-display:block;src:url("${dataUri}") format("woff2");}` +
+          `[class^="bi-"]::before,[class*=" bi-"]::before{display:inline-block;font-family:"bootstrap-icons"!important;font-style:normal;font-weight:normal!important;line-height:1;vertical-align:-.125em;}` +
+          glyphs;
+      })
+      .catch((err) => {
+        // Reset so a later download can retry; return null → export without the
+        // embedded font rather than failing the whole download.
+        iconFontCssPromise = null;
+        console.warn('Icon font embed failed; PNG icons may be missing', err);
+        return null;
+      });
+    return iconFontCssPromise;
+  }
+
   function applyQr() {
     const qrTarget = qrUrl(FIXED_WAIVER_URL);
     document.querySelectorAll('#inv-live-card img[data-qr]').forEach((img) => {
@@ -611,21 +661,26 @@ const timeOpts = timeOptions(11, 22);
 
   window.addEventListener('resize', fitScale);
 
-  $('inv-download')?.addEventListener('click', () => {
+  $('inv-download')?.addEventListener('click', async () => {
     const el = $('inv-live-card');
     if (!el || !window.htmlToImage) return;
     const wrap = $('inv-scale-wrap');
     const prevScale = wrap.style.getPropertyValue('--inv-scale');
     wrap.style.setProperty('--inv-scale', '1'); // export at full resolution, not the fitted-to-screen scale
-    window.htmlToImage.toPng(el, { pixelRatio: 2, cacheBust: true })
-      .then((dataUrl) => {
-        const a = document.createElement('a');
-        a.download = 'monkey-vault-invitation.png';
-        a.href = dataUrl;
-        a.click();
-      })
-      .catch((err) => console.warn('PNG export failed', err))
-      .finally(() => wrap.style.setProperty('--inv-scale', prevScale));
+    try {
+      const fontEmbedCSS = await iconFontEmbedCss();
+      const opts = { pixelRatio: 2, cacheBust: true };
+      if (fontEmbedCSS) opts.fontEmbedCSS = fontEmbedCSS;
+      const dataUrl = await window.htmlToImage.toPng(el, opts);
+      const a = document.createElement('a');
+      a.download = 'monkey-vault-invitation.png';
+      a.href = dataUrl;
+      a.click();
+    } catch (err) {
+      console.warn('PNG export failed', err);
+    } finally {
+      wrap.style.setProperty('--inv-scale', prevScale);
+    }
   });
 
   render();
