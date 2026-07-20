@@ -267,8 +267,11 @@ const timeOpts = timeOptions(11, 22);
 
   /* Scale the whole card down to fit the available stage width instead of
      letting the fixed-px cards (440/660/470) force horizontal scroll on
-     narrower viewports — set via JS as a CSS custom property. */
-  .inv-scale-wrap { transform: scale(var(--inv-scale, 1)); transform-origin: center; transition: transform .15s ease; }
+     narrower viewports — set via JS as a CSS custom property. The wrap's
+     width/height are also set by JS to the *scaled* card size (transform-origin
+     top-left), so its layout box matches what's drawn — otherwise it reserves
+     the full natural footprint, overflowing narrow stages and leaving big gaps. */
+  .inv-scale-wrap { transform: scale(var(--inv-scale, 1)); transform-origin: top left; transition: transform .15s ease; }
 
   /* BG picker (Invite style only) — aligned to the top of the card, level
      with the photo it controls, instead of centered on the whole row. */
@@ -361,8 +364,18 @@ const timeOpts = timeOptions(11, 22);
     .inv-grid { grid-template-columns: minmax(0, 1fr); }
     .inv-preview { position: static; }
   }
-  @media (max-width: 520px) {
-    .inv-stage { padding: 24px 16px; }
+
+  /* Phones: the BG picker and photo buttons stop sharing a horizontal row with
+     the card (which squeezed the card to a tiny scale and pushed it off the
+     stage) — they stack above/below it so the card fills the available width.
+     min-height drops so the stage hugs its content instead of framing the
+     small card in a tall empty box. */
+  @media (max-width: 640px) {
+    .inv-stage { min-height: 0; padding: 24px 16px; }
+    .inv-stage-row { flex-direction: column; gap: 14px; width: 100%; }
+    .inv-bg-col { flex-direction: row; align-items: center; align-self: center; margin-top: 0; gap: 8px; }
+    .inv-bg-label { margin-bottom: 0; }
+    .inv-photo-col { flex-direction: row; width: auto; align-self: center; margin-top: 0; }
   }
 </style>
 
@@ -608,20 +621,50 @@ const timeOpts = timeOptions(11, 22);
     $('inv-sq-stripe').hidden = !ink;
   }
 
-  // Scale the whole preview card down to fit the stage without ever needing
-  // horizontal scroll (the ticket layout, at 660px plus the BG/photo side
-  // columns, is wider than the available column on laptop-size viewports).
+  // Scale the preview card down to fit the stage without ever needing
+  // horizontal scroll (the ticket layout, at 660px, is wider than the available
+  // column on laptop-size viewports; on phones every layout is wider than the
+  // screen). We measure the card's natural width against the room actually
+  // available to it, then size the wrap's box to the scaled result so it
+  // occupies exactly what it draws.
   function fitScale() {
     const stageRow = $('inv-stage-row');
     const wrap = $('inv-scale-wrap');
-    if (!stageRow || !wrap) return;
+    const card = $('inv-live-card');
+    if (!stageRow || !wrap || !card) return;
+
+    // Reset to natural size before measuring.
+    wrap.style.width = '';
+    wrap.style.height = '';
     wrap.style.setProperty('--inv-scale', '1');
-    // measure natural (unscaled) width of the whole row against the stage's content box
-    const stage = stageRow.parentElement;
-    const available = stage.clientWidth - 72; // minus .inv-stage's own horizontal padding
-    const natural = stageRow.scrollWidth;
-    const scale = natural > available ? Math.max(0.5, available / natural) : 1;
+
+    const cardW = card.offsetWidth;
+    const cardH = card.offsetHeight;
+    if (!cardW || !cardH) return;
+
+    const rs = getComputedStyle(stageRow);
+    const stacked = rs.flexDirection.startsWith('column');
+
+    // When stacked (phones) the card owns the full row width. When the side
+    // columns sit beside it (desktop) they keep their natural size — only the
+    // card scales — so subtract them and the gaps between.
+    let available = stageRow.clientWidth;
+    if (!stacked) {
+      const gapX = parseFloat(rs.columnGap) || 0;
+      let siblings = 0;
+      let visibleSiblings = 0;
+      Array.from(stageRow.children).forEach((child) => {
+        if (child === wrap) return;
+        const w = child.offsetWidth;
+        if (w > 0) { siblings += w; visibleSiblings += 1; }
+      });
+      available -= siblings + gapX * visibleSiblings;
+    }
+
+    const scale = Math.min(1, Math.max(0.2, available / cardW));
     wrap.style.setProperty('--inv-scale', String(scale));
+    wrap.style.width = `${cardW * scale}px`;
+    wrap.style.height = `${cardH * scale}px`;
   }
 
   // ---- wiring ----
