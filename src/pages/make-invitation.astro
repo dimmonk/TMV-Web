@@ -708,10 +708,23 @@ const timeOpts = timeOptions(11, 22);
     const el = $('inv-live-card');
     if (!el || !window.htmlToImage) return;
     const wrap = $('inv-scale-wrap');
-    const prevScale = wrap.style.getPropertyValue('--inv-scale');
-    wrap.style.setProperty('--inv-scale', '1'); // export at full resolution, not the fitted-to-screen scale
+    // Fetch the font first (async), so the card is only reset to full size for
+    // the brief synchronous capture below — no visible flash while it loads.
+    const fontEmbedCSS = await iconFontEmbedCss();
+    // Export at the card's natural resolution: clear BOTH the fit-to-screen
+    // scale AND the box sizing fitScale set. The capture target (#inv-live-card)
+    // is an auto-width wrapper, so while the wrap is pinned to the shrunk width
+    // the card overflows it and only the middle strip gets captured — cutting
+    // off both sides. Resetting all three lets it lay out at its design width.
+    const prev = {
+      scale: wrap.style.getPropertyValue('--inv-scale'),
+      width: wrap.style.width,
+      height: wrap.style.height,
+    };
+    wrap.style.setProperty('--inv-scale', '1');
+    wrap.style.width = '';
+    wrap.style.height = '';
     try {
-      const fontEmbedCSS = await iconFontEmbedCss();
       const opts = { pixelRatio: 2, cacheBust: true };
       if (fontEmbedCSS) opts.fontEmbedCSS = fontEmbedCSS;
       const dataUrl = await window.htmlToImage.toPng(el, opts);
@@ -722,7 +735,10 @@ const timeOpts = timeOptions(11, 22);
     } catch (err) {
       console.warn('PNG export failed', err);
     } finally {
-      wrap.style.setProperty('--inv-scale', prevScale);
+      wrap.style.setProperty('--inv-scale', prev.scale);
+      wrap.style.width = prev.width;
+      wrap.style.height = prev.height;
+      fitScale(); // re-fit to the current viewport after the full-size capture
     }
   });
 
