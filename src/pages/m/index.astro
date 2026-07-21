@@ -13,6 +13,7 @@ import OfferingCard from '../../components/OfferingCard.astro';
 import BookingCard from '../../components/BookingCard.astro';
 import ClassCard from '../../components/ClassCard.astro';
 import PartyCard from '../../components/PartyCard.astro';
+import InvitationMaker from '../../components/InvitationMaker.astro';
 import { offerings } from '../../data/offerings';
 import { firstSessionOptions } from '../../data/first-session';
 import { camps, campDaySchedule } from '../../data/camps';
@@ -92,6 +93,12 @@ const clientConfig = {
     waiverUrl: links.waiver,
     bookingUrl: links.booking,
     address: `${site.name} · ${site.address.street}, ${site.address.locality} (Downsview Park)`,
+  },
+  inv: {
+    venue: site.name,
+    address: `${site.address.street} · ${site.address.locality}`,
+    defaultPhoto: url('assets/invite-default-photo.png'),
+    waiverUrl: links.waiver,
   },
 };
 ---
@@ -275,14 +282,14 @@ const clientConfig = {
             <button type="button" class="tile m-tile" data-goto="#getstarted"><span class="m-tile-ic" style={`background:color-mix(in srgb,${cat.openGym} 14%,#fff)`}><i class="bi bi-flag-fill" style={`color:${cat.openGym}`}></i></span><div><div class="m-tile-t">Get Started</div><div class="m-tile-s">First-visit guide</div></div></button>
           </div>
 
-          <a href={url('make-invitation')} class="m-invite" style={`--m-invite-accent:${cat.parties}`}>
+          <button type="button" class="m-invite" data-goto="#invitation" style={`--m-invite-accent:${cat.parties}`}>
             <span class="m-invite-ic"><i class="bi bi-postcard-heart-fill" aria-hidden="true"></i></span>
             <div class="m-invite-txt">
               <div class="m-invite-t">Invitation maker <span class="m-invite-badge">Free</span></div>
               <div class="m-invite-s">Make a party invite for your birthday booking and download it — right from your phone.</div>
             </div>
             <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
-          </a>
+          </button>
 
           <div class="m-visit">
             <div class="m-visit-eyebrow"><span class="mh-rule"></span>Visit us</div>
@@ -453,6 +460,16 @@ const clientConfig = {
             <div class="m-groupslink-txt"><div class="m-groupslink-t">Groups &amp; team events</div><div class="m-groupslink-s">Schools, corporate &amp; early access</div></div>
             <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
           </button>
+        </div>
+      </section>
+
+      <!-- ===== SUB: INVITATION MAKER (mounts the shared invitation-maker
+             module; the app shell supplies the header + bottom nav) ===== -->
+      <section data-screen="invitation" class="m-screen" hidden>
+        <div class="m-pad">
+          <MobileHero eyebrow="Birthday parties" title="Invitation maker" desc="Fill in your party details, pick a style, then download it to text or post — or print at home." />
+          <div style="height:18px"></div>
+          <InvitationMaker showIntro={false} contained={false} />
         </div>
       </section>
 
@@ -705,7 +722,7 @@ const clientConfig = {
 
   /* Invitation maker feature card (Events + More) — party-accent tinted so it
      reads as a highlighted feature, a full-page link to the invitation maker. */
-  .m-invite { display: flex; align-items: center; gap: 13px; text-decoration: none; color: inherit; margin-bottom: 24px; padding: 15px 16px; border-radius: 16px; background: color-mix(in srgb, var(--m-invite-accent) 8%, #fff); border: 1px solid color-mix(in srgb, var(--m-invite-accent) 26%, #ebe9e4); box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); }
+  .m-invite { cursor: pointer; width: 100%; text-align: left; font: inherit; display: flex; align-items: center; gap: 13px; text-decoration: none; color: inherit; margin-bottom: 24px; padding: 15px 16px; border-radius: 16px; background: color-mix(in srgb, var(--m-invite-accent) 8%, #fff); border: 1px solid color-mix(in srgb, var(--m-invite-accent) 26%, #ebe9e4); box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); }
   .m-invite-ic { flex: none; width: 44px; height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center; background: var(--m-invite-accent); color: #211f1b; }
   .m-invite-ic i { font-size: 21px; }
   .m-invite-txt { flex: 1; }
@@ -835,8 +852,8 @@ const clientConfig = {
   const PRICE_API = cfg.priceApi;
 
   const TABS = ['home', 'train', 'book', 'schedule', 'more'];
-  const SUBS = ['pricing', 'store', 'about', 'reviews', 'getstarted', 'camps', 'events', 'groups', 'register'];
-  const SUBTITLES: Record<string, string> = { pricing: 'Pricing', store: 'Store', getstarted: 'Get Started', about: 'About', camps: 'Camps', events: 'Events', groups: 'Groups & Teams', reviews: 'Reviews', register: 'Registration' };
+  const SUBS = ['pricing', 'store', 'about', 'reviews', 'getstarted', 'camps', 'events', 'groups', 'register', 'invitation'];
+  const SUBTITLES: Record<string, string> = { pricing: 'Pricing', store: 'Store', getstarted: 'Get Started', about: 'About', camps: 'Camps', events: 'Events', groups: 'Groups & Teams', reviews: 'Reviews', register: 'Registration', invitation: 'Invitation Maker' };
 
   const screens = Array.from(document.querySelectorAll<HTMLElement>('[data-screen]'));
   const navBtns = Array.from(document.querySelectorAll<HTMLElement>('[data-nav]'));
@@ -860,6 +877,24 @@ const clientConfig = {
       showHero: false,
     });
   }
+  // Same lazy pattern for the invitation maker: one shared module, mounted the
+  // first time its screen opens.
+  let _invMounted = false;
+  async function ensureInvitation() {
+    if (_invMounted) return;
+    const host = document.querySelector<HTMLElement>('[data-screen="invitation"] .inv-root');
+    if (!host) return;
+    _invMounted = true;
+    const { mountInvitationMaker } = await import('../../lib/invitation-maker');
+    const inv = cfg.inv || {};
+    mountInvitationMaker(host, {
+      venue: inv.venue,
+      address: inv.address,
+      defaultPhoto: inv.defaultPhoto,
+      waiverUrl: inv.waiverUrl,
+    });
+  }
+
   const headMain = document.querySelector<HTMLElement>('[data-head="main"]');
   const headSub = document.querySelector<HTMLElement>('[data-head="sub"]');
   const subtitleEl = document.querySelector<HTMLElement>('[data-subtitle]');
@@ -893,6 +928,7 @@ const clientConfig = {
     if (screen === 'schedule') ensureSchedule();
     if (screen === 'pricing') ensurePricing();
     if (screen === 'register') ensureRegister();
+    if (screen === 'invitation') ensureInvitation();
   }
 
   // ---- live status pill (gym timezone, 60s tick) ----
@@ -1135,6 +1171,25 @@ const clientConfig = {
   navBtns.forEach((b) => b.addEventListener('click', () => { location.hash = b.dataset.nav || 'home'; }));
   document.querySelectorAll<HTMLElement>('[data-goto]').forEach((el) => {
     el.addEventListener('click', () => { location.hash = el.dataset.goto || ''; });
+  });
+
+  // Shared content components (e.g. <PartyCard>) link to the DESKTOP page for a
+  // feature, because that's the only target valid in both shells. When this app
+  // has a screen for that page, keep the user in the app instead of doing a full
+  // page load just to be redirected back here. Knowing which pages map to which
+  // screens is the shell's job, not the component's.
+  const PAGE_SCREEN: Record<string, string> = {
+    '/make-invitation': 'invitation',
+    '/camp-registration': 'register',
+  };
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement)?.closest?.('a[href]') as HTMLAnchorElement | null;
+    if (!a || a.target === '_blank' || e.defaultPrevented) return;
+    if (a.origin !== location.origin) return;
+    const screen = PAGE_SCREEN[a.pathname.replace(/\/$/, '')];
+    if (!screen) return;
+    e.preventDefault();
+    location.hash = screen;
   });
   document.querySelector('[data-back]')?.addEventListener('click', () => {
     if (history.length > 1) history.back();

@@ -17,31 +17,38 @@ The site has **two** front-ends:
    with a dark header and a **bottom tab bar**. Screens are toggled by URL hash
    (`/m/#home`, `/m/#events`, …). This is what phone users actually see.
 
-## RULE: any page that renders on a phone must have the mobile bottom nav
+## THE RULE: content carries no chrome — the shell sets header/footer/nav
 
-A page reachable on a phone must never be a dead-end (no way back into the app).
-There are exactly two correct ways to make a page work on mobile — pick one:
+A feature is content. The **shell** it renders in owns the header, footer and
+nav. So a feature must never bake in page chrome, and must never be a dead-end
+on a phone.
 
-- **Redirect pattern (default, preferred when the app can host it).** Keep
-  `mobileRedirect` at its default (`true`) and build a matching screen inside
-  the `/m/` app, then set `mobileHash="<screen>"` so phones deep-link into it.
-  Extract shared logic into a module used by both (see `camp-registration.astro`
-  + `src/lib/camp-reg-form.ts` — one form, mounted on both the desktop page and
-  the `/m/` "Register" screen). Phone users get the full app shell.
+**Every feature that works on a phone belongs in the `/m/` app shell.** Build it
+as three pieces:
 
-- **Standalone pattern (for big design-delivered pages the app can't host).**
-  Set `mobileRedirect={false}` on `BaseLayout`. The layout then **automatically**
-  renders `<MobileTabBar>` (phone-only, links back into `/m/#…`), so the page
-  keeps the bottom nav with no extra wiring. Optionally set
-  `mobileTab="more"` to highlight a tab. Example: `make-invitation.astro`.
+1. **Shared markup** — an Astro component with no chrome (e.g.
+   `components/InvitationMaker.astro`, `components/PartyCard.astro`).
+2. **Shared logic** (only if interactive) — a `mount*(root, opts)` module in
+   `src/lib` whose queries are scoped to `root` (e.g. `lib/invitation-maker.ts`,
+   `lib/camp-reg-form.ts`). No assumption about which shell it's in.
+3. **Two thin wirings** — the desktop page renders it inside `BaseLayout`, and
+   the `/m/` app renders it in a `data-screen` section (register the screen in
+   `SUBS` + `SUBTITLES`, and lazy-mount the logic in `render()`).
 
-**The gate is structural:** `BaseLayout` renders the tab bar whenever
-`mobileRedirect={false}` (see the INVARIANT comment there). You cannot add a
-mobile-visible page and forget the nav — it's tied to the same flag. When a new
-full page arrives (e.g. from design), the only decision is *which* of the two
-patterns above; both keep the mobile nav intact.
+Then set `mobileHash="<screen>"` on the desktop page so phones deep-link into
+the app screen instead of loading desktop chrome. Worked examples:
+`make-invitation.astro` → `/m/#invitation`, `camp-registration.astro` →
+`/m/#register`.
 
-Do **not** hand-add `<MobileTabBar>` to a page — it comes from `BaseLayout`. If
-you build a page with a custom layout (not `BaseLayout`) that shows on mobile,
-you are outside the gate: include `<MobileTabBar>` yourself, or (better) route
-it through `BaseLayout`.
+**Shared content must be shell-agnostic:** no fixed widths, no viewport media
+queries, no `.container`/`.m-pad` baked in. It fills whatever column the shell
+gives it. Width and padding are the shell's concern (see `PartyCard`'s note).
+
+### Fallback (rare): a page that truly can't be an app screen
+
+Set `mobileRedirect={false}`. `BaseLayout` then **automatically** renders
+`<MobileTabBar>` so the page still has the bottom nav instead of being a
+dead-end. This is a structural guard, not a pattern to reach for — nothing uses
+it today. Never hand-add `<MobileTabBar>`; it comes from `BaseLayout`. A page on
+a custom layout (not `BaseLayout`) is outside the guard entirely — route it
+through `BaseLayout`.
