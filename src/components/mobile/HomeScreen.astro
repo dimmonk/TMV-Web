@@ -1,0 +1,95 @@
+---
+/**
+ * Home — the phone composition, kept verbatim from the /m/ app's `home` screen.
+ *
+ * This is a genuinely different composition from the desktop homepage (stat-band
+ * hero, row-button, stacked cards, review strip), not the desktop markup
+ * narrowed. The page renders this below md and the desktop composition above —
+ * both wrapped in data-chrome, so the single breakpoint rule in global.css
+ * decides. Styles live in src/styles/mobile-app.css under `.mapp`.
+ *
+ * The only change from the original: the /m/ router's `data-goto="#screen"`
+ * buttons are now real links to real routes.
+ */
+import OfferingCard from '../OfferingCard.astro';
+import BookingCard from '../BookingCard.astro';
+import { offerings } from '../../data/offerings';
+import { cat, reviews, url, heroStats } from '../../data/site';
+import { sq } from '../../data/square-links';
+
+// Compact size props for the mobile OfferingCard variant.
+const OC = {
+  height: '360px', mediaRatio: '16/9', titleSize: '17px', descSize: '12.5px',
+  backTitleSize: '18px', padFront: '16px 16px 18px', padBack: '20px 20px 18px',
+};
+const reviewItems = reviews.items.map((r) => ({ name: r.name, role: r.context, text: r.quote }));
+---
+<div class="m-pad">
+  <div class="m-home-hero">
+    <div class="mh-glow"></div>
+    <div class="m-home-hero-inner">
+      <div class="mh-eyebrow"><span class="mh-rule"></span>Parkour &amp; movement · Toronto</div>
+      <h2 class="m-home-title">Move better.<br>Have more fun.</h2>
+      <p class="m-home-lead">Drop in to play, book a class, train like an athlete, or throw a party — every age, every level, under one big roof.</p>
+      <div class="m-home-stats">
+        {heroStats.map((st, i) => (
+          <div class:list={['m-home-stat', { mid: i === 1, end: i === heroStats.length - 1 }]}><div class="m-home-statv">{st.value}</div><div class="m-home-statl">{st.mobileLabel ?? st.label}</div></div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <a class="rowpress m-newhere" href={url('get-started')}>
+    <span class="m-newhere-ic"><i class="bi bi-flag-fill" aria-hidden="true"></i></span>
+    <div class="m-newhere-txt"><div class="m-newhere-t">New here?</div><div class="m-newhere-s">Start with the 3-step first-visit guide.</div></div>
+    <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
+  </a>
+
+  <h3 class="m-h3">Three ways to get moving</h3>
+  <p class="m-sub">Pick where to start.</p>
+  <div class="m-stack" style="margin-bottom:30px">
+    {offerings.map((o) => <OfferingCard {...o} href={url(o.key)} {...OC} />)}
+  </div>
+
+  <div class="m-rowhead">
+    <h3 class="m-h3" style="margin:0">Booking now</h3>
+    <a class="m-alllink" href={url('book')}>All <i class="bi bi-arrow-right" style={`color:${cat.camps}`} aria-hidden="true"></i></a>
+  </div>
+  <div style="margin-bottom:30px">
+    <BookingCard color={cat.camps} duration="9–2 daily" bookingTag="Register" title="Summer Camps 2026" description="A full week of parkour over the break — skills, flips, games and friends." pills="Ages 5+ | Mon–Fri | All levels" price="$350 / week" priceNote="booking now" actionLabel="Reserve" href={sq.home.summerCamps} target="_blank" />
+  </div>
+
+  <div class="m-revstrip">
+    <div class="m-revstrip-top">
+      <span class="m-revstrip-num">{reviews.ratingValue}</span>
+      <div>
+        <div class="m-revstrip-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></div>
+        <div class="m-revstrip-count">{reviews.ratingCount.replace(/^Based on /, '')}</div>
+      </div>
+    </div>
+    <div data-carousel>
+      <div class="m-revviewport" data-rev-viewport>
+        <div class="m-revtrack" data-rev-track>
+          {reviewItems.map((r) => (
+            <div class="m-hrev">
+              <p class="m-revstrip-quote">“{r.text}”</p>
+              <div class="m-hrev-by">{r.name} <span>· {r.role}</span></div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="m-revnav">
+        <button type="button" class="m-revarrow" data-rev-prev aria-label="Previous review"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+        <div class="m-revdots">
+          {reviewItems.map((_, i) => <button type="button" class="m-revdot" data-rev-dot={i} aria-label={`Review ${i + 1}`}></button>)}
+        </div>
+        <button type="button" class="m-revarrow" data-rev-next aria-label="Next review"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { mountReviewCarousels } from '../../lib/review-carousel';
+  mountReviewCarousels();
+</script>

@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import OfferingCard from '../components/OfferingCard.astro';
+import HomeScreen from '../components/mobile/HomeScreen.astro';
 import Reviews from '../components/Reviews.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { seo, links, cat, url, heroStats } from '../data/site';
@@ -35,6 +36,12 @@ const camps = [
 ];
 ---
 <BaseLayout title={seo.home.title} description={seo.home.description} active="" mobileTab="home">
+  {/* Phone composition — the purpose-built mobile design. Shown below md by the
+      chrome handoff in global.css; the desktop composition below is hidden there
+      (and this one is hidden at md and up). */}
+  <div class="mapp" data-chrome="app"><HomeScreen /></div>
+
+  <div data-chrome="site">
   <!-- HERO -->
   <section class="hero" id="top">
     <div class="hero-glow"></div>
@@ -131,6 +138,7 @@ const camps = [
       { theme: 'light', eyebrow: 'All classes, one view', title: 'Group Class Schedule', icon: 'bi-calendar3', href: url('schedule') },
     ]} />
   </section>
+  </div>
 </BaseLayout>
 
 <style>

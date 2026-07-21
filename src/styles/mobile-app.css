@@ -1,0 +1,292 @@
+/* ============================================================================
+ * The mobile app design language.
+ *
+ * This is the purpose-built phone design that used to live in the /m/ app. It
+ * is NOT the desktop CSS narrowed — it is its own composition (stat-band hero,
+ * row-buttons, tile lists, its own type scale), so it is kept verbatim.
+ *
+ * Every rule is scoped under `.mapp`, the wrapper each page puts around its
+ * mobile composition. That wrapper also carries data-chrome="app", so the ONE
+ * breakpoint rule in global.css shows it below md and hides it at md and up —
+ * the desktop composition (data-chrome="site") does the reverse.
+ *
+ * The old shell rules (.m-app viewport lock, .m-screen router visibility, the
+ * header and tab bar) are deliberately NOT here: BaseLayout owns chrome now.
+ * ==========================================================================*/
+
+.mapp { min-width: 0; }
+  .mapp .m-pad { padding: 16px 18px 28px; }
+  .mapp .m-pad-x { padding: 0 18px; }
+  .mapp .m-stack { display: flex; flex-direction: column; gap: 16px; }
+
+  /* header */
+
+
+  /* home hero */
+  .mapp .m-home-hero { background: #211f1b; color: #fff; border-radius: 22px; padding: 26px 24px 24px; margin-bottom: 26px; position: relative; overflow: hidden; }
+  .mapp .mh-glow { position: absolute; inset: 0; background: radial-gradient(360px 200px at 92% -20%, rgba(255,212,0,.16), transparent 70%); }
+  .mapp .m-home-hero-inner { position: relative; }
+  .mapp .mh-eyebrow { display: inline-flex; align-items: center; gap: 8px; font: 700 10.5px/1 'Archivo', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #ffd400; margin-bottom: 18px; }
+  .mapp .mh-rule { width: 18px; height: 2px; background: #ffd400; }
+  .mapp .m-home-title { font: 800 33px/1.02 'Archivo', sans-serif; letter-spacing: -.02em; margin: 0 0 14px; }
+  .mapp .m-home-lead { font: 400 14px/1.55 inherit; color: rgba(255,255,255,.72); margin: 0 0 22px; }
+  .mapp .m-home-stats { display: flex; border-top: 1px solid rgba(255,255,255,.12); padding-top: 16px; }
+  .mapp .m-home-stat { flex: 1; border-right: 1px solid rgba(255,255,255,.12); }
+  .mapp .m-home-stat.mid { text-align: center; }
+  .mapp .m-home-stat.end { text-align: right; border-right: 0; }
+  .mapp .m-home-statv { font: 800 19px/1 'Archivo', sans-serif; color: #ffd400; }
+  .mapp .m-home-statl { font: 600 10.5px/1.3 inherit; color: rgba(255,255,255,.6); margin-top: 5px; }
+
+  .mapp .m-newhere { cursor: pointer; width: 100%; text-align: left; background: #fff; border: 1px solid #ebe9e4; border-radius: 15px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 15px 16px; display: flex; align-items: center; gap: 13px; margin-bottom: 28px; }
+  .mapp .m-newhere-ic { flex: none; width: 38px; height: 38px; border-radius: 11px; background: #fbf3cf; display: flex; align-items: center; justify-content: center; }
+  .mapp .m-newhere-ic i { font-size: 16px; color: #b78900; }
+  .mapp .m-newhere-txt { flex: 1; }
+  .mapp .m-newhere-t { font: 800 14px/1.15 'Archivo', sans-serif; }
+  .mapp .m-newhere-s { font: 500 12px/1.35 inherit; color: #8a877f; margin-top: 3px; }
+  .mapp .m-chev { font-size: 13px; color: #c4c0b7; }
+
+  .mapp .m-h3 { font: 800 18px/1 'Archivo', sans-serif; letter-spacing: -.01em; margin: 0 0 5px; }
+  .mapp .m-sub { font: 500 13px/1.4 inherit; color: #8a877f; margin: 0 0 15px; }
+  .mapp .m-rowhead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 13px; }
+  .mapp .m-alllink { cursor: pointer; background: none; border: 0; font: 800 11.5px/1 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: .04em; color: #211f1b; display: inline-flex; align-items: center; gap: 5px; }
+  .mapp .m-label { font: 800 12px/1 'Archivo', sans-serif; letter-spacing: .06em; text-transform: uppercase; color: #9b8e6a; margin: 0 0 12px; }
+
+  .mapp .m-revstrip { background: #fff; border: 1px solid #ebe9e4; border-radius: 16px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 20px; margin-bottom: 26px; }
+  .mapp .m-revstrip-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .mapp .m-revstrip-num { font: 900 24px/1 'Archivo', sans-serif; }
+  .mapp .m-revstrip-stars { color: #e9a300; font-size: 12px; letter-spacing: 2px; }
+  .mapp .m-revstrip-count { font: 600 11.5px/1 inherit; color: #8a877f; margin-top: 5px; }
+  .mapp .m-revstrip-quote { font: 500 13.5px/1.5 inherit; color: #3a3833; margin: 0; }
+  .mapp .m-hrev { flex: 0 0 100%; box-sizing: border-box; }
+  .mapp .m-hrev-by { font: 800 12.5px/1 'Archivo', sans-serif; color: #211f1b; margin-top: 10px; }
+  .mapp .m-hrev-by span { font-weight: 600; color: #9b9890; }
+
+  /* book drop-ins */
+  .mapp .m-dropin { background: #fff; border: 1px solid #ebe9e4; border-radius: 16px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); overflow: hidden; }
+  .mapp .m-dropin-strip { display: block; height: 4px; }
+  .mapp .m-dropin-body { padding: 18px; }
+  .mapp .m-dropin-head { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
+  .mapp .m-dropin-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 6px; color: #fff; font: 800 10.5px/1 'Archivo', sans-serif; letter-spacing: .07em; text-transform: uppercase; }
+  .mapp .m-dropin-tag i { font-size: 12px; }
+  .mapp .m-dropin-title { font: 800 20px/1.05 'Archivo', sans-serif; letter-spacing: -.01em; margin: 0; }
+  .mapp .m-dropin-desc { font: 400 13px/1.5 inherit; color: #5b5853; margin: 0 0 14px; }
+  .mapp .m-dropin-cta { display: flex; align-items: center; gap: 13px; border: 1px solid; border-radius: 12px; padding: 14px 15px; }
+  .mapp .m-dropin-cta i { font-size: 24px; }
+  .mapp .m-dropin-ctat { font: 800 17px/1.05 'Archivo', sans-serif; letter-spacing: -.01em; }
+  .mapp .m-dropin-ctas { font: 600 12px/1.35 inherit; color: #6a6760; margin-top: 3px; }
+
+  /* schedule — the day list / chips / loading / error rules live in the
+  is:global block below (that DOM is injected at runtime via innerHTML,
+  so scoped rules can't reach it). Only the server-rendered chips strip
+  wrapper is styled here. */
+  .mapp .m-chips { display: flex; gap: 8px; overflow-x: auto; padding: 0 18px 18px; }
+
+  /* more tiles */
+  .mapp .m-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+  .mapp .m-tile { cursor: pointer; text-align: left; background: #fff; border: 1px solid #ebe9e4; border-radius: 16px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 16px; display: flex; flex-direction: column; gap: 14px; min-height: 104px; }
+  .mapp .m-tile-ic { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+  .mapp .m-tile-ic i { font-size: 19px; }
+  .mapp .m-tile-t { font: 800 14.5px/1.1 'Archivo', sans-serif; letter-spacing: -.005em; }
+  .mapp .m-tile-s { font: 500 11.5px/1.35 inherit; color: #8a877f; margin-top: 4px; }
+
+  .mapp .m-visit { background: #211f1b; color: #fff; border-radius: 20px; padding: 24px; }
+  .mapp .m-visit-eyebrow { display: flex; align-items: center; gap: 9px; font: 700 11px/1 'Archivo', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #ffd400; margin-bottom: 18px; }
+  .mapp .m-visit-rows { display: flex; flex-direction: column; gap: 14px; }
+  .mapp .m-visit-row { display: flex; align-items: flex-start; gap: 12px; }
+  .mapp .m-visit-row i { font-size: 15px; color: #ffd400; margin-top: 2px; }
+  .mapp .m-visit-t { font: 700 13.5px/1.3 'Archivo', sans-serif; }
+  .mapp .m-visit-s { font: 500 12px/1.3 inherit; color: rgba(255,255,255,.6); margin-top: 3px; }
+  .mapp .m-visit-btns { display: flex; gap: 10px; margin-top: 6px; }
+  .mapp .m-visit-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); border-radius: 11px; padding: 12px; color: #fff; text-decoration: none; font: 700 12px/1 'Archivo', sans-serif; }
+
+  /* get started */
+  .mapp .m-step { display: flex; gap: 13px; margin-bottom: 12px; }
+  .mapp .m-stepn { flex: none; width: 34px; height: 34px; border-radius: 10px; background: #211f1b; color: #ffd400; display: flex; align-items: center; justify-content: center; font: 900 15px/1 'Archivo', sans-serif; }
+  .mapp .m-step-t { font: 800 18px/1.1 'Archivo', sans-serif; letter-spacing: -.01em; }
+  .mapp .m-step-p { font: 400 13px/1.5 inherit; color: #6a6760; margin: 6px 0 0; }
+  .mapp .m-note { display: flex; gap: 10px; background: #fff; border: 1px solid #ebe9e4; border-left: 4px solid #ffd400; border-radius: 12px; padding: 13px 15px; margin: 0 0 14px; }
+  .mapp .m-note i { font-size: 15px; color: #211f1b; margin-top: 1px; }
+  .mapp .m-note span { font: 600 12.5px/1.5 inherit; color: #3a3833; }
+  .mapp .m-darkbtn-sm { display: inline-flex; align-items: center; gap: 8px; background: #211f1b; color: #fff; text-decoration: none; border-radius: 10px; padding: 12px 16px; font: 800 12px/1 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: .03em; }
+  .mapp .m-brandbtn { display: flex; align-items: center; justify-content: center; gap: 8px; background: #ffd400; color: #211f1b; text-decoration: none; border-radius: 12px; padding: 13px; font: 800 13px/1 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: .03em; }
+  .mapp .m-brandbtn-sm { display: inline-flex; align-items: center; gap: 8px; background: #ffd400; color: #211f1b; text-decoration: none; border-radius: 10px; padding: 12px 17px; font: 800 12.5px/1 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: .03em; }
+  .mapp .m-card { background: #fff; border: 1px solid #ebe9e4; border-radius: 16px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 18px 20px; margin-bottom: 12px; }
+  .mapp .m-card-title { font: 800 14px/1.1 'Archivo', sans-serif; margin-bottom: 14px; display: flex; align-items: center; gap: 9px; }
+  .mapp .m-list { display: flex; flex-direction: column; gap: 11px; }
+  .mapp .m-li { display: flex; align-items: flex-start; gap: 10px; }
+  .mapp .m-li > i { font-size: 15px; margin-top: 1px; }
+  .mapp .m-li span:last-child { font: 500 13px/1.5 inherit; color: #3a3833; }
+  .mapp .m-lin { flex: none; width: 22px; height: 22px; border-radius: 7px; background: #f3f2ee; display: flex; align-items: center; justify-content: center; font: 800 11px/1 'Archivo', sans-serif; color: #211f1b; }
+  .mapp .m-li .m-lin + span { padding-top: 2px; }
+  .mapp .m-warn { display: flex; gap: 11px; background: #fff7d6; border: 1px solid #f1e4a0; border-radius: 14px; padding: 15px 17px; margin-bottom: 0; }
+  .mapp .m-warn i { font-size: 16px; color: #9a7b00; margin-top: 1px; }
+  .mapp .m-warn span { font: 600 12.5px/1.55 inherit; color: #5c4d12; }
+
+  .mapp .m-faqbox { background: #fff; border: 1px solid #ebe9e4; border-radius: 16px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); overflow: hidden; }
+  .mapp .m-faq-sum { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 16px; font: 700 14px/1.3 'Archivo', sans-serif; color: #211f1b; }
+  .mapp .m-faq-sum i { font-size: 12px; color: #b0aca3; flex: none; }
+  .mapp .m-faq-a { padding: 0 16px 16px; font: 400 13px/1.6 inherit; color: #6a6760; }
+
+  /* about */
+  .mapp .m-about-lead { font: 400 14px/1.6 inherit; color: #3a3833; margin: 0 0 22px; }
+  .mapp .m-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 26px; }
+  .mapp .m-gitem { aspect-ratio: 1/1; border-radius: 14px; overflow: hidden; background: #e9e7e1; }
+  .mapp .m-gitem img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .mapp .m-facility { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 26px; }
+  .mapp .m-fcard { background: #fff; border: 1px solid #ebe9e4; border-radius: 14px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 16px; }
+  .mapp .m-fic { display: inline-flex; width: 38px; height: 38px; border-radius: 11px; background: #f3f2ee; align-items: center; justify-content: center; margin-bottom: 11px; }
+  .mapp .m-fic i { font-size: 17px; color: #211f1b; }
+  .mapp .m-ft { font: 800 14px/1.15 'Archivo', sans-serif; margin-bottom: 5px; }
+  .mapp .m-fb { font: 400 12px/1.45 inherit; color: #6a6760; margin: 0; }
+  .mapp .m-hours { background: #211f1b; color: #fff; border-radius: 18px; padding: 22px 24px; margin-bottom: 16px; }
+  .mapp .m-hours-label { font: 700 11px/1 'Archivo', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #ffd400; margin-bottom: 6px; }
+  .mapp .m-hours-title { font: 800 20px/1.1 'Archivo', sans-serif; }
+  .mapp .m-hrow { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,.1); }
+  .mapp .m-hrow span:first-child { font: 600 13.5px/1 inherit; color: rgba(255,255,255,.82); }
+  .mapp .m-htime { font: 600 13.5px/1 inherit; color: rgba(255,255,255,.55); }
+  .mapp .m-camptime { flex: none; min-width: 92px; font: 800 12.5px/1 'Archivo', sans-serif; color: #ffd400; }
+  .mapp .m-camplabel { font: 600 13.5px/1.3 inherit; color: rgba(255,255,255,.85); }
+  .mapp .m-contact { background: #fff; border: 1px solid #ebe9e4; border-radius: 18px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 22px 24px; margin-bottom: 16px; }
+  .mapp .m-contact-row { display: flex; gap: 13px; align-items: flex-start; margin-bottom: 16px; font: 600 14px/1.55 inherit; color: #211f1b; }
+  .mapp .m-contact-row a { color: #211f1b; text-decoration: none; }
+  .mapp .m-contact-ic { flex: none; width: 40px; height: 40px; border-radius: 11px; background: #f3f2ee; display: flex; align-items: center; justify-content: center; }
+  .mapp .m-contact-ic i { font-size: 16px; color: #211f1b; }
+  .mapp .m-socials { display: flex; gap: 10px; }
+  .mapp .m-socials a { flex: 1; height: 50px; border-radius: 13px; background: #211f1b; display: inline-flex; align-items: center; justify-content: center; color: #ffd400; text-decoration: none; font-size: 20px; }
+  .mapp .m-fine { font: 400 12px/1.5 inherit; color: #9b9890; margin: 0; }
+
+  /* events */
+  /* Layout only — the cards are the shared <PartyCard> component. */
+  .mapp .m-partycards { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+  .mapp .m-hold { display: flex; gap: 10px; background: #f3f2ee; border-radius: 12px; padding: 13px 15px; margin-bottom: 26px; }
+  .mapp .m-hold i { font-size: 14px; color: #9b8e6a; margin-top: 1px; }
+  .mapp .m-hold span { font: 500 12.5px/1.5 inherit; color: #6a6760; }
+  .mapp .m-groupslink { cursor: pointer; width: 100%; background: #fff; border: 1px solid #ebe9e4; border-radius: 14px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 16px; display: flex; align-items: center; gap: 13px; }
+  .mapp .m-groupslink-ic { flex: none; width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; }
+  .mapp .m-groupslink-ic i { font-size: 17px; }
+  .mapp .m-groupslink-txt { flex: 1; text-align: left; }
+  .mapp .m-groupslink-t { font: 800 14px/1.15 'Archivo', sans-serif; }
+  .mapp .m-groupslink-s { font: 500 12px/1.35 inherit; color: #8a877f; margin-top: 3px; }
+
+  /* Invitation maker feature card (Events + More) — party-accent tinted so it
+  reads as a highlighted feature, a full-page link to the invitation maker. */
+  .mapp .m-invite { cursor: pointer; width: 100%; text-align: left; font: inherit; display: flex; align-items: center; gap: 13px; text-decoration: none; color: inherit; margin-bottom: 24px; padding: 15px 16px; border-radius: 16px; background: color-mix(in srgb, var(--m-invite-accent) 8%, #fff); border: 1px solid color-mix(in srgb, var(--m-invite-accent) 26%, #ebe9e4); box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); }
+  .mapp .m-invite-ic { flex: none; width: 44px; height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center; background: var(--m-invite-accent); color: #211f1b; }
+  .mapp .m-invite-ic i { font-size: 21px; }
+  .mapp .m-invite-txt { flex: 1; }
+  .mapp .m-invite-t { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font: 800 14.5px/1.15 'Archivo', sans-serif; }
+  .mapp .m-invite-badge { font: 800 9px/1 'Archivo', sans-serif; letter-spacing: .05em; text-transform: uppercase; color: #211f1b; background: color-mix(in srgb, var(--m-invite-accent) 52%, #fff); padding: 4px 7px; border-radius: 999px; }
+  .mapp .m-invite-s { font: 500 12px/1.4 inherit; color: #8a877f; margin-top: 4px; }
+
+  /* groups */
+  .mapp .m-gcard { background: #fff; border: 1px solid #ebe9e4; border-radius: 18px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 22px 24px; margin-bottom: 14px; }
+  .mapp .m-ghead { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .mapp .m-gic { flex: none; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+  .mapp .m-gic i { font-size: 20px; }
+  .mapp .m-geyebrow { font: 700 10.5px/1 'Archivo', sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+  .mapp .m-gtitle { font: 800 19px/1.1 'Archivo', sans-serif; letter-spacing: -.01em; margin-top: 5px; }
+  .mapp .m-gdesc { font: 400 13px/1.55 inherit; color: #6a6760; margin: 0 0 16px; }
+  .mapp .m-glabel { font: 700 10.5px/1 'Archivo', sans-serif; letter-spacing: .1em; text-transform: uppercase; color: #9b9890; margin-bottom: 10px; }
+  .mapp .m-gtiers { border: 1px solid #ebe9e4; border-radius: 12px; overflow: hidden; margin-bottom: 14px; }
+  .mapp .m-gtier { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; border-bottom: 1px solid #f0efea; }
+  .mapp .m-gtier:last-child { border-bottom: 0; }
+  .mapp .m-gtier span:first-child { font: 600 13.5px/1 inherit; color: #3a3833; }
+  .mapp .m-gtier-v { font: 800 13.5px/1 'Archivo', sans-serif; color: #211f1b; }
+  .mapp .m-gfine { font: 400 12px/1.5 inherit; color: #9b9890; margin: 0 0 16px; }
+  .mapp .m-gfoot2 { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-top: 14px; border-top: 1px solid #f0efea; }
+  .mapp .m-gbig { font: 800 20px/1 'Archivo', sans-serif; color: #211f1b; }
+  .mapp .m-gsub { font: 600 12px/1.3 inherit; color: #9b9890; margin-top: 5px; }
+
+  /* store gift */
+  .mapp .m-gift { text-decoration: none; display: flex; align-items: center; gap: 14px; background: #211f1b; color: #fff; border-radius: 16px; padding: 18px 20px; }
+  .mapp .m-gift-ic { flex: none; width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; }
+  .mapp .m-gift-ic i { font-size: 20px; color: #ffd400; }
+  .mapp .m-gift-txt { flex: 1; }
+  .mapp .m-gift-t { font: 800 16px/1.1 'Archivo', sans-serif; }
+  .mapp .m-gift-s { font: 600 12px/1.3 inherit; color: rgba(255,255,255,.6); margin-top: 3px; }
+  .mapp .m-gift > i { color: #ffd400; font-size: 16px; }
+
+  /* reviews */
+  .mapp .m-revsum { background: #fff; border: 1px solid #ebe9e4; border-radius: 18px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 20px 22px; margin: 0 0 20px; display: flex; align-items: center; gap: 18px; }
+  .mapp .m-revsum-score { text-align: center; }
+  .mapp .m-revsum-num { font: 900 40px/1 'Archivo', sans-serif; color: #211f1b; }
+  .mapp .m-revsum-stars { color: #e9a300; font-size: 12px; letter-spacing: 2px; margin-top: 6px; }
+  .mapp .m-revsum-txt { flex: 1; }
+  .mapp .m-revsum-t { font: 800 16px/1.2 'Archivo', sans-serif; color: #211f1b; }
+  .mapp .m-revsum-s { font: 500 12.5px/1.4 inherit; color: #8a877f; margin-top: 5px; }
+  /* Transform-driven carousel — NO native scroll/snap. iOS Safari's snap
+  handling broke both swiping and programmatic scrollTo here; a translateX
+  track switched by the dots/arrows (plus a touch handler) works everywhere. */
+  .mapp .m-revviewport { overflow: hidden; touch-action: pan-y; }
+  .mapp .m-revtrack { display: flex; transition: transform .35s ease; }
+  .mapp .m-revcard { flex: 0 0 100%; box-sizing: border-box; background: #fff; border: 1px solid #ebe9e4; border-radius: 16px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 18px 20px; }
+  .mapp .m-revcard + .m-revcard { margin-left: 0; }
+  .mapp .m-revcard-stars { color: #e9a300; font-size: 11px; letter-spacing: 2px; margin-bottom: 10px; }
+  .mapp .m-revcard-text { font: 500 13.5px/1.55 inherit; color: #3a3833; margin: 0 0 12px; }
+  .mapp .m-revcard-by { font: 800 12.5px/1 'Archivo', sans-serif; color: #211f1b; }
+  .mapp .m-revcard-by span { font-weight: 600; color: #9b9890; }
+  .mapp .m-revnav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 14px; }
+  .mapp .m-revarrow { cursor: pointer; width: 40px; height: 40px; border-radius: 50%; background: #fff; border: 1px solid #e6e4dd; color: #211f1b; font-size: 15px; display: flex; align-items: center; justify-content: center; }
+  .mapp .m-revarrow:disabled { opacity: .35; }
+  .mapp .m-revdots { display: flex; gap: 4px; }
+  .mapp .m-revdot { cursor: pointer; background: none; border: 0; padding: 8px 4px; display: flex; }
+  .mapp .m-revdot::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #d8d4cc; transition: background .15s, transform .15s; }
+  .mapp .m-revdot.on::before { background: #211f1b; transform: scale(1.25); }
+
+  /* bottom nav */
+  /* The tab bar is the app's primary chrome and must paint above any
+  screen-level sticky UI (e.g. the registration form's pay bar, z-index 40) —
+  otherwise the Book button, which protrudes ~15px above the bar, gets
+  clipped. Keep this above every in-screen z-index. */
+  .mapp .m-nav { flex: none; position: relative; z-index: 50; background: rgba(28,26,23,.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid rgba(255,255,255,.08); padding: 9px 12px calc(13px + env(safe-area-inset-bottom, 10px)); display: flex; align-items: flex-end; }
+  .mapp .m-navbtn { flex: 1; cursor: pointer; background: none; border: 0; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 7px; color: rgba(255,255,255,.42); }
+  .mapp .m-navbtn i { font-size: 26px; }
+  .mapp .m-navbtn span { font: 700 12px/1 'Archivo', sans-serif; letter-spacing: .02em; }
+  .mapp .m-navbtn.active { color: #fff; }
+  .mapp .m-navcenter .m-navcenter-c { width: 64px; height: 64px; margin-top: -36px; border-radius: 50%; background: #ffd400; border: 4px solid rgba(28,26,23,.92); box-shadow: 0 6px 15px -7px rgba(255,212,0,.45); display: flex; align-items: center; justify-content: center; }
+  .mapp .m-navcenter .m-navcenter-c i { font-size: 29px; color: #211f1b; }
+  .mapp .m-navcenter span:last-child { font-weight: 800; text-transform: uppercase; }
+
+  @keyframes tmv-pulse { 0% { box-shadow: 0 0 0 0 rgba(95,208,127,.5); } 70% { box-shadow: 0 0 0 6px rgba(95,208,127,0); } 100% { box-shadow: 0 0 0 0 rgba(95,208,127,0); } }
+
+  .mapp details.faq { border-top: 1px solid #f0efea; }
+  .mapp details.faq:first-child { border-top: 0; }
+  .mapp details.faq summary { list-style: none; cursor: pointer; }
+  .mapp details.faq summary::-webkit-details-marker { display: none; }
+  .mapp details.faq[open] .faq-chev { transform: rotate(180deg); }
+  .mapp .faq-chev { transition: transform .2s ease; }
+  .mapp .navbtn:active { transform: scale(.9); }
+  .mapp .tile:active, .mapp .rowpress:active { transform: scale(.98); }
+  .mapp .m-chip { flex: none; cursor: pointer; font: 700 12.5px/1 'Archivo', sans-serif; border-radius: 999px; padding: 9px 15px; white-space: nowrap; }
+  .mapp .m-sched-day { margin-bottom: 22px; }
+  .mapp .m-sched-daylabel { font: 800 12px/1 'Archivo', sans-serif; letter-spacing: .06em; text-transform: uppercase; color: #9b8e6a; margin-bottom: 11px; }
+  .mapp .m-sched-card { background: #fff; border: 1px solid #ebe9e4; border-radius: 16px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); overflow: hidden; }
+  .mapp .m-sess { display: flex; gap: 13px; padding: 14px 16px; border-bottom: 1px solid #f0efea; }
+  .mapp .m-sess:last-child { border-bottom: 0; }
+  .mapp .m-sess-bar { flex: none; width: 4px; align-self: stretch; border-radius: 2px; }
+  .mapp .m-sess-name { font: 800 14.5px/1.15 'Archivo', sans-serif; color: #211f1b; }
+  .mapp .m-sess-meta { font: 500 12.5px/1.3 inherit; color: #8a877f; margin-top: 4px; }
+  .mapp .m-sess-badge { font: 800 9px/1 'Archivo', sans-serif; letter-spacing: .06em; text-transform: uppercase; border-radius: 4px; padding: 3px 5px; margin-left: 8px; }
+  .mapp .m-loading { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 60px 0; color: #9b8e6a; font: 600 13px/1 -apple-system, system-ui, sans-serif; }
+  .mapp .m-spin { width: 26px; height: 26px; border-radius: 50%; border: 3px solid #e6e4dd; border-top-color: #211f1b; animation: tmv-spin-g .8s linear infinite; }
+  .mapp .m-err { text-align: center; padding: 50px 20px; }
+  .mapp .m-err i { font-size: 26px; color: #c4c0b7; }
+  .mapp .m-err p { font: 600 13.5px/1.5 inherit; color: #6a6760; margin: 14px 0 16px; }
+  .mapp .m-retry { cursor: pointer; background: #211f1b; color: #fff; border: 0; border-radius: 11px; padding: 12px 20px; font: 800 12px/1 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: .03em; }
+  .mapp .m-autonote { display: flex; align-items: center; gap: 9px; background: #f3f2ee; border-radius: 12px; padding: 13px 15px; margin-top: 4px; }
+  .mapp .m-autonote i { font-size: 14px; color: #9b8e6a; }
+  .mapp .m-autonote span { font: 500 12px/1.4 inherit; color: #6a6760; }
+  .mapp .m-darkbtn { display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%; background: #211f1b; color: #fff; text-decoration: none; border: 0; cursor: pointer; border-radius: 12px; padding: 14px; font: 800 13px/1 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: .03em; }
+  @keyframes tmv-spin-g { to { transform: rotate(360deg); } }
+
+/* ---------------------------------------------------------------------------
+ * The /m/ app navigated by JS, so these were <button data-goto="#screen">.
+ * They are real <a href> now (real routes, working back button), which means
+ * they arrive with link underline + link colour. Neutralise that so they look
+ * exactly like the original controls.
+ * -------------------------------------------------------------------------*/
+.mapp a.rowpress,
+.mapp a.m-newhere,
+.mapp a.m-alllink,
+.mapp a.m-tile,
+.mapp a.tile { text-decoration: none; color: inherit; }
