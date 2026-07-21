@@ -13,8 +13,9 @@ import { links, site, url } from '../data/site';
 interface Props {
   /** Desktop shows the page-title band; the /m/ screen uses MobileHero instead. */
   showIntro?: boolean;
-  /** Apply the site's `.container` width cap. The /m/ screen supplies its own
-   * padding (.m-pad), so it opts out — width is the shell's concern. */
+  /** Render as a desktop *page* section: applies the site's `.container` width
+   * cap and the page's vertical breathing room. The /m/ screen supplies both
+   * itself (.m-pad + the hero), so it opts out — spacing is the shell's job. */
   contained?: boolean;
 }
 const { showIntro = true, contained = true } = Astro.props;
@@ -55,7 +56,7 @@ const timeOpts = timeOptions(11, 22);
 </div>
 )}
 
-<div class:list={['inv-grid', contained && 'container']}>
+<div class:list={['inv-grid', contained && 'container', contained && 'inv-grid-page']}>
   <!-- CONTROLS -->
   <div class="inv-controls">
     <div class="inv-card">
@@ -236,7 +237,12 @@ const timeOpts = timeOptions(11, 22);
   .inv-intro-title { font: 800 30px/1.02 var(--font-display); letter-spacing: -.02em; margin: 0 0 6px; }
   .inv-intro-lead { font: 400 14px/1.5 var(--font-body); color: var(--muted); margin: 0; max-width: 520px; }
 
-  .inv-grid { display: grid; grid-template-columns: 396px minmax(0, 1fr); gap: 32px; align-items: start; padding-block: 28px 60px; }
+  .inv-grid { display: grid; grid-template-columns: 396px minmax(0, 1fr); gap: 32px; align-items: start; }
+  /* Page-level vertical breathing room belongs to the desktop page (gap from the
+     intro band, room before the footer). The /m/ screen supplies its own spacing
+     via .m-pad + the hero, so it must NOT inherit this — otherwise it stacks on
+     top and leaves a dead band under the hero. */
+  .inv-grid-page { padding-block: 28px 60px; }
   .inv-controls { display: flex; flex-direction: column; gap: 24px; }
   .inv-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 20px; }
   .inv-steplabel { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; font: 800 14px/1 var(--font-display); }
