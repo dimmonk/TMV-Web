@@ -8,12 +8,21 @@
  *
  * Reuses the app's existing vocabulary rather than inventing new patterns:
  * MobileHero for the header, BookingCard for each of the three ways to book
- * (same component Book/Train screens use), m-stack for the coach list.
+ * (same component Book/Train screens use), m-stack for the coach list, m-tile
+ * for the "good to know" facts (same non-interactive tile Athletic Program's
+ * screen uses for its benefits).
+ *
+ * NOT ported: desktop's closing "not sure who to train with? call/email us"
+ * strip. Deliberate, not missed — that exact function (call, email, directions)
+ * is already one tap away from every screen via the More sheet's Visit Us
+ * card, so a page-local copy of it here would just be a duplicate, not new
+ * content.
  */
 import MobileHero from '../MobileHero.astro';
 import BookingCard from '../BookingCard.astro';
 import { privateWays } from '../../data/private-lessons';
 import { sq } from '../../data/square-links';
+import { cat } from '../../data/site';
 
 const plHref = (key: string) =>
   key === 'intro' ? sq.privateLessons.introduction : key === 'private' ? sq.privateLessons.privateLesson : '#coaches';
@@ -22,6 +31,15 @@ const coaches = [
   { name: 'Taigh Smullen', role: 'Manager', bio: 'Trampoline and parkour specialist — explosive air awareness built on solid fundamentals.', tags: ['Trampoline', 'Parkour'], href: sq.privateLessons.coachTaigh },
   { name: 'Steven Leblanc', role: 'Manager', bio: '24+ years of parkour — flips, acrobatics and conditioning. Methodical, progression-driven coaching.', tags: ['Parkour', 'Flips', 'Conditioning'], href: sq.privateLessons.coachSteven },
   { name: 'Nelson Lin', role: 'Coach', bio: 'Tricking, calisthenics and gymnastics — high-energy flips and bodyweight strength.', tags: ['Tricking', 'Calisthenics', 'Gymnastics'], href: sq.privateLessons.coachNelson },
+];
+// Condensed from the desktop page's 4-card "Good to know" section. Genuinely
+// missing (not just condensed away) until now — "Waiver first" in particular
+// is functional information: a first-timer needs to know before they try to book.
+const notes = [
+  { icon: 'bi-graph-up-arrow', title: 'One coach, your journey', sub: 'They know your history and build on it' },
+  { icon: 'bi-calendar-heart', title: 'They come in for you', sub: 'Book outside their shift, even a day off' },
+  { icon: 'bi-tag', title: 'Each sets their rate', sub: 'Separate from class pricing — shown at booking' },
+  { icon: 'bi-clipboard-check', title: 'Waiver first', sub: 'New here? Start on Get Started, then come back' },
 ];
 ---
 <MobileHero eyebrow="Private" title="Built around you" desc="One-on-one coaching shaped entirely around your goals and pace — three ways in." />
@@ -49,6 +67,17 @@ const coaches = [
         <div class="m-coach-tags">{c.tags.map((t) => <span class="m-coach-tag">{t}</span>)}</div>
         <div class="m-coach-cta">Book with {c.name.split(' ')[0]} <i class="bi bi-arrow-right" aria-hidden="true"></i></div>
       </a>
+    ))}
+  </div>
+
+  <h3 class="m-h3" style="margin:28px 0 4px">Good to know</h3>
+  <p class="m-sub" style="margin-bottom:14px">Before you book.</p>
+  <div class="m-tiles">
+    {notes.map((n) => (
+      <div class="tile m-tile" style="cursor:default">
+        <span class="m-tile-ic" style={`background:color-mix(in srgb,${cat.private} 16%,#fff)`}><i class={`bi ${n.icon}`} style={`color:${cat.private}`} aria-hidden="true"></i></span>
+        <div><div class="m-tile-t">{n.title}</div><div class="m-tile-s">{n.sub}</div></div>
+      </div>
     ))}
   </div>
 </div>

@@ -2,17 +2,24 @@
 /**
  * Athletic Program — NEW mobile screen (the /m/ app never had one; phones
  * used to fall back to Square booking links directly). Condensed from the
- * desktop page's copy — mobile doesn't need the full six-benefit grid and
- * five-part class breakdown, just enough to decide and join.
+ * desktop page's copy (6 benefits -> 4, full paragraphs -> one line each),
+ * but every SECTION desktop has is present here — condensed is not the same
+ * as missing. Desktop has 5 sections (program/benefits, class structure,
+ * schedule, join, fallback pass); this had only 3 until a pass caught that
+ * the class-structure explanation and the fallback pass option had been
+ * dropped entirely rather than condensed.
  *
  * Reuses the app's existing vocabulary: MobileHero for the header, the
  * m-tile grid for benefits (same visual as the More sheet's tiles, just
- * non-interactive here), m-gtier rows for the weekly schedule (same pattern
- * Groups uses for its price tiers), and BookingCard for membership.
+ * non-interactive here), m-step for the session structure (same pattern the
+ * Get Started screen uses for its numbered steps), m-gtier rows for the
+ * weekly schedule and m-gcard/m-gfoot2 for the fallback pass (both the same
+ * pattern Groups uses for its own primary/secondary option pair), and
+ * BookingCard for membership.
  */
 import MobileHero from '../MobileHero.astro';
 import BookingCard from '../BookingCard.astro';
-import { cat, url } from '../../data/site';
+import { cat, url, links } from '../../data/site';
 import { sq } from '../../data/square-links';
 
 const benefits = [
@@ -26,6 +33,15 @@ const classTypes = [
   { label: 'Explosive', val: 'Mon & Fri' },
   { label: 'Speed League', val: 'Wed' },
 ];
+// Condensed from the desktop page's 5-part class structure — same five
+// stops, one line each instead of a full paragraph per step.
+const structure = [
+  { t: 'Intro / warm up', p: 'Dynamic movement, quick overview of the day.' },
+  { t: 'Physical conditioning', p: 'Strength and endurance — overall fitness plus parkour-specific power.' },
+  { t: 'Technical foundations', p: 'Core parkour technique that builds the base for advanced movement.' },
+  { t: 'Theme of the day', p: 'A rotating focus block — challenges, speed runs, acrobatics, fluidity.' },
+  { t: 'Stretching / outro', p: 'Recovery, plus a preview of the next session.' },
+];
 ---
 <MobileHero eyebrow="Train" title="Train like an athlete" desc="Two 90-minute coached sessions a week that build strength, speed and agility for any sport — ages 9–14 and 15+." stats={[{ v: '2×90min', l: 'core sessions' }, { v: '9–14 & 15+', l: 'age groups' }, { v: '$150', l: 'per month' }]} />
 <div class="m-pad">
@@ -37,6 +53,17 @@ const classTypes = [
       <div class="tile m-tile" style="cursor:default">
         <span class="m-tile-ic" style={`background:color-mix(in srgb,${cat.athletic} 16%,#fff)`}><i class={`bi ${b.icon}`} style={`color:${cat.athletic}`} aria-hidden="true"></i></span>
         <div><div class="m-tile-t">{b.title}</div><div class="m-tile-s">{b.sub}</div></div>
+      </div>
+    ))}
+  </div>
+
+  <h3 class="m-h3" style="margin:0 0 4px">How a session runs</h3>
+  <p class="m-sub" style="margin-bottom:14px">Every 90-minute session follows the same arc.</p>
+  <div style="margin-bottom:28px">
+    {structure.map((s, i) => (
+      <div class="m-step" style={i === structure.length - 1 ? 'margin-bottom:0' : ''}>
+        <span class="m-stepn">{i + 1}</span>
+        <div><div class="m-step-t">{s.t}</div><p class="m-step-p">{s.p}</p></div>
       </div>
     ))}
   </div>
@@ -54,4 +81,21 @@ const classTypes = [
 
   <h3 class="m-h3" style="margin-bottom:14px">Join the program</h3>
   <BookingCard color={cat.athletic} bookingTag="Membership" duration="Year-round" title="30-day membership" description="Enroll any time — automatic monthly or one-time, renew whenever. Includes unlimited open gym and half-price add-on classes." pills="Ages 9+ | Cancel anytime" price="$150" priceNote="/ month" actionLabel="Join now" href={sq.athletic.membership} target="_blank" />
+
+  {/* Same primary/secondary option pairing GroupsScreen uses (m-gcard +
+      m-gfoot2) — for anyone training closer to once a week than twice, a
+      pass without the membership commitment. Desktop has this; the mobile
+      screen didn't, which meant the only path shown here was the $150/month
+      subscription with no lighter alternative. */}
+  <div class="m-gcard" style="margin-top:14px">
+    <div class="m-ghead">
+      <span class="m-gic" style={`background:color-mix(in srgb,${cat.athletic} 14%,#fff)`}><i class="bi bi-ticket-perforated-fill" style={`color:${cat.athletic}`} aria-hidden="true"></i></span>
+      <div><div class="m-geyebrow" style={`color:${cat.athletic}`}>Fallback option</div><div class="m-gtitle">10× Class Pass</div></div>
+    </div>
+    <p class="m-gdesc">For athletes training about once a week — ten classes to use whenever, no membership.</p>
+    <div class="m-gfoot2">
+      <div><div class="m-gbig">$275</div><div class="m-gsub">10 classes</div></div>
+      <a href={links.store} target="_blank" rel="noopener" class="m-darkbtn-sm">Get the pass <i class="bi bi-arrow-up-right"></i></a>
+    </div>
+  </div>
 </div>
