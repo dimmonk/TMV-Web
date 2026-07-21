@@ -1,0 +1,53 @@
+/* Camp registration form — shared styles for both shells (desktop standalone
+ * page + the /m/ mobile app "Register" screen). The form's markup is generated
+ * by src/lib/camp-reg-form.ts, so these rules can't be Astro-scoped; they are
+ * namespaced under .reg-root (the mount container) and use the reg- prefix to
+ * avoid collisions. Responsiveness is container-based (@container on .reg-root)
+ * so the form adapts to its container width — the phone frame on /m/, the page
+ * width on desktop. */
+.reg-root { container-type: inline-size; }
+.reg-root ::selection { background: #ffd400; color: #211f1b; }
+.reg-root a { color: #a2601f; }
+.reg-root a:hover { color: #e27902; }
+.reg-root .reg-in { width: 100%; font: 600 14px/1.2 -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: #211f1b; background: #f6f5f1; border: 1px solid #e3e0d8; border-radius: 10px; padding: 11px 13px; outline: none; transition: border-color .15s, background .15s; }
+.reg-root .reg-in:focus { border-color: #e27902; background: #fff; }
+.reg-root .reg-in::placeholder { color: #a8a49b; font-weight: 500; }
+.reg-root textarea.reg-in { resize: vertical; min-height: 60px; }
+.reg-root .reg-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 26px; align-items: start; }
+.reg-root .reg-side { position: sticky; top: 20px; }
+.reg-root .reg-mbar { display: none; }
+.reg-root .reg-mnotice { display: none; }
+.reg-root .reg-wkrow { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+.reg-root .reg-latrow { background: #fbf9f4; border-top: 1px solid #efece4; padding: 9px 12px; display: flex; align-items: center; gap: 10px; }
+.reg-root .reg-wklabel { flex: 1; min-width: 74px; }
+.reg-root .reg-wkcells { display: flex; gap: 5px; }
+.reg-root .reg-chip { cursor: pointer; transition: border-color .15s, background .15s, transform .1s; }
+.reg-root .reg-chip:active { transform: scale(.97); }
+.reg-root .reg-pill { cursor: pointer; transition: background .12s, color .12s, border-color .12s; }
+.reg-root .reg-khead { cursor: pointer; }
+.reg-root .reg-x { cursor: pointer; transition: background .15s, color .15s; }
+.reg-root .reg-x:hover { background: #f4d3d0 !important; color: #b3261e !important; }
+.reg-root .reg-cta { cursor: pointer; transition: filter .15s, transform .1s; }
+.reg-root .reg-cta:hover { filter: brightness(1.05); }
+.reg-root .reg-cta:active { transform: translateY(1px); }
+@container (max-width: 920px) {
+  .reg-root .reg-grid { grid-template-columns: 1fr; }
+  .reg-root .reg-side { display: none; }
+  .reg-root .reg-mbar { display: flex; position: sticky; bottom: 0; z-index: 40; }
+  .reg-root .reg-mnotice { display: block; }
+  .reg-root .reg-wrap { padding-bottom: 12px !important; }
+  .reg-root .reg-doc { padding: 24px 20px 30px !important; }
+}
+@container (max-width: 560px) {
+  .reg-root .reg-wkrow, .reg-root .reg-latrow { flex-wrap: wrap; row-gap: 9px; }
+  .reg-root .reg-wklabel { flex: 1 1 100%; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .reg-root .reg-wkprice { margin-left: auto; margin-top: 0 !important; }
+  .reg-root .reg-wkcells { width: 100%; justify-content: space-between; }
+  .reg-root .reg-wkcells > span { width: auto !important; flex: 1 1 0; min-width: 40px; max-width: 54px; }
+}
+@media print {
+  .sh, footer, .reg-root [data-noprint] { display: none !important; }
+  html, body { background: #fff; }
+  .reg-root .reg-doc { box-shadow: none !important; border: none !important; border-radius: 0 !important; padding: 0 !important; }
+  .reg-root .reg-doc-inner { max-width: none !important; }
+}

@@ -26,6 +26,7 @@ import { cat, links, site, social, hours, reviews, seo, url, heroStats } from '.
 import { storeProducts } from '../../data/store';
 import { sq } from '../../data/square-links';
 import { forSurface } from '../../data/surface';
+import '../../styles/camp-reg-form.css';
 
 // Resolve a class's action href for the mobile app. Schedule-linked classes go
 // to the mobile Schedule screen; classes whose desktop page has no mobile
@@ -86,6 +87,11 @@ const clientConfig = {
   cat,
   scheduleApi: 'https://us-central1-tmv-management.cloudfunctions.net/getPublicSchedule',
   priceApi: 'https://us-central1-tmv-management.cloudfunctions.net/getPublicPriceList',
+  reg: {
+    waiverUrl: links.waiver,
+    bookingUrl: links.booking,
+    address: `${site.name} · ${site.address.street}, ${site.address.locality} (Downsview Park)`,
+  },
 };
 ---
 <MobileLayout title={seo.home.title} description={seo.home.description}>
@@ -398,6 +404,7 @@ const clientConfig = {
       <section data-screen="camps" class="m-screen" hidden>
         <div class="m-pad">
           <MobileHero eyebrow="Camps" title="School-break day camps" desc="A full day of parkour, games and friends. Ages 5+ · 9 AM–2 PM, late pickup available." stats={[{ v: 'Ages 5+', l: 'welcome' }, { v: '9–2', l: 'daily' }, { v: '$350', l: 'per week' }]} />
+          <button type="button" class="m-darkbtn" data-goto="#register" style="margin-top:18px; width:100%; justify-content:center;">Register &amp; pick your weeks <i class="bi bi-arrow-right"></i></button>
           <div style="height:18px"></div>
           <div class="m-stack" style="margin-bottom:26px">
             {forSurface(camps, 'mobile').map((c) => <BookingCard color={cat.camps} bookingTag={c.bookingTag} title={c.title} description={c.desc} pills={c.pills} price={c.price} priceNote={c.priceNote} actionLabel={c.cta} href={c.href} target="_blank" />)}
@@ -409,6 +416,12 @@ const clientConfig = {
           </div>
           <p class="m-fine">Nut-free environment — please pack nut-free and tell us about any allergies. Cancellation: two weeks' written notice for weekly camps.</p>
         </div>
+      </section>
+
+      <!-- ===== SUB: REGISTER (mounts the shared camp-reg-form; bottom nav
+             is hidden while active so the form's sticky pay bar owns the edge) ===== -->
+      <section data-screen="register" class="m-screen" hidden>
+        <div class="reg-root" data-reg-mount></div>
       </section>
 
       <!-- ===== SUB: EVENTS ===== -->
@@ -871,12 +884,31 @@ const clientConfig = {
   const PRICE_API = cfg.priceApi;
 
   const TABS = ['home', 'train', 'book', 'schedule', 'more'];
-  const SUBS = ['pricing', 'store', 'about', 'reviews', 'getstarted', 'camps', 'events', 'groups'];
-  const SUBTITLES: Record<string, string> = { pricing: 'Pricing', store: 'Store', getstarted: 'Get Started', about: 'About', camps: 'Camps', events: 'Events', groups: 'Groups & Teams', reviews: 'Reviews' };
+  const SUBS = ['pricing', 'store', 'about', 'reviews', 'getstarted', 'camps', 'events', 'groups', 'register'];
+  const SUBTITLES: Record<string, string> = { pricing: 'Pricing', store: 'Store', getstarted: 'Get Started', about: 'About', camps: 'Camps', events: 'Events', groups: 'Groups & Teams', reviews: 'Reviews', register: 'Registration' };
 
   const screens = Array.from(document.querySelectorAll<HTMLElement>('[data-screen]'));
   const navBtns = Array.from(document.querySelectorAll<HTMLElement>('[data-nav]'));
+  const bottomNav = document.querySelector<HTMLElement>('.m-nav');
   const scroll = document.querySelector<HTMLElement>('.m-scroll');
+
+  // The camp registration form is the shared module mounted once, the first time
+  // its screen opens (same lazy pattern as schedule/pricing).
+  let _regMounted = false;
+  async function ensureRegister() {
+    if (_regMounted) return;
+    const host = document.querySelector<HTMLElement>('[data-reg-mount]');
+    if (!host) return;
+    _regMounted = true;
+    const { mountCampRegForm } = await import('../../lib/camp-reg-form');
+    const reg = cfg.reg || {};
+    mountCampRegForm(host, {
+      waiverUrl: reg.waiverUrl,
+      bookingUrl: reg.bookingUrl,
+      address: reg.address,
+      showHero: false,
+    });
+  }
   const headMain = document.querySelector<HTMLElement>('[data-head="main"]');
   const headSub = document.querySelector<HTMLElement>('[data-head="sub"]');
   const subtitleEl = document.querySelector<HTMLElement>('[data-subtitle]');
@@ -901,11 +933,15 @@ const clientConfig = {
     });
     if (headMain && headSub) { headMain.hidden = isSub; headSub.hidden = !isSub; }
     if (isSub && subtitleEl) subtitleEl.textContent = SUBTITLES[screen] || '';
+    // During registration the bottom tab bar is hidden — the form's own sticky
+    // pay bar owns the bottom edge (back is via the "‹ Registration" app-bar).
+    if (bottomNav) bottomNav.hidden = screen === 'register';
     if (scroll) scroll.scrollTop = 0;
     const shown = screens.find((el) => !el.hidden);
     if (shown) { shown.setAttribute('tabindex', '-1'); shown.focus({ preventScroll: true }); }
     if (screen === 'schedule') ensureSchedule();
     if (screen === 'pricing') ensurePricing();
+    if (screen === 'register') ensureRegister();
   }
 
   // ---- live status pill (gym timezone, 60s tick) ----
