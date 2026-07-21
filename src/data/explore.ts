@@ -28,7 +28,7 @@ export const exploreTiles: ExploreTile[] = [
   { key: 'pricing',    label: 'Pricing',     sub: 'Passes, packs & memberships', path: 'pricing',       icon: 'bi-tag-fill',     fg: cat.openGym },
   { key: 'store',      label: 'Store',       sub: 'Buy passes & memberships',    path: 'store',         icon: 'bi-bag-fill',     fg: '#211f1b' },
   { key: 'camps',      label: 'Camps',       sub: 'School-break day camps',      path: 'camps',         icon: 'bi-sun-fill',     fg: cat.camps },
-  { key: 'events',     label: 'Events',      sub: 'Birthdays & parties',         path: 'events',        icon: 'bi-balloon-fill', fg: cat.parties },
+  { key: 'events',     label: 'Birthday Parties', sub: 'Kids & teen parties at the gym', path: 'events',        icon: 'bi-balloon-fill', fg: cat.parties },
   { key: 'groups',     label: 'Groups',      sub: 'Schools, teams & corporate',  path: 'groups',        icon: 'bi-people-fill',  fg: cat.groups },
   { key: 'about',      label: 'About',       sub: 'The space, hours & contact',  path: 'about',         icon: 'bi-geo-alt-fill', fg: cat.classes },
   { key: 'reviews',    label: 'Reviews',     sub: 'What members say',            path: 'reviews',       icon: 'bi-star-fill',    fg: '#e9a300' },

@@ -127,7 +127,7 @@ export const cat = {
 export const nav = [
   { key: 'train', label: 'Train', path: 'train' },
   { key: 'camps', label: 'Camps', path: 'camps' },
-  { key: 'events', label: 'Events', path: 'events' },
+  { key: 'events', label: 'Birthday Parties', path: 'events' },
   { key: 'pricing', label: 'Pricing', path: 'pricing' },
   { key: 'store', label: 'Store', path: 'store' },
   { key: 'about', label: 'About', path: 'about' },
