@@ -12,11 +12,12 @@ import MobileHero from '../../components/MobileHero.astro';
 import OfferingCard from '../../components/OfferingCard.astro';
 import BookingCard from '../../components/BookingCard.astro';
 import ClassCard from '../../components/ClassCard.astro';
+import PartyCard from '../../components/PartyCard.astro';
 import { offerings } from '../../data/offerings';
 import { firstSessionOptions } from '../../data/first-session';
 import { camps, campDaySchedule } from '../../data/camps';
 import { privateWays } from '../../data/private-lessons';
-import { partyHubCards } from '../../data/parties';
+import { partyHubCards, partyCards } from '../../data/parties';
 import { facility } from '../../data/facility';
 import { firstVisitBring, firstVisitArrive } from '../../data/first-visit';
 import { groupTiers, eventPricing } from '../../data/events';
@@ -429,44 +430,13 @@ const clientConfig = {
         <div class="m-pad">
           <MobileHero eyebrow="Events" title="Parties & group events" desc="Birthdays, school trips and team days — coaches run the whole session while you relax." />
           <div style="height:18px"></div>
-          <div class="m-ev-full">
-            <div class="m-ev-full-head">
-              <span class="m-ev-pop">Most popular</span>
-              <h3 class="m-ev-title">Full Birthday Party</h3>
-            </div>
-            <p class="m-ev-desc">Coaches stay with your group the whole time — a private room, a coached session and free play.</p>
-            <div class="m-ev-tl">
-              <div class="m-ev-tlrow"><span class="m-ev-tlt">60′</span><span>Coached parkour session &amp; games</span></div>
-              <div class="m-ev-tlrow"><span class="m-ev-tlt">30′</span><span>Private party room — food &amp; cake</span></div>
-              <div class="m-ev-tlrow last"><span class="m-ev-tlt">30′</span><span>Open gym free play, supervised</span></div>
-            </div>
-            <div class="m-ev-price">
-              <div><div class="m-ev-big">{eventPricing.fullBirthdayBase}</div><div class="m-ev-sub">base · up to 8 kids · +$25 each extra</div></div>
-              <span class="m-ev-meta">2 hrs · Ages 5+</span>
-            </div>
-            <a href={sq.book.fullBirthday} target="_blank" rel="noopener" class="m-darkbtn">Book your party <i class="bi bi-arrow-up-right"></i></a>
-          </div>
-
-          <div class="m-ev-mini">
-            <span class="m-ev-minitag">Smaller &amp; last-minute</span>
-            <h3 class="m-ev-minititle">Mini Birthday Party</h3>
-            <p class="m-ev-minidesc">The same one-hour coached parkour session — lower minimum, so smaller groups and last-minute plans still get in. All-day pass for every kid. No private room.</p>
-            <div class="m-ev-minifoot">
-              <div><div class="m-ev-minibig">{eventPricing.miniBirthdayPerKid}</div><div class="m-ev-minisub">per kid · 3–15 · ages 8+</div></div>
-              <a href={sq.book.miniBirthday} target="_blank" rel="noopener" class="m-brandbtn-sm">Book mini <i class="bi bi-arrow-right"></i></a>
-            </div>
+          <!-- Same <PartyCard> the desktop Events page renders, from the same
+               `partyCards` data — this screen just stacks them. -->
+          <div class="m-partycards">
+            {partyCards.map((card) => <PartyCard card={card} />)}
           </div>
 
           <div class="m-hold"><i class="bi bi-shield-lock" aria-hidden="true"></i><span>Your card isn't charged at booking — it just holds the slot. You pay in person on the day, by final headcount.</span></div>
-
-          <a href={url('make-invitation')} class="m-invite" style={`--m-invite-accent:${cat.parties}`}>
-            <span class="m-invite-ic"><i class="bi bi-postcard-heart-fill" aria-hidden="true"></i></span>
-            <div class="m-invite-txt">
-              <div class="m-invite-t">Invitation maker <span class="m-invite-badge">Free</span></div>
-              <div class="m-invite-s">Design a party invite and download it to text or post — right from your phone.</div>
-            </div>
-            <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
-          </a>
 
           <div class="m-label">Party FAQ</div>
           <div class="m-faqbox" style="margin-bottom:22px">
@@ -721,27 +691,8 @@ const clientConfig = {
   .m-fine { font: 400 12px/1.5 inherit; color: #9b9890; margin: 0; }
 
   /* events */
-  .m-ev-full { background: #fff; border: 2px solid #ffd400; border-radius: 18px; overflow: hidden; margin-bottom: 14px; padding: 20px 20px 22px; }
-  .m-ev-full-head { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
-  .m-ev-pop { font: 800 10px/1 'Archivo', sans-serif; letter-spacing: .07em; text-transform: uppercase; color: #211f1b; background: #ffd400; padding: 5px 9px; border-radius: 999px; }
-  .m-ev-title { font: 800 21px/1.05 'Archivo', sans-serif; letter-spacing: -.01em; margin: 0; }
-  .m-ev-desc { font: 400 13px/1.5 inherit; color: #5b5853; margin: 0 0 16px; }
-  .m-ev-tl { display: flex; flex-direction: column; margin-bottom: 16px; }
-  .m-ev-tlrow { display: flex; gap: 13px; padding: 10px 0; border-bottom: 1px solid #f0efea; }
-  .m-ev-tlrow.last { border-bottom: 0; }
-  .m-ev-tlt { flex: none; width: 34px; font: 800 14px/1 'Archivo', sans-serif; color: #e0a800; }
-  .m-ev-tlrow span:last-child { font: 600 13px/1.35 inherit; color: #3a3833; }
-  .m-ev-price { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-top: 16px; border-top: 1px solid #f0efea; margin-bottom: 16px; }
-  .m-ev-big { font: 900 26px/1 'Archivo', sans-serif; }
-  .m-ev-sub { font: 600 12px/1.3 inherit; color: #9b9890; margin-top: 5px; }
-  .m-ev-meta { font: 700 11px/1 'Archivo', sans-serif; color: #9b9890; }
-  .m-ev-mini { background: #211f1b; color: #fff; border-radius: 18px; padding: 20px 22px; margin-bottom: 24px; }
-  .m-ev-minitag { font: 800 10px/1 'Archivo', sans-serif; letter-spacing: .07em; text-transform: uppercase; color: #ffd400; background: rgba(255,255,255,.08); padding: 5px 9px; border-radius: 999px; }
-  .m-ev-minititle { font: 800 20px/1.05 'Archivo', sans-serif; letter-spacing: -.01em; margin: 10px 0 8px; }
-  .m-ev-minidesc { font: 400 13px/1.55 inherit; color: rgba(255,255,255,.7); margin: 0 0 16px; }
-  .m-ev-minifoot { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.12); }
-  .m-ev-minibig { font: 900 24px/1 'Archivo', sans-serif; color: #ffd400; }
-  .m-ev-minisub { font: 600 12px/1.3 inherit; color: rgba(255,255,255,.55); margin-top: 5px; }
+  /* Layout only — the cards are the shared <PartyCard> component. */
+  .m-partycards { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
   .m-hold { display: flex; gap: 10px; background: #f3f2ee; border-radius: 12px; padding: 13px 15px; margin-bottom: 26px; }
   .m-hold i { font-size: 14px; color: #9b8e6a; margin-top: 1px; }
   .m-hold span { font: 500 12.5px/1.5 inherit; color: #6a6760; }

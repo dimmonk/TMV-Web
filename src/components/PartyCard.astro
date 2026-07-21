@@ -1,0 +1,160 @@
+---
+/**
+ * Shared Events-page party card — rendered by BOTH the desktop Events page and
+ * the mobile /m/ Events screen from the same `partyCards` data.
+ *
+ * Shell-agnostic by design: the card has NO fixed width and no viewport media
+ * queries. It fills whatever column its shell hands it (a grid cell on desktop,
+ * the full screen width on mobile) and every internal row wraps on its own, so
+ * the same markup reads correctly from ~320px to ~600px. That is the rule that
+ * keeps one component valid in two shells — if a card ever needs to *know*
+ * which shell it's in, the split belongs in the shell's composition, not here.
+ *
+ * Styling leans on the global design tokens + .btn classes (global.css is loaded
+ * by both BaseLayout and MobileLayout), so there is no per-surface theme.
+ */
+import type { PartyCardData } from '../data/parties';
+import { cat, url } from '../data/site';
+
+interface Props {
+  card: PartyCardData;
+}
+const { card } = Astro.props;
+
+const pills = card.pills ? card.pills.split('|').map((s) => s.trim()).filter(Boolean) : [];
+const dark = card.theme === 'dark';
+const primaryBtn = dark ? 'btn-primary' : 'btn-dark';
+const ghostBtn = dark ? 'btn-ghost-light' : 'btn-ghost';
+---
+<article class:list={['pc', dark ? 'pc-dark' : 'pc-light']} style={`--pc-accent:${cat.parties}`}>
+  {card.image && (
+    <div class="pc-media">
+      <img src={card.image} alt="Kids and coaches mid-session on the gym floor" loading="lazy" />
+      {card.flag && <span class="pc-flag">{card.flag}</span>}
+    </div>
+  )}
+
+  <div class="pc-body">
+    {card.tag && <span class="pc-tag">{card.tag}</span>}
+    <h3 class="pc-title">{card.title}</h3>
+    <p class="pc-desc">{card.desc}</p>
+
+    {card.timeline && (
+      <div class="pc-tl">
+        {card.timeline.map((s, i) => (
+          <div class:list={['pc-tl-row', i === card.timeline!.length - 1 && 'last']}>
+            <span class="pc-tl-t">{s.t}</span><span>{s.label}</span>
+          </div>
+        ))}
+      </div>
+    )}
+
+    {pills.length > 0 && (
+      <div class="pc-pills">{pills.map((p) => <span class="pc-pill">{p}</span>)}</div>
+    )}
+
+    {card.included && (
+      <div class="pc-block">
+        <div class="pc-label">What's included</div>
+        <div class="pc-list">
+          {card.included.map((t) => (
+            <div class="pc-li yes"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>{t}</span></div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {card.goodToKnow && (
+      <div class="pc-block">
+        <div class="pc-label">Good to know</div>
+        <div class="pc-list">
+          {card.goodToKnow.map((t) => (
+            <div class="pc-li no"><i class="bi bi-dash-circle" aria-hidden="true"></i><span>{t}</span></div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="pc-foot">
+      <div class="pc-price">
+        <div>
+          <div class="pc-big">{card.price}</div>
+          <div class="pc-sub">{card.priceSub}</div>
+        </div>
+        {card.priceExtra && (
+          <div class="pc-extra">{card.priceExtra.map((l) => <div>{l}</div>)}</div>
+        )}
+      </div>
+      <div class="pc-actions">
+        <a href={card.bookHref} target="_blank" rel="noopener" class={`btn ${primaryBtn} pc-btn`}>
+          {card.bookLabel} <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+        </a>
+        {card.invite && (
+          <a href={url('make-invitation')} class={`btn ${ghostBtn} pc-btn`}>Make an invitation</a>
+        )}
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  /* No fixed width anywhere — the card fills its container in either shell. */
+  .pc { display: flex; flex-direction: column; border-radius: 20px; overflow: hidden; min-width: 0; }
+  .pc-light { background: #fff; border: 2px solid var(--pc-accent); box-shadow: var(--shadow-sm); }
+  .pc-dark { background: var(--ink); color: #fff; box-shadow: 0 18px 40px -28px rgba(0,0,0,.6); }
+
+  .pc-media { position: relative; aspect-ratio: 16/8; overflow: hidden; background: #1a1815; }
+  .pc-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pc-flag { position: absolute; top: 14px; left: 14px; font: 700 10px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: #fff; background: var(--pc-accent); padding: 7px 11px; border-radius: 999px; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+
+  .pc-body { flex: 1; display: flex; flex-direction: column; padding: 24px 24px 26px; }
+  .pc-tag { align-self: flex-start; font: 700 10px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: var(--pc-accent); background: rgba(255,255,255,.08); padding: 7px 11px; border-radius: 999px; margin-bottom: 14px; }
+  .pc-title { font: 800 23px/1.1 var(--font-display); letter-spacing: -.012em; margin: 0 0 8px; }
+  .pc-desc { font: 400 13.5px/1.55 var(--font-body); margin: 0 0 18px; }
+  .pc-light .pc-desc { color: var(--muted); }
+  .pc-dark .pc-desc { color: rgba(255,255,255,.7); }
+
+  .pc-tl { display: flex; flex-direction: column; margin-bottom: 18px; }
+  .pc-tl-row { display: flex; align-items: flex-start; gap: 13px; padding: 12px 0; border-bottom: 1px solid var(--line-soft); font: 600 13.5px/1.4 var(--font-body); color: var(--text-2); }
+  .pc-tl-row.last { border-bottom: 0; }
+  .pc-tl-t { flex: none; width: 38px; font: 800 15px/1.35 var(--font-display); color: var(--pc-accent); }
+
+  .pc-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .pc-pill { font: 700 11.5px/1 var(--font-display); color: var(--text-2); background: #f3f2ee; border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px; }
+
+  .pc-block { margin-bottom: 16px; }
+  .pc-label { font: 700 10px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 11px; }
+  .pc-light .pc-label { color: var(--muted-3); }
+  .pc-dark .pc-label { color: rgba(255,255,255,.45); }
+  .pc-list { display: flex; flex-direction: column; gap: 9px; }
+  .pc-li { display: flex; align-items: flex-start; gap: 10px; font: 600 13.5px/1.55 var(--font-body); }
+  .pc-li i { flex: none; margin-top: 2px; }
+  .pc-dark .pc-li.yes { color: rgba(255,255,255,.88); }
+  .pc-dark .pc-li.yes i { color: var(--pc-accent); }
+  .pc-dark .pc-li.no { color: rgba(255,255,255,.7); }
+  .pc-dark .pc-li.no i { color: rgba(255,255,255,.4); }
+  .pc-light .pc-li.yes { color: var(--text-2); }
+  .pc-light .pc-li.yes i { color: var(--pc-accent); }
+  .pc-light .pc-li.no { color: var(--muted); }
+  .pc-light .pc-li.no i { color: var(--muted-3); }
+
+  /* Foot always stacks (price, then actions) so both cards read the same at
+     every width — no shell-specific arrangement. */
+  .pc-foot { margin-top: auto; padding-top: 18px; }
+  .pc-light .pc-foot { border-top: 1px solid var(--line-soft); }
+  .pc-dark .pc-foot { border-top: 1px solid rgba(255,255,255,.12); }
+  .pc-price { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 16px; margin-bottom: 16px; }
+  .pc-big { font: 800 28px/1 var(--font-display); }
+  .pc-light .pc-big { color: var(--ink); }
+  .pc-dark .pc-big { color: var(--pc-accent); }
+  .pc-sub { font: 600 12.5px/1.35 var(--font-body); margin-top: 6px; }
+  .pc-light .pc-sub { color: var(--muted-3); }
+  .pc-dark .pc-sub { color: rgba(255,255,255,.55); }
+  .pc-extra { font: 600 12.5px/1.6 var(--font-body); }
+  .pc-light .pc-extra { color: var(--muted); }
+  .pc-dark .pc-extra { color: rgba(255,255,255,.6); }
+
+  .pc-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  /* Buttons share a row when there's room and stretch to full width when not. */
+  .pc-btn { flex: 1 1 auto; justify-content: center; text-align: center; }
+</style>
