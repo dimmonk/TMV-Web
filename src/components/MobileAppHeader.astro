@@ -44,7 +44,12 @@ const { variant = 'brand', title = 'Back', backHref = url('') } = Astro.props;
 
 <style>
   .m-head { position: sticky; top: 0; z-index: 15; background: #211f1b; border-bottom: 1px solid rgba(255,255,255,.08); padding: calc(16px + env(safe-area-inset-top, 0px)) 18px 16px; }
-  .m-head-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  /* min-height pinned to the logo's height (32px) — the only fixed-size
+     content in either variant — so the header is the same total height
+     whether a page shows the brand row or the back row. Without this, the
+     back row's negative-margin tap target (below) sizes shorter than the
+     logo and the header visibly shrinks on every 'back' page. */
+  .m-head-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 32px; }
   .m-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
   .m-brand img { flex: none; width: 32px; height: 32px; object-fit: contain; }
   .m-brand span { font: 900 14.5px/1 'Archivo', sans-serif; letter-spacing: .01em; text-transform: uppercase; color: #fff; white-space: nowrap; }
