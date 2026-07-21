@@ -2,19 +2,26 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { seo, links, site } from '../data/site';
 
-// Ported from the "Camp Registration" design handoff (.dc.html prototype).
-// The prototype was authored in an in-house React-like runtime (DCLogic); here
-// it's re-implemented as a self-contained client-side state machine so it runs
-// on the static Astro site. All layout uses the prototype's inline styles
-// verbatim; only the handful of interactive class rules live in the scoped
-// <style> below (Astro's scoped styles don't reach JS-generated DOM, so they're
-// namespaced under #reg-root instead).
+// Ported from the "Camp Registration" design handoff v2 (CampRegForm.dc.html) —
+// re-implemented as a self-contained client-side state machine so it runs on the
+// static Astro site. Layout uses the prototype's inline styles verbatim; the
+// interactive class rules live in the #reg-root-scoped <style> below (Astro's
+// scoped styles don't reach JS-generated DOM). Responsiveness is container-based
+// (@container on #reg-root), matching v2.
 //
-// Prices are the documented camp defaults (the .dc.html's offline fallbacks).
-// The prototype's live members-app price fetch (tmv-data.js) is intentionally
-// not wired here — this is a standalone preview page, not the paid cart. Square
-// checkout is likewise stubbed: "Register & pay" advances to the printable
-// confirmation view without charging.
+// v2 highlights recreated here: calendar week picker (tap day cells; tap the week
+// name for the whole week), yellow (#ffd400 on ink) CTAs with accent reserved for
+// identity (selection/checks/prices/icons), sibling shortcut, tappable mobile
+// breakdown sheet, cancellation policy, ages-5+ validation, softened allergy copy.
+//
+// PLUS the per-day expiry the site owner asked for (not in the handoff): each
+// camp day closes at the END of its day (same-day signup still works), passed
+// days render disabled, and a week shows "Closed" once all its days have passed.
+//
+// Prices are the documented camp defaults (the .dc.html offline fallbacks); the
+// prototype's live members-app price fetch is intentionally not wired here — this
+// is a standalone preview, and "Register & pay" advances to the printable
+// confirmation without a real Square charge.
 const accent = '#e27902';
 const address = `${site.name} · ${site.address.street}, ${site.address.locality} (Downsview Park)`;
 ---
@@ -24,9 +31,10 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
   active="camps"
   mobileRedirect={false}
 >
-  <div id="reg-root" style={`--acc:${accent}; min-height:100vh; background:#f5f4f1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b;`}></div>
+  <div id="reg-root" class="reg-root" style={`--acc:${accent}; min-height:100vh; background:#f5f4f1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b;`}></div>
 
   <style is:global>
+    #reg-root { container-type:inline-size; }
     #reg-root ::selection { background:#ffd400; color:#211f1b; }
     #reg-root a { color:#a2601f; }
     #reg-root a:hover { color:#e27902; }
@@ -37,20 +45,34 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
     #reg-root .reg-grid { display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:26px; align-items:start; }
     #reg-root .reg-side { position:sticky; top:20px; }
     #reg-root .reg-mbar { display:none; }
-    #reg-root .chip { cursor:pointer; transition:border-color .15s, background .15s, transform .1s; }
-    #reg-root .chip:active { transform:scale(.97); }
-    #reg-root .pill { cursor:pointer; transition:background .12s, color .12s, border-color .12s; }
-    #reg-root .khead { cursor:pointer; }
+    #reg-root .reg-mnotice { display:none; }
+    #reg-root .reg-wkrow { display:flex; align-items:center; gap:10px; padding:10px 12px; }
+    #reg-root .reg-latrow { background:#fbf9f4; border-top:1px solid #efece4; padding:9px 12px; display:flex; align-items:center; gap:10px; }
+    #reg-root .reg-wklabel { flex:1; min-width:74px; }
+    #reg-root .reg-wkcells { display:flex; gap:5px; }
+    #reg-root .reg-chip { cursor:pointer; transition:border-color .15s, background .15s, transform .1s; }
+    #reg-root .reg-chip:active { transform:scale(.97); }
+    #reg-root .reg-pill { cursor:pointer; transition:background .12s, color .12s, border-color .12s; }
+    #reg-root .reg-khead { cursor:pointer; }
     #reg-root .reg-x { cursor:pointer; transition:background .15s, color .15s; }
     #reg-root .reg-x:hover { background:#f4d3d0 !important; color:#b3261e !important; }
     #reg-root .reg-cta { cursor:pointer; transition:filter .15s, transform .1s; }
     #reg-root .reg-cta:hover { filter:brightness(1.05); }
     #reg-root .reg-cta:active { transform:translateY(1px); }
-    @media (max-width:920px) {
+    @container (max-width:920px) {
       #reg-root .reg-grid { grid-template-columns:1fr; }
       #reg-root .reg-side { display:none; }
-      #reg-root .reg-mbar { display:flex; position:sticky; bottom:0; z-index:40; margin:0 -16px; }
+      #reg-root .reg-mbar { display:flex; position:sticky; bottom:0; z-index:40; }
+      #reg-root .reg-mnotice { display:block; }
       #reg-root .reg-wrap { padding-bottom:12px !important; }
+      #reg-root .reg-doc { padding:24px 20px 30px !important; }
+    }
+    @container (max-width:560px) {
+      #reg-root .reg-wkrow, #reg-root .reg-latrow { flex-wrap:wrap; row-gap:9px; }
+      #reg-root .reg-wklabel { flex:1 1 100%; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
+      #reg-root .reg-wkprice { margin-left:auto; margin-top:0 !important; }
+      #reg-root .reg-wkcells { width:100%; justify-content:space-between; }
+      #reg-root .reg-wkcells > span { width:auto !important; flex:1 1 0; min-width:40px; max-width:54px; }
     }
     @media print {
       .sh, footer, #reg-root [data-noprint] { display:none !important; }
@@ -69,39 +91,39 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
       campPADay: 90, campPrivateDay: 90, latePickupPerDay: 20, latePickupBulk: 75,
     };
     const DYC = true; // day-camp late-pickup add-on enabled
+    const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 
-    // `monday` = the Monday of each week (ISO, local); every camp day's real
-    // date is derived from it (Mon+0 … Fri+4), so Week 6's Monday is Aug 3 —
-    // the skipped Civic Holiday — with its camp days running Tue–Fri.
+    // `monday` = the Monday of each week; every camp day's real date derives from
+    // it (used for per-day expiry). Week 6's Monday is Aug 3, the skipped Civic
+    // Holiday. `nums` = day-of-month per weekday for the calendar cells; a weekday
+    // missing from `days` is a stat holiday (rendered as a disabled "–" cell).
     const WEEKS = [
-      { id:'w1', n:'Week 1', dates:'Jun 29 – Jul 3', monday:'2026-06-29', days:['Mon','Tue','Thu','Fri'], partial:true },
-      { id:'w2', n:'Week 2', dates:'Jul 6 – 10', monday:'2026-07-06', days:['Mon','Tue','Wed','Thu','Fri'] },
-      { id:'w3', n:'Week 3', dates:'Jul 13 – 17', monday:'2026-07-13', days:['Mon','Tue','Wed','Thu','Fri'] },
-      { id:'w4', n:'Week 4', dates:'Jul 20 – 24', monday:'2026-07-20', days:['Mon','Tue','Wed','Thu','Fri'] },
-      { id:'w5', n:'Week 5', dates:'Jul 27 – 31', monday:'2026-07-27', days:['Mon','Tue','Wed','Thu','Fri'] },
-      { id:'w6', n:'Week 6', dates:'Aug 4 – 7', monday:'2026-08-03', days:['Tue','Wed','Thu','Fri'], partial:true },
-      { id:'w7', n:'Week 7', dates:'Aug 10 – 14', monday:'2026-08-10', days:['Mon','Tue','Wed','Thu','Fri'] },
-      { id:'w8', n:'Week 8', dates:'Aug 17 – 21', monday:'2026-08-17', days:['Mon','Tue','Wed','Thu','Fri'] },
-      { id:'w9', n:'Week 9', dates:'Aug 24 – 28', monday:'2026-08-24', days:['Mon','Tue','Wed','Thu','Fri'] },
+      { id:'w1', n:'Week 1', dates:'Jun 29 – Jul 3', monday:'2026-06-29', days:['Mon','Tue','Thu','Fri'], partial:true, month:'July', nums:{ Mon:'29', Tue:'30', Thu:'2', Fri:'3' } },
+      { id:'w2', n:'Week 2', dates:'Jul 6 – 10', monday:'2026-07-06', days:['Mon','Tue','Wed','Thu','Fri'], nums:{ Mon:'6', Tue:'7', Wed:'8', Thu:'9', Fri:'10' } },
+      { id:'w3', n:'Week 3', dates:'Jul 13 – 17', monday:'2026-07-13', days:['Mon','Tue','Wed','Thu','Fri'], nums:{ Mon:'13', Tue:'14', Wed:'15', Thu:'16', Fri:'17' } },
+      { id:'w4', n:'Week 4', dates:'Jul 20 – 24', monday:'2026-07-20', days:['Mon','Tue','Wed','Thu','Fri'], nums:{ Mon:'20', Tue:'21', Wed:'22', Thu:'23', Fri:'24' } },
+      { id:'w5', n:'Week 5', dates:'Jul 27 – 31', monday:'2026-07-27', days:['Mon','Tue','Wed','Thu','Fri'], nums:{ Mon:'27', Tue:'28', Wed:'29', Thu:'30', Fri:'31' } },
+      { id:'w6', n:'Week 6', dates:'Aug 4 – 7', monday:'2026-08-03', days:['Tue','Wed','Thu','Fri'], partial:true, month:'August', nums:{ Tue:'4', Wed:'5', Thu:'6', Fri:'7' } },
+      { id:'w7', n:'Week 7', dates:'Aug 10 – 14', monday:'2026-08-10', days:['Mon','Tue','Wed','Thu','Fri'], nums:{ Mon:'10', Tue:'11', Wed:'12', Thu:'13', Fri:'14' } },
+      { id:'w8', n:'Week 8', dates:'Aug 17 – 21', monday:'2026-08-17', days:['Mon','Tue','Wed','Thu','Fri'], nums:{ Mon:'17', Tue:'18', Wed:'19', Thu:'20', Fri:'21' } },
+      { id:'w9', n:'Week 9', dates:'Aug 24 – 28', monday:'2026-08-24', days:['Mon','Tue','Wed','Thu','Fri'], nums:{ Mon:'24', Tue:'25', Wed:'26', Thu:'27', Fri:'28' } },
     ];
-    // Per-day expiry: a camp day closes at the END of that day (so same-day
-    // signup works), individual days block off as they pass, and a whole week
-    // is "Closed" only once every one of its days has passed.
-    const DAY_OFFSET = { Mon:0, Tue:1, Wed:2, Thu:3, Fri:4 };
-    function dayStart(w, d) { const dt = new Date(w.monday + 'T00:00:00'); dt.setDate(dt.getDate() + DAY_OFFSET[d]); return dt; }
-    function dayExpired(w, d) { const end = dayStart(w, d); end.setDate(end.getDate() + 1); return Date.now() >= end.getTime(); }
-    const openDays = (w) => w.days.filter((d) => !dayExpired(w, d));
-    const weekExpired = (w) => openDays(w).length === 0;
     const PADATES = [
       { id:'pa1', label:'Fri · Oct 10' },
       { id:'pa2', label:'Fri · Nov 21' },
       { id:'pa3', label:'Fri · Jan 16' },
     ];
-    const DAY_LABELS = ['Mon','Tue','Wed','Thu','Fri'];
+
+    // Per-day expiry: a camp day closes at the END of that day (so same-day
+    // signup works); a whole week is "Closed" only once every day has passed.
+    const DAY_OFFSET = { Mon:0, Tue:1, Wed:2, Thu:3, Fri:4 };
+    function dayStart(w, d) { const dt = new Date(w.monday + 'T00:00:00'); dt.setDate(dt.getDate() + DAY_OFFSET[d]); return dt; }
+    function dayExpired(w, d) { const end = dayStart(w, d); end.setDate(end.getDate() + 1); return Date.now() >= end.getTime(); }
+    const openDays = (w) => w.days.filter((d) => !dayExpired(w, d));
+    const weekExpired = (w) => openDays(w).length === 0;
 
     const daysPrice = (n) => { if (n <= 0) return 0; const key = ['campDaily','camp2Days','camp3Days','camp4Days','campWeekly'][Math.min(n,5)-1]; return PL[key]; };
-    // Full week bills only the days still open (all 5 open = weekly rate); once
-    // some days have passed, "full week" means the remaining open days.
+    // Full week bills only the still-open days (all open = weekly rate).
     const weekFull = (w) => daysPrice(openDays(w).length);
     const lateCost = (n) => { if (n <= 0) return 0; return n >= 4 ? PL.latePickupBulk : n * PL.latePickupPerDay; };
     const waiverOk = (k) => k.waiver === 'yes' || (k.waiver === 'no' && k.waiverDone);
@@ -111,20 +133,19 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
     // ---- state ----
     let seq = 1;
     const blankKid = (id) => ({ id, name:'', age:'', allergies:'', notes:'', waiver:'unset', waiverDone:false, camp:'weekly', weeks:{}, paDates:{} });
-    const state = { stage:'build', kids:[ blankKid('k1') ], expanded:'k1', parent:{ name:'', email:'', phone:'' }, error:'', ref:'' };
-
+    const state = { stage:'build', kids:[ blankKid('k1') ], expanded:'k1', parent:{ name:'', email:'', phone:'' }, error:'', mSumOpen:false, ref:'' };
     const kidById = (id) => state.kids.find((k) => k.id === id);
 
-    // ---- pricing per child ----
+    // ---- pricing per child (attend excludes passed days) ----
     function computeKid(k) {
       const lines = []; let total = 0;
       if (k.camp === 'weekly') {
         WEEKS.forEach((w) => {
           const e = k.weeks[w.id]; if (!e) return;
-          const attend = w.days.filter((d) => (e.mode === 'full' || e.days[d]) && !dayExpired(w, d));
+          const attend = w.days.filter((d) => e.days[d] && !dayExpired(w, d));
           if (attend.length === 0) return;
-          const base = e.mode === 'full' ? weekFull(w) : daysPrice(attend.length);
-          const detail = (e.mode === 'full' && attend.length === w.days.length) ? 'full week' : attend.join(', ');
+          const base = daysPrice(attend.length);
+          const detail = attend.length === openDays(w).length ? 'full week' : attend.join(', ');
           lines.push({ title:w.n, dates:w.dates, days:detail, amount:base }); total += base;
           const lateDays = attend.filter((d) => e.late[d]);
           if (lateDays.length > 0) { const lc = lateCost(lateDays.length); lines.push({ title:'Late pickup', days:lateDays.join(', '), amount:lc, sub:true }); total += lc; }
@@ -138,34 +159,39 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
       }
       return { lines, total };
     }
+    const grandTotal = () => state.kids.reduce((a, k) => a + computeKid(k).total, 0);
 
-    const grandTotal = () => state.kids.reduce((a,k) => a + computeKid(k).total, 0);
-
-    // ---- summary line items (shared by live summary + receipt) ----
-    function summaryKidsHTML() {
-      const rows = state.kids
+    // ---- summary line items (shared: desktop card, mobile sheet, receipt) ----
+    function summaryKidsData() {
+      return state.kids
         .map((k, ki) => ({ k, ki, comp: computeKid(k) }))
-        .filter((x) => x.comp.lines.length > 0);
-      if (rows.length === 0) return '';
-      return rows.map((x) => {
-        const name = x.k.name.trim() || ('Camper ' + (x.ki + 1));
-        const lines = x.comp.lines.map((l, li) => {
-          const color = l.sub ? '#9b9890' : '#3a3833';
-          const mt = li === 0 ? '0px' : (l.sub ? '3px' : '13px');
-          const left = l.title
-            ? `<strong style="font-weight:800;">${esc(l.title)}</strong>${l.dates ? ' · ' + esc(l.dates) : ''}`
-            : esc(l.label);
-          const daysLine = l.days ? `<div style="color:#9b9890; font-size:11.5px; margin-top:1px;">${esc(l.days)}</div>` : '';
-          return `<div style="font:600 12.5px/1.5 inherit; color:${color}; margin-top:${mt};">
-            <div style="display:flex; justify-content:space-between; gap:12px;"><span>${left}</span><span style="white-space:nowrap;">${money(l.amount)}</span></div>
-            ${daysLine}
-          </div>`;
-        }).join('');
-        return `<div>
-          <div style="font:800 12px/1 'Archivo',sans-serif; color:#a2601f; margin-bottom:8px; text-transform:uppercase; letter-spacing:.03em;">${esc(name)}</div>
-          ${lines}
-        </div>`;
-      }).join('');
+        .filter((x) => x.comp.lines.length > 0)
+        .map((x) => ({
+          name: x.k.name.trim() || ('Camper ' + (x.ki + 1)),
+          lines: x.comp.lines.map((l, li) => ({
+            label: l.label, title: l.title, dates: l.dates, days: l.days, amount: money(l.amount),
+            color: l.sub ? '#9b9890' : '#3a3833', mt: li === 0 ? '0px' : (l.sub ? '3px' : '13px'),
+          })),
+        }));
+    }
+    // Light card / receipt line (shows title · dates + a greyed days sub-line).
+    function summaryLineHTML(ln) {
+      const left = ln.title
+        ? `<strong style="font-weight:800;">${esc(ln.title)}</strong>${ln.dates ? ' · ' + esc(ln.dates) : ''}`
+        : esc(ln.label);
+      const daysLine = ln.days ? `<div style="color:#9b9890; font-size:11.5px; margin-top:1px;">${esc(ln.days)}</div>` : '';
+      return `<div style="font:600 12.5px/1.55 inherit; color:${ln.color}; margin-top:${ln.mt};">
+        <div style="display:flex; justify-content:space-between; gap:12px;"><span>${left}</span><span style="white-space:nowrap;">${ln.amount}</span></div>
+        ${daysLine}
+      </div>`;
+    }
+    function summaryBlockHTML(pad) {
+      const kids = summaryKidsData();
+      if (kids.length === 0) return `<p style="font:500 13px/1.5 inherit; color:#9b9890; margin:0;">Pick a camp and some days to see your total here.</p>`;
+      return `<div style="display:flex; flex-direction:column; gap:16px;">` + kids.map((s) => `<div>
+        <div style="font:800 12px/1 'Archivo',sans-serif; color:#a2601f; margin-bottom:8px; text-transform:uppercase; letter-spacing:.03em;">${esc(s.name)}</div>
+        ${s.lines.map(summaryLineHTML).join('')}
+      </div>`).join('') + `</div>`;
     }
 
     // ---- one child card ----
@@ -179,15 +205,14 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
       if (isPrivate) summaryLine = 'Private day · booked by appointment';
       else if (k.camp === 'weekly') { const n = Object.keys(k.weeks).length; summaryLine = n ? ('Weekly Camp · ' + n + ' week' + (n>1?'s':'')) : 'Weekly Camp — pick weeks'; }
       else { const n = Object.keys(k.paDates).length; summaryLine = n ? ('P.A. Day · ' + n + ' day' + (n>1?'s':'')) : 'P.A. Day — pick dates'; }
-      const priceLabel = isPrivate ? '' : money(comp.total);
+      const priceLabel = (isPrivate || comp.total === 0) ? '' : money(comp.total);
       const cardBorder = isExp ? 'var(--acc)' : '#eae7df';
       const headBg = isExp ? '#fffdf9' : '#fff';
 
       const removeBtn = state.kids.length > 1
         ? `<span class="reg-x" data-act="removeKid" data-kid="${k.id}" title="Remove" style="flex:none; width:28px; height:28px; border-radius:8px; background:#f3f2ee; color:#9b9890; display:flex; align-items:center; justify-content:center; font-size:13px;"><i class="bi bi-trash"></i></span>`
         : '';
-
-      const head = `<div class="khead" data-act="toggleExpand" data-kid="${k.id}" style="display:flex; align-items:center; gap:12px; padding:14px 16px; background:${headBg};">
+      const head = `<div class="reg-khead" data-act="toggleExpand" data-kid="${k.id}" style="display:flex; align-items:center; gap:12px; padding:14px 16px; background:${headBg};">
         <span style="flex:none; width:36px; height:36px; border-radius:10px; background:var(--acc); color:#fff; display:flex; align-items:center; justify-content:center; font:900 15px/1 'Archivo',sans-serif;">${esc(initial)}</span>
         <div style="flex:1; min-width:0;">
           <div style="font:800 15.5px/1.1 'Archivo',sans-serif;">${esc(displayName)}</div>
@@ -201,8 +226,8 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
       if (!isExp) return `<div style="background:#fff; border:1.5px solid ${cardBorder}; border-radius:16px; overflow:hidden; box-shadow:0 1px 3px rgba(28,25,23,.05),0 14px 30px -26px rgba(28,25,23,.4);">${head}</div>`;
 
       const campChips = [['weekly','Weekly'],['paday','P.A. Day'],['private','Private Day']].map(([val,label]) => {
-        if (k.camp === val) return `<span class="chip" data-act="setCamp" data-kid="${k.id}" data-camp="${val}" style="display:inline-flex; align-items:center; gap:7px; padding:10px 14px; border-radius:11px; border:1.5px solid var(--acc); background:#fff7ef; font:800 13px/1 'Archivo',sans-serif;"><i class="bi bi-check-circle-fill" style="color:var(--acc);"></i>${label}</span>`;
-        return `<span class="chip" data-act="setCamp" data-kid="${k.id}" data-camp="${val}" style="display:inline-flex; align-items:center; padding:10px 14px; border-radius:11px; border:1.5px solid #e5e2db; background:#fff; font:700 13px/1 'Archivo',sans-serif; color:#5b5853;">${label}</span>`;
+        if (k.camp === val) return `<span class="reg-chip" data-act="setCamp" data-kid="${k.id}" data-camp="${val}" style="display:inline-flex; align-items:center; gap:7px; padding:10px 14px; border-radius:11px; border:1.5px solid var(--acc); background:#fff7ef; font:800 13px/1 'Archivo',sans-serif;"><i class="bi bi-check-circle-fill" style="color:var(--acc);"></i>${label}</span>`;
+        return `<span class="reg-chip" data-act="setCamp" data-kid="${k.id}" data-camp="${val}" style="display:inline-flex; align-items:center; padding:10px 14px; border-radius:11px; border:1.5px solid #e5e2db; background:#fff; font:700 13px/1 'Archivo',sans-serif; color:#5b5853;">${label}</span>`;
       }).join('');
       const campBlock = `<div>
         <div style="font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#9b9890; margin:12px 0 9px;">Camp</div>
@@ -213,7 +238,6 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
       if (k.camp === 'weekly') flow = weeklyFlowHTML(k);
       else if (k.camp === 'paday') flow = padayFlowHTML(k);
       else flow = privateFlowHTML();
-
       const details = isPrivate ? '' : camperDetailsHTML(k);
 
       return `<div style="background:#fff; border:1.5px solid ${cardBorder}; border-radius:16px; overflow:hidden; box-shadow:0 1px 3px rgba(28,25,23,.05),0 14px 30px -26px rgba(28,25,23,.4);">
@@ -226,89 +250,78 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
       </div>`;
     }
 
-    // ---- weekly flow ----
-    function weeklyFlowHTML(k) {
-      const dayTierHint = [1,2,3,4].map((n) => n + 'd $' + daysPrice(n)).join(' · ');
-      const rows = WEEKS.map((w) => {
-        if (weekExpired(w)) {
-          return `<div style="border:1px solid #ece9e2; border-radius:12px; overflow:hidden; opacity:.6;">
-            <div style="display:flex; align-items:center; gap:12px; padding:11px 13px; cursor:not-allowed;">
-              <span style="flex:none; width:20px; height:20px; border-radius:6px; border:1.5px solid #d5d1c8; background:#f3f2ee;"></span>
-              <div style="flex:1; min-width:0;">
-                <div style="font:800 13.5px/1.1 'Archivo',sans-serif; color:#8a877f;">${w.n}</div>
-                <div style="font:600 11.5px/1.3 inherit; color:#b0aca3; margin-top:2px;">${w.dates}</div>
-              </div>
-              <span style="flex:none; font:700 9px/1 'Archivo',sans-serif; letter-spacing:.05em; text-transform:uppercase; color:#8a877f; background:#eeece7; padding:5px 8px; border-radius:6px;">Closed</span>
-            </div>
-          </div>`;
-        }
-        const e = k.weeks[w.id];
-        const sel = !!e;
-        let priceLabel = money(weekFull(w));
-        if (sel) priceLabel = money(computeKid({ ...k, camp:'weekly', weeks:{ [w.id]:e } }).total);
-        const rowBorder = sel ? 'var(--acc)' : '#ece9e2';
-        const check = sel
-          ? `<span style="flex:none; width:20px; height:20px; border-radius:6px; background:var(--acc); display:flex; align-items:center; justify-content:center;"><i class="bi bi-check-lg" style="color:#fff; font-size:13px;"></i></span>`
-          : `<span style="flex:none; width:20px; height:20px; border-radius:6px; border:1.5px solid #d5d1c8;"></span>`;
-        const fourDay = w.partial ? `<span style="flex:none; font:700 9px/1 'Archivo',sans-serif; letter-spacing:.05em; text-transform:uppercase; color:#a2601f; background:#fff2e2; padding:5px 7px; border-radius:6px;">4-day</span>` : '';
-        const header = `<div class="pill" data-act="toggleWeek" data-kid="${k.id}" data-week="${w.id}" style="display:flex; align-items:center; gap:12px; padding:11px 13px;">
-          ${check}
-          <div style="flex:1; min-width:0;">
-            <div style="font:800 13.5px/1.1 'Archivo',sans-serif;">${w.n}</div>
-            <div style="font:600 11.5px/1.3 inherit; color:#8a877f; margin-top:2px;">${w.dates}</div>
-          </div>
+    // ---- weekly flow: calendar rows ----
+    function dayCellHTML(k, w, d) {
+      const letter = d[0];
+      const num = w.nums[d] || '';
+      const hol = w.days.indexOf(d) === -1;
+      if (hol) return `<span title="Holiday — no camp" style="width:40px; padding:6px 0 7px; text-align:center; border-radius:9px; background:#f3f2ee; border:1.5px solid #f3f2ee;"><span style="display:block; font:700 8.5px/1 'Archivo',sans-serif; letter-spacing:.04em; color:#c9c4b8;">${letter}</span><span style="display:block; font:800 13.5px/1 'Archivo',sans-serif; color:#c9c4b8; margin-top:3px;">–</span></span>`;
+      if (dayExpired(w, d)) return `<span title="This day has passed" style="width:40px; padding:6px 0 7px; text-align:center; border-radius:9px; background:#f3f2ee; border:1.5px solid #eae7df; cursor:not-allowed;"><span style="display:block; font:700 8.5px/1 'Archivo',sans-serif; letter-spacing:.04em; color:#c9c4b8;">${letter}</span><span style="display:block; font:800 13.5px/1 'Archivo',sans-serif; color:#c4c0b7; margin-top:3px; text-decoration:line-through;">${num}</span></span>`;
+      const e = k.weeks[w.id];
+      const on = !!(e && e.days[d]);
+      const cellStyle = on
+        ? `width:40px; padding:6px 0 7px; text-align:center; border-radius:9px; background:var(--acc); border:1.5px solid var(--acc); color:#fff;`
+        : `width:40px; padding:6px 0 7px; text-align:center; border-radius:9px; background:#fff; border:1.5px solid #e0dcd3;`;
+      const letterStyle = on ? `opacity:.75;` : `color:#b0aca3;`;
+      const numStyle = on ? `` : `color:#5b5853;`;
+      return `<span class="reg-pill" data-act="weekDay" data-kid="${k.id}" data-week="${w.id}" data-day="${d}" style="${cellStyle}"><span style="display:block; font:700 8.5px/1 'Archivo',sans-serif; letter-spacing:.04em; ${letterStyle}">${letter}</span><span style="display:block; font:800 13.5px/1 'Archivo',sans-serif; margin-top:3px; ${numStyle}">${num}</span></span>`;
+    }
+
+    function weekRowHTML(k, w) {
+      const closed = weekExpired(w);
+      const e = k.weeks[w.id];
+      const attend = e ? w.days.filter((d) => e.days[d] && !dayExpired(w, d)) : [];
+      const sel = attend.length > 0;
+      const rowBorder = sel ? 'var(--acc)' : '#ece9e2';
+
+      let priceLabel, priceColor;
+      if (closed) { priceLabel = 'Closed'; priceColor = '#9b9890'; }
+      else if (sel) { priceLabel = money(computeKid({ ...k, camp:'weekly', weeks:{ [w.id]:e } }).total); priceColor = 'var(--acc)'; }
+      else { priceLabel = money(weekFull(w)); priceColor = '#9b9890'; }
+
+      const fourDay = w.partial ? `<span style="flex:none; font:700 8.5px/1 'Archivo',sans-serif; letter-spacing:.05em; text-transform:uppercase; color:#a2601f; background:#fff2e2; padding:4px 6px; border-radius:5px;">4-day</span>` : '';
+      const labelClass = closed ? 'reg-wklabel' : 'reg-pill reg-wklabel';
+      const labelData = closed ? '' : `data-act="toggleWeek" data-kid="${k.id}" data-week="${w.id}"`;
+      const label = `<div class="${labelClass}" ${labelData}>
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <div style="font:800 13px/1.1 'Archivo',sans-serif;">${w.n}</div>
           ${fourDay}
-          <span style="flex:none; font:800 13.5px/1 'Archivo',sans-serif; color:#211f1b;">${priceLabel}</span>
+        </div>
+        <div class="reg-wkprice" style="font:800 12.5px/1 'Archivo',sans-serif; color:${priceColor}; margin-top:6px;">${priceLabel}</div>
+      </div>`;
+
+      const cells = `<div class="reg-wkcells">${DAYS.map((d) => dayCellHTML(k, w, d)).join('')}</div>`;
+
+      let lateRow = '';
+      if (sel && !closed) {
+        const lateN = attend.filter((d) => e.late[d]).length;
+        const lateLabel = lateN > 0 ? ('+' + money(lateCost(lateN)) + (lateN >= 4 ? ' (capped)' : '')) : '';
+        const latePills = DAYS.map((d) => {
+          const active = !!(e && e.days[d]) && w.days.indexOf(d) !== -1 && !dayExpired(w, d);
+          if (!active) return `<span style="width:40px; visibility:hidden;"></span>`;
+          const on = !!e.late[d];
+          return on
+            ? `<span class="reg-pill" data-act="weekLate" data-kid="${k.id}" data-week="${w.id}" data-day="${d}" style="width:40px; padding:8px 0; text-align:center; border-radius:8px; background:#211f1b; border:1.5px solid #211f1b; color:#ffd400; font:800 11px/1 'Archivo',sans-serif;">${d[0]}</span>`
+            : `<span class="reg-pill" data-act="weekLate" data-kid="${k.id}" data-week="${w.id}" data-day="${d}" style="width:40px; padding:8px 0; text-align:center; border-radius:8px; background:#fff; border:1.5px solid #e0dcd3; color:#8a877f; font:800 11px/1 'Archivo',sans-serif;">${d[0]}</span>`;
+        }).join('');
+        lateRow = `<div class="reg-latrow">
+          <div class="reg-wklabel">
+            <div style="font:600 12px/1.4 inherit; color:#8a877f;">Late pickup to 4 PM</div>
+            ${lateLabel ? `<div class="reg-wkprice" style="font:800 11.5px/1 'Archivo',sans-serif; color:var(--acc); margin-top:4px;">${lateLabel}</div>` : ''}
+          </div>
+          <div class="reg-wkcells">${latePills}</div>
         </div>`;
+      }
 
-        let panel = '';
-        if (sel) {
-          const lateN = w.days.filter((d) => (e.mode === 'full' || e.days[d]) && e.late[d] && !dayExpired(w, d)).length;
-          const lateLabel = lateN > 0 ? ('+' + money(lateCost(lateN))) : '';
-          const seg = e.mode === 'full'
-            ? `<span class="pill" style="padding:6px 13px; border-radius:7px; background:#fff; color:#211f1b; font:800 11.5px/1 'Archivo',sans-serif; box-shadow:0 1px 2px rgba(0,0,0,.08);">Full week</span>
-               <span class="pill" data-act="weekMode" data-kid="${k.id}" data-week="${w.id}" data-mode="days" style="padding:6px 13px; border-radius:7px; color:#8a877f; font:700 11.5px/1 'Archivo',sans-serif;">Pick days</span>`
-            : `<span class="pill" data-act="weekMode" data-kid="${k.id}" data-week="${w.id}" data-mode="full" style="padding:6px 13px; border-radius:7px; color:#8a877f; font:700 11.5px/1 'Archivo',sans-serif;">Full week</span>
-               <span class="pill" style="padding:6px 13px; border-radius:7px; background:#fff; color:#211f1b; font:800 11.5px/1 'Archivo',sans-serif; box-shadow:0 1px 2px rgba(0,0,0,.08);">Pick days</span>`;
+      const divider = w.month ? `<div style="display:flex; align-items:center; gap:10px; margin:5px 0 -1px;"><span style="font:800 11px/1 'Archivo',sans-serif; letter-spacing:.09em; text-transform:uppercase;">${w.month}</span><span style="flex:1; height:1px; background:#e8e5dd;"></span></div>` : '';
+      return `${divider}<div style="border:1px solid ${rowBorder}; border-radius:12px; overflow:hidden;"><div class="reg-wkrow">${label}${cells}</div>${lateRow}</div>`;
+    }
 
-          let dayBlock = '';
-          if (e.mode === 'days') {
-            const dayPills = w.days.map((d) => {
-              if (dayExpired(w, d)) return `<span title="This day has passed" style="min-width:44px; text-align:center; padding:9px 8px; border-radius:9px; background:#f3f2ee; border:1.5px solid #eae7df; color:#c4c0b7; font:700 12px/1 'Archivo',sans-serif; text-decoration:line-through; cursor:not-allowed;">${d}</span>`;
-              const on = !!e.days[d];
-              return on
-                ? `<span class="pill" data-act="weekDay" data-kid="${k.id}" data-week="${w.id}" data-day="${d}" style="min-width:44px; text-align:center; padding:9px 8px; border-radius:9px; background:var(--acc); color:#fff; font:800 12px/1 'Archivo',sans-serif;">${d}</span>`
-                : `<span class="pill" data-act="weekDay" data-kid="${k.id}" data-week="${w.id}" data-day="${d}" style="min-width:44px; text-align:center; padding:9px 8px; border-radius:9px; background:#fff; border:1.5px solid #e0dcd3; color:#8a877f; font:700 12px/1 'Archivo',sans-serif;">${d}</span>`;
-            }).join('');
-            dayBlock = `<div style="margin-bottom:12px;">
-              <div style="font:600 10px/1 inherit; color:#9b9890; margin-bottom:7px;">Days attending · ${dayTierHint}</div>
-              <div style="display:flex; gap:6px; flex-wrap:wrap;">${dayPills}</div>
-            </div>`;
-          }
-
-          const latePills = w.days.filter((d) => (e.mode === 'full' || e.days[d]) && !dayExpired(w, d)).map((d) => {
-            const on = !!e.late[d];
-            return on
-              ? `<span class="pill" data-act="weekLate" data-kid="${k.id}" data-week="${w.id}" data-day="${d}" style="min-width:44px; text-align:center; padding:8px; border-radius:9px; background:#211f1b; color:#ffd400; font:800 12px/1 'Archivo',sans-serif;">${d}</span>`
-              : `<span class="pill" data-act="weekLate" data-kid="${k.id}" data-week="${w.id}" data-day="${d}" style="min-width:44px; text-align:center; padding:8px; border-radius:9px; background:#fff; border:1.5px solid #e0dcd3; color:#8a877f; font:700 12px/1 'Archivo',sans-serif;">${d}</span>`;
-          }).join('');
-
-          panel = `<div style="background:#fbf9f4; border-top:1px solid #efece4; padding:12px 13px 13px;">
-            <div style="display:inline-flex; padding:3px; background:#efece4; border-radius:9px; margin-bottom:12px;">${seg}</div>
-            ${dayBlock}
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:7px;">
-              <div style="font:600 10px/1 inherit; color:#9b9890;">Late pickup to 4 PM · $20/day (max $75)</div>
-              <span style="font:800 11.5px/1 'Archivo',sans-serif; color:var(--acc);">${lateLabel}</span>
-            </div>
-            <div style="display:flex; gap:6px; flex-wrap:wrap;">${latePills}</div>
-          </div>`;
-        }
-
-        return `<div style="border:1px solid ${rowBorder}; border-radius:12px; overflow:hidden;">${header}${panel}</div>`;
-      }).join('');
-
+    function weeklyFlowHTML(k) {
+      const rows = WEEKS.map((w) => weekRowHTML(k, w)).join('');
       return `<div>
-        <div style="font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#9b9890; margin-bottom:9px;">Pick weeks — tap a week for day-by-day</div>
+        <div style="font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#9b9890; margin-bottom:6px;">Pick your days</div>
+        <div style="font:600 12px/1.4 inherit; color:#a8a49b; margin-bottom:10px;">Tap days — or tap a week's name to take the whole week.</div>
         <div style="display:flex; flex-direction:column; gap:8px;">${rows}</div>
       </div>`;
     }
@@ -322,7 +335,7 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
         const check = sel
           ? `<span style="flex:none; width:20px; height:20px; border-radius:6px; background:var(--acc); display:flex; align-items:center; justify-content:center;"><i class="bi bi-check-lg" style="color:#fff; font-size:13px;"></i></span>`
           : `<span style="flex:none; width:20px; height:20px; border-radius:6px; border:1.5px solid #d5d1c8;"></span>`;
-        const header = `<div class="pill" data-act="togglePa" data-kid="${k.id}" data-pa="${p.id}" style="display:flex; align-items:center; gap:12px; padding:12px 13px;">
+        const header = `<div class="reg-pill" data-act="togglePa" data-kid="${k.id}" data-pa="${p.id}" style="display:flex; align-items:center; gap:12px; padding:12px 13px;">
           ${check}
           <div style="flex:1;"><div style="font:800 13.5px/1.1 'Archivo',sans-serif;">${p.label}</div><div style="font:600 11.5px/1.3 inherit; color:#8a877f; margin-top:2px;">9 AM – 2 PM</div></div>
           <span style="flex:none; font:800 13.5px/1 'Archivo',sans-serif;">$90</span>
@@ -333,7 +346,7 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
           const box = on
             ? `<span style="flex:none; width:18px; height:18px; border-radius:5px; background:#211f1b; display:flex; align-items:center; justify-content:center;"><i class="bi bi-check-lg" style="color:#ffd400; font-size:12px;"></i></span>`
             : `<span style="flex:none; width:18px; height:18px; border-radius:5px; border:1.5px solid #d5d1c8;"></span>`;
-          lateRow = `<div class="pill" data-act="paLate" data-kid="${k.id}" data-pa="${p.id}" style="background:#fbf9f4; border-top:1px solid #efece4; padding:11px 13px; display:flex; align-items:center; gap:10px;">
+          lateRow = `<div class="reg-pill" data-act="paLate" data-kid="${k.id}" data-pa="${p.id}" style="background:#fbf9f4; border-top:1px solid #efece4; padding:11px 13px; display:flex; align-items:center; gap:10px;">
             ${box}
             <span style="flex:1; font:600 12px/1.3 inherit; color:#5b5853;">Late pickup to 4 PM</span>
             <span style="font:800 12px/1 'Archivo',sans-serif; color:var(--acc);">+$20</span>
@@ -347,7 +360,7 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
       </div>`;
     }
 
-    // ---- private flow ----
+    // ---- private flow (yellow CTA) ----
     function privateFlowHTML() {
       return `<div style="border:1px solid #e8e5dd; background:#faf9f5; border-radius:12px; padding:16px 16px 18px;">
         <div style="display:flex; gap:13px; align-items:flex-start; margin-bottom:14px;">
@@ -357,7 +370,7 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
             <p style="font:400 13px/1.5 inherit; color:#5b5853; margin:0; text-wrap:pretty;">You pick your own date and we build the day around your group (5+ kids, $90 each). Reserve your date through our booking system — no need to fill out this form.</p>
           </div>
         </div>
-        <a href="${BOOKING_URL}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:9px; text-decoration:none; background:var(--acc); color:#fff; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; padding:13px 18px; border-radius:10px;">Book a private day <i class="bi bi-arrow-up-right"></i></a>
+        <a href="${BOOKING_URL}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:9px; text-decoration:none; background:#ffd400; color:#211f1b; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; padding:13px 18px; border-radius:10px;">Book a private day <i class="bi bi-arrow-up-right"></i></a>
       </div>`;
     }
 
@@ -369,11 +382,11 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
       const waiverBg = wStat === 'ok' ? '#f0f8f2' : (wStat === 'todo' ? '#fff7ef' : '#faf9f5');
 
       const yesChip = k.waiver === 'yes'
-        ? `<span class="chip" data-act="waiver" data-kid="${k.id}" data-val="yes" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:11px; border-radius:10px; border:1.5px solid #1b6b2f; background:#eef7f0; color:#1b6b2f; font:800 13px/1 'Archivo',sans-serif;"><i class="bi bi-check-circle-fill"></i>Yes — on file</span>`
-        : `<span class="chip" data-act="waiver" data-kid="${k.id}" data-val="yes" style="flex:1; display:inline-flex; align-items:center; justify-content:center; padding:11px; border-radius:10px; border:1.5px solid #e0dcd3; background:#fff; color:#5b5853; font:700 13px/1 'Archivo',sans-serif;">Yes — done before</span>`;
+        ? `<span class="reg-chip" data-act="waiver" data-kid="${k.id}" data-val="yes" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:11px; border-radius:10px; border:1.5px solid #1b6b2f; background:#eef7f0; color:#1b6b2f; font:800 13px/1 'Archivo',sans-serif;"><i class="bi bi-check-circle-fill"></i>Yes — on file</span>`
+        : `<span class="reg-chip" data-act="waiver" data-kid="${k.id}" data-val="yes" style="flex:1; display:inline-flex; align-items:center; justify-content:center; padding:11px; border-radius:10px; border:1.5px solid #e0dcd3; background:#fff; color:#5b5853; font:700 13px/1 'Archivo',sans-serif;">Yes — done before</span>`;
       const noChip = k.waiver === 'no'
-        ? `<span class="chip" data-act="waiver" data-kid="${k.id}" data-val="no" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:11px; border-radius:10px; border:1.5px solid var(--acc); background:#fff7ef; color:#a2601f; font:800 13px/1 'Archivo',sans-serif;"><i class="bi bi-check-circle-fill"></i>No — first time</span>`
-        : `<span class="chip" data-act="waiver" data-kid="${k.id}" data-val="no" style="flex:1; display:inline-flex; align-items:center; justify-content:center; padding:11px; border-radius:10px; border:1.5px solid #e0dcd3; background:#fff; color:#5b5853; font:700 13px/1 'Archivo',sans-serif;">No — first time</span>`;
+        ? `<span class="reg-chip" data-act="waiver" data-kid="${k.id}" data-val="no" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:11px; border-radius:10px; border:1.5px solid var(--acc); background:#fff7ef; color:#a2601f; font:800 13px/1 'Archivo',sans-serif;"><i class="bi bi-check-circle-fill"></i>No — first time</span>`
+        : `<span class="reg-chip" data-act="waiver" data-kid="${k.id}" data-val="no" style="flex:1; display:inline-flex; align-items:center; justify-content:center; padding:11px; border-radius:10px; border:1.5px solid #e0dcd3; background:#fff; color:#5b5853; font:700 13px/1 'Archivo',sans-serif;">No — first time</span>`;
 
       let step2 = '';
       if (k.waiver === 'no') {
@@ -382,8 +395,8 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
           : `<span style="flex:none; width:20px; height:20px; border-radius:6px; border:2px solid #d5b48a;"></span><span style="font:700 12.5px/1.2 'Archivo',sans-serif; color:#a2601f;">I've completed the waiver</span>`;
         step2 = `<div style="margin-top:12px; padding-top:12px; border-top:1px dashed #e6dcc8;">
           <div style="font:700 12.5px/1.35 'Archivo',sans-serif; color:#a2601f; margin-bottom:9px;">Step 2 — sign the one-time waiver, then confirm it's done.</div>
-          <a href="${WAIVER_URL}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; background:var(--acc); color:#fff; font:800 12.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; padding:11px 15px; border-radius:9px; margin-bottom:10px;"><i class="bi bi-pencil-square"></i>Please sign the waiver here</a>
-          <div class="pill" data-act="waiverDone" data-kid="${k.id}" style="display:flex; align-items:center; gap:9px;">${doneRow}</div>
+          <a href="${WAIVER_URL}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; background:#ffd400; color:#211f1b; font:800 12.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; padding:11px 15px; border-radius:9px; margin-bottom:10px;"><i class="bi bi-pencil-square"></i>Please sign the waiver here</a>
+          <div class="reg-pill" data-act="waiverDone" data-kid="${k.id}" style="display:flex; align-items:center; gap:9px;">${doneRow}</div>
         </div>`;
       }
 
@@ -392,9 +405,9 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
         <div style="display:flex; flex-direction:column; gap:10px;">
           <div style="display:flex; gap:10px;">
             <input class="reg-in" style="flex:2;" type="text" placeholder="Camper's name" value="${esc(k.name)}" data-field="${k.id}.name">
-            <input class="reg-in" style="flex:1;" type="text" placeholder="Age" value="${esc(k.age)}" data-field="${k.id}.age">
+            <input class="reg-in" style="flex:1;" type="number" min="5" max="17" inputmode="numeric" placeholder="Age (5+)" value="${esc(k.age)}" data-field="${k.id}.age">
           </div>
-          <input class="reg-in" type="text" placeholder="Allergies (we're a nut-free facility)" value="${esc(k.allergies)}" data-field="${k.id}.allergies">
+          <input class="reg-in" type="text" placeholder="Allergies we should know about" value="${esc(k.allergies)}" data-field="${k.id}.allergies">
           <textarea class="reg-in" placeholder="Anything the coaches should know? (optional)" data-field="${k.id}.notes">${esc(k.notes)}</textarea>
           <div style="border:1px solid ${waiverBorder}; background:${waiverBg}; border-radius:11px; padding:13px 14px;">
             <div style="font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#9b9890; margin-bottom:9px;">Waiver</div>
@@ -411,15 +424,18 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
       const cards = state.kids.map((k, ki) => kidCardHTML(k, ki)).join('');
       const total = grandTotal();
       const totalLabel = money(total);
+      const ctaLabel = total > 0 ? ('Register & pay ' + totalLabel) : 'Register & pay';
 
-      const pendingKids = state.kids.filter((k) => k.camp !== 'private' && computeKid(k).total > 0 && !waiverOk(k));
+      const pendingKids = state.kids.filter((k) => k.camp !== 'private' && computeKid(k).total > 0 && k.waiver === 'no' && !k.waiverDone);
       const waiverPending = pendingKids.length > 0;
       const waiverMsg = waiverPending ? ('Waiver still needed for ' + pendingKids.map((k) => k.name.trim() || ('camper ' + (state.kids.indexOf(k) + 1))).join(', ') + '.') : '';
 
-      const sumInner = summaryKidsHTML();
-      const linesBlock = sumInner
-        ? `<div style="display:flex; flex-direction:column; gap:16px;">${sumInner}</div>`
-        : `<p style="font:500 13px/1.5 inherit; color:#9b9890; margin:0;">Pick a camp and some days to see your total here.</p>`;
+      const k0 = state.kids[0];
+      const canCopySchedule = !!k0 && k0.camp !== 'private' && (Object.keys(k0.weeks).length > 0 || Object.keys(k0.paDates).length > 0);
+      const copyFromName = (k0 && k0.name.trim()) || 'Camper 1';
+      const siblingBtn = canCopySchedule
+        ? `<div class="reg-cta" data-act="addSibling" style="flex:1; min-width:180px; border:1.5px dashed #e6c98f; border-radius:14px; padding:15px; text-align:center; font:800 13.5px/1 'Archivo',sans-serif; color:#a2601f; background:#fffdf9;"><i class="bi bi-people"></i>&nbsp; Add a sibling — same days as ${esc(copyFromName)}</div>`
+        : '';
 
       const waiverWarn = waiverPending
         ? `<div style="display:flex; align-items:flex-start; gap:8px; font:600 11.5px/1.4 inherit; color:#a2601f; background:#fff7ef; border:1px solid #f0dcc2; border-radius:9px; padding:9px 11px; margin-top:14px;"><i class="bi bi-exclamation-triangle-fill" style="margin-top:1px;"></i><span>${esc(waiverMsg)}</span></div>`
@@ -430,6 +446,18 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
 
       const kc = state.kids.length;
       const mobileCount = kc + ' camper' + (kc > 1 ? 's' : '');
+
+      // mobile breakdown sheet (tap total)
+      const sheet = state.mSumOpen ? `<div style="width:100%; max-height:270px; overflow-y:auto; padding:16px 18px 6px; border-bottom:1px solid rgba(255,255,255,.12);">
+        ${mobileSheetLinesHTML()}
+        <div style="font:500 10.5px/1.4 inherit; color:rgba(255,255,255,.5); padding-bottom:8px;">HST included. Cancel any week up to two weeks before it starts for a full refund, minus a $20 fee — less notice, 15% retained.</div>
+      </div>` : '';
+      const mSumChev = state.mSumOpen ? 'bi-chevron-down' : 'bi-chevron-up';
+
+      const mobileNotice = (state.error || waiverPending) ? `<div class="reg-mnotice" data-noprint style="padding:0 16px 10px;">
+        ${state.error ? `<div style="font:600 12px/1.4 inherit; color:#b3261e; background:#fdecea; border-radius:9px; padding:10px 12px;">${esc(state.error)}</div>` : ''}
+        ${(!state.error && waiverPending) ? `<div style="display:flex; align-items:flex-start; gap:8px; font:600 12px/1.4 inherit; color:#a2601f; background:#fff7ef; border:1px solid #f0dcc2; border-radius:9px; padding:10px 12px;"><i class="bi bi-exclamation-triangle-fill" style="margin-top:1px;"></i><span>${esc(waiverMsg)}</span></div>` : ''}
+      </div>` : '';
 
       return `<div>
         <section data-noprint style="background:#211f1b; color:#fff; position:relative; overflow:hidden;">
@@ -444,13 +472,13 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
         <div class="reg-wrap" style="max-width:1140px; margin:0 auto; padding:26px 16px 60px;">
           <div class="reg-grid">
             <div>
-              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-                <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.13em; text-transform:uppercase; color:#9b9890;">Who's registering</div>
-                <div style="font:600 12px/1 inherit; color:#b0aca3;">Full week $350 · fewer days priced per tier · late pickup $20/day</div>
-              </div>
+              <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.13em; text-transform:uppercase; color:#9b9890; margin-bottom:14px;">Who's registering</div>
               <div style="display:flex; flex-direction:column; gap:14px;">
                 ${cards}
-                <div class="reg-cta" data-act="addKid" style="border:1.5px dashed #d5d1c8; border-radius:14px; padding:15px; text-align:center; font:800 13.5px/1 'Archivo',sans-serif; color:#8a877f; background:#fff;"><i class="bi bi-plus-lg"></i>&nbsp; Add another child</div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <div class="reg-cta" data-act="addKid" style="flex:1; min-width:180px; border:1.5px dashed #d5d1c8; border-radius:14px; padding:15px; text-align:center; font:800 13.5px/1 'Archivo',sans-serif; color:#8a877f; background:#fff;"><i class="bi bi-plus-lg"></i>&nbsp; Add another child</div>
+                  ${siblingBtn}
+                </div>
                 <div style="background:#fff; border:1px solid #e8e5dd; border-radius:16px; padding:18px 18px 20px; box-shadow:0 1px 3px rgba(28,25,23,.05);">
                   <div style="font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#9b9890; margin-bottom:12px;">Parent / guardian</div>
                   <div style="display:flex; flex-direction:column; gap:10px;">
@@ -470,36 +498,54 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
                   <div style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--acc);">Your registration</div>
                 </div>
                 <div style="padding:18px 20px;">
-                  ${linesBlock}
+                  ${summaryBlockHTML()}
                   <div style="margin-top:18px; padding-top:16px; border-top:1px solid #ece9e2;">
                     <div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="font:800 15px/1 'Archivo',sans-serif;">Total</span><span style="font:900 26px/1 'Archivo',sans-serif; color:var(--acc);">${totalLabel}</span></div>
-                    <div style="font:500 11px/1.4 inherit; color:#9b9890; margin-top:5px;">HST included · charged in full via Square</div>
+                    <div style="font:500 11px/1.4 inherit; color:#9b9890; margin-top:5px;">HST included</div>
                   </div>
                   ${waiverWarn}
                   ${errorBlock}
-                  <div class="reg-cta" data-act="register" style="margin-top:16px; text-align:center; padding:15px; border-radius:12px; background:var(--acc); color:#fff; font:800 14.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em;">Register &amp; pay ${totalLabel}</div>
+                  <div class="reg-cta" data-act="register" style="margin-top:16px; text-align:center; padding:15px; border-radius:12px; background:#ffd400; color:#211f1b; font:800 14.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em;">${ctaLabel}</div>
                   <div style="display:flex; align-items:center; justify-content:center; gap:6px; font:600 10.5px/1.3 inherit; color:#b0aca3; margin-top:10px;"><i class="bi bi-lock-fill"></i>Secure checkout by Square</div>
+                  <div style="margin-top:14px; padding-top:12px; border-top:1px solid #ece9e2; font:500 11px/1.55 inherit; color:#9b9890; text-wrap:pretty;"><strong style="font-weight:700; color:#7a7770;">Plans change?</strong> Cancel any week up to two weeks before it starts for a full refund, minus a $20 processing fee. With less notice, 15% is retained.</div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="reg-mbar" data-noprint style="align-items:center; justify-content:space-between; gap:12px; background:#211f1b; color:#fff; padding:14px 18px; box-shadow:0 -8px 24px -12px rgba(0,0,0,.5);">
-            <div>
-              <div style="font:600 10.5px/1 inherit; color:rgba(255,255,255,.55); margin-bottom:5px;">${mobileCount}</div>
+        <div class="reg-mbar" data-noprint style="flex-direction:column; background:#211f1b; color:#fff; box-shadow:0 -8px 24px -12px rgba(0,0,0,.5);">
+          ${sheet}
+          <div style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 18px;">
+            <div class="reg-pill" data-act="toggleMSum">
+              <div style="display:flex; align-items:center; gap:6px; font:600 10.5px/1 inherit; color:rgba(255,255,255,.55); margin-bottom:5px;">${mobileCount} <i class="bi ${mSumChev}" style="font-size:10px;"></i></div>
               <div style="font:900 21px/1 'Archivo',sans-serif; color:var(--acc);">${totalLabel}</div>
             </div>
-            <span class="reg-cta" data-act="register" style="display:inline-flex; align-items:center; gap:9px; padding:13px 20px; border-radius:11px; background:var(--acc); color:#fff; font:800 13.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em;">Register <i class="bi bi-arrow-right"></i></span>
+            <span class="reg-cta" data-act="register" style="display:inline-flex; align-items:center; gap:9px; padding:13px 20px; border-radius:11px; background:#ffd400; color:#211f1b; font:800 13.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em;">Register <i class="bi bi-arrow-right"></i></span>
           </div>
         </div>
+        ${mobileNotice}
       </div>`;
+    }
+
+    // mobile breakdown sheet lines (dark theme, title · days)
+    function mobileSheetLinesHTML() {
+      const kids = summaryKidsData();
+      if (kids.length === 0) return `<div style="font:500 12px/1.5 inherit; color:rgba(255,255,255,.55); margin-bottom:10px;">Pick a camp and some days to see the breakdown here.</div>`;
+      return kids.map((s) => `<div style="margin-bottom:12px;">
+        <div style="font:800 11.5px/1 'Archivo',sans-serif; color:#ffd400; text-transform:uppercase; letter-spacing:.03em; margin-bottom:7px;">${esc(s.name)}</div>
+        ${s.lines.map((ln) => {
+          const left = ln.title ? `<strong style="font-weight:800;">${esc(ln.title)}</strong>${ln.days ? ' · ' + esc(ln.days) : ''}` : esc(ln.label);
+          return `<div style="display:flex; justify-content:space-between; gap:12px; font:600 12px/1.5 inherit; color:rgba(255,255,255,.8); margin-top:${ln.mt};"><span>${left}</span><span style="white-space:nowrap;">${ln.amount}</span></div>`;
+        }).join('')}
+      </div>`).join('');
     }
 
     // ---- confirm stage ----
     const INSTRUCTIONS = [
       { icon:'bi-clipboard-check', title:'Before camp', items:[
         'Sign the one-time waiver for any first-time camper — it must be done before day 1.',
-        'Pack a nut-free lunch and snacks, a labelled water bottle, clean indoor running shoes, and comfy clothes to move in. Label everything.' ] },
+        'Pack a lunch and snacks (please avoid nuts), a labelled water bottle, clean indoor running shoes, and comfy clothes to move in. Label everything.' ] },
       { icon:'bi-sun', title:'The day of camp', items:[
         'Doors open at 8:45 AM for arrival. Camp runs 9:00 AM – 2:00 PM.',
         'On day one, arrive a few minutes early so we can check your camper in.' ] },
@@ -509,14 +555,18 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
         'Running late, or need late pickup added last-minute? Call us — we’ll keep your camper until you arrive.',
         'Let us know in advance who else is authorized to pick up your child.' ] },
       { icon:'bi-shield-check', title:'Allergies & safety', items:[
-        'We are a nut-free facility — please pack accordingly and let coaches know about any allergies.',
+        'Please avoid packing nuts, and tell the coaches about any allergies at drop-off.',
         'Cancellations need two weeks’ written notice (15% deposit retained for late notice; otherwise a $20 transaction fee).' ] },
     ];
 
     function confirmStageHTML() {
       const totalLabel = money(grandTotal());
       const emailLabel = state.parent.email || 'your email';
-      const receipt = summaryKidsHTML();
+      const kids = summaryKidsData();
+      const receipt = kids.map((s) => `<div style="margin-bottom:14px;">
+        <div style="font:800 13px/1 'Archivo',sans-serif; margin-bottom:7px;">${esc(s.name)}</div>
+        ${s.lines.map(summaryLineHTML).join('')}
+      </div>`).join('');
       const instr = INSTRUCTIONS.map((ins) => {
         const items = ins.items.map((it) => `<div style="font:400 13px/1.5 inherit; color:#5b5853; text-wrap:pretty;">${esc(it)}</div>`).join('');
         return `<div style="display:flex; gap:13px;">
@@ -570,45 +620,57 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
       const field = active && active.dataset ? active.dataset.field : null;
       let caret = null;
       if (field) { try { caret = active.selectionStart; } catch (e) { caret = null; } }
-
       root.innerHTML = state.stage === 'build' ? buildStageHTML() : confirmStageHTML();
-
       if (field) {
         const el = root.querySelector(`[data-field="${field}"]`);
         if (el) { el.focus(); if (caret != null) { try { el.setSelectionRange(caret, caret); } catch (e) {} } }
       }
     }
 
-    // ---- click actions (event delegation) ----
+    function scrollHome() { try { window.scrollTo(0, 0); } catch (e) {} }
+
     function onRegister() {
       const { kids, parent } = state;
-      const total = grandTotal();
-      if (total <= 0) { state.error = 'Add at least one camp day. Private days are booked separately with the button in the card.'; render(); return; }
+      if (grandTotal() <= 0) { state.error = 'Add at least one camp day. Private days are booked separately with the button in the card.'; render(); return; }
       if (!parent.name.trim() || !parent.email.trim()) { state.error = 'Please add the parent/guardian name and email.'; render(); return; }
       for (const k of kids) {
         if (k.camp === 'private') continue;
         if (computeKid(k).total <= 0) { state.error = 'Every camper needs at least one day (or remove them / switch to a private booking).'; render(); return; }
         if (!k.name.trim()) { state.error = 'Please name each camper.'; render(); return; }
+        if (k.age !== '' && Number(k.age) < 5) { state.error = 'Camps are for ages 5 and up — check ' + (k.name.trim() || 'your camper') + '’s age.'; render(); return; }
         if (!waiverOk(k)) { state.error = 'Waiver still needed for ' + (k.name.trim() || 'a camper') + ' — answer Step 1 and complete it.'; render(); return; }
       }
       state.ref = 'TMV-' + Math.random().toString(36).slice(2, 7).toUpperCase();
-      state.stage = 'confirm'; state.error = '';
+      state.stage = 'confirm'; state.error = ''; state.mSumOpen = false;
       render();
-      try { window.scrollTo(0, 0); } catch (e) {}
+      scrollHome();
     }
 
+    // ---- click actions (event delegation) ----
     root.addEventListener('click', (ev) => {
       const el = ev.target.closest('[data-act]');
       if (!el || !root.contains(el)) return;
       const act = el.dataset.act;
       const id = el.dataset.kid;
       const k = id ? kidById(id) : null;
-      state.error = '';
+      if (act !== 'toggleMSum') state.error = '';
 
       switch (act) {
         case 'addKid': {
           const nid = 'k' + (++seq);
           state.kids = [...state.kids, blankKid(nid)];
+          state.expanded = nid;
+          break;
+        }
+        case 'addSibling': {
+          const src = state.kids[0];
+          if (!src) break;
+          const nid = 'k' + (++seq);
+          const kid = blankKid(nid);
+          kid.camp = src.camp;
+          kid.weeks = JSON.parse(JSON.stringify(src.weeks));
+          kid.paDates = JSON.parse(JSON.stringify(src.paDates));
+          state.kids = [...state.kids, kid];
           state.expanded = nid;
           break;
         }
@@ -627,31 +689,36 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
         case 'toggleWeek': {
           if (!k) break;
           const w = WEEKS.find((x) => x.id === el.dataset.week);
-          if (weekExpired(w)) break; // closed weeks can't be selected
-          if (k.weeks[w.id]) delete k.weeks[w.id];
-          else { const days = {}, late = {}; w.days.forEach((d) => { days[d] = true; late[d] = false; }); k.weeks[w.id] = { mode:'full', days, late }; }
+          if (weekExpired(w)) break;
+          const e = k.weeks[w.id];
+          const open = openDays(w);
+          const allOn = e && open.length > 0 && open.every((d) => e.days[d]);
+          if (allOn) { delete k.weeks[w.id]; }
+          else { const days = {}; open.forEach((d) => { days[d] = true; }); k.weeks[w.id] = { days, late: (e && e.late) || {} }; }
           break;
         }
-        case 'weekMode':
-          if (k && k.weeks[el.dataset.week]) k.weeks[el.dataset.week].mode = el.dataset.mode;
-          break;
         case 'weekDay': {
           const w = WEEKS.find((x) => x.id === el.dataset.week);
-          const e = k && k.weeks[el.dataset.week];
-          if (e && !dayExpired(w, el.dataset.day)) e.days[el.dataset.day] = !e.days[el.dataset.day];
+          const d = el.dataset.day;
+          if (!k || dayExpired(w, d)) break;
+          const prev = k.weeks[w.id];
+          const e = prev ? { days: { ...prev.days }, late: { ...prev.late } } : { days: {}, late: {} };
+          e.days[d] = !e.days[d];
+          if (w.days.some((x) => e.days[x])) k.weeks[w.id] = e; else delete k.weeks[w.id];
           break;
         }
         case 'weekLate': {
           const w = WEEKS.find((x) => x.id === el.dataset.week);
+          const d = el.dataset.day;
           const e = k && k.weeks[el.dataset.week];
-          if (e && !dayExpired(w, el.dataset.day)) e.late[el.dataset.day] = !e.late[el.dataset.day];
+          if (e && !dayExpired(w, d)) e.late[d] = !e.late[d];
           break;
         }
         case 'togglePa': {
           if (!k) break;
           const pid = el.dataset.pa;
           if (k.paDates[pid]) delete k.paDates[pid];
-          else k.paDates[pid] = { late:false };
+          else k.paDates[pid] = { late: false };
           break;
         }
         case 'paLate': {
@@ -665,15 +732,20 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
         case 'waiverDone':
           if (k) k.waiverDone = !k.waiverDone;
           break;
+        case 'toggleMSum':
+          state.mSumOpen = !state.mSumOpen;
+          break;
         case 'register':
           onRegister();
-          return; // onRegister renders itself
+          return;
         case 'edit':
           state.stage = 'build';
-          break;
+          render();
+          scrollHome();
+          return;
         case 'download':
           try { window.print(); } catch (e) {}
-          return; // no state change / re-render needed
+          return;
       }
       render();
     });
