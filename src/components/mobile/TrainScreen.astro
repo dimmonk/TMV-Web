@@ -17,9 +17,8 @@ import { cat, links, url } from '../../data/site';
 const classHref = (c: ClassItem): string =>
   'external' in c.link ? c.link.external : url(c.link.screen);
 ---
+<MobileHero eyebrow="Train" title="Every way to move" desc="Open gym, coached classes and the Athletic Program — every age, every level, one big roof." stats={[{ v: '4', l: 'ways to train' }, { v: 'Ages 3+', l: 'all levels' }, { v: '7 days', l: 'a week' }]} />
 <div class="m-pad">
-  <MobileHero eyebrow="Train" title="Every way to move" desc="Open gym, coached classes and the Athletic Program — every age, every level, one big roof." stats={[{ v: '4', l: 'ways to train' }, { v: 'Ages 3+', l: 'all levels' }, { v: '7 days', l: 'a week' }]} />
-  <div style="height:18px"></div>
   <BookingCard color={cat.openGym} bookingTag="Drop-in" duration="No limit" title="Open Gym" description="Drop in any day and stay as long as you like. Sign the waiver, grab a pass, the floor is yours." pills="All ages | 11 AM – 10 PM | No booking" price="From $25" priceNote="day pass" actionLabel="Get a pass" href={links.store} target="_blank" />
 
   <div class="m-rowhead" style="margin:26px 0 6px">

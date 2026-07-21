@@ -29,7 +29,10 @@ const { eyebrow, title, desc, stats } = Astro.props;
 </div>
 
 <style>
-  .mh { background: #211f1b; color: #fff; border-radius: 22px; padding: 26px 24px 24px; position: relative; overflow: hidden; }
+  /* Full-bleed: no radius, no side inset — fuses with the sticky app bar above
+     it into one continuous dark header band. Internal padding is unchanged so
+     the text still clears the edges. */
+  .mh { background: #211f1b; color: #fff; padding: 24px 22px; position: relative; overflow: hidden; }
   .mh-glow { position: absolute; inset: 0; background: radial-gradient(360px 200px at 92% -20%, rgba(255,212,0,.16), transparent 70%); }
   .mh-inner { position: relative; }
   .mh-eyebrow { display: inline-flex; align-items: center; gap: 8px; font: 700 10.5px/1 'Archivo', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #ffd400; margin-bottom: 16px; }

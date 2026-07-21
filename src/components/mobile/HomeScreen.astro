@@ -24,21 +24,21 @@ const OC = {
 };
 const reviewItems = reviews.items.map((r) => ({ name: r.name, role: r.context, text: r.quote }));
 ---
-<div class="m-pad">
-  <div class="m-home-hero">
-    <div class="mh-glow"></div>
-    <div class="m-home-hero-inner">
-      <div class="mh-eyebrow"><span class="mh-rule"></span>Parkour &amp; movement · Toronto</div>
-      <h2 class="m-home-title">Move better.<br>Have more fun.</h2>
-      <p class="m-home-lead">Drop in to play, book a class, train like an athlete, or throw a party — every age, every level, under one big roof.</p>
-      <div class="m-home-stats">
-        {heroStats.map((st, i) => (
-          <div class:list={['m-home-stat', { mid: i === 1, end: i === heroStats.length - 1 }]}><div class="m-home-statv">{st.value}</div><div class="m-home-statl">{st.mobileLabel ?? st.label}</div></div>
-        ))}
-      </div>
+<div class="m-home-hero">
+  <div class="mh-glow"></div>
+  <div class="m-home-hero-inner">
+    <div class="mh-eyebrow"><span class="mh-rule"></span>Parkour &amp; movement · Toronto</div>
+    <h2 class="m-home-title">Move better.<br>Have more fun.</h2>
+    <p class="m-home-lead">Drop in to play, book a class, train like an athlete, or throw a party — every age, every level, under one big roof.</p>
+    <div class="m-home-stats">
+      {heroStats.map((st, i) => (
+        <div class:list={['m-home-stat', { mid: i === 1, end: i === heroStats.length - 1 }]}><div class="m-home-statv">{st.value}</div><div class="m-home-statl">{st.mobileLabel ?? st.label}</div></div>
+      ))}
     </div>
   </div>
+</div>
 
+<div class="m-pad">
   <a class="rowpress m-newhere" href={url('get-started')}>
     <span class="m-newhere-ic"><i class="bi bi-flag-fill" aria-hidden="true"></i></span>
     <div class="m-newhere-txt"><div class="m-newhere-t">New here?</div><div class="m-newhere-s">Start with the 3-step first-visit guide.</div></div>
