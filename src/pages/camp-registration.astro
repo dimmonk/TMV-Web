@@ -70,17 +70,24 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
     };
     const DYC = true; // day-camp late-pickup add-on enabled
 
+    // `start` = the week's first camp day (ISO, local). Registration for a week
+    // closes once that day arrives (weekExpired) — an expired week renders as a
+    // non-interactive "Closed" row and can't be added to the cart. To close a
+    // week at a different time (e.g. end of the week, or an early-bird cutoff),
+    // change its `start` value.
     const WEEKS = [
-      { id:'w1', n:'Week 1', dates:'Jun 29 – Jul 3', days:['Mon','Tue','Thu','Fri'], partial:true },
-      { id:'w2', n:'Week 2', dates:'Jul 6 – 10', days:['Mon','Tue','Wed','Thu','Fri'] },
-      { id:'w3', n:'Week 3', dates:'Jul 13 – 17', days:['Mon','Tue','Wed','Thu','Fri'] },
-      { id:'w4', n:'Week 4', dates:'Jul 20 – 24', days:['Mon','Tue','Wed','Thu','Fri'] },
-      { id:'w5', n:'Week 5', dates:'Jul 27 – 31', days:['Mon','Tue','Wed','Thu','Fri'] },
-      { id:'w6', n:'Week 6', dates:'Aug 4 – 7', days:['Tue','Wed','Thu','Fri'], partial:true },
-      { id:'w7', n:'Week 7', dates:'Aug 10 – 14', days:['Mon','Tue','Wed','Thu','Fri'] },
-      { id:'w8', n:'Week 8', dates:'Aug 17 – 21', days:['Mon','Tue','Wed','Thu','Fri'] },
-      { id:'w9', n:'Week 9', dates:'Aug 24 – 28', days:['Mon','Tue','Wed','Thu','Fri'] },
+      { id:'w1', n:'Week 1', dates:'Jun 29 – Jul 3', start:'2026-06-29', days:['Mon','Tue','Thu','Fri'], partial:true },
+      { id:'w2', n:'Week 2', dates:'Jul 6 – 10', start:'2026-07-06', days:['Mon','Tue','Wed','Thu','Fri'] },
+      { id:'w3', n:'Week 3', dates:'Jul 13 – 17', start:'2026-07-13', days:['Mon','Tue','Wed','Thu','Fri'] },
+      { id:'w4', n:'Week 4', dates:'Jul 20 – 24', start:'2026-07-20', days:['Mon','Tue','Wed','Thu','Fri'] },
+      { id:'w5', n:'Week 5', dates:'Jul 27 – 31', start:'2026-07-27', days:['Mon','Tue','Wed','Thu','Fri'] },
+      { id:'w6', n:'Week 6', dates:'Aug 4 – 7', start:'2026-08-04', days:['Tue','Wed','Thu','Fri'], partial:true },
+      { id:'w7', n:'Week 7', dates:'Aug 10 – 14', start:'2026-08-10', days:['Mon','Tue','Wed','Thu','Fri'] },
+      { id:'w8', n:'Week 8', dates:'Aug 17 – 21', start:'2026-08-17', days:['Mon','Tue','Wed','Thu','Fri'] },
+      { id:'w9', n:'Week 9', dates:'Aug 24 – 28', start:'2026-08-24', days:['Mon','Tue','Wed','Thu','Fri'] },
     ];
+    // A week is closed once its start day has arrived (local time).
+    const weekExpired = (w) => Date.now() >= new Date(w.start + 'T00:00:00').getTime();
     const PADATES = [
       { id:'pa1', label:'Fri · Oct 10' },
       { id:'pa2', label:'Fri · Nov 21' },
@@ -217,6 +224,18 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
     function weeklyFlowHTML(k) {
       const dayTierHint = [1,2,3,4].map((n) => n + 'd $' + daysPrice(n)).join(' · ');
       const rows = WEEKS.map((w) => {
+        if (weekExpired(w)) {
+          return `<div style="border:1px solid #ece9e2; border-radius:12px; overflow:hidden; opacity:.6;">
+            <div style="display:flex; align-items:center; gap:12px; padding:11px 13px; cursor:not-allowed;">
+              <span style="flex:none; width:20px; height:20px; border-radius:6px; border:1.5px solid #d5d1c8; background:#f3f2ee;"></span>
+              <div style="flex:1; min-width:0;">
+                <div style="font:800 13.5px/1.1 'Archivo',sans-serif; color:#8a877f;">${w.n}</div>
+                <div style="font:600 11.5px/1.3 inherit; color:#b0aca3; margin-top:2px;">${w.dates}</div>
+              </div>
+              <span style="flex:none; font:700 9px/1 'Archivo',sans-serif; letter-spacing:.05em; text-transform:uppercase; color:#8a877f; background:#eeece7; padding:5px 8px; border-radius:6px;">Closed</span>
+            </div>
+          </div>`;
+        }
         const e = k.weeks[w.id];
         const sel = !!e;
         let priceLabel = money(weekFull(w));
@@ -457,14 +476,14 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="reg-mbar" data-noprint style="align-items:center; justify-content:space-between; gap:12px; background:#211f1b; color:#fff; padding:14px 18px; box-shadow:0 -8px 24px -12px rgba(0,0,0,.5);">
-          <div>
-            <div style="font:600 10.5px/1 inherit; color:rgba(255,255,255,.55); margin-bottom:5px;">${mobileCount}</div>
-            <div style="font:900 21px/1 'Archivo',sans-serif; color:var(--acc);">${totalLabel}</div>
+          <div class="reg-mbar" data-noprint style="align-items:center; justify-content:space-between; gap:12px; background:#211f1b; color:#fff; padding:14px 18px; box-shadow:0 -8px 24px -12px rgba(0,0,0,.5);">
+            <div>
+              <div style="font:600 10.5px/1 inherit; color:rgba(255,255,255,.55); margin-bottom:5px;">${mobileCount}</div>
+              <div style="font:900 21px/1 'Archivo',sans-serif; color:var(--acc);">${totalLabel}</div>
+            </div>
+            <span class="reg-cta" data-act="register" style="display:inline-flex; align-items:center; gap:9px; padding:13px 20px; border-radius:11px; background:var(--acc); color:#fff; font:800 13.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em;">Register <i class="bi bi-arrow-right"></i></span>
           </div>
-          <span class="reg-cta" data-act="register" style="display:inline-flex; align-items:center; gap:9px; padding:13px 20px; border-radius:11px; background:var(--acc); color:#fff; font:800 13.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em;">Register <i class="bi bi-arrow-right"></i></span>
         </div>
       </div>`;
     }
@@ -601,6 +620,7 @@ const address = `${site.name} · ${site.address.street}, ${site.address.locality
         case 'toggleWeek': {
           if (!k) break;
           const w = WEEKS.find((x) => x.id === el.dataset.week);
+          if (weekExpired(w)) break; // closed weeks can't be selected
           if (k.weeks[w.id]) delete k.weeks[w.id];
           else { const days = {}, late = {}; w.days.forEach((d) => { days[d] = true; late[d] = false; }); k.weeks[w.id] = { mode:'full', days, late }; }
           break;
