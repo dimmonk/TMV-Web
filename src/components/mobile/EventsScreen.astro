@@ -1,0 +1,45 @@
+---
+/**
+ * Birthday Parties (route: /events) — phone composition, verbatim from the /m/
+ * app's `events` screen. Same PartyCard + partyCards data as the desktop page,
+ * just stacked instead of gridded.
+ */
+import MobileHero from '../MobileHero.astro';
+import PartyCard from '../PartyCard.astro';
+import { cat, url } from '../../data/site';
+import { partyCards } from '../../data/parties';
+
+const eventFaqs = [
+  { q: 'When do I pay?', a: 'Nothing upfront — the card on file is only for the cancellation policy. You pay in person on the day, based on final headcount.' },
+  { q: 'Weekend slots full?', a: 'The availability online is all we have. Smaller groups can book a Mini party (3+ kids, $30 each).' },
+  { q: 'Can we bring food?', a: 'Yes — cake, pizza, snacks, drinks, no fees. We provide the room, tables and a fridge/freezer.' },
+  { q: 'Can we extend open gym?', a: 'Ask your instructor — $5 per participant for an extra hour (room time still ends at 2 hours).' },
+];
+---
+<div class="m-pad">
+  <MobileHero eyebrow="Birthday Parties" title="Parties & group events" desc="Birthdays, school trips and team days — coaches run the whole session while you relax." />
+  <div style="height:18px"></div>
+  <!-- Same <PartyCard> the desktop Events page renders, from the same
+       `partyCards` data — this screen just stacks them. -->
+  <div class="m-partycards">
+    {partyCards.map((card) => <PartyCard card={card} />)}
+  </div>
+
+  <div class="m-hold"><i class="bi bi-shield-lock" aria-hidden="true"></i><span>Your card isn't charged at booking — it just holds the slot. You pay in person on the day, by final headcount.</span></div>
+
+  <div class="m-label">Party FAQ</div>
+  <div class="m-faqbox" style="margin-bottom:22px">
+    {eventFaqs.map((qa) => (
+      <details class="faq">
+        <summary class="m-faq-sum"><span>{qa.q}</span><i class="bi bi-chevron-down faq-chev" aria-hidden="true"></i></summary>
+        <div class="m-faq-a">{qa.a}</div>
+      </details>
+    ))}
+  </div>
+
+  <a class="m-groupslink" href={url('groups')}>
+    <span class="m-groupslink-ic" style={`background:color-mix(in srgb,${cat.groups} 14%,#fff)`}><i class="bi bi-people-fill" style={`color:${cat.groups}`} aria-hidden="true"></i></span>
+    <div class="m-groupslink-txt"><div class="m-groupslink-t">Groups &amp; team events</div><div class="m-groupslink-s">Schools, corporate &amp; early access</div></div>
+    <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
+  </a>
+</div>

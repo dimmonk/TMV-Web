@@ -9,17 +9,13 @@ import ClassCard from '../ClassCard.astro';
 import { coreClasses, specializedClasses, partnershipClasses } from '../../data/classes';
 import type { ClassItem } from '../../data/classes';
 import { cat, links, url } from '../../data/site';
-import { sq } from '../../data/square-links';
 
-// Action href for a class on the phone. Schedule-linked classes go to the
-// Schedule route; the rest keep the /m/ app's original targets so behaviour is
-// unchanged (athletic-program and private-lessons never had a phone screen).
-const classHref = (c: ClassItem): string => {
-  if ('external' in c.link) return c.link.external;
-  if (c.link.screen === 'schedule') return url('schedule');
-  if (c.link.screen === 'private-lessons') return sq.book.privateLesson;
-  return sq.athletic.membership; // athletic-program
-};
+// Action href for a class on the phone: every `link.screen` value is now a
+// real route (private-lessons and athletic-program got their own phone
+// screens), so this is a straight route lookup — no more falling back to a
+// Square link because a screen didn't exist yet.
+const classHref = (c: ClassItem): string =>
+  'external' in c.link ? c.link.external : url(c.link.screen);
 ---
 <div class="m-pad">
   <MobileHero eyebrow="Train" title="Every way to move" desc="Open gym, coached classes and the Athletic Program — every age, every level, one big roof." stats={[{ v: '4', l: 'ways to train' }, { v: 'Ages 3+', l: 'all levels' }, { v: '7 days', l: 'a week' }]} />

@@ -295,3 +295,19 @@
    Cosmetic only; this was part of the old shell block but is not shell. */
 .mapp .app-scroll { scrollbar-width: none; }
 .mapp .app-scroll::-webkit-scrollbar { display: none; }
+
+/* ---------------------------------------------------------------------------
+ * Coach cards — NEW (Private Lessons had no phone screen before). Same visual
+ * language as the rest of the app: white card, shadow-sm, Archivo headings,
+ * pill tags matching m-gtier/m-coach-tag treatment elsewhere.
+ * -------------------------------------------------------------------------*/
+.mapp a.m-coach { text-decoration: none; color: inherit; display: block; background: #fff; border: 1px solid #ebe9e4; border-radius: 16px; padding: 18px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); }
+.mapp .m-coach-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.mapp .m-coach-ph { flex: none; width: 46px; height: 46px; border-radius: 12px; background: repeating-linear-gradient(45deg,#f0eee9,#f0eee9 8px,#e9e7e1 8px,#e9e7e1 16px); display: flex; align-items: center; justify-content: center; color: #9b9890; font-size: 17px; }
+.mapp .m-coach-name { font: 800 15.5px/1.15 'Archivo', sans-serif; letter-spacing: -.005em; }
+.mapp .m-coach-role { font: 700 11px/1.3 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: .06em; color: #f44336; margin-top: 3px; }
+.mapp .m-coach-bio { font: 400 12.5px/1.5 inherit; color: #6a6760; margin: 0 0 12px; }
+.mapp .m-coach-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.mapp .m-coach-tag { font: 600 11px/1 'Archivo', sans-serif; color: color-mix(in srgb, #f44336 62%, #000); background: color-mix(in srgb, #f44336 10%, #fff); border: 1px solid color-mix(in srgb, #f44336 24%, #fff); border-radius: 999px; padding: 6px 10px; }
+.mapp .m-coach-cta { display: flex; align-items: center; gap: 8px; font: 800 12.5px/1 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: .03em; color: #211f1b; }
+.mapp .m-coach-cta i { color: #f44336; }

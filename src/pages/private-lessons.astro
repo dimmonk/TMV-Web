@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PrivateLessonsScreen from '../components/mobile/PrivateLessonsScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import { seo, cat, site, url } from '../data/site';
 import { sq } from '../data/square-links';
@@ -26,6 +27,9 @@ const notes = [
 ];
 ---
 <BaseLayout title={seo.privateLessons.title} description={seo.privateLessons.description} active="" mobileTab="book" appHeader="back" appTitle="Private Lessons">
+  <div class="mapp" data-chrome="app"><PrivateLessonsScreen /></div>
+
+  <div data-chrome="site">
   <section class="pagehero red">
     <div class="pagehero-glow"></div>
     <div class="pl-hero container">
@@ -96,6 +100,7 @@ const notes = [
       <div class="pl-help-left"><span class="pl-help-ic"><i class="bi bi-chat-dots-fill" aria-hidden="true"></i></span><div><div class="pl-help-t">Not sure who to train with?</div><div class="pl-help-b">Tell us your goals and we'll point you to the right coach. Call {site.phoneDisplay} or email us.</div></div></div>
       <a href={`mailto:${site.email}`} class="btn btn-primary">Get in touch <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
     </section>
+  </div>
   </div>
 </BaseLayout>
 

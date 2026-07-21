@@ -1,0 +1,55 @@
+---
+/**
+ * Private Lessons — NEW mobile screen (the /m/ app never had one; phones used
+ * to fall back to Square booking links directly). Built from the same data as
+ * the desktop page, src/data/private-lessons.ts — including its `hub` field,
+ * condensed copy written for exactly this kind of compact card and, until now,
+ * unused because nothing rendered mobile.
+ *
+ * Reuses the app's existing vocabulary rather than inventing new patterns:
+ * MobileHero for the header, BookingCard for each of the three ways to book
+ * (same component Book/Train screens use), m-stack for the coach list.
+ */
+import MobileHero from '../MobileHero.astro';
+import BookingCard from '../BookingCard.astro';
+import { privateWays } from '../../data/private-lessons';
+import { sq } from '../../data/square-links';
+
+const plHref = (key: string) =>
+  key === 'intro' ? sq.privateLessons.introduction : key === 'private' ? sq.privateLessons.privateLesson : '#coaches';
+
+const coaches = [
+  { name: 'Taigh Smullen', role: 'Manager', bio: 'Trampoline and parkour specialist — explosive air awareness built on solid fundamentals.', tags: ['Trampoline', 'Parkour'], href: sq.privateLessons.coachTaigh },
+  { name: 'Steven Leblanc', role: 'Manager', bio: '24+ years of parkour — flips, acrobatics and conditioning. Methodical, progression-driven coaching.', tags: ['Parkour', 'Flips', 'Conditioning'], href: sq.privateLessons.coachSteven },
+  { name: 'Nelson Lin', role: 'Coach', bio: 'Tricking, calisthenics and gymnastics — high-energy flips and bodyweight strength.', tags: ['Tricking', 'Calisthenics', 'Gymnastics'], href: sq.privateLessons.coachNelson },
+];
+---
+<div class="m-pad">
+  <MobileHero eyebrow="Private" title="Built around you" desc="One-on-one coaching shaped entirely around your goals and pace — three ways in." />
+  <div style="height:18px"></div>
+
+  <div class="m-stack" style="margin-bottom:28px">
+    {privateWays.map((w) => (
+      <BookingCard color={w.color} duration={w.hub.dur} flag={w.hub.flag} bookingTag={w.hub.bookingTag} title={w.title} description={w.hub.desc} pills={w.hub.pills} price={w.hub.price} priceNote={w.hub.priceNote} actionLabel={w.cta} href={plHref(w.key)} target={w.key === 'coach' ? '_self' : '_blank'} />
+    ))}
+  </div>
+
+  <h3 class="m-h3" id="coaches">Choose your coach</h3>
+  <p class="m-sub" style="margin-bottom:14px">A few coaches take their own roster of private students — reserve one outside their shift and they'll come in just for you.</p>
+  <div class="m-stack">
+    {coaches.map((c) => (
+      <a class="m-coach" href={c.href} target="_blank" rel="noopener">
+        <div class="m-coach-head">
+          <div class="m-coach-ph"><i class="bi bi-camera" aria-hidden="true"></i></div>
+          <div class="m-coach-info">
+            <div class="m-coach-name">{c.name}</div>
+            <div class="m-coach-role">{c.role}</div>
+          </div>
+        </div>
+        <p class="m-coach-bio">{c.bio}</p>
+        <div class="m-coach-tags">{c.tags.map((t) => <span class="m-coach-tag">{t}</span>)}</div>
+        <div class="m-coach-cta">Book with {c.name.split(' ')[0]} <i class="bi bi-arrow-right" aria-hidden="true"></i></div>
+      </a>
+    ))}
+  </div>
+</div>

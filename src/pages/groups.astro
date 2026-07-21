@@ -9,6 +9,7 @@
  * which render from src/data/explore.ts.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
+import GroupsScreen from '../components/mobile/GroupsScreen.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { seo, cat } from '../data/site';
 import { groupTiers, eventPricing } from '../data/events';
@@ -22,6 +23,9 @@ import { sq } from '../data/square-links';
   appHeader="back"
   appTitle="Groups & Teams"
 >
+  <div class="mapp" data-chrome="app"><GroupsScreen /></div>
+
+  <div data-chrome="site">
   <section class="pagehero" style={`--party:${cat.groups}`}>
     <div class="pagehero-glow"></div>
     <div class="container herog">
@@ -60,6 +64,7 @@ import { sq } from '../data/square-links';
     </div>
     <p class="ev-note">Booking &amp; cancellation: your card isn't charged at booking — payment is made in person based on final headcount. A fee applies for cancellations within 24 hours or no-shows.</p>
   </section>
+  </div>
 </BaseLayout>
 
 <style>

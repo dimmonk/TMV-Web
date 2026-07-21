@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import EventsScreen from '../components/mobile/EventsScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import PartyCard from '../components/PartyCard.astro';
@@ -34,6 +35,9 @@ const faqGroups = [
 ];
 ---
 <BaseLayout title={seo.events.title} description={seo.events.description} active="events" mobileTab="more" appHeader="back" appTitle="Birthday Parties">
+  <div class="mapp" data-chrome="app"><EventsScreen /></div>
+
+  <div data-chrome="site">
   <section class="pagehero" style={`--party:${cat.parties}`}>
     <div class="pagehero-glow"></div>
     <div class="container hero2">
@@ -98,6 +102,7 @@ const faqGroups = [
     </div>
   </section>
 
+  </div>
 </BaseLayout>
 
 <style>

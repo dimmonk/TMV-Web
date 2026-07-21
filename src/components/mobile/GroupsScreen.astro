@@ -1,0 +1,41 @@
+---
+/**
+ * Groups & Teams — phone composition, verbatim from the /m/ app's `groups`
+ * screen. In the old app this was a sub-screen under Events; the route is now
+ * /groups (its own indexable URL — see src/pages/groups.astro), but the phone
+ * markup and copy are unchanged.
+ */
+import MobileHero from '../MobileHero.astro';
+import { cat } from '../../data/site';
+import { groupTiers, eventPricing } from '../../data/events';
+import { sq } from '../../data/square-links';
+---
+<div class="m-pad">
+  <MobileHero eyebrow="Groups & Teams" title="Bring your whole crew" desc="Schools, corporate teams and community events, plus private early-access bookings." />
+  <div style="height:18px"></div>
+  <div class="m-gcard">
+    <div class="m-ghead">
+      <span class="m-gic" style={`background:color-mix(in srgb,${cat.groups} 14%,#fff)`}><i class="bi bi-people-fill" style={`color:${cat.groups}`} aria-hidden="true"></i></span>
+      <div><div class="m-geyebrow" style={`color:${cat.groups}`}>Group Events</div><div class="m-gtitle">Field trips &amp; team-building</div></div>
+    </div>
+    <p class="m-gdesc">Two hours — an hour of guided activities, then an hour of open gym. Great for field trips, teams and community events, all levels.</p>
+    <div class="m-glabel">Price per participant</div>
+    <div class="m-gtiers">
+      {groupTiers.map((t) => <div class="m-gtier"><span>{t.label}</span><span class="m-gtier-v">{t.val}</span></div>)}
+    </div>
+    <p class="m-gfine">Minimum 10; smaller groups pay the $300 base. Final total is calculated on event day.</p>
+    <a href={sq.book.groupEvents} target="_blank" rel="noopener" class="m-darkbtn">Plan an event <i class="bi bi-arrow-up-right"></i></a>
+  </div>
+
+  <div class="m-gcard">
+    <div class="m-ghead">
+      <span class="m-gic" style={`background:color-mix(in srgb,${cat.openGym} 14%,#fff)`}><i class="bi bi-sunrise" style={`color:${cat.openGym}`} aria-hidden="true"></i></span>
+      <div><div class="m-geyebrow" style={`color:${cat.openGym}`}>Early Access</div><div class="m-gtitle">The gym, all to yourself</div></div>
+    </div>
+    <p class="m-gdesc">Reserve the gym before we open at 11 AM for exclusive access — perfect for small groups or focused training with no crowds.</p>
+    <div class="m-gfoot2">
+      <div><div class="m-gbig">{eventPricing.earlyAccessFrom}</div><div class="m-gsub">+ $25 / person open gym</div></div>
+      <a href={sq.book.earlyGymAccess} target="_blank" rel="noopener" class="m-darkbtn-sm">Reserve <i class="bi bi-arrow-up-right"></i></a>
+    </div>
+  </div>
+</div>

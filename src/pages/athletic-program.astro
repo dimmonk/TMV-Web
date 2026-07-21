@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import AthleticProgramScreen from '../components/mobile/AthleticProgramScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import Pill from '../components/Pill.astro';
@@ -45,6 +46,9 @@ const payOptions = [
 ];
 ---
 <BaseLayout title={seo.athletic.title} description={seo.athletic.description} active="train" mobileTab="train" appHeader="back" appTitle="Athletic Program">
+  <div class="mapp" data-chrome="app"><AthleticProgramScreen /></div>
+
+  <div data-chrome="site">
   <section class="pagehero" style={`--cat:${cat.athletic}`}>
     <div class="pagehero-glow"></div>
     <div class="ap-hero container">
@@ -141,6 +145,7 @@ const payOptions = [
       { theme: 'light', eyebrow: 'All classes, one view', title: 'Group Class Schedule', icon: 'bi-calendar3', href: url('schedule') },
     ]} />
   </section>
+  </div>
 </BaseLayout>
 
 <style>
