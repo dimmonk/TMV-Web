@@ -3,8 +3,9 @@ import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import MobileTabBar from '../components/MobileTabBar.astro';
+import MobileAppHeader from '../components/MobileAppHeader.astro';
+import MobileMoreSheet from '../components/MobileMoreSheet.astro';
 import { site, social, hours, links, url } from '../data/site';
-import { deviceSwitchScript } from '../lib/device-switch';
 
 interface Props {
   title: string;
@@ -15,28 +16,22 @@ interface Props {
   brand?: string;
   /** absolute-or-relative OG image; defaults to the logo */
   ogImage?: string;
-  /** section hash to deep-link into the app-style mobile UI (m/#hash) */
-  mobileHash?: string;
-  /** false = keep phones on this page (for pages with no mobile-app equivalent,
-   * e.g. the invitation maker — the mobile shell has no screen for them).
-   * When false, this layout AUTO-RENDERS the mobile bottom tab bar so the page
-   * is never a dead-end on phones — see the invariant note by <MobileTabBar>. */
-  mobileRedirect?: boolean;
-  /** which bottom-tab to highlight when the tab bar is shown (mobileRedirect=false) */
+  /** Which bottom tab to light up. A page that lives *under* a tab passes that
+   *  tab's key (e.g. /schedule → 'schedule'); pages in the More sheet pass 'more'. */
   mobileTab?: 'home' | 'train' | 'book' | 'schedule' | 'more' | '';
+  /** App-header style. 'brand' for the tab destinations, 'back' for pages
+   *  underneath them (shows a back chevron + `appTitle`). */
+  appHeader?: 'brand' | 'back';
+  /** Label beside the back chevron. Defaults to the page title. */
+  appTitle?: string;
+  /** Where the back chevron goes. Defaults to home. */
+  backHref?: string;
 }
 
-const { title, description, active = '', brand = '#ffd400', ogImage, mobileHash, mobileRedirect = true, mobileTab = '' } = Astro.props;
-
-// Phones get the dedicated app-style mobile UI (the Astro page at /m/).
-// Desktop stays on these SEO-rich Astro pages. Deep-link to the matching
-// mobile section where we can.
-const activeToHash: Record<string, string> = {
-  '': 'home', train: 'train', camps: 'camps', events: 'events',
-  pricing: 'pricing', store: 'store', about: 'about',
-};
-const mHash = mobileHash ?? activeToHash[active] ?? 'home';
-const mobileUrl = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/m/#${mHash}`;
+const {
+  title, description, active = '', brand = '#ffd400', ogImage,
+  mobileTab = '', appHeader = 'brand', appTitle, backHref,
+} = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const image = new URL(ogImage ?? url('assets/tmvlogo.png'), Astro.site).href;
@@ -82,14 +77,10 @@ const jsonLd = {
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <!-- Device switch: touch devices whose shorter viewport side is phone-sized
-         get the app-style mobile UI at /m/; everything else (desktop, tablets,
-         unfolded foldables, crawlers) stays on this SEO-rich page. Runs before
-         render to avoid a flash. Decision logic is the single source of truth in
-         src/lib/device-switch.ts — see there for why we measure space, not UA. -->
-    {mobileRedirect && (
-      <script is:inline set:html={deviceSwitchScript({ to: 'mobile', target: mobileUrl })} />
-    )}
+    <!-- No device switch, by design. One responsive document serves every
+         width: the md stop in global.css picks the app chrome or the site
+         chrome. Nothing sniffs the UA and nothing redirects, so a foldable
+         simply re-lays-out when it opens. -->
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -97,6 +88,12 @@ const jsonLd = {
     <meta name="theme-color" content="#211f1b" />
     <link rel="icon" href={url('assets/tmvlogo.png')} />
     <link rel="apple-touch-icon" href={url('assets/tmvlogo.png')} />
+
+    <!-- PWA — scoped to the site root now that the app shell IS the site. -->
+    <link rel="manifest" href={url('manifest.json')} />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -130,17 +127,17 @@ const jsonLd = {
   </head>
   <body style={`--brand:${brand}`}>
     <a href="#main" class="visually-hidden">Skip to content</a>
+    {/* Both chromes are always in the document; the md stop in global.css shows
+        exactly one. Because they are unconditional, a new page cannot forget its
+        nav or end up a dead-end on a phone — the old failure mode that the
+        redirect + per-page opt-out flags kept producing. */}
+    <MobileAppHeader variant={appHeader} title={appTitle ?? title} backHref={backHref} />
     <SiteHeader active={active} />
     <main id="main">
       <slot />
     </main>
     <SiteFooter />
-    {/* INVARIANT: a page that opts to render on phones (mobileRedirect=false)
-        is not part of the /m/ app shell, so it would have no bottom nav and be
-        a dead-end. Tying the tab bar to the SAME flag that keeps the page on
-        mobile means you can't add a mobile-visible page and forget the nav —
-        it's automatic. Pages that redirect to /m/ don't need it (they get the
-        app's own nav). The bar is phone-only via CSS. */}
-    {!mobileRedirect && <MobileTabBar active={mobileTab} />}
+    <MobileTabBar active={mobileTab} />
+    <MobileMoreSheet />
   </body>
 </html>

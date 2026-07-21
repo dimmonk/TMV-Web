@@ -53,6 +53,39 @@
   --gutter: 24px;
 }
 
+/* ============================================================================
+ * BREAKPOINT SCALE — the canonical stops. Use these values for anything that
+ * changes PAGE LAYOUT or CHROME. (Component-internal tweaks — when a card's own
+ * columns wrap, say — may still use bespoke values; those are local decisions,
+ * not layout stops.)
+ *
+ *   sm   640px   large phone
+ *   md   768px   phone → tablet. THE CHROME HANDOFF (see below).
+ *   lg  1024px   tablet → laptop
+ *   xl  1280px   wide desktop
+ *
+ * 768 matches the other three TMV apps, so the phone/tablet line is the same
+ * across every product. CSS can't put a custom property inside a media query
+ * without a build plugin, so the rule is: the chrome handoff is written ONCE,
+ * here. No other file may branch on it.
+ * ==========================================================================*/
+
+/* ---- chrome handoff -------------------------------------------------------
+ * One responsive document, two chromes. Below md the page wears the app shell
+ * (dark sticky header + fixed bottom tab bar); at md and up it wears the site
+ * chrome (SiteHeader + SiteFooter). BaseLayout tags each chrome element with
+ * data-chrome, and this is the only place that decides which one is showing —
+ * there is no device sniffing and no redirect anywhere in the system.
+ * -------------------------------------------------------------------------*/
+@media (max-width: 767px) {
+  [data-chrome='site'] { display: none !important; }
+  /* Clear the fixed tab bar so the last content on the page isn't hidden. */
+  body { padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (min-width: 768px) {
+  [data-chrome='app'] { display: none !important; }
+}
+
 /* ---- reset ---- */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }

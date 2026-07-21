@@ -12,7 +12,7 @@ import { forSurface } from '../data/surface';
 const desktopStore = forSurface(storeProducts, 'desktop');
 const storeBySection = (s: string) => desktopStore.filter((p) => p.section === s);
 ---
-<BaseLayout title={seo.store.title} description={seo.store.description} active="store">
+<BaseLayout title={seo.store.title} description={seo.store.description} active="store" mobileTab="more" appHeader="back" appTitle="Store">
   <section class="pagehero">
     <div class="pagehero-glow"></div>
     <div class="container pagehero-inner">

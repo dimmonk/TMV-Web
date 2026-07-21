@@ -3,17 +3,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { seo } from '../data/site';
 import '../styles/camp-reg-form.css';
 
-// Standalone desktop/tablet camp-registration page. The interactive form itself
-// is the shared module src/lib/camp-reg-form.ts — the SAME component the /m/
-// mobile app mounts on its "Register" screen (single source of truth). Phones
-// are redirected to /m/#register (mobileHash below) so they get the app shell
-// with its header + bottom nav instead of this desktop-chrome page.
+// Camp registration. The interactive form is the shared module
+// src/lib/camp-reg-form.ts; this page mounts it and lets the layout supply
+// whichever chrome the viewport calls for.
 ---
 <BaseLayout
   title={seo.campRegistration.title}
   description={seo.campRegistration.description}
   active="camps"
-  mobileHash="register"
+  mobileTab="more"
+  appHeader="back"
+  appTitle="Registration"
 >
   <div id="reg-root" class="reg-root" style="min-height:100vh; background:#f5f4f1;"></div>
 

@@ -1,12 +1,8 @@
 ---
 /**
- * Invitation maker — desktop surface. The feature itself is the shared
- * <InvitationMaker /> component + src/lib/invitation-maker.ts; this page only
- * supplies the desktop shell (BaseLayout's SiteHeader/SiteFooter).
- *
- * Phones are redirected to /m/#invitation (mobileHash below) so they get the
- * app shell with its header + bottom nav instead of this desktop-chrome page —
- * the same split camp-registration uses.
+ * Invitation maker. The feature itself is the shared <InvitationMaker />
+ * component + src/lib/invitation-maker.ts; this page just drops it into the
+ * layout, which supplies whichever chrome the viewport calls for.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import InvitationMaker from '../components/InvitationMaker.astro';
@@ -16,7 +12,9 @@ import { seo } from '../data/site';
   title={seo.makeInvitation.title}
   description={seo.makeInvitation.description}
   active="events"
-  mobileHash="invitation"
+  mobileTab="more"
+  appHeader="back"
+  appTitle="Invitation Maker"
 >
   <InvitationMaker />
 

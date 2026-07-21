@@ -1,0 +1,129 @@
+---
+/**
+ * The "More" slide-up sheet — the mobile counterpart of the desktop footer.
+ *
+ * The old `/m/` app had this as a full screen (`#more`), but it hosts no content
+ * of its own: it is the overflow nav plus "how to reach us", which is exactly
+ * what the footer is on desktop. Mobile hides the footer (the app shell owns the
+ * viewport), so that content resurfaces here instead of becoming a thin route.
+ *
+ * The tiles come from `exploreTiles` — the same array the footer and the desktop
+ * explore grid render, so a new revenue stream is added in one place.
+ *
+ * Uses a native <dialog>, which gives focus trapping, Esc-to-close and inertness
+ * for free rather than reimplementing them.
+ */
+import { url, site, cat } from '../data/site';
+import { exploreTiles } from '../data/explore';
+---
+
+<dialog class="m-sheet" data-more-sheet aria-label="More">
+  <div class="m-sheet-grab"></div>
+
+  <div class="m-sheet-body">
+    <div class="m-sheet-head">
+      <h2 class="m-sheet-title">Everything else</h2>
+      <button type="button" class="m-sheet-x" data-more-close aria-label="Close">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div class="m-tiles">
+      {exploreTiles.map((t) => (
+        <a class="m-tile" href={url(t.path)} style={`--fg:${t.fg}`}>
+          <span class="m-tile-ic"><i class={`bi ${t.icon}`} aria-hidden="true"></i></span>
+          <span class="m-tile-txt">
+            <span class="m-tile-t">{t.label}</span>
+            <span class="m-tile-s">{t.sub}</span>
+          </span>
+        </a>
+      ))}
+    </div>
+
+    <a class="m-invite" href={url('make-invitation')} style={`--fg:${cat.parties}`}>
+      <span class="m-invite-ic"><i class="bi bi-postcard-heart-fill" aria-hidden="true"></i></span>
+      <span class="m-invite-txt">
+        <span class="m-invite-t">Invitation maker <span class="m-invite-badge">Free</span></span>
+        <span class="m-invite-s">Make a party invite for your booking and download it — right from your phone.</span>
+      </span>
+      <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
+    </a>
+
+    {/* Visit us — same `site` data the desktop SiteFooter renders. Call and
+        Directions are the two things that must always be one tap away. */}
+    <div class="m-visit">
+      <div class="m-visit-eyebrow">Visit us</div>
+      <div class="m-visit-row">
+        <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+        <span><span class="m-visit-t">{site.address.street}</span><span class="m-visit-s">{site.address.locality}, {site.address.region}</span></span>
+      </div>
+      <div class="m-visit-row">
+        <i class="bi bi-clock-fill" aria-hidden="true"></i>
+        <span><span class="m-visit-t">{site.hoursLabel}</span><span class="m-visit-s">Open gym to the public daily</span></span>
+      </div>
+      <div class="m-visit-btns">
+        <a href={site.mapUrl} target="_blank" rel="noopener" class="m-visit-btn"><i class="bi bi-geo-alt" aria-hidden="true"></i> Directions</a>
+        <a href={`tel:${site.phone}`} class="m-visit-btn"><i class="bi bi-telephone-fill" aria-hidden="true"></i> Call us</a>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .m-sheet { width: 100%; max-width: 100%; margin: auto auto 0; padding: 0; border: 0; background: var(--bg); border-radius: 20px 20px 0 0; max-height: 88dvh; overflow: hidden; color: var(--text); }
+  .m-sheet::backdrop { background: rgba(20, 18, 16, .5); }
+  .m-sheet-grab { width: 38px; height: 4px; border-radius: 999px; background: var(--line); margin: 9px auto 0; flex: none; }
+  .m-sheet-body { overflow-y: auto; max-height: calc(88dvh - 13px); padding: 6px 18px calc(22px + env(safe-area-inset-bottom, 0px)); }
+
+  .m-sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0 14px; }
+  .m-sheet-title { font: 900 21px/1.1 var(--font-display); letter-spacing: -.02em; }
+  .m-sheet-x { cursor: pointer; flex: none; width: 34px; height: 34px; border-radius: 50%; border: 0; background: var(--line-soft); color: var(--text-2); display: flex; align-items: center; justify-content: center; }
+
+  .m-tiles { display: grid; gap: 9px; }
+  .m-tile { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 13px; }
+  .m-tile:active { transform: scale(.99); }
+  .m-tile-ic { flex: none; width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--fg) 14%, #fff); }
+  .m-tile-ic i { font-size: 19px; color: var(--fg); }
+  .m-tile-txt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .m-tile-t { font: 800 14.5px/1 var(--font-display); letter-spacing: -.01em; }
+  .m-tile-s { font-size: 12.5px; color: var(--muted); }
+
+  .m-invite { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; margin-top: 14px; background: color-mix(in srgb, var(--fg) 8%, #fff); border: 1px solid color-mix(in srgb, var(--fg) 26%, #fff); border-radius: 14px; padding: 13px; }
+  .m-invite-ic { flex: none; width: 40px; height: 40px; border-radius: 11px; background: var(--fg); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 19px; }
+  .m-invite-txt { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .m-invite-t { font: 800 14.5px/1 var(--font-display); display: flex; align-items: center; gap: 7px; }
+  .m-invite-badge { font: 800 9.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .06em; color: var(--fg); background: #fff; border: 1px solid color-mix(in srgb, var(--fg) 34%, #fff); border-radius: 999px; padding: 3px 6px; }
+  .m-invite-s { font-size: 12.5px; color: var(--muted); }
+  .m-chev { flex: none; margin-left: auto; color: var(--faint); }
+
+  .m-visit { margin-top: 18px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .m-visit-eyebrow { font: 800 10.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .1em; color: var(--muted-2); margin-bottom: 12px; }
+  .m-visit-row { display: flex; align-items: flex-start; gap: 11px; padding: 7px 0; }
+  .m-visit-row i { flex: none; font-size: 15px; color: var(--brand); margin-top: 1px; }
+  .m-visit-row span { display: flex; flex-direction: column; gap: 2px; }
+  .m-visit-t { font: 700 14px/1.25 var(--font-display); }
+  .m-visit-s { font-size: 12.5px; color: var(--muted); }
+  .m-visit-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 12px; }
+  .m-visit-btn { display: flex; align-items: center; justify-content: center; gap: 7px; text-decoration: none; background: var(--ink); color: #fff; border-radius: 11px; padding: 12px; font: 800 12.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .m-sheet[open] { animation: m-sheet-up .22s cubic-bezier(.22, 1, .36, 1); }
+    @keyframes m-sheet-up { from { transform: translateY(14%); } to { transform: none; } }
+  }
+</style>
+
+<script>
+  // Wires the tab bar's More button to the sheet. Both live in the app chrome,
+  // which only exists below the md stop, so there is nothing to do on desktop.
+  const sheet = document.querySelector<HTMLDialogElement>('[data-more-sheet]');
+  if (sheet) {
+    document.querySelectorAll<HTMLElement>('[data-more-open]').forEach((btn) => {
+      btn.addEventListener('click', () => sheet.showModal());
+    });
+    sheet.querySelector<HTMLElement>('[data-more-close]')?.addEventListener('click', () => sheet.close());
+    // Click outside the panel (on the backdrop) closes it.
+    sheet.addEventListener('click', (e) => {
+      if (e.target === sheet) sheet.close();
+    });
+  }
+</script>

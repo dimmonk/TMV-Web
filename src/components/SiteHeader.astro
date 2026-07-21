@@ -3,7 +3,7 @@ import { nav, links, url, site } from '../data/site';
 interface Props { active?: string; }
 const { active = '' } = Astro.props;
 ---
-<header class="sh">
+<header class="sh" data-chrome="site">
   <div class="sh-bar container">
     <a href={url('')} class="sh-brand" aria-label={`${site.name} — home`}>
       <img src={url('assets/tmvlogo.png')} alt="" width="40" height="40" />

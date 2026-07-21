@@ -1,0 +1,94 @@
+---
+/**
+ * The app shell's sticky header — the mobile half of the site chrome.
+ *
+ * BaseLayout renders this alongside SiteHeader and lets CSS pick one: below the
+ * md stop this shows and SiteHeader hides, at md and up the reverse (the handoff
+ * lives in ONE place, global.css). There is no device sniffing and no redirect.
+ *
+ * Ported out of the old `/m/` single-page app, where a JS router toggled between
+ * a "main" and a "sub" header row. Real routes make that unnecessary: a page
+ * simply declares which variant it wears, and the back chevron is a real link,
+ * so it works even on a cold deep-link in from search.
+ */
+import { url, site } from '../data/site';
+
+interface Props {
+  /** 'brand' for the tab-bar destinations; 'back' for everything underneath them. */
+  variant?: 'brand' | 'back';
+  /** Label beside the back chevron on 'back' pages. */
+  title?: string;
+  /** Where back goes. A real href — not history.back() — so deep links behave. */
+  backHref?: string;
+}
+const { variant = 'brand', title = 'Back', backHref = url('') } = Astro.props;
+---
+
+<header class="m-head" data-chrome="app">
+  <div class="m-head-row">
+    {variant === 'brand' ? (
+      <div class="m-brand">
+        <img src={url('assets/tmvlogo.png')} alt="" width="32" height="32" />
+        <span>{site.name}</span>
+      </div>
+    ) : (
+      <a class="m-back" href={backHref}>
+        <i class="bi bi-chevron-left" aria-hidden="true"></i><span>{title}</span>
+      </a>
+    )}
+    <span class="m-status" data-status>
+      <span class="m-status-dot"></span><span class="m-status-label">Open now</span>
+    </span>
+  </div>
+</header>
+
+<style>
+  .m-head { position: sticky; top: 0; z-index: 15; background: #211f1b; border-bottom: 1px solid rgba(255,255,255,.08); padding: calc(16px + env(safe-area-inset-top, 0px)) 18px 16px; }
+  .m-head-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .m-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .m-brand img { flex: none; width: 32px; height: 32px; object-fit: contain; }
+  .m-brand span { font: 900 14.5px/1 'Archivo', sans-serif; letter-spacing: .01em; text-transform: uppercase; color: #fff; white-space: nowrap; }
+  .m-back { text-decoration: none; display: inline-flex; align-items: center; gap: 5px; font: 800 17px/1 'Archivo', sans-serif; letter-spacing: -.01em; color: #fff; white-space: nowrap; min-width: 0; }
+  .m-back span { overflow: hidden; text-overflow: ellipsis; }
+  .m-back i { font-size: 18px; color: #ffd400; }
+  .m-status { flex: none; display: inline-flex; align-items: center; gap: 6px; font: 700 11px/1 'Archivo', sans-serif; letter-spacing: .04em; text-transform: uppercase; border-radius: 999px; padding: 7px 11px; white-space: nowrap; color: #5fd07f; background: rgba(95,208,127,.13); border: 1px solid rgba(95,208,127,.28); }
+  .m-status-dot { flex: none; width: 7px; height: 7px; border-radius: 50%; background: #5fd07f; }
+  @keyframes tmv-pulse { 0% { box-shadow: 0 0 0 0 rgba(95,208,127,.5); } 70% { box-shadow: 0 0 0 6px rgba(95,208,127,0); } 100% { box-shadow: 0 0 0 0 rgba(95,208,127,0); } }
+  .tmv-pulse { animation: tmv-pulse 1.6s ease-in-out infinite; }
+</style>
+
+<script>
+  // Live "Open now / Closes at X / Opens 11 AM" pill. Ported verbatim from the
+  // old /m/ app so the behaviour is unchanged by the shell migration.
+  function formatHour12(totalMinutes: number) {
+    const h24 = Math.floor(totalMinutes / 60) % 24;
+    const h12 = h24 % 12 === 0 ? 12 : h24 % 12;
+    return h12 + ' ' + (h24 < 12 ? 'AM' : 'PM');
+  }
+  function openStatus() {
+    let hour = 12, minute = 0, wd = 'Mon';
+    try {
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Toronto', hour12: false, weekday: 'short', hour: '2-digit', minute: '2-digit' }).formatToParts(new Date());
+      const m = Object.fromEntries(parts.map((p) => [p.type, p.value]));
+      hour = parseInt(m.hour, 10) % 24; minute = parseInt(m.minute, 10) || 0; wd = m.weekday;
+    } catch (e) { /* fall back to open */ }
+    const mins = hour * 60 + minute;
+    const closeAt = wd === 'Fri' ? 24 * 60 : 22 * 60;
+    const isOpen = mins >= 11 * 60 && mins < closeAt;
+    if (isOpen && closeAt - mins <= 120) return { label: 'Closes at ' + formatHour12(closeAt), fg: '#ffb84d', bg: 'rgba(255,184,77,.14)', bd: 'rgba(255,184,77,.3)', dot: '#ffb84d', pulse: false };
+    if (isOpen) return { label: 'Open now', fg: '#5fd07f', bg: 'rgba(95,208,127,.13)', bd: 'rgba(95,208,127,.28)', dot: '#5fd07f', pulse: true };
+    return { label: 'Opens 11 AM', fg: 'rgba(255,255,255,.6)', bg: 'rgba(255,255,255,.07)', bd: 'rgba(255,255,255,.15)', dot: 'rgba(255,255,255,.4)', pulse: false };
+  }
+  function paintStatus() {
+    const s = openStatus();
+    document.querySelectorAll<HTMLElement>('[data-status]').forEach((el) => {
+      el.style.color = s.fg; el.style.background = s.bg; el.style.borderColor = s.bd;
+      const dot = el.querySelector<HTMLElement>('.m-status-dot');
+      const label = el.querySelector<HTMLElement>('.m-status-label');
+      if (dot) { dot.style.background = s.dot; dot.classList.toggle('tmv-pulse', s.pulse); }
+      if (label) label.textContent = s.label;
+    });
+  }
+  paintStatus();
+  setInterval(paintStatus, 60000);
+</script>
