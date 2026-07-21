@@ -1,0 +1,49 @@
+---
+/**
+ * Train — the phone composition, verbatim from the /m/ app's `train` screen.
+ * See HomeScreen for how the mobile/desktop compositions are switched.
+ */
+import MobileHero from '../MobileHero.astro';
+import BookingCard from '../BookingCard.astro';
+import ClassCard from '../ClassCard.astro';
+import { coreClasses, specializedClasses, partnershipClasses } from '../../data/classes';
+import type { ClassItem } from '../../data/classes';
+import { cat, links, url } from '../../data/site';
+import { sq } from '../../data/square-links';
+
+// Action href for a class on the phone. Schedule-linked classes go to the
+// Schedule route; the rest keep the /m/ app's original targets so behaviour is
+// unchanged (athletic-program and private-lessons never had a phone screen).
+const classHref = (c: ClassItem): string => {
+  if ('external' in c.link) return c.link.external;
+  if (c.link.screen === 'schedule') return url('schedule');
+  if (c.link.screen === 'private-lessons') return sq.book.privateLesson;
+  return sq.athletic.membership; // athletic-program
+};
+---
+<div class="m-pad">
+  <MobileHero eyebrow="Train" title="Every way to move" desc="Open gym, coached classes and the Athletic Program — every age, every level, one big roof." stats={[{ v: '4', l: 'ways to train' }, { v: 'Ages 3+', l: 'all levels' }, { v: '7 days', l: 'a week' }]} />
+  <div style="height:18px"></div>
+  <BookingCard color={cat.openGym} bookingTag="Drop-in" duration="No limit" title="Open Gym" description="Drop in any day and stay as long as you like. Sign the waiver, grab a pass, the floor is yours." pills="All ages | 11 AM – 10 PM | No booking" price="From $25" priceNote="day pass" actionLabel="Get a pass" href={links.store} target="_blank" />
+
+  <div class="m-rowhead" style="margin:26px 0 6px">
+    <h3 class="m-h3" style="margin:0">Core programs</h3>
+    <a class="m-alllink" href={url('schedule')}>Times <i class="bi bi-calendar3" style={`color:${cat.classes}`} aria-hidden="true"></i></a>
+  </div>
+  <p class="m-sub" style="margin-bottom:14px">Tap a card to flip it for level, ages, schedule &amp; price.</p>
+  <div class="m-stack" style="margin-bottom:30px">
+    {coreClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}
+  </div>
+
+  <h3 class="m-h3">Specialized classes</h3>
+  <p class="m-sub" style="margin-bottom:14px">Focused, skill-specific sessions for one discipline.</p>
+  <div class="m-stack" style="margin-bottom:30px">
+    {specializedClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}
+  </div>
+
+  <h3 class="m-h3">Partnerships</h3>
+  <p class="m-sub" style="margin-bottom:14px">Run by trusted partner coaches who share our space.</p>
+  <div class="m-stack">
+    {partnershipClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}
+  </div>
+</div>

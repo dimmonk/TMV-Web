@@ -1,0 +1,17 @@
+---
+/**
+ * Schedule — the phone composition, verbatim from the /m/ app's `schedule`
+ * screen. The chips + day cards are rendered by src/lib/mobile-schedule.ts.
+ */
+import MobileHero from '../MobileHero.astro';
+---
+<div style="padding:18px 0 28px">
+  <div style="padding:0 18px 18px"><MobileHero eyebrow="Schedule" title="This week at the gym" desc="Live class times you can filter by age — the same schedule our front desk runs from." /></div>
+  <div class="app-scroll m-chips" data-sched-chips></div>
+  <div class="m-pad-x" data-sched-body></div>
+</div>
+
+<script>
+  import { mountMobileSchedule } from '../../lib/mobile-schedule';
+  mountMobileSchedule();
+</script>

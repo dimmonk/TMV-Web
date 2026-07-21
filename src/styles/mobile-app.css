@@ -290,3 +290,8 @@
 .mapp a.m-alllink,
 .mapp a.m-tile,
 .mapp a.tile { text-decoration: none; color: inherit; }
+
+/* Horizontal scroller (the schedule's filter chips) — hide the scrollbar.
+   Cosmetic only; this was part of the old shell block but is not shell. */
+.mapp .app-scroll { scrollbar-width: none; }
+.mapp .app-scroll::-webkit-scrollbar { display: none; }

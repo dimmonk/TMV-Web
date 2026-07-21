@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import BookScreen from '../components/mobile/BookScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import BookingCard from '../components/BookingCard.astro';
 import { seo, cat, site, url } from '../data/site';
@@ -77,6 +78,9 @@ const groups: Group[] = [
 const jumpItems = groups.map((g) => ({ label: g.title, id: g.id }));
 ---
 <BaseLayout title={seo.book.title} description={seo.book.description} active="" mobileTab="book">
+  <div class="mapp" data-chrome="app"><BookScreen /></div>
+
+  <div data-chrome="site">
   <section class="pagehero">
     <div class="pagehero-glow"></div>
     <div class="container pagehero-inner">
@@ -127,6 +131,7 @@ const jumpItems = groups.map((g) => ({ label: g.title, id: g.id }));
       </div>
       <a href={`mailto:${site.email}`} class="btn btn-primary">Get in touch <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
     </section>
+  </div>
   </div>
 </BaseLayout>
 

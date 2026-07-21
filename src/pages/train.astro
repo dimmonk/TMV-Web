@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import TrainScreen from '../components/mobile/TrainScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import ClassCard from '../components/ClassCard.astro';
@@ -18,6 +19,9 @@ const jumpItems = [
 ];
 ---
 <BaseLayout title={seo.train.title} description={seo.train.description} active="train" mobileTab="train">
+  <div class="mapp" data-chrome="app"><TrainScreen /></div>
+
+  <div data-chrome="site">
   <section class="pagehero">
     <div class="pagehero-glow"></div>
     <div class="container hero2">
@@ -111,6 +115,7 @@ const jumpItems = [
       { theme: 'light', eyebrow: 'All classes, one view', title: 'Group Class Schedule', icon: 'bi-calendar3', href: url('schedule') },
     ]} />
   </section>
+  </div>
 </BaseLayout>
 
 <style>

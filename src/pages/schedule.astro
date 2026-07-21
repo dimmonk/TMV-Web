@@ -1,9 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ScheduleScreen from '../components/mobile/ScheduleScreen.astro';
 import { seo, url } from '../data/site';
 import '../styles/print-schedule-sheet.css';
 ---
 <BaseLayout title={seo.schedule.title} description={seo.schedule.description} active="train" mobileTab="schedule">
+  <div class="mapp" data-chrome="app"><ScheduleScreen /></div>
+
+  <div data-chrome="site">
   <section class="pagehero">
     <div class="pagehero-glow"></div>
     <div class="container pagehero-inner">
@@ -63,6 +67,7 @@ import '../styles/print-schedule-sheet.css';
         <div class="popup-desc"></div>
       </div>
     </div>
+  </div>
   </div>
 </BaseLayout>
 
