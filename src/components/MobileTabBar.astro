@@ -21,10 +21,14 @@ const { active = '' } = Astro.props;
 ---
 
 <nav class="mtab" data-chrome="app" aria-label="Main">
-  <a class:list={['mtab-btn', active === 'home' && 'active']} href={url('')}><i class="bi bi-house-door-fill" aria-hidden="true"></i><span>Home</span></a>
-  <a class:list={['mtab-btn', active === 'train' && 'active']} href={url('train')}><i class="bi bi-person-arms-up" aria-hidden="true"></i><span>Train</span></a>
-  <a class="mtab-btn mtab-center" href={url('book')}><span class="mtab-center-c"><i class="bi bi-calendar-check-fill" aria-hidden="true"></i></span><span>Book</span></a>
-  <a class:list={['mtab-btn', active === 'schedule' && 'active']} href={url('schedule')}><i class="bi bi-calendar3" aria-hidden="true"></i><span>Schedule</span></a>
+  {/* These 4 are fixed, always-visible destinations — 'viewport' prefetches
+      all of them the moment the tab bar itself is on screen (i.e. immediately,
+      on every page), so by the time a tap actually happens the destination is
+      already warm. This is what makes tab switches feel instant again. */}
+  <a class:list={['mtab-btn', active === 'home' && 'active']} href={url('')} data-astro-prefetch="viewport"><i class="bi bi-house-door-fill" aria-hidden="true"></i><span>Home</span></a>
+  <a class:list={['mtab-btn', active === 'train' && 'active']} href={url('train')} data-astro-prefetch="viewport"><i class="bi bi-person-arms-up" aria-hidden="true"></i><span>Train</span></a>
+  <a class="mtab-btn mtab-center" href={url('book')} data-astro-prefetch="viewport"><span class="mtab-center-c"><i class="bi bi-calendar-check-fill" aria-hidden="true"></i></span><span>Book</span></a>
+  <a class:list={['mtab-btn', active === 'schedule' && 'active']} href={url('schedule')} data-astro-prefetch="viewport"><i class="bi bi-calendar3" aria-hidden="true"></i><span>Schedule</span></a>
   <button type="button" class:list={['mtab-btn', active === 'more' && 'active']} data-more-open aria-haspopup="dialog" aria-expanded="false"><i class="bi bi-grid-fill" aria-hidden="true"></i><span>More</span></button>
 </nav>
 

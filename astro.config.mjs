@@ -19,4 +19,11 @@ export default defineConfig({
   // Dev-only overlay (never ships in `astro build`/production) — off because
   // it sits over the phone-width preview during mobile work.
   devToolbar: { enabled: false },
+  // Real routes (see CLAUDE.md — no device fork, no hash router) mean every
+  // nav tap is a genuine navigation, unlike the old /m/ app's single-document
+  // hash router, which never re-fetched anything after first load. 'hover' is
+  // a safe, standard default for every link site-wide (only fires on real
+  // intent). The bottom tab bar's own links go further — see the
+  // data-astro-prefetch="viewport" override on them in MobileTabBar.astro.
+  prefetch: { defaultStrategy: 'hover' },
 });
