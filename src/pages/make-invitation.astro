@@ -200,6 +200,7 @@ const timeOpts = timeOptions(11, 22);
           <div id="inv-photo-col" class="inv-photo-col">
             <button type="button" id="inv-replace-photo" class="inv-photobtn inv-photobtn-dark"><i class="bi bi-upload" aria-hidden="true"></i>Replace</button>
             <button type="button" id="inv-remove-photo" class="inv-photobtn"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>Remove</button>
+            <div class="inv-photo-tip"><i class="bi bi-arrows-move" aria-hidden="true"></i>Drag the photo to reposition</div>
           </div>
           <input type="file" id="inv-photo-input" accept="image/*" hidden />
         </div>
@@ -285,11 +286,14 @@ const timeOpts = timeOptions(11, 22);
   .inv-photobtn i { font-size: 16px; }
   .inv-photobtn-dark { background: var(--ink); color: #fff; border: 0; }
   .inv-photobtn-dark i { color: var(--brand); }
+  .inv-photo-tip { display: flex; align-items: flex-start; gap: 5px; font: 600 10px/1.3 var(--font-body); color: #a29e95; text-align: left; margin-top: 2px; }
+  .inv-photo-tip i { font-size: 12px; margin-top: 1px; flex: none; }
 
   /* PORTRAIT */
   .inv-p-card { width: 440px; min-height: 616px; background: #fff; border: 0; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 4px rgba(28,25,23,.06), 0 40px 70px -40px rgba(28,25,23,.55); display: flex; flex-direction: column; }
   .inv-p-photohead { position: relative; height: 240px; background: var(--ink); flex: none; }
-  .inv-p-photoimg { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .inv-p-photoimg { width: 100%; height: 100%; object-fit: cover; display: block; cursor: grab; touch-action: none; }
+  .inv-p-photoimg.inv-p-dragging { cursor: grabbing; }
   .inv-p-badge { position: absolute; top: 16px; left: 16px; display: inline-flex; align-items: center; gap: 8px; background: var(--inv-accent, #ffd400); color: var(--ink); font: 900 12px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; padding: 9px 13px; border-radius: 8px; box-shadow: 0 8px 20px -10px rgba(0,0,0,.5); }
   .inv-p-inkhead { flex: none; background: #fff; border-bottom: 2px solid var(--inv-accent, #ffd400); padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; }
   .inv-p-inkhead .inv-p-badge { position: static; box-shadow: none; }
@@ -375,7 +379,8 @@ const timeOpts = timeOptions(11, 22);
     .inv-stage-row { flex-direction: column; gap: 14px; width: 100%; }
     .inv-bg-col { flex-direction: row; align-items: center; align-self: center; margin-top: 0; gap: 8px; }
     .inv-bg-label { margin-bottom: 0; }
-    .inv-photo-col { flex-direction: row; width: auto; align-self: center; margin-top: 0; }
+    .inv-photo-col { flex-direction: row; flex-wrap: wrap; justify-content: center; width: auto; align-self: center; margin-top: 0; }
+    .inv-photo-tip { width: 100%; justify-content: center; text-align: center; }
   }
 </style>
 
@@ -397,6 +402,7 @@ const timeOpts = timeOptions(11, 22);
     ink: false,
     accent: '#ffd400',
     photoSrc: DEFAULT_PHOTO,
+    photoPos: { x: 50, y: 50 }, // object-position %, draggable to frame the photo
   };
 
   function qrUrl(data) {
@@ -513,6 +519,7 @@ const timeOpts = timeOptions(11, 22);
 
     root.style.setProperty('--inv-accent', state.accent);
     $('inv-p-photo').src = state.photoSrc;
+    applyPhotoPos();
 
     // Portrait
     $('inv-p-name').textContent = name;
@@ -691,16 +698,72 @@ const timeOpts = timeOptions(11, 22);
 
   if (!$('inv-date').value) $('inv-date').value = nextSaturdayISO();
 
-  // Photo replace / remove
+  // Photo replace / remove. A new/removed photo resets the framing to centred.
   $('inv-replace-photo')?.addEventListener('click', () => $('inv-photo-input')?.click());
   $('inv-photo-input')?.addEventListener('change', (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => { state.photoSrc = String(reader.result); render(); };
+    reader.onload = () => { state.photoSrc = String(reader.result); state.photoPos = { x: 50, y: 50 }; render(); };
     reader.readAsDataURL(file);
   });
-  $('inv-remove-photo')?.addEventListener('click', () => { state.photoSrc = DEFAULT_PHOTO; render(); });
+  $('inv-remove-photo')?.addEventListener('click', () => { state.photoSrc = DEFAULT_PHOTO; state.photoPos = { x: 50, y: 50 }; render(); });
+
+  // ---- Drag the Invite photo to frame it ----
+  // object-fit:cover crops the photo to the header box and centres it; there's
+  // no way to choose WHICH part shows. Dragging pans object-position so the user
+  // frames the shot, and the chosen position is inline on the <img>, so it's
+  // captured in the PNG export too. Panning only exists on the axis that
+  // actually overflows the box (the cropped one).
+  const photoImg = $('inv-p-photo');
+  const clamp = (v) => Math.max(0, Math.min(100, v));
+
+  function applyPhotoPos() {
+    if (photoImg) photoImg.style.objectPosition = `${state.photoPos.x}% ${state.photoPos.y}%`;
+  }
+
+  // How many box-pixels the cover-scaled image overflows the header on each
+  // axis. object-position 0..100% maps across exactly that overflow.
+  function photoOverflow() {
+    const box = $('inv-p-photohead');
+    if (!photoImg || !box) return { x: 0, y: 0 };
+    const bw = box.clientWidth, bh = box.clientHeight;
+    const nw = photoImg.naturalWidth, nh = photoImg.naturalHeight;
+    if (!bw || !bh || !nw || !nh) return { x: 0, y: 0 };
+    const scale = Math.max(bw / nw, bh / nh);
+    return { x: nw * scale - bw, y: nh * scale - bh };
+  }
+
+  let photoDrag = null;
+  photoImg?.addEventListener('pointerdown', (e) => {
+    if (state.style !== 'portrait' || state.ink) return;
+    const overflow = photoOverflow();
+    if (overflow.x <= 1 && overflow.y <= 1) return; // photo already fits — nothing to pan
+    photoDrag = { px: e.clientX, py: e.clientY, x: state.photoPos.x, y: state.photoPos.y, overflow };
+    photoImg.setPointerCapture(e.pointerId);
+    photoImg.classList.add('inv-p-dragging');
+    e.preventDefault();
+  });
+  photoImg?.addEventListener('pointermove', (e) => {
+    if (!photoDrag) return;
+    // Screen px → card-layout px (the preview card is transform-scaled to fit).
+    const wrapScale = parseFloat($('inv-scale-wrap').style.getPropertyValue('--inv-scale')) || 1;
+    const dx = (e.clientX - photoDrag.px) / wrapScale;
+    const dy = (e.clientY - photoDrag.py) / wrapScale;
+    // Direct manipulation: dragging the image down reveals more of its top, i.e.
+    // object-position moves toward 0% — so subtract the drag delta.
+    const nextX = photoDrag.overflow.x > 0 ? photoDrag.x - (dx / photoDrag.overflow.x) * 100 : photoDrag.x;
+    const nextY = photoDrag.overflow.y > 0 ? photoDrag.y - (dy / photoDrag.overflow.y) * 100 : photoDrag.y;
+    state.photoPos = { x: clamp(nextX), y: clamp(nextY) };
+    applyPhotoPos();
+  });
+  const endPhotoDrag = () => {
+    if (!photoDrag) return;
+    photoDrag = null;
+    photoImg.classList.remove('inv-p-dragging');
+  };
+  photoImg?.addEventListener('pointerup', endPhotoDrag);
+  photoImg?.addEventListener('pointercancel', endPhotoDrag);
 
   window.addEventListener('resize', fitScale);
 
