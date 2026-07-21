@@ -16,4 +16,7 @@ export default defineConfig({
   site: 'https://themonkeyvault.com',
   trailingSlash: 'ignore',
   build: { format: 'directory' },
+  // Dev-only overlay (never ships in `astro build`/production) — off because
+  // it sits over the phone-width preview during mobile work.
+  devToolbar: { enabled: false },
 });
