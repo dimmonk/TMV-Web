@@ -1,9 +1,7 @@
 /**
- * Camp sessions — SINGLE SOURCE OF TRUTH shared by the desktop Camps page
- * (src/pages/camps.astro, rendered as flip cards) and the mobile Camps screen
- * (src/pages/m/index.astro, rendered with BookingCard). The object carries the
- * union of both layouts' fields; each surface reads what it renders. Edit a
- * camp once and both update.
+ * Camp sessions — SINGLE SOURCE OF TRUTH for the Camps page
+ * (src/pages/camps.astro, rendered as flip cards). The object carries the union
+ * of the fields the layouts use; each reads what it renders.
  */
 import { sq } from './square-links';
 import type { Surfaced } from './surface';

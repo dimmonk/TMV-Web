@@ -6,49 +6,62 @@ Hosting (`themonkeyvault` / themonkeyvault.com) from the **TMV-Members** repo:
 `scripts/build-web.sh`, which copies this repo's fresh `dist/`). So the deploy
 flow is: `npm run build` here → deploy from TMV-Members.
 
-## The two site chromes — desktop pages vs the `/m/` mobile app
+## One responsive document, two chromes
 
-The site has **two** front-ends:
+There is **one** front-end. Every route is a normal Astro page using
+`BaseLayout`, and the chrome is chosen by a media query — not by a device check.
 
-1. **Desktop pages** (`src/pages/*.astro`) — use `BaseLayout` (top `SiteHeader`
-   + `SiteFooter`). Responsive, but on phones they **redirect** to the mobile
-   app via `BaseLayout`'s device switch (`src/lib/device-switch.ts`).
-2. **The mobile app** (`src/pages/m/index.astro`) — a single-page, app-style UI
-   with a dark header and a **bottom tab bar**. Screens are toggled by URL hash
-   (`/m/#home`, `/m/#events`, …). This is what phone users actually see.
+- **Below `md` (768px)** — the app shell: `MobileAppHeader` (dark sticky header)
+  + `MobileTabBar` (fixed bottom tabs) + `MobileMoreSheet`.
+- **At `md` and up** — the site chrome: `SiteHeader` + `SiteFooter`.
 
-## THE RULE: content carries no chrome — the shell sets header/footer/nav
+Both chromes are rendered on every page, unconditionally, and tagged
+`data-chrome="app" | "site"`. **The handoff is written exactly once**, in
+`src/styles/global.css`. No other file may branch on it, and nothing sniffs the
+user agent or redirects.
 
-A feature is content. The **shell** it renders in owns the header, footer and
-nav. So a feature must never bake in page chrome, and must never be a dead-end
-on a phone.
+768 matches the other three TMV apps. The canonical scale is
+**640 / 768 / 1024 / 1280** — use those for anything affecting page layout or
+chrome (component-internal wrap points may still be bespoke).
 
-**Every feature that works on a phone belongs in the `/m/` app shell.** Build it
-as three pieces:
+> There used to be a second document at `/m/` reached by a JS device-switch
+> redirect. It's gone. That design forced an unfolded Galaxy Fold onto the phone
+> UI (its UA still says `Mobile`), and it kept producing missing-nav bugs
+> whenever a feature landed in only one shell. Don't reintroduce a device fork —
+> app-style chrome is just CSS.
+
+## THE RULE: content carries no chrome — the layout sets header/footer/nav
+
+A feature is content. `BaseLayout` owns header, footer and nav. So a feature
+must never bake in page chrome, and never assume a viewport.
 
 1. **Shared markup** — an Astro component with no chrome (e.g.
    `components/InvitationMaker.astro`, `components/PartyCard.astro`).
 2. **Shared logic** (only if interactive) — a `mount*(root, opts)` module in
    `src/lib` whose queries are scoped to `root` (e.g. `lib/invitation-maker.ts`,
-   `lib/camp-reg-form.ts`). No assumption about which shell it's in.
-3. **Two thin wirings** — the desktop page renders it inside `BaseLayout`, and
-   the `/m/` app renders it in a `data-screen` section (register the screen in
-   `SUBS` + `SUBTITLES`, and lazy-mount the logic in `render()`).
+   `lib/camp-reg-form.ts`).
+3. **One wiring** — a page renders it inside `BaseLayout`. That's it. There is
+   no second surface to register it in, which is the whole point.
 
-Then set `mobileHash="<screen>"` on the desktop page so phones deep-link into
-the app screen instead of loading desktop chrome. Worked examples:
-`make-invitation.astro` → `/m/#invitation`, `camp-registration.astro` →
-`/m/#register`.
+**Content must be width-agnostic:** no fixed widths, no baked-in `.container`.
+It fills whatever column it's given; width and padding are the layout's job
+(see `PartyCard`'s note). It must read correctly from ~320px up.
 
-**Shared content must be shell-agnostic:** no fixed widths, no viewport media
-queries, no `.container`/`.m-pad` baked in. It fills whatever column the shell
-gives it. Width and padding are the shell's concern (see `PartyCard`'s note).
+## Page props that drive the app chrome
 
-### Fallback (rare): a page that truly can't be an app screen
+On `BaseLayout`:
 
-Set `mobileRedirect={false}`. `BaseLayout` then **automatically** renders
-`<MobileTabBar>` so the page still has the bottom nav instead of being a
-dead-end. This is a structural guard, not a pattern to reach for — nothing uses
-it today. Never hand-add `<MobileTabBar>`; it comes from `BaseLayout`. A page on
-a custom layout (not `BaseLayout`) is outside the guard entirely — route it
-through `BaseLayout`.
+- `mobileTab` — which bottom tab lights up (`home|train|book|schedule|more`).
+- `appHeader` — `'brand'` for the tab destinations, `'back'` for pages beneath
+  them (renders a back chevron; `appTitle` labels it, `backHref` targets it).
+  Back is a real link, so a cold deep-link from search behaves.
+
+A page cannot forget its nav: both chromes are unconditional, so there is no
+opt-out flag to get wrong.
+
+## Navigation IA
+
+The primary nav (`nav` in `data/site.ts`) is deliberately capped at **six**. The
+long tail lives in **`src/data/explore.ts`** — one array rendered by both the
+mobile More sheet and the desktop footer's Explore column. Add a revenue stream
+there once and it appears on both surfaces.

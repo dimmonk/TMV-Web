@@ -1,17 +1,15 @@
 ---
 /**
- * Shared Events-page party card — rendered by BOTH the desktop Events page and
- * the mobile /m/ Events screen from the same `partyCards` data.
+ * Shared Events-page party card, rendered from the `partyCards` data.
  *
  * Shell-agnostic by design: the card has NO fixed width and no viewport media
- * queries. It fills whatever column its shell hands it (a grid cell on desktop,
- * the full screen width on mobile) and every internal row wraps on its own, so
- * the same markup reads correctly from ~320px to ~600px. That is the rule that
- * keeps one component valid in two shells — if a card ever needs to *know*
- * which shell it's in, the split belongs in the shell's composition, not here.
+ * queries. It fills whatever column the layout hands it (a grid cell on wide
+ * screens, the full width on a phone) and every internal row wraps on its own, so
+ * the same markup reads correctly from ~320px upward. The card never needs to
+ * know which chrome surrounds it — width and padding are the layout's job.
  *
- * Styling leans on the global design tokens + .btn classes (global.css is loaded
- * by both BaseLayout and MobileLayout), so there is no per-surface theme.
+ * Styling leans on the global design tokens + .btn classes, so there is no
+ * per-surface theme.
  */
 import type { PartyCardData } from '../data/parties';
 import { cat, url } from '../data/site';

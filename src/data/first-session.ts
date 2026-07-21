@@ -1,9 +1,7 @@
 /**
  * The four "ways to start" for a first visit — SINGLE SOURCE OF TRUTH shared by
- * the desktop Get Started page (src/pages/get-started.astro) and the mobile
- * Get Started screen (src/pages/m/index.astro). Both render with the shared
- * BookingCard; each surface resolves the action href from the semantic `key`
- * (they have different routes — desktop opens its pages, mobile its screens).
+ * the Get Started page (src/pages/get-started.astro), rendered with the shared
+ * BookingCard, which resolves the action href from the semantic `key`.
  */
 import { cat } from './site';
 

@@ -1,11 +1,10 @@
 /**
- * Camp registration form — the single implementation mounted by BOTH shells:
- * the standalone desktop page (src/pages/camp-registration.astro) and the /m/
- * mobile app's "Register" sub-screen. Ported from the design handoff v2
+ * Camp registration form — the single implementation, mounted by
+ * src/pages/camp-registration.astro. Ported from the design handoff v2
  * (CampRegForm.dc.html), with the site-owner's per-day expiry merged in.
  *
  * Call mountCampRegForm(container, opts) once per container. All state is
- * per-mount (closure), so the two shells never share state. Styles live in
+ * per-mount (closure), so separate mounts never share state. Styles live in
  * src/styles/camp-reg-form.css (import it in whichever page mounts this).
  *
  * Prices are the documented camp defaults; Square checkout is stubbed —
@@ -20,7 +19,7 @@ export interface CampRegFormOptions {
   address: string;
   /** category/identity accent (selection, checks, prices, icons). Not CTAs. */
   accent?: string;
-  /** show the dark hero band (desktop). The /m/ shell has its own header. */
+  /** show the dark hero band. Hosts that supply their own header opt out. */
   showHero?: boolean;
 }
 

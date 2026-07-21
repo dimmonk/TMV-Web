@@ -1,9 +1,8 @@
 ---
 /**
- * Invitation maker — the shared markup + styles for the feature, rendered by
- * BOTH shells. It carries NO page chrome: the desktop page wraps it in
- * BaseLayout (SiteHeader/SiteFooter) and the /m/ app renders it inside the app
- * shell (dark header + bottom tab bar). Whoever renders it owns the chrome.
+ * Invitation maker — the shared markup + styles for the feature. It carries NO
+ * page chrome: the page wraps it in BaseLayout, which supplies whichever chrome
+ * the viewport calls for. Whoever renders it owns the chrome.
  *
  * Interactivity lives in src/lib/invitation-maker.ts — call
  * mountInvitationMaker(root, opts) on the wrapper this renders.
@@ -11,11 +10,11 @@
 import { links, site, url } from '../data/site';
 
 interface Props {
-  /** Desktop shows the page-title band; the /m/ screen uses MobileHero instead. */
+  /** Show the page-title band above the maker. */
   showIntro?: boolean;
-  /** Render as a desktop *page* section: applies the site's `.container` width
-   * cap and the page's vertical breathing room. The /m/ screen supplies both
-   * itself (.m-pad + the hero), so it opts out — spacing is the shell's job. */
+  /** Render as a page section: applies the site's `.container` width cap and the
+   * page's vertical breathing room. Width and spacing are the layout's job, so
+   * a host that supplies its own opts out. */
   contained?: boolean;
 }
 const { showIntro = true, contained = true } = Astro.props;
@@ -239,7 +238,7 @@ const timeOpts = timeOptions(11, 22);
 
   .inv-grid { display: grid; grid-template-columns: 396px minmax(0, 1fr); gap: 32px; align-items: start; }
   /* Page-level vertical breathing room belongs to the desktop page (gap from the
-     intro band, room before the footer). The /m/ screen supplies its own spacing
+     intro band, room before the footer). A host that supplies its own spacing
      via .m-pad + the hero, so it must NOT inherit this — otherwise it stacks on
      top and leaves a dead band under the hero. */
   .inv-grid-page { padding-block: 28px 60px; }

@@ -7,6 +7,7 @@ const routes = [
   'train',
   'camps',
   'events',
+  'groups',
   'make-invitation',
   'pricing',
   'store',

@@ -29,10 +29,7 @@ export const exploreTiles: ExploreTile[] = [
   { key: 'store',      label: 'Store',       sub: 'Buy passes & memberships',    path: 'store',         icon: 'bi-bag-fill',     fg: '#211f1b' },
   { key: 'camps',      label: 'Camps',       sub: 'School-break day camps',      path: 'camps',         icon: 'bi-sun-fill',     fg: cat.camps },
   { key: 'events',     label: 'Events',      sub: 'Birthdays & parties',         path: 'events',        icon: 'bi-balloon-fill', fg: cat.parties },
-  // Groups is a revenue stream worth a direct link. It is still a section of
-  // /events today; it graduates to its own /groups route in the migration's
-  // gap-closing phase — at which point only this `path` changes.
-  { key: 'groups',     label: 'Groups',      sub: 'Schools, teams & corporate',  path: 'events#groups', icon: 'bi-people-fill',  fg: cat.groups },
+  { key: 'groups',     label: 'Groups',      sub: 'Schools, teams & corporate',  path: 'groups',        icon: 'bi-people-fill',  fg: cat.groups },
   { key: 'about',      label: 'About',       sub: 'The space, hours & contact',  path: 'about',         icon: 'bi-geo-alt-fill', fg: cat.classes },
   { key: 'reviews',    label: 'Reviews',     sub: 'What members say',            path: 'reviews',       icon: 'bi-star-fill',    fg: '#e9a300' },
   { key: 'getstarted', label: 'Get Started', sub: 'First-visit guide',           path: 'get-started',   icon: 'bi-flag-fill',    fg: cat.openGym },

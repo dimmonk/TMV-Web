@@ -1,12 +1,10 @@
 /**
  * The class catalog — SINGLE SOURCE OF TRUTH for every class card, shared by the
- * desktop Train page (src/pages/train.astro) and the mobile Train screen
- * (src/pages/m/index.astro). Edit a class here once and it populates both
- * surfaces; each surface only owns its own LAYOUT (desktop = grid sections,
- * mobile = stacked list) and resolves the action href from the semantic `link`.
+ * Train page (src/pages/train.astro). Edit a class here once; the page owns
+ * only its LAYOUT and resolves the action href from the semantic `link`.
  *
- * `link` is where the two surfaces legitimately differ (they have different
- * routes): desktop opens its rich pages, mobile falls back to booking where no
+ * `link` is resolved per render site: it opens the rich page where one exists
+ * and falls back to booking where no
  * mobile screen exists. Everything else — copy, media, specs — lives here once.
  */
 

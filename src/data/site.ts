@@ -161,6 +161,11 @@ export const seo = {
     description:
       'Throw an unforgettable parkour birthday party or book a group event for your school, team or organization at The Monkey Vault in Toronto.',
   },
+  groups: {
+    title: 'Group Events for Schools, Teams & Corporate | The Monkey Vault',
+    description:
+      'Field trips, team-building and corporate group events at The Monkey Vault in Toronto — guided parkour activities plus open gym, or reserve the gym before we open.',
+  },
   makeInvitation: {
     title: 'Invitation Maker | The Monkey Vault Toronto',
     description:

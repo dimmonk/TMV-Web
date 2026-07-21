@@ -1,12 +1,10 @@
 /**
  * Invitation maker — the interactive logic for the shared <InvitationMaker />
- * markup, mounted by BOTH shells:
- *   - desktop: src/pages/make-invitation.astro (inside BaseLayout's chrome)
- *   - mobile:  the /m/ app's "invitation" screen (inside the app shell)
+ * markup, mounted by src/pages/make-invitation.astro.
  *
  * Call mountInvitationMaker(root, opts) once per rendered <InvitationMaker />.
  * Every query is scoped to `root` and all state lives in the closure, so the
- * module carries no assumption about which shell it is running in — the shell
+ * module carries no assumption about where it is running — the layout
  * owns the header/footer/nav, this owns the feature.
  *
  * Styles ship with the component (src/components/InvitationMaker.astro).

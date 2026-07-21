@@ -1,16 +1,18 @@
 ---
 import { site, social, links, url } from '../data/site';
+import { exploreTiles } from '../data/explore';
 const year = new Date().getFullYear();
 
 const columns = [
   {
+    // Desktop's answer to the mobile More sheet: the primary nav stays capped at
+    // six, and the long tail lives here — rendered from the SAME array the sheet
+    // uses, so adding a revenue stream surfaces on both at once. 'Train' leads
+    // because it is a primary destination and so isn't in the tile set.
     title: 'Explore',
     items: [
       { text: 'Train', href: url('train') },
-      { text: 'Camps', href: url('camps') },
-      { text: 'Events', href: url('events') },
-      { text: 'Pricing', href: url('pricing') },
-      { text: 'About', href: url('about') },
+      ...exploreTiles.map((t) => ({ text: t.label, href: url(t.path) })),
     ],
   },
   {

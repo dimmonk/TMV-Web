@@ -48,7 +48,9 @@ const { variant = 'brand', title = 'Back', backHref = url('') } = Astro.props;
   .m-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
   .m-brand img { flex: none; width: 32px; height: 32px; object-fit: contain; }
   .m-brand span { font: 900 14.5px/1 'Archivo', sans-serif; letter-spacing: .01em; text-transform: uppercase; color: #fff; white-space: nowrap; }
-  .m-back { text-decoration: none; display: inline-flex; align-items: center; gap: 5px; font: 800 17px/1 'Archivo', sans-serif; letter-spacing: -.01em; color: #fff; white-space: nowrap; min-width: 0; }
+  /* Negative margin keeps the label optically aligned with the brand row while
+     the padding gives the chevron a 44px-tall tap target. */
+  .m-back { text-decoration: none; display: inline-flex; align-items: center; gap: 5px; font: 800 17px/1 'Archivo', sans-serif; letter-spacing: -.01em; color: #fff; white-space: nowrap; min-width: 0; min-height: 44px; padding: 0 10px 0 4px; margin: -12px 0 -12px -4px; }
   .m-back span { overflow: hidden; text-overflow: ellipsis; }
   .m-back i { font-size: 18px; color: #ffd400; }
   .m-status { flex: none; display: inline-flex; align-items: center; gap: 6px; font: 700 11px/1 'Archivo', sans-serif; letter-spacing: .04em; text-transform: uppercase; border-radius: 999px; padding: 7px 11px; white-space: nowrap; color: #5fd07f; background: rgba(95,208,127,.13); border: 1px solid rgba(95,208,127,.28); }
