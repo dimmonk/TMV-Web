@@ -35,7 +35,11 @@ const { eyebrow, title, desc, stats } = Astro.props;
   .mh { background: #211f1b; color: #fff; padding: 24px 22px; position: relative; overflow: hidden; }
   .mh-glow { position: absolute; inset: 0; background: radial-gradient(360px 200px at 92% -20%, rgba(255,212,0,.16), transparent 70%); }
   .mh-inner { position: relative; }
-  .mh-eyebrow { display: inline-flex; align-items: center; gap: 8px; font: 700 10.5px/1 'Archivo', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #ffd400; margin-bottom: 16px; }
+  /* flex, not inline-flex: an inline-level box picks up "phantom" leading
+     space above it from the surrounding line-height (body's line-height:1.5
+     at 16px vs this row's own 10.5px content), pushing the eyebrow down ~12px
+     for no visible reason. flex is block-level and immune to that. */
+  .mh-eyebrow { display: flex; align-items: center; gap: 8px; font: 700 10.5px/1 'Archivo', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #ffd400; margin-bottom: 16px; }
   .mh-rule { width: 18px; height: 2px; background: #ffd400; }
   .mh-title { font: 800 30px/1.04 'Archivo', sans-serif; letter-spacing: -.02em; margin: 0 0 12px; }
   .mh-desc { font: 400 14px/1.55 inherit; color: rgba(255,255,255,.72); margin: 0; }

@@ -31,7 +31,10 @@
   .mapp .m-home-hero { background: #211f1b; color: #fff; padding: 24px 22px; position: relative; overflow: hidden; }
   .mapp .mh-glow { position: absolute; inset: 0; background: radial-gradient(360px 200px at 92% -20%, rgba(255,212,0,.16), transparent 70%); }
   .mapp .m-home-hero-inner { position: relative; }
-  .mapp .mh-eyebrow { display: inline-flex; align-items: center; gap: 8px; font: 700 10.5px/1 'Archivo', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #ffd400; margin-bottom: 18px; }
+  /* flex, not inline-flex — see the identical fix + comment on MobileHero.astro's
+     .mh-eyebrow; this is the same rule duplicated for the home hero, which
+     doesn't render through that component. */
+  .mapp .mh-eyebrow { display: flex; align-items: center; gap: 8px; font: 700 10.5px/1 'Archivo', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #ffd400; margin-bottom: 18px; }
   .mapp .mh-rule { width: 18px; height: 2px; background: #ffd400; }
   .mapp .m-home-title { font: 800 33px/1.02 'Archivo', sans-serif; letter-spacing: -.02em; margin: 0 0 14px; }
   .mapp .m-home-lead { font: 400 14px/1.55 inherit; color: rgba(255,255,255,.72); margin: 0 0 22px; }
