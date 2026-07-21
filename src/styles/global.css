@@ -51,6 +51,13 @@
   /* layout */
   --container: 1200px;
   --gutter: 24px;
+
+  /* The fixed bottom tab bar's real rendered height (MobileTabBar.astro
+   * measures itself and overwrites this on load/resize) — the ONE source
+   * anything that needs to clear or sit above the tab bar reads from. This
+   * value is only the pre-JS fallback, close to the real number so there's no
+   * layout jump before the measurement script runs. */
+  --tabbar-h: 86px;
 }
 
 /* ============================================================================
@@ -80,7 +87,10 @@
 @media (max-width: 767px) {
   [data-chrome='site'] { display: none !important; }
   /* Clear the fixed tab bar so the last content on the page isn't hidden. */
-  body { padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
+  /* var(--tabbar-h) already includes the safe-area inset (baked into the tab
+     bar's own bottom padding) — do not add env(safe-area-inset-bottom) again
+     here, that would double-count it. */
+  body { padding-bottom: var(--tabbar-h); }
 }
 @media (min-width: 768px) {
   [data-chrome='app'] { display: none !important; }

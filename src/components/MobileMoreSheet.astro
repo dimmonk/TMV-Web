@@ -63,13 +63,21 @@ import { exploreTiles } from '../data/explore';
   /* Sheet chrome only (backdrop, grab handle, slide-up, close button) — none
      of this existed in the /m/ app, which had no modal, so it isn't a restore.
      Everything INSIDE .m-sheet-body is the original design via .mapp. */
-  .m-sheet { width: 100%; max-width: 100%; margin: auto auto 0; padding: 0; border: 0; background: transparent; max-height: 90dvh; overflow: hidden; }
+  /* Native <dialog> renders in the browser's top layer — ABOVE everything in
+     normal stacking order, including the tab bar's z-index:50 — so without
+     this the sheet would extend straight to the screen edge and bury the tab
+     bar underneath it. Explicit inset (not margin:auto, which fights with
+     max-height in unpredictable ways for a position:fixed top-layer box)
+     pins ONLY the bottom edge var(--tabbar-h) above the viewport bottom —
+     the tab bar's real measured height, see MobileTabBar.astro — and lets
+     the box grow upward from there, capped by max-height. */
+  .m-sheet { position: fixed; inset: auto 0 var(--tabbar-h) 0; margin: 0; width: 100%; max-width: 100%; padding: 0; border: 0; background: transparent; max-height: calc(90dvh - var(--tabbar-h)); overflow: hidden; }
   .m-sheet::backdrop { background: rgba(20, 18, 16, .5); }
   .m-sheet-grab { width: 38px; height: 4px; border-radius: 999px; background: rgba(255,255,255,.5); margin: 0 auto 9px; }
   /* overscroll-behavior:contain stops scroll chaining: without it, a swipe that
      runs past this element's own scroll end keeps going and scrolls the page
      behind the sheet instead of just bouncing/stopping here. */
-  .m-sheet-body { position: relative; overflow-y: auto; overscroll-behavior: contain; max-height: calc(90dvh - 13px); background: #f5f4f1; border-radius: 20px 20px 0 0; padding-top: 8px; }
+  .m-sheet-body { position: relative; overflow-y: auto; overscroll-behavior: contain; max-height: calc(90dvh - 13px - var(--tabbar-h)); background: #f5f4f1; border-radius: 20px 20px 0 0; padding-top: 8px; }
   .m-sheet-body .m-pad { padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)); }
   .m-sheet-x { position: absolute; top: 22px; right: 18px; z-index: 1; cursor: pointer; width: 34px; height: 34px; border-radius: 50%; border: 0; background: #eceae4; color: #3a3833; display: flex; align-items: center; justify-content: center; }
 

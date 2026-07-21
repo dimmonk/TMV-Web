@@ -39,3 +39,18 @@ const { active = '' } = Astro.props;
   .mtab-center .mtab-center-c i { font-size: 29px; color: #211f1b; }
   .mtab-center span:last-child { font-weight: 800; text-transform: uppercase; }
 </style>
+
+<script>
+  // Single source for --tabbar-h (declared with a static fallback in
+  // global.css): everything that needs to clear the tab bar, or stop above
+  // it, reads this instead of guessing the height independently. A
+  // ResizeObserver (not a one-time read) keeps it correct across rotation and
+  // safe-area changes — env(safe-area-inset-bottom) is baked into .mtab's own
+  // padding, so its measured height already reflects the real device inset.
+  const bar = document.querySelector('.mtab');
+  if (bar) {
+    const set = () => document.documentElement.style.setProperty('--tabbar-h', bar.getBoundingClientRect().height + 'px');
+    set();
+    new ResizeObserver(set).observe(bar);
+  }
+</script>
