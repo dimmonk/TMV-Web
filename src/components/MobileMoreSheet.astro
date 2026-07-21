@@ -29,9 +29,6 @@ const tiles = forSurface(exploreTiles, 'mobile');
 
   <div class="m-sheet-panel" data-more-panel role="dialog" aria-modal="true" aria-label="More" tabindex="-1">
     <div class="m-sheet-grab"></div>
-    <button type="button" class="m-sheet-x" data-more-close aria-label="Close">
-      <i class="bi bi-x-lg" aria-hidden="true"></i>
-    </button>
 
     <div class="m-sheet-scroll mapp">
       <div class="m-pad">
@@ -88,7 +85,6 @@ const tiles = forSurface(exploreTiles, 'mobile');
   }
 
   .m-sheet-grab { flex: none; width: 38px; height: 4px; border-radius: 999px; background: #d8d5cc; margin: 10px auto 2px; }
-  .m-sheet-x { position: absolute; top: 14px; right: 14px; z-index: 1; cursor: pointer; width: 34px; height: 34px; border-radius: 50%; border: 0; background: #eceae4; color: #3a3833; display: flex; align-items: center; justify-content: center; }
 
   /* overscroll-behavior:contain stops scroll chaining: without it, a swipe that
      runs past this element's own scroll end keeps going and scrolls the page
@@ -110,6 +106,7 @@ const tiles = forSurface(exploreTiles, 'mobile');
 <script>
   const root = document.querySelector<HTMLElement>('[data-more-root]');
   const panel = root?.querySelector<HTMLElement>('[data-more-panel]');
+  const triggers = Array.from(document.querySelectorAll<HTMLElement>('[data-more-open]'));
   if (root && panel) {
     let opener: HTMLElement | null = null;
 
@@ -121,18 +118,25 @@ const tiles = forSurface(exploreTiles, 'mobile');
       opener = fromEl;
       root!.classList.add('open');
       document.body.style.overflow = 'hidden';
+      triggers.forEach((t) => t.setAttribute('aria-expanded', 'true'));
       panel!.focus();
     }
     function close() {
       root!.classList.remove('open');
       document.body.style.overflow = '';
+      triggers.forEach((t) => t.setAttribute('aria-expanded', 'false'));
       opener?.focus();
     }
 
-    document.querySelectorAll<HTMLElement>('[data-more-open]').forEach((btn) => {
-      btn.addEventListener('click', () => open(btn));
+    // The More tab is the only way in AND out: tapping it while the sheet is
+    // already open closes it again, so there's no separate close button
+    // needed floating over the content.
+    triggers.forEach((btn) => {
+      btn.setAttribute('aria-expanded', 'false');
+      btn.addEventListener('click', () => {
+        root!.classList.contains('open') ? close() : open(btn);
+      });
     });
-    root.querySelector<HTMLElement>('[data-more-close]')?.addEventListener('click', close);
     root.querySelector('[data-more-backdrop]')?.addEventListener('click', close);
 
     document.addEventListener('keydown', (e) => {
