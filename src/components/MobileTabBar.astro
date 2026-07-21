@@ -1,0 +1,47 @@
+---
+/**
+ * Fixed bottom tab bar for standalone mobile pages (the invitation maker, and
+ * any future page that lives OUTSIDE the /m/ app but should still feel part of
+ * it). The /m/ app has its own in-app nav that switches screens via JS; these
+ * pages are separate documents, so here the tabs are real links back into the
+ * app (`/m/#home`, `/m/#more`, …) — the app reads the hash on load and opens the
+ * matching screen. Shown only at phone widths; desktop keeps the SiteHeader.
+ *
+ * Matches the /m/ nav's look (icons, center Book button, colours) so crossing
+ * from the app into a standalone page and back feels seamless.
+ */
+import { url } from '../data/site';
+
+interface Props {
+  /** Which tab to highlight. The invitation maker lives under Events → "More". */
+  active?: 'home' | 'train' | 'book' | 'schedule' | 'more' | '';
+}
+const { active = '' } = Astro.props;
+const m = (hash: string) => `${url('m/')}#${hash}`;
+---
+<nav class="mtab" aria-label="Main navigation">
+  <a class:list={['mtab-btn', active === 'home' && 'active']} href={m('home')}><i class="bi bi-house-door-fill" aria-hidden="true"></i><span>Home</span></a>
+  <a class:list={['mtab-btn', active === 'train' && 'active']} href={m('train')}><i class="bi bi-person-arms-up" aria-hidden="true"></i><span>Train</span></a>
+  <a class="mtab-btn mtab-center" href={m('book')}><span class="mtab-center-c"><i class="bi bi-calendar-check-fill" aria-hidden="true"></i></span><span>Book</span></a>
+  <a class:list={['mtab-btn', active === 'schedule' && 'active']} href={m('schedule')}><i class="bi bi-calendar3" aria-hidden="true"></i><span>Schedule</span></a>
+  <a class:list={['mtab-btn', active === 'more' && 'active']} href={m('more')}><i class="bi bi-grid-fill" aria-hidden="true"></i><span>More</span></a>
+</nav>
+
+<style>
+  .mtab { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; background: rgba(28,26,23,.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid rgba(255,255,255,.08); padding: 9px 12px calc(13px + env(safe-area-inset-bottom, 10px)); display: none; align-items: flex-end; }
+  .mtab-btn { flex: 1; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 7px; color: rgba(255,255,255,.42); }
+  .mtab-btn i { font-size: 26px; }
+  .mtab-btn span { font: 700 12px/1 'Archivo', sans-serif; letter-spacing: .02em; }
+  .mtab-btn.active { color: #fff; }
+  .mtab-btn:active { transform: scale(.9); }
+  .mtab-center .mtab-center-c { width: 64px; height: 64px; margin-top: -36px; border-radius: 50%; background: #ffd400; border: 4px solid rgba(28,26,23,.92); box-shadow: 0 6px 15px -7px rgba(255,212,0,.45); display: flex; align-items: center; justify-content: center; }
+  .mtab-center .mtab-center-c i { font-size: 29px; color: #211f1b; }
+  .mtab-center span:last-child { font-weight: 800; text-transform: uppercase; }
+  /* Phones only — desktop keeps the SiteHeader/footer chrome. */
+  @media (max-width: 640px) { .mtab { display: flex; } }
+</style>
+
+<!-- Clear the fixed bar so the page's last content / footer isn't hidden. -->
+<style is:global>
+  @media (max-width: 640px) { body { padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px)); } }
+</style>
