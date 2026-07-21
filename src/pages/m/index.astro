@@ -426,8 +426,11 @@ const clientConfig = {
         </div>
       </section>
 
-      <!-- ===== SUB: REGISTER (mounts the shared camp-reg-form; bottom nav
-             is hidden while active so the form's sticky pay bar owns the edge) ===== -->
+      <!-- ===== SUB: REGISTER (mounts the shared camp-reg-form) =====
+             The tab bar stays up here like every other screen. Nothing overlaps:
+             the form's .reg-mbar is sticky INSIDE .m-scroll, and .m-scroll is the
+             flex-1 row above .m-nav — so the pay bar pins to the scroller's
+             bottom, which is exactly the tab bar's top edge. -->
       <section data-screen="register" class="m-screen" hidden>
         <div class="reg-root" data-reg-mount></div>
       </section>
@@ -857,7 +860,6 @@ const clientConfig = {
 
   const screens = Array.from(document.querySelectorAll<HTMLElement>('[data-screen]'));
   const navBtns = Array.from(document.querySelectorAll<HTMLElement>('[data-nav]'));
-  const bottomNav = document.querySelector<HTMLElement>('.m-nav');
   const scroll = document.querySelector<HTMLElement>('.m-scroll');
 
   // The camp registration form is the shared module mounted once, the first time
@@ -919,9 +921,6 @@ const clientConfig = {
     });
     if (headMain && headSub) { headMain.hidden = isSub; headSub.hidden = !isSub; }
     if (isSub && subtitleEl) subtitleEl.textContent = SUBTITLES[screen] || '';
-    // During registration the bottom tab bar is hidden — the form's own sticky
-    // pay bar owns the bottom edge (back is via the "‹ Registration" app-bar).
-    if (bottomNav) bottomNav.hidden = screen === 'register';
     if (scroll) scroll.scrollTop = 0;
     const shown = screens.find((el) => !el.hidden);
     if (shown) { shown.setAttribute('tabindex', '-1'); shown.focus({ preventScroll: true }); }
