@@ -268,6 +268,15 @@ const clientConfig = {
             <button type="button" class="tile m-tile" data-goto="#getstarted"><span class="m-tile-ic" style={`background:color-mix(in srgb,${cat.openGym} 14%,#fff)`}><i class="bi bi-flag-fill" style={`color:${cat.openGym}`}></i></span><div><div class="m-tile-t">Get Started</div><div class="m-tile-s">First-visit guide</div></div></button>
           </div>
 
+          <a href={url('make-invitation')} class="m-invite" style={`--m-invite-accent:${cat.parties}`}>
+            <span class="m-invite-ic"><i class="bi bi-postcard-heart-fill" aria-hidden="true"></i></span>
+            <div class="m-invite-txt">
+              <div class="m-invite-t">Invitation maker <span class="m-invite-badge">Free</span></div>
+              <div class="m-invite-s">Make a party invite for your birthday booking and download it — right from your phone.</div>
+            </div>
+            <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
+          </a>
+
           <div class="m-visit">
             <div class="m-visit-eyebrow"><span class="mh-rule"></span>Visit us</div>
             <div class="m-visit-rows">
@@ -436,6 +445,15 @@ const clientConfig = {
           </div>
 
           <div class="m-hold"><i class="bi bi-shield-lock" aria-hidden="true"></i><span>Your card isn't charged at booking — it just holds the slot. You pay in person on the day, by final headcount.</span></div>
+
+          <a href={url('make-invitation')} class="m-invite" style={`--m-invite-accent:${cat.parties}`}>
+            <span class="m-invite-ic"><i class="bi bi-postcard-heart-fill" aria-hidden="true"></i></span>
+            <div class="m-invite-txt">
+              <div class="m-invite-t">Invitation maker <span class="m-invite-badge">Free</span></div>
+              <div class="m-invite-s">Design a party invite and download it to text or post — right from your phone.</div>
+            </div>
+            <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
+          </a>
 
           <div class="m-label">Party FAQ</div>
           <div class="m-faqbox" style="margin-bottom:22px">
@@ -720,6 +738,16 @@ const clientConfig = {
   .m-groupslink-txt { flex: 1; text-align: left; }
   .m-groupslink-t { font: 800 14px/1.15 'Archivo', sans-serif; }
   .m-groupslink-s { font: 500 12px/1.35 inherit; color: #8a877f; margin-top: 3px; }
+
+  /* Invitation maker feature card (Events + More) — party-accent tinted so it
+     reads as a highlighted feature, a full-page link to the invitation maker. */
+  .m-invite { display: flex; align-items: center; gap: 13px; text-decoration: none; color: inherit; margin-bottom: 24px; padding: 15px 16px; border-radius: 16px; background: color-mix(in srgb, var(--m-invite-accent) 8%, #fff); border: 1px solid color-mix(in srgb, var(--m-invite-accent) 26%, #ebe9e4); box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); }
+  .m-invite-ic { flex: none; width: 44px; height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center; background: var(--m-invite-accent); color: #211f1b; }
+  .m-invite-ic i { font-size: 21px; }
+  .m-invite-txt { flex: 1; }
+  .m-invite-t { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font: 800 14.5px/1.15 'Archivo', sans-serif; }
+  .m-invite-badge { font: 800 9px/1 'Archivo', sans-serif; letter-spacing: .05em; text-transform: uppercase; color: #211f1b; background: color-mix(in srgb, var(--m-invite-accent) 52%, #fff); padding: 4px 7px; border-radius: 999px; }
+  .m-invite-s { font: 500 12px/1.4 inherit; color: #8a877f; margin-top: 4px; }
 
   /* groups */
   .m-gcard { background: #fff; border: 1px solid #ebe9e4; border-radius: 18px; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); padding: 22px 24px; margin-bottom: 14px; }
