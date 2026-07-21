@@ -166,6 +166,11 @@ export const seo = {
     description:
       "Make a birthday invitation for your Monkey Vault party in seconds — pick a style, fill in the details, and download to text, post or print.",
   },
+  campRegistration: {
+    title: 'Camp Registration | The Monkey Vault Toronto',
+    description:
+      "Register your kids for Monkey Vault parkour camp — add each child, pick their weeks or P.A. Days and late pickup, and pay once, securely, at the end.",
+  },
   pricing: {
     title: 'Passes, Memberships & Pricing | The Monkey Vault',
     description:
