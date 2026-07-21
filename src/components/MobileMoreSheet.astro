@@ -72,15 +72,30 @@ const tiles = forSurface(exploreTiles, 'mobile');
      — the whole fix in one line. The panel extends to the true bottom of the
      viewport (bottom:0); the tab bar simply paints on top of the sliver behind
      it, which is what "slides up behind the tab bar" means physically. */
-  .m-sheet-root { position: fixed; inset: 0; z-index: 40; visibility: hidden; pointer-events: none; }
-  .m-sheet-root.open { visibility: visible; pointer-events: auto; }
+  /* --close-dur must match the panel's own transition-duration below (the
+     longer of the two animated properties) — it's what visibility waits for. */
+  .m-sheet-root {
+    --close-dur: .45s;
+    position: fixed; inset: 0; z-index: 40; pointer-events: none;
+    /* Closing removes .open, so visibility snaps back to this rule. Without
+       the delay, visibility:hidden would apply INSTANTLY the moment .open is
+       removed — cutting the panel's slide-down transition off after a frame
+       or two, no matter how long its transform transition-duration says,
+       because a hidden element stops painting. Delaying by --close-dur keeps
+       it visible/painting for the full close animation; only opening (below)
+       needs to be instant. */
+    visibility: hidden;
+    transition: visibility 0s linear var(--close-dur);
+  }
+  .m-sheet-root.open { visibility: visible; pointer-events: auto; transition-delay: 0s; }
 
   .m-sheet-backdrop { position: absolute; inset: 0; background: rgba(20, 18, 16, .5); opacity: 0; transition: opacity .38s ease; }
   .m-sheet-root.open .m-sheet-backdrop { opacity: 1; }
 
-  .m-sheet-panel { position: absolute; left: 0; right: 0; bottom: 0; max-height: 85dvh; display: flex; flex-direction: column; background: #f5f4f1; border-radius: 20px 20px 0 0; transform: translateY(100%); transition: transform .45s cubic-bezier(.22, 1, .36, 1); }
+  .m-sheet-panel { position: absolute; left: 0; right: 0; bottom: 0; max-height: 85dvh; display: flex; flex-direction: column; background: #f5f4f1; border-radius: 20px 20px 0 0; transform: translateY(100%); transition: transform var(--close-dur) cubic-bezier(.22, 1, .36, 1); }
   .m-sheet-root.open .m-sheet-panel { transform: translateY(0); }
   @media (prefers-reduced-motion: reduce) {
+    .m-sheet-root { --close-dur: 0s; }
     .m-sheet-backdrop, .m-sheet-panel { transition: none; }
   }
 
