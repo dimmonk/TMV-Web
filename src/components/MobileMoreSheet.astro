@@ -1,17 +1,18 @@
 ---
 /**
- * The "More" slide-up sheet — markup restored verbatim from the /m/ app's
- * `more` screen (tile grid, invite promo, dark Visit-us card). It hosts no
- * content of its own: it's the overflow nav plus "how to reach us", i.e. what
- * the footer is on desktop, which mobile hides. Call + Directions stay one tap
- * from any page.
+ * The "More" slide-up sheet — the overflow nav plus "how to reach us" (what
+ * the footer is on desktop, which mobile hides). Call + Directions stay one
+ * tap from any page.
  *
- * The /m/ screen switched screens via JS (data-goto="#hash"); here the tiles
- * are real <a href> to real routes, and the whole thing is a native <dialog>
- * for free focus-trap + Esc-to-close instead of reimplementing them. Styling
- * is unchanged: wrapped in .mapp so it uses the SAME m-tile/m-invite/m-visit
- * rules as every other phone screen (src/styles/mobile-app.css) — no
- * component-local reinvention.
+ * A plain panel in normal document flow, NOT a native <dialog>. A <dialog>
+ * shown via showModal() renders in the browser's top layer, which sits ABOVE
+ * every normal z-index in the document — including the tab bar's z-index:50 —
+ * no matter what CSS is written against it. That fought the one requirement
+ * that actually matters here (the tab bar must stay visible and on top, with
+ * the sheet sliding up BEHIND it) and needed increasingly fragile inset/margin
+ * math to fake. A normal element has no such override: give the panel a
+ * z-index below the tab bar's and the tab bar simply wins, every time, with
+ * no math at all.
  */
 import { url, site } from '../data/site';
 import { exploreTiles } from '../data/explore';
@@ -23,85 +24,127 @@ import { forSurface } from '../data/surface';
 const tiles = forSurface(exploreTiles, 'mobile');
 ---
 
-<dialog class="m-sheet" data-more-sheet aria-label="More">
-  <div class="m-sheet-grab"></div>
+<div class="m-sheet-root" data-more-root data-chrome="app">
+  <div class="m-sheet-backdrop" data-more-backdrop></div>
 
-  <div class="m-sheet-body mapp">
+  <div class="m-sheet-panel" data-more-panel role="dialog" aria-modal="true" aria-label="More" tabindex="-1">
+    <div class="m-sheet-grab"></div>
     <button type="button" class="m-sheet-x" data-more-close aria-label="Close">
       <i class="bi bi-x-lg" aria-hidden="true"></i>
     </button>
 
-    <div class="m-pad">
-      <div class="m-tiles">
-        {tiles.map((t) => (
-          <a class="tile m-tile" href={url(t.path)}>
-            <span class="m-tile-ic" style={`background:color-mix(in srgb,${t.fg} 14%,#fff)`}><i class={`bi ${t.icon}`} style={`color:${t.fg}`} aria-hidden="true"></i></span>
-            <div><div class="m-tile-t">{t.label}</div><div class="m-tile-s">{t.sub}</div></div>
-          </a>
-        ))}
-      </div>
-
-      <a class="m-invite" href={url('make-invitation')} style="--m-invite-accent:#e5399b">
-        <span class="m-invite-ic"><i class="bi bi-postcard-heart-fill" aria-hidden="true"></i></span>
-        <div class="m-invite-txt">
-          <div class="m-invite-t">Invitation maker <span class="m-invite-badge">Free</span></div>
-          <div class="m-invite-s">Make a party invite for your birthday booking and download it — right from your phone.</div>
+    <div class="m-sheet-scroll mapp">
+      <div class="m-pad">
+        <div class="m-tiles-col">
+          {tiles.map((t) => (
+            <a class="m-tile-row" href={url(t.path)}>
+              <span class="m-tile-ic" style={`background:color-mix(in srgb,${t.fg} 14%,#fff)`}><i class={`bi ${t.icon}`} style={`color:${t.fg}`} aria-hidden="true"></i></span>
+              <div class="m-tile-row-txt"><div class="m-tile-t">{t.label}</div><div class="m-tile-s">{t.sub}</div></div>
+              <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
+            </a>
+          ))}
         </div>
-        <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
-      </a>
 
-      <div class="m-visit">
-        <div class="m-visit-eyebrow"><span class="mh-rule"></span>Visit us</div>
-        <div class="m-visit-rows">
-          <div class="m-visit-row"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i><div><div class="m-visit-t">{site.address.street}</div><div class="m-visit-s">{site.address.neighbourhood}, {site.address.locality}</div></div></div>
-          <div class="m-visit-row"><i class="bi bi-clock-fill" aria-hidden="true"></i><div><div class="m-visit-t">{site.hoursLabel}</div><div class="m-visit-s">Open gym to the public daily</div></div></div>
-          <div class="m-visit-btns">
-            <a href={site.mapUrl} target="_blank" rel="noopener" class="m-visit-btn"><i class="bi bi-geo-alt"></i> Directions</a>
-            <a href={`tel:${site.phone}`} class="m-visit-btn"><i class="bi bi-telephone-fill"></i> Call us</a>
+        <a class="m-invite" href={url('make-invitation')} style="--m-invite-accent:#e5399b">
+          <span class="m-invite-ic"><i class="bi bi-postcard-heart-fill" aria-hidden="true"></i></span>
+          <div class="m-invite-txt">
+            <div class="m-invite-t">Invitation maker <span class="m-invite-badge">Free</span></div>
+            <div class="m-invite-s">Make a party invite for your birthday booking and download it — right from your phone.</div>
+          </div>
+          <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
+        </a>
+
+        <div class="m-visit">
+          <div class="m-visit-eyebrow"><span class="mh-rule"></span>Visit us</div>
+          <div class="m-visit-rows">
+            <div class="m-visit-row"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i><div><div class="m-visit-t">{site.address.street}</div><div class="m-visit-s">{site.address.neighbourhood}, {site.address.locality}</div></div></div>
+            <div class="m-visit-row"><i class="bi bi-clock-fill" aria-hidden="true"></i><div><div class="m-visit-t">{site.hoursLabel}</div><div class="m-visit-s">Open gym to the public daily</div></div></div>
+            <div class="m-visit-btns">
+              <a href={site.mapUrl} target="_blank" rel="noopener" class="m-visit-btn"><i class="bi bi-geo-alt"></i> Directions</a>
+              <a href={`tel:${site.phone}`} class="m-visit-btn"><i class="bi bi-telephone-fill"></i> Call us</a>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</dialog>
+</div>
 
 <style>
-  /* Sheet chrome only (backdrop, grab handle, slide-up, close button) — none
-     of this existed in the /m/ app, which had no modal, so it isn't a restore.
-     Everything INSIDE .m-sheet-body is the original design via .mapp. */
-  /* Native <dialog> renders in the browser's top layer — ABOVE everything in
-     normal stacking order, including the tab bar's z-index:50 — so without
-     this the sheet would extend straight to the screen edge and bury the tab
-     bar underneath it. Explicit inset (not margin:auto, which fights with
-     max-height in unpredictable ways for a position:fixed top-layer box)
-     pins ONLY the bottom edge var(--tabbar-h) above the viewport bottom —
-     the tab bar's real measured height, see MobileTabBar.astro — and lets
-     the box grow upward from there, capped by max-height. */
-  .m-sheet { position: fixed; inset: auto 0 var(--tabbar-h) 0; margin: 0; width: 100%; max-width: 100%; padding: 0; border: 0; background: transparent; max-height: calc(90dvh - var(--tabbar-h)); overflow: hidden; }
-  .m-sheet::backdrop { background: rgba(20, 18, 16, .5); }
-  .m-sheet-grab { width: 38px; height: 4px; border-radius: 999px; background: rgba(255,255,255,.5); margin: 0 auto 9px; }
+  /* z-index:40, deliberately BELOW the tab bar's z-index:50 (MobileTabBar.astro)
+     — the whole fix in one line. The panel extends to the true bottom of the
+     viewport (bottom:0); the tab bar simply paints on top of the sliver behind
+     it, which is what "slides up behind the tab bar" means physically. */
+  .m-sheet-root { position: fixed; inset: 0; z-index: 40; visibility: hidden; pointer-events: none; }
+  .m-sheet-root.open { visibility: visible; pointer-events: auto; }
+
+  .m-sheet-backdrop { position: absolute; inset: 0; background: rgba(20, 18, 16, .5); opacity: 0; transition: opacity .22s ease; }
+  .m-sheet-root.open .m-sheet-backdrop { opacity: 1; }
+
+  .m-sheet-panel { position: absolute; left: 0; right: 0; bottom: 0; max-height: 85dvh; display: flex; flex-direction: column; background: #f5f4f1; border-radius: 20px 20px 0 0; transform: translateY(100%); transition: transform .25s cubic-bezier(.22, 1, .36, 1); }
+  .m-sheet-root.open .m-sheet-panel { transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .m-sheet-backdrop, .m-sheet-panel { transition: none; }
+  }
+
+  .m-sheet-grab { flex: none; width: 38px; height: 4px; border-radius: 999px; background: #d8d5cc; margin: 10px auto 2px; }
+  .m-sheet-x { position: absolute; top: 14px; right: 14px; z-index: 1; cursor: pointer; width: 34px; height: 34px; border-radius: 50%; border: 0; background: #eceae4; color: #3a3833; display: flex; align-items: center; justify-content: center; }
+
   /* overscroll-behavior:contain stops scroll chaining: without it, a swipe that
      runs past this element's own scroll end keeps going and scrolls the page
      behind the sheet instead of just bouncing/stopping here. */
-  .m-sheet-body { position: relative; overflow-y: auto; overscroll-behavior: contain; max-height: calc(90dvh - 13px - var(--tabbar-h)); background: #f5f4f1; border-radius: 20px 20px 0 0; padding-top: 8px; }
-  .m-sheet-body .m-pad { padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)); }
-  .m-sheet-x { position: absolute; top: 22px; right: 18px; z-index: 1; cursor: pointer; width: 34px; height: 34px; border-radius: 50%; border: 0; background: #eceae4; color: #3a3833; display: flex; align-items: center; justify-content: center; }
+  .m-sheet-scroll { overflow-y: auto; overscroll-behavior: contain; }
+  /* The panel sits BEHIND the tab bar (z-index, above), so the last real row
+     of content needs its own clearance to end up somewhere tappable instead
+     of sliding out of view underneath it — var(--tabbar-h) is the tab bar's
+     own measured height (single source: MobileTabBar.astro). */
+  .m-sheet-scroll .m-pad { padding-top: 8px; padding-bottom: calc(20px + var(--tabbar-h)); }
 
-  @media (prefers-reduced-motion: no-preference) {
-    .m-sheet[open] { animation: m-sheet-up .22s cubic-bezier(.22, 1, .36, 1); }
-    @keyframes m-sheet-up { from { transform: translateY(14%); } to { transform: none; } }
-  }
+  /* Single-column tile rows — matches .m-invite's established row pattern
+     (icon left, stacked text, chevron) rather than a new card shape. */
+  .m-tiles-col { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .m-tile-row { display: flex; align-items: center; gap: 13px; text-decoration: none; color: inherit; padding: 13px 14px; border-radius: 16px; background: #fff; border: 1px solid #ebe9e4; box-shadow: 0 1px 3px rgba(28,25,23,.04), 0 14px 30px -24px rgba(28,25,23,.38); }
+  .m-tile-row-txt { flex: 1; min-width: 0; }
 </style>
 
 <script>
-  const sheet = document.querySelector<HTMLDialogElement>('[data-more-sheet]');
-  if (sheet) {
+  const root = document.querySelector<HTMLElement>('[data-more-root]');
+  const panel = root?.querySelector<HTMLElement>('[data-more-panel]');
+  if (root && panel) {
+    let opener: HTMLElement | null = null;
+
+    function focusablesIn(el: HTMLElement) {
+      return Array.from(el.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
+    }
+
+    function open(fromEl: HTMLElement) {
+      opener = fromEl;
+      root!.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      panel!.focus();
+    }
+    function close() {
+      root!.classList.remove('open');
+      document.body.style.overflow = '';
+      opener?.focus();
+    }
+
     document.querySelectorAll<HTMLElement>('[data-more-open]').forEach((btn) => {
-      btn.addEventListener('click', () => sheet.showModal());
+      btn.addEventListener('click', () => open(btn));
     });
-    sheet.querySelector<HTMLElement>('[data-more-close]')?.addEventListener('click', () => sheet.close());
-    sheet.addEventListener('click', (e) => {
-      if (e.target === sheet) sheet.close();
+    root.querySelector<HTMLElement>('[data-more-close]')?.addEventListener('click', close);
+    root.querySelector('[data-more-backdrop]')?.addEventListener('click', close);
+
+    document.addEventListener('keydown', (e) => {
+      if (!root!.classList.contains('open')) return;
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key !== 'Tab') return;
+      // Minimal focus trap: wrap Tab/Shift+Tab at the panel's edges.
+      const items = focusablesIn(panel!);
+      if (!items.length) return;
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+      else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
     });
   }
 </script>
