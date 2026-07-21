@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import MobileTabBar from '../components/MobileTabBar.astro';
 import { site, social, hours, links, url } from '../data/site';
 import { deviceSwitchScript } from '../lib/device-switch';
 
@@ -17,11 +18,15 @@ interface Props {
   /** section hash to deep-link into the app-style mobile UI (m/#hash) */
   mobileHash?: string;
   /** false = keep phones on this page (for pages with no mobile-app equivalent,
-   * e.g. the invitation maker — the mobile shell has no screen for them) */
+   * e.g. the invitation maker — the mobile shell has no screen for them).
+   * When false, this layout AUTO-RENDERS the mobile bottom tab bar so the page
+   * is never a dead-end on phones — see the invariant note by <MobileTabBar>. */
   mobileRedirect?: boolean;
+  /** which bottom-tab to highlight when the tab bar is shown (mobileRedirect=false) */
+  mobileTab?: 'home' | 'train' | 'book' | 'schedule' | 'more' | '';
 }
 
-const { title, description, active = '', brand = '#ffd400', ogImage, mobileHash, mobileRedirect = true } = Astro.props;
+const { title, description, active = '', brand = '#ffd400', ogImage, mobileHash, mobileRedirect = true, mobileTab = '' } = Astro.props;
 
 // Phones get the dedicated app-style mobile UI (the Astro page at /m/).
 // Desktop stays on these SEO-rich Astro pages. Deep-link to the matching
@@ -130,5 +135,12 @@ const jsonLd = {
       <slot />
     </main>
     <SiteFooter />
+    {/* INVARIANT: a page that opts to render on phones (mobileRedirect=false)
+        is not part of the /m/ app shell, so it would have no bottom nav and be
+        a dead-end. Tying the tab bar to the SAME flag that keeps the page on
+        mobile means you can't add a mobile-visible page and forget the nav —
+        it's automatic. Pages that redirect to /m/ don't need it (they get the
+        app's own nav). The bar is phone-only via CSS. */}
+    {!mobileRedirect && <MobileTabBar active={mobileTab} />}
   </body>
 </html>

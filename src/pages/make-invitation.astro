@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import MobileTabBar from '../components/MobileTabBar.astro';
 import { seo, links, site, url } from '../data/site';
 
 const defaultAddress = `${site.address.street} · ${site.address.locality}`;
@@ -25,7 +24,7 @@ function timeOptions(startHour: number, endHour: number) {
 }
 const timeOpts = timeOptions(11, 22);
 ---
-<BaseLayout title={seo.makeInvitation.title} description={seo.makeInvitation.description} active="events" mobileRedirect={false}>
+<BaseLayout title={seo.makeInvitation.title} description={seo.makeInvitation.description} active="events" mobileRedirect={false} mobileTab="more">
   <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js" is:inline></script>
 
   <div class="inv-intro">
@@ -209,10 +208,6 @@ const timeOpts = timeOptions(11, 22);
       <p class="inv-hint"><i class="bi bi-info-circle" aria-hidden="true"></i><span id="inv-hint-text">Download a high-res PNG to text or post to your story, or print it. In the print dialog you can scale it or fit several per page.</span></p>
     </div>
   </div>
-
-  <!-- Keep the mobile app's bottom tab bar on this standalone page so phone
-       users can jump back into /m/ instead of hitting a dead end. -->
-  <MobileTabBar active="more" />
 </BaseLayout>
 
 <style>
