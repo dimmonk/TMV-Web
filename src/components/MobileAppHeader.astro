@@ -43,7 +43,13 @@ const { variant = 'brand', title = 'Back', backHref = url('') } = Astro.props;
 </header>
 
 <style>
-  .m-head { position: sticky; top: 0; z-index: 15; background: #211f1b; border-bottom: 1px solid rgba(255,255,255,.08); padding: calc(16px + env(safe-area-inset-top, 0px)) 18px 16px; }
+  /* No border: every screen has a hero of this SAME solid #211f1b directly
+     beneath the header, so a dividing line here reads as an unwanted seam
+     between two things that should look like one block on first load. Once
+     scrolled, the header (still sticky, still dark) against the page's light
+     background is already distinct enough on its own — no explicit border
+     needed for that either. */
+  .m-head { position: sticky; top: 0; z-index: 15; background: #211f1b; padding: calc(16px + env(safe-area-inset-top, 0px)) 18px 16px; }
   /* min-height pinned to the logo's height (32px) — the only fixed-size
      content in either variant — so the header is the same total height
      whether a page shows the brand row or the back row. Without this, the

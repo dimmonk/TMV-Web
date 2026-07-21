@@ -15,6 +15,12 @@
  */
 import { url, site } from '../data/site';
 import { exploreTiles } from '../data/explore';
+import { forSurface } from '../data/surface';
+
+// This IS the mobile surface, so resolve mobile's own label/copy overrides
+// (e.g. Events -> "Birthday Parties") — desktop (SiteFooter) resolves the
+// same array for 'desktop' and keeps the base label untouched.
+const tiles = forSurface(exploreTiles, 'mobile');
 ---
 
 <dialog class="m-sheet" data-more-sheet aria-label="More">
@@ -27,7 +33,7 @@ import { exploreTiles } from '../data/explore';
 
     <div class="m-pad">
       <div class="m-tiles">
-        {exploreTiles.map((t) => (
+        {tiles.map((t) => (
           <a class="tile m-tile" href={url(t.path)}>
             <span class="m-tile-ic" style={`background:color-mix(in srgb,${t.fg} 14%,#fff)`}><i class={`bi ${t.icon}`} style={`color:${t.fg}`} aria-hidden="true"></i></span>
             <div><div class="m-tile-t">{t.label}</div><div class="m-tile-s">{t.sub}</div></div>

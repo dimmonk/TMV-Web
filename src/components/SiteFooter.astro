@@ -1,6 +1,7 @@
 ---
 import { site, social, links, url } from '../data/site';
 import { exploreTiles } from '../data/explore';
+import { forSurface } from '../data/surface';
 const year = new Date().getFullYear();
 
 const columns = [
@@ -9,10 +10,12 @@ const columns = [
     // six, and the long tail lives here — rendered from the SAME array the sheet
     // uses, so adding a revenue stream surfaces on both at once. 'Train' leads
     // because it is a primary destination and so isn't in the tile set.
+    // forSurface(..., 'desktop') resolves desktop's own label/copy overrides —
+    // this is desktop chrome, so it must never pick up a mobile-only override.
     title: 'Explore',
     items: [
       { text: 'Train', href: url('train') },
-      ...exploreTiles.map((t) => ({ text: t.label, href: url(t.path) })),
+      ...forSurface(exploreTiles, 'desktop').map((t) => ({ text: t.label, href: url(t.path) })),
     ],
   },
   {
