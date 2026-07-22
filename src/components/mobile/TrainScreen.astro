@@ -36,6 +36,22 @@ const classHref = (c: ClassItem): string =>
     {specializedClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}
   </div>
 
+  {/* Desktop's Class Membership block — a $180 unlimited offer that covers
+      every class on this screen. Was missing from mobile entirely, so the
+      phone showed the classes with no way to learn they can be bought as one
+      pass. Uses the same m-gcard/m-gfoot2 pattern Groups uses. */}
+  <div class="m-gcard" style="margin-bottom:30px">
+    <div class="m-ghead">
+      <span class="m-gic" style={`background:color-mix(in srgb,${cat.classes} 14%,#fff)`}><i class="bi bi-infinity" style={`color:${cat.classes}`} aria-hidden="true"></i></span>
+      <div><div class="m-geyebrow" style={`color:${cat.classes}`}>One membership · all access</div><div class="m-gtitle">Every class, unlimited</div></div>
+    </div>
+    <p class="m-gdesc">Unlocks every recreational and specialized class above, plus unlimited open gym. No per-class fees, no reservations. Private lessons, the Athletic Program and partner classes are billed separately.</p>
+    <div class="m-gfoot2">
+      <div><div class="m-gbig">$180</div><div class="m-gsub">30 days · unlimited</div></div>
+      <a href={`${url('store')}#classes`} class="m-darkbtn-sm">Get it <i class="bi bi-arrow-right"></i></a>
+    </div>
+  </div>
+
   <h3 class="m-h3">Partnerships</h3>
   <p class="m-sub" style="margin-bottom:14px">Run by trusted partner coaches who share our space.</p>
   <div class="m-stack">

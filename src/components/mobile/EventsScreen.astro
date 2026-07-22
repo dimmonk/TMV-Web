@@ -9,6 +9,16 @@ import PartyCard from '../PartyCard.astro';
 import { cat, url } from '../../data/site';
 import { partyCards } from '../../data/parties';
 
+// Desktop's "How booking works" — was missing from mobile, so the phone never
+// explained that the card on file isn't charged, which is the single most
+// common parent question before booking.
+const steps = [
+  { t: 'Pick the age range', p: 'Select the average age of the group.' },
+  { t: 'Pick group size', p: 'You can update the headcount later if it changes.' },
+  { t: 'Pick date & time', p: 'Weekend slots fill fast — what you see online is all we have.' },
+  { t: 'Enter payment info', p: 'Your card is not charged — it only holds the slot.' },
+  { t: 'Check your email', p: "Confirmation lands in your inbox. Peek in spam if you don't see it." },
+];
 const eventFaqs = [
   { q: 'When do I pay?', a: 'Nothing upfront — the card on file is only for the cancellation policy. You pay in person on the day, based on final headcount.' },
   { q: 'Weekend slots full?', a: 'The availability online is all we have. Smaller groups can book a Mini party (3+ kids, $30 each).' },
@@ -25,6 +35,17 @@ const eventFaqs = [
   </div>
 
   <div class="m-hold"><i class="bi bi-shield-lock" aria-hidden="true"></i><span>Your card isn't charged at booking — it just holds the slot. You pay in person on the day, by final headcount.</span></div>
+
+  <h3 class="m-h3" style="margin:0 0 4px">How booking works</h3>
+  <p class="m-sub" style="margin-bottom:14px">Five steps, about two minutes.</p>
+  <div style="margin-bottom:28px">
+    {steps.map((st, i) => (
+      <div class="m-step" style={i === steps.length - 1 ? 'margin-bottom:0' : ''}>
+        <span class="m-stepn">{i + 1}</span>
+        <div><div class="m-step-t">{st.t}</div><p class="m-step-p">{st.p}</p></div>
+      </div>
+    ))}
+  </div>
 
   <div class="m-label">Party FAQ</div>
   <div class="m-faqbox" style="margin-bottom:22px">

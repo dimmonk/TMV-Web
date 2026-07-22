@@ -33,6 +33,12 @@ export const exploreTiles: ExploreTile[] = [
   { key: 'pricing',    label: 'Pricing',     sub: 'Passes, packs & memberships', path: 'pricing',       icon: 'bi-tag-fill',     fg: cat.openGym },
   { key: 'store',      label: 'Store',       sub: 'Buy passes & memberships',    path: 'store',         icon: 'bi-bag-fill',     fg: '#211f1b' },
   { key: 'camps',      label: 'Camps',       sub: 'School-break day camps',      path: 'camps',         icon: 'bi-sun-fill',     fg: cat.camps },
+  // only:'mobile' — on desktop the Athletic Program is already reachable from
+  // the top nav's Train page, the store and the class cards, so adding it here
+  // would put a redundant extra link in the footer's Explore column. On phone
+  // the overflow sheet is the only menu there is, and it was reachable ONLY by
+  // finding a class card on the Train screen.
+  { key: 'athletic',   label: 'Athletic Program', sub: 'Train like an athlete', path: 'athletic-program', icon: 'bi-lightning-fill', fg: cat.athletic, only: 'mobile' },
   // Base/desktop label stays 'Events' (matches the top nav and the page itself).
   // Mobile gets 'Birthday Parties' because Groups now has its own tile right
   // below this one, and without the split "Events" reads ambiguously in a
