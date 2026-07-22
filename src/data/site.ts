@@ -53,6 +53,20 @@ export const social = {
   youtube: 'https://www.youtube.com/@TheMonkeyVault',
 } as const;
 
+/**
+ * General public hours as NUMBERS — the single source for anything that has to
+ * compute against the clock (the app header's open/closed pill) or emit a
+ * machine-readable time (the LocalBusiness JSON-LD). The display strings in
+ * `hours` and `hoursLabel` below must agree with these.
+ *
+ * Deliberately 22:00 EVERY day, including Friday. The gym does stay open until
+ * midnight on Fridays, but that window is ADULTS ONLY, which is exactly why it
+ * is not part of the advertised general hours — so it must not drive a generic
+ * "Open now" pill or the structured data either, or a family reads 11 PM Friday
+ * as open to them.
+ */
+export const hoursRange = { open: 11, close: 22 } as const;
+
 export const hours = [
   { day: 'Monday', time: '11:00 AM – 10:00 PM' },
   { day: 'Tuesday', time: '11:00 AM – 10:00 PM' },

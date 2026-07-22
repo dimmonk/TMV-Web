@@ -6,7 +6,7 @@ import SiteFooter from '../components/SiteFooter.astro';
 import MobileTabBar from '../components/MobileTabBar.astro';
 import MobileAppHeader from '../components/MobileAppHeader.astro';
 import MobileMoreSheet from '../components/MobileMoreSheet.astro';
-import { site, social, hours, links, url } from '../data/site';
+import { site, social, hours, hoursRange, links, url } from '../data/site';
 
 interface Props {
   title: string;
@@ -63,8 +63,8 @@ const jsonLd = {
   openingHoursSpecification: hours.map((h) => ({
     '@type': 'OpeningHoursSpecification',
     dayOfWeek: h.day,
-    opens: '11:00',
-    closes: '22:00',
+    opens: `${String(hoursRange.open).padStart(2, '0')}:00`,
+    closes: `${String(hoursRange.close).padStart(2, '0')}:00`,
   })),
   sameAs: [social.instagram, social.facebook, social.youtube].filter(Boolean),
   hasMap: site.mapUrl,
