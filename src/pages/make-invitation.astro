@@ -28,14 +28,16 @@ import { seo } from '../data/site';
   <script>
     import { mountInvitationMaker } from '../lib/invitation-maker';
     import { links, site, url } from '../data/site';
-    const root = document.querySelector<HTMLElement>('.inv-root');
-    if (root) {
+    document.addEventListener('astro:page-load', () => {
+      const root = document.querySelector<HTMLElement>('.inv-root');
+      if (!root || root.dataset.mounted) return;
+      root.dataset.mounted = '1';
       mountInvitationMaker(root, {
         venue: site.name,
         address: `${site.address.street} · ${site.address.locality}`,
         defaultPhoto: url('assets/invite-default-photo.png'),
         waiverUrl: links.waiver,
       });
-    }
+    });
   </script>
 </BaseLayout>

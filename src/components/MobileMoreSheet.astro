@@ -127,47 +127,62 @@ const tiles = forSurface(exploreTiles, 'mobile');
 </style>
 
 <script>
-  const root = document.querySelector<HTMLElement>('[data-more-root]');
-  const panel = root?.querySelector<HTMLElement>('[data-more-panel]');
-  const triggers = Array.from(document.querySelectorAll<HTMLElement>('[data-more-open]'));
-  if (root && panel) {
-    let opener: HTMLElement | null = null;
+  // Under view transitions the sheet + its triggers are re-rendered per page, so
+  // all element lookups happen LIVE (inside each handler) rather than being
+  // captured in closures at first load. wireSheet() re-binds the per-page
+  // trigger/backdrop clicks on every navigation; the document-level keydown is
+  // added exactly once (guarded) and queries the current sheet each time.
+  let opener: HTMLElement | null = null;
 
-    function focusablesIn(el: HTMLElement) {
-      return Array.from(el.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
-    }
+  function focusablesIn(el: HTMLElement) {
+    return Array.from(el.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
+  }
+  function open(fromEl: HTMLElement) {
+    const root = document.querySelector<HTMLElement>('[data-more-root]');
+    const panel = root?.querySelector<HTMLElement>('[data-more-panel]');
+    if (!root || !panel) return;
+    opener = fromEl;
+    root.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.querySelectorAll<HTMLElement>('[data-more-open]').forEach((t) => t.setAttribute('aria-expanded', 'true'));
+    panel.focus();
+  }
+  function close() {
+    const root = document.querySelector<HTMLElement>('[data-more-root]');
+    if (!root) return;
+    root.classList.remove('open');
+    document.body.style.overflow = '';
+    document.querySelectorAll<HTMLElement>('[data-more-open]').forEach((t) => t.setAttribute('aria-expanded', 'false'));
+    opener?.focus();
+  }
 
-    function open(fromEl: HTMLElement) {
-      opener = fromEl;
-      root!.classList.add('open');
-      document.body.style.overflow = 'hidden';
-      triggers.forEach((t) => t.setAttribute('aria-expanded', 'true'));
-      panel!.focus();
-    }
-    function close() {
-      root!.classList.remove('open');
-      document.body.style.overflow = '';
-      triggers.forEach((t) => t.setAttribute('aria-expanded', 'false'));
-      opener?.focus();
-    }
-
-    // The More tab is the only way in AND out: tapping it while the sheet is
-    // already open closes it again, so there's no separate close button
-    // needed floating over the content.
-    triggers.forEach((btn) => {
+  function wireSheet() {
+    // A tile is a real <a href> — tapping it navigates while the sheet is open.
+    // The body element persists across a view transition, so clear any leftover
+    // scroll lock (and open state) so the new page starts clean and scrollable.
+    document.body.style.overflow = '';
+    const root = document.querySelector<HTMLElement>('[data-more-root]');
+    if (!root) return;
+    root.classList.remove('open');
+    // The More tab is the only way in AND out — tap again to close, so no
+    // floating close button. Fresh elements each nav → binding fresh is safe.
+    document.querySelectorAll<HTMLElement>('[data-more-open]').forEach((btn) => {
       btn.setAttribute('aria-expanded', 'false');
-      btn.addEventListener('click', () => {
-        root!.classList.contains('open') ? close() : open(btn);
-      });
+      btn.addEventListener('click', () => (root.classList.contains('open') ? close() : open(btn)));
     });
     root.querySelector('[data-more-backdrop]')?.addEventListener('click', close);
+  }
+  document.addEventListener('astro:page-load', wireSheet);
 
+  if (!(window as any).__moreKeydown) {
+    (window as any).__moreKeydown = true;
     document.addEventListener('keydown', (e) => {
-      if (!root!.classList.contains('open')) return;
+      const root = document.querySelector<HTMLElement>('[data-more-root]');
+      const panel = root?.querySelector<HTMLElement>('[data-more-panel]');
+      if (!root || !panel || !root.classList.contains('open')) return;
       if (e.key === 'Escape') { close(); return; }
       if (e.key !== 'Tab') return;
-      // Minimal focus trap: wrap Tab/Shift+Tab at the panel's edges.
-      const items = focusablesIn(panel!);
+      const items = focusablesIn(panel);
       if (!items.length) return;
       const first = items[0], last = items[items.length - 1];
       if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }

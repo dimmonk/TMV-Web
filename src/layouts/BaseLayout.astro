@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import '../styles/mobile-app.css';
+import { ViewTransitions } from 'astro:transitions';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import MobileTabBar from '../components/MobileTabBar.astro';
@@ -125,6 +126,13 @@ const jsonLd = {
     />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    {/* Client-side routing with animated cross-fades. Astro runs module scripts
+        ONCE (not per navigation), so every on-load init in this site
+        (status pill, --tabbar-h, More sheet, carousel, live schedule/pricing
+        fetches, invite + camp-reg mounts) is registered on `astro:page-load`,
+        which fires on first load AND after every transition. */}
+    <ViewTransitions />
   </head>
   <body style={`--brand:${brand}`}>
     <a href="#main" class="visually-hidden">Skip to content</a>

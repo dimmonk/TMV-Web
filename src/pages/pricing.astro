@@ -86,10 +86,9 @@ import '../styles/price-list-sheet.css';
 
 <script>
   import { renderPriceListSheet } from '../lib/price-list-renderer.js';
-  const root = document.getElementById('pl-embed-root');
-  try {
-    await renderPriceListSheet(root);
-  } catch (err) {
-    console.error('[pricing] render failed', err);
-  }
+  document.addEventListener('astro:page-load', () => {
+    const root = document.getElementById('pl-embed-root');
+    if (!root) return;
+    renderPriceListSheet(root).catch((err) => console.error('[pricing] render failed', err));
+  });
 </script>
