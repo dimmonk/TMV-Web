@@ -181,7 +181,7 @@ export const seo = {
       'Field trips, team-building and corporate group events at The Monkey Vault in Toronto — guided parkour activities plus open gym, or reserve the gym before we open.',
   },
   makeInvitation: {
-    title: 'Invitation Maker | The Monkey Vault Toronto',
+    title: 'Design Your Invite | The Monkey Vault Toronto',
     description:
       "Make a birthday invitation for your Monkey Vault party in seconds — pick a style, fill in the details, and download to text, post or print.",
   },
