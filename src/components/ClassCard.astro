@@ -71,7 +71,7 @@ const mediaExists = !isLocal || existsSync(fileURLToPath(new URL(`../../public/$
         {!mediaExists
           ? <div class="cc-media-ph" aria-hidden="true"><i class="bi bi-person-arms-up"></i></div>
           : isVideo
-          ? <video class="cc-img" src={src} muted loop playsinline webkit-playsinline preload="metadata"></video>
+          ? <video class="cc-img" src={src} muted loop playsinline webkit-playsinline preload="none"></video>
           : <img class="cc-img" src={src} alt={title} loading="lazy" />}
         <div class="cc-tags">
           <span class="cc-tag" style={`color:${tagText}`}>{tagLabel}</span>

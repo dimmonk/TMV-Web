@@ -96,6 +96,16 @@
   [data-chrome='app'] { display: none !important; }
 }
 
+/* ---- view transitions: instant, no cross-fade ---------------------------
+ * The default Astro root cross-fade morphs the whole page on every navigation
+ * — measured at ~700ms on content-heavy pages, which is what read as "slow".
+ * Killing the root animation makes the swap effectively instant (~20ms) while
+ * keeping client-side routing (no full reload, persisted head/fonts). Named
+ * transition:animate on specific elements still works if ever wanted.
+ * -----------------------------------------------------------------------*/
+::view-transition-old(root),
+::view-transition-new(root) { animation: none !important; mix-blend-mode: normal; }
+
 /* ---- shared desktop page hero -------------------------------------------
  * The dark hero band at the top of every desktop page composition. Was copied
  * verbatim into 14 page <style> blocks; now it lives here once. A page tints
