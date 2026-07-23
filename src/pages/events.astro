@@ -38,7 +38,7 @@ const faqGroups = [
   <div class="mapp" data-chrome="app"><EventsScreen /></div>
 
   <div data-chrome="site">
-  <section class="pagehero" style={`--party:${cat.parties}`}>
+  <section class="pagehero" style={`--party:${cat.parties};--ph:${cat.parties}`}>
     <div class="pagehero-glow"></div>
     <div class="container hero2">
       <div>
@@ -106,10 +106,6 @@ const faqGroups = [
 </BaseLayout>
 
 <style>
-  .pagehero { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
-  .pagehero-glow { position: absolute; inset: 0; background: radial-gradient(680px 360px at 90% -12%, color-mix(in srgb, var(--party) 13%, transparent), transparent 70%); }
-  .pagehero-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--party); margin-bottom: 20px; }
-  .pagehero-kicker .rule { width: 22px; height: 2px; background: var(--party); }
   .hero2 { padding-block: 60px 66px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; position: relative; }
   .hero2-title { font: 800 clamp(38px,9vw,56px)/1 var(--font-display); letter-spacing: -.02em; margin-bottom: 18px; }
   .hero2-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255,255,255,.72); max-width: 470px; margin-bottom: 30px; }

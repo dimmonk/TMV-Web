@@ -30,7 +30,7 @@ const notes = [
   <div class="mapp" data-chrome="app"><PrivateLessonsScreen /></div>
 
   <div data-chrome="site">
-  <section class="pagehero red">
+  <section class="pagehero red" style="--ph:var(--c-private)">
     <div class="pagehero-glow"></div>
     <div class="pl-hero container">
       <div class="pl-kicker"><span class="rule"></span>Private · 1-on-1 coaching</div>
@@ -105,9 +105,6 @@ const notes = [
 </BaseLayout>
 
 <style>
-  .pagehero { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
-  .pagehero.red .pagehero-glow { background: radial-gradient(680px 360px at 88% -15%, rgba(244,67,54,.16), transparent 70%); }
-  .pagehero-glow { position: absolute; inset: 0; }
   .pl-hero { padding-block: 58px 54px; position: relative; max-width: 1120px; }
   .pl-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--c-private); margin-bottom: 18px; }
   .pl-kicker .rule { width: 22px; height: 2px; background: var(--c-private); }
