@@ -1,4 +1,6 @@
 ---
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { url, cat } from '../data/site';
 interface Props {
   category?: string;
@@ -54,13 +56,21 @@ const backAction = backActionLabel.trim() || actionLabel;
 const isExternal = /^(https?:|mailto:)/.test(href);
 const src = image.startsWith('assets/') ? url(image) : image;
 const isVideo = /\.(mp4|webm|ogv|mov)(\?|$)/i.test(image);
+// Some class clips (acrodance/flexibility/handstand/…) were referenced by the
+// design but never delivered. Check at BUILD time whether the local asset
+// actually exists — if not, render a branded placeholder instead of a <video>
+// that 404s and shows a broken box. Auto-heals the moment the file is added.
+const isLocal = image.startsWith('assets/');
+const mediaExists = !isLocal || existsSync(fileURLToPath(new URL(`../../public/${image}`, import.meta.url)));
 ---
 <article class:list={['cc', { flippable: hasBack }]} style={`--cat:${catColor}; --cat-ink:${catInk}`} aria-pressed="false">
   <div class="cc-inner">
     <div class="cc-face cc-front">
       <div class="cc-strip"></div>
       <div class="cc-media">
-        {isVideo
+        {!mediaExists
+          ? <div class="cc-media-ph" aria-hidden="true"><i class="bi bi-person-arms-up"></i></div>
+          : isVideo
           ? <video class="cc-img" src={src} muted loop playsinline webkit-playsinline preload="metadata"></video>
           : <img class="cc-img" src={src} alt={title} loading="lazy" />}
         <div class="cc-tags">
@@ -112,6 +122,11 @@ const isVideo = /\.(mp4|webm|ogv|mov)(\?|$)/i.test(image);
   .cc-strip { height: 4px; background: var(--cat); flex: none; }
   .cc-media { position: relative; aspect-ratio: 16/11; overflow: hidden; background: var(--ink); }
   .cc-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
+  /* Branded placeholder for classes whose clip hasn't been delivered yet —
+     a category-tinted panel with a movement glyph. Reads as intentional, not
+     broken, and emits no network request (so no 404 in the console). */
+  .cc-media-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(150deg, color-mix(in srgb, var(--cat) 28%, var(--ink)), var(--ink)); }
+  .cc-media-ph i { font-size: 40px; color: color-mix(in srgb, var(--cat) 60%, #fff); opacity: .85; }
   .cc:hover .cc-img { transform: scale(1.05); }
   .cc-tags { position: absolute; top: 12px; left: 12px; display: flex; flex-direction: column; align-items: flex-start; gap: 7px; }
   .cc-tag { padding: 5px 10px; border-radius: 999px; background: var(--cat); font: 700 11px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; box-shadow: 0 3px 10px rgba(0,0,0,.3); }
