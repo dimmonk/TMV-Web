@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import CampsScreen from '../components/mobile/CampsScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import Pill from '../components/Pill.astro';
@@ -17,6 +18,9 @@ const facts = [
 ];
 ---
 <BaseLayout title={seo.camps.title} description={seo.camps.description} active="camps" mobileTab="more" appHeader="back" appTitle="Camps">
+  <div class="mapp" data-chrome="app"><CampsScreen /></div>
+
+  <div data-chrome="site">
   <section class="pagehero" style={`--cat:${cat.camps}`}>
     <div class="pagehero-glow"></div>
     <div class="container hero2">
@@ -98,6 +102,7 @@ const facts = [
     </div>
     <p class="know-fine">Cancellation policy: two weeks' written notice for weekly camps (15% deposit retained for late notice; $20 transaction fee otherwise). No-nut policy in effect — please tell us about any allergies.</p>
   </section>
+  </div>
 </BaseLayout>
 
 <style>

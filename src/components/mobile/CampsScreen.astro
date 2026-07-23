@@ -1,0 +1,51 @@
+---
+/**
+ * Camps — phone composition. MobileHero + camp BookingCards + a day-schedule
+ * timeline + "good to know" tiles. Uses the camps data's `mobile` desc override
+ * and the shared campDaySchedule. See HomeScreen for the switch.
+ */
+import MobileHero from '../MobileHero.astro';
+import BookingCard from '../BookingCard.astro';
+import { cat, url } from '../../data/site';
+import { camps, campDaySchedule } from '../../data/camps';
+import { forSurface } from '../../data/surface';
+
+const list = forSurface(camps, 'mobile');
+const facts = [
+  { icon: 'bi-clock', title: 'Hours', sub: '9 AM–2 PM · late pickup to 4 PM' },
+  { icon: 'bi-person-badge', title: 'Ages', sub: '5+ · all levels' },
+  { icon: 'bi-bag', title: 'Bring', sub: 'Indoor shoes, water, lunch, snacks' },
+  { icon: 'bi-shield-check', title: 'Waiver', sub: 'New campers sign online first' },
+  { icon: 'bi-exclamation-triangle', title: 'Allergies', sub: 'Nut-free — tell us about any' },
+  { icon: 'bi-geo-alt', title: 'Location', sub: '75 Carl Hall Rd · Downsview Park' },
+];
+---
+<MobileHero eyebrow="Camps" title="Parkour camps, packed with fun" desc="A full day of skill-building, flips, games and friends — all levels, always a big focus on fun." stats={[{ v: '9–2', l: 'daily' }, { v: 'Ages 5+', l: 'all levels' }, { v: 'til 4 PM', l: 'late pickup' }]} />
+<div class="m-pad">
+  <h3 class="m-h3" style="margin:0 0 4px">Pick your camp</h3>
+  <p class="m-sub" style="margin-bottom:14px">Three ways to camp with us.</p>
+  <div class="m-stack" style="margin-bottom:30px">
+    {list.map((c) => (
+      <BookingCard color={cat.camps} bookingTag={c.bookingTag} title={c.title} description={c.desc} pills={c.pills} price={c.price} priceNote={c.priceNote} actionLabel={c.cta} href={c.href} target="_blank" />
+    ))}
+  </div>
+
+  <h3 class="m-h3" style="margin:0 0 4px">A day at camp</h3>
+  <p class="m-sub" style="margin-bottom:14px">From drop-off to pick-up.</p>
+  <div class="m-gcard" style="margin-bottom:30px">
+    <div class="m-gtiers">
+      {campDaySchedule.map((s) => <div class="m-gtier"><span>{s.label}</span><span class="m-gtier-v">{s.time}</span></div>)}
+    </div>
+  </div>
+
+  <h3 class="m-h3" style="margin:0 0 4px">Good to know</h3>
+  <p class="m-sub" style="margin-bottom:14px">The essentials before you book.</p>
+  <div class="m-tiles">
+    {facts.map((f) => (
+      <div class="tile m-tile" style="cursor:default">
+        <span class="m-tile-ic" style={`background:color-mix(in srgb,${cat.camps} 16%,#fff)`}><i class={`bi ${f.icon}`} style={`color:${cat.camps}`} aria-hidden="true"></i></span>
+        <div><div class="m-tile-t">{f.title}</div><div class="m-tile-s">{f.sub}</div></div>
+      </div>
+    ))}
+  </div>
+</div>

@@ -79,6 +79,20 @@ const badgeStars = Array.from({ length: 5 }, (_, i) =>
 
 <style>
   .rv { background: var(--bg); padding-block: clamp(48px, 8vw, 72px); }
+  /* Inside the app column (.mapp .m-pad) the badge's fixed padding overflowed
+     the 375px viewport by a few px. Below the sm stop, drop the section's own
+     padding (the mobile screen's .m-pad already provides it) and let the badge
+     go full-width so it can't push past the edge. */
+  .mapp .rv { padding-block: 0; }
+  @media (max-width: 640px) {
+    /* Stack the header (heading over badge) instead of the desktop side-by-side
+       space-between, which pushed the fixed-width badge a few px past the edge.
+       Single column + min-width:0 so nothing else can force overflow either. */
+    .rv-head { flex-direction: column; align-items: stretch; gap: 16px; }
+    .rv-grid { grid-template-columns: 1fr; }
+    .rv-grid, .rv-card, .rv-badge { min-width: 0; }
+    .rv-badge { box-sizing: border-box; max-width: 100%; justify-content: center; padding: 16px; }
+  }
   .rv-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; flex-wrap: wrap; margin-bottom: 36px; }
   .rv-eyebrow { font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--faint); margin-bottom: 10px; }
   .rv-heading { font: 800 clamp(26px, 5vw, 36px)/1.04 var(--font-display); letter-spacing: -.018em; margin-bottom: 8px; }

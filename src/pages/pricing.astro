@@ -1,11 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CtaBand from '../components/CtaBand.astro';
+import MobileHero from '../components/MobileHero.astro';
 import { seo, links, url } from '../data/site';
 import '../styles/price-list-sheet.css';
 ---
 <BaseLayout title={seo.pricing.title} description={seo.pricing.description} active="pricing" mobileTab="more" appHeader="back" appTitle="Pricing">
-  <section class="pagehero">
+  <div class="mapp" data-chrome="app">
+    <MobileHero eyebrow="Pricing" title="One price list" desc="Live from our booking system — buy before you arrive and skip the front-desk line." />
+  </div>
+
+  <section class="pagehero" data-chrome="site">
     <div class="pagehero-glow"></div>
     <div class="container pagehero-inner">
       <div class="pagehero-kicker"><span class="rule"></span>Passes, packs &amp; memberships</div>

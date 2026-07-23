@@ -1,10 +1,13 @@
 ---
 /**
- * Invitation maker. The feature itself is the shared <InvitationMaker />
- * component + src/lib/invitation-maker.ts; this page just drops it into the
- * layout, which supplies whichever chrome the viewport calls for.
+ * Design Your Invite. The feature is the shared <InvitationMaker /> +
+ * src/lib/invitation-maker.ts — a SINGLE mount, rendered once and shared by both
+ * chromes. Only the hero switches: MobileHero below md (data-chrome=app); the
+ * maker's own intro band is tagged data-chrome=site inside the component, so the
+ * md handoff in global.css hides it below md and shows it at md and up.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
+import MobileHero from '../components/MobileHero.astro';
 import InvitationMaker from '../components/InvitationMaker.astro';
 import { seo } from '../data/site';
 ---
@@ -16,7 +19,11 @@ import { seo } from '../data/site';
   appHeader="back"
   appTitle="Design Your Invite"
 >
-  <InvitationMaker />
+  <div class="mapp" data-chrome="app">
+    <MobileHero eyebrow="Birthday parties" title="Design Your Invite" desc="Fill in your party details, pick a style, then download to text, post or print — right from your phone." />
+  </div>
+
+  <InvitationMaker contained={true} />
 
   <script>
     import { mountInvitationMaker } from '../lib/invitation-maker';

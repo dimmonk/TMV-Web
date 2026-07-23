@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import AboutScreen from '../components/mobile/AboutScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { seo, site, social, hours, links, url } from '../data/site';
@@ -27,6 +28,9 @@ const socials = [
 ].filter((s) => s.href);
 ---
 <BaseLayout title={seo.about.title} description={seo.about.description} active="about" mobileTab="more" appHeader="back" appTitle="About">
+  <div class="mapp" data-chrome="app"><AboutScreen /></div>
+
+  <div data-chrome="site">
   <section class="pagehero">
     <div class="pagehero-glow"></div>
     <div class="container hero2">
@@ -100,6 +104,7 @@ const socials = [
       </div>
     </div>
   </section>
+  </div>
 </BaseLayout>
 
 <style>

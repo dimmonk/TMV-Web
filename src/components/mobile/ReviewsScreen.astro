@@ -1,0 +1,22 @@
+---
+/**
+ * Reviews — phone composition. MobileHero + the shared <Reviews> card list,
+ * which is already single-column and width-agnostic. See HomeScreen for how the
+ * mobile/desktop compositions are switched.
+ */
+import MobileHero from '../MobileHero.astro';
+import Reviews from '../Reviews.astro';
+import { links, url, reviews } from '../../data/site';
+---
+<MobileHero eyebrow="Reviews" title="Loved by the community" desc="What Toronto says about training here — parents, open-gym members, first-timers and athletes." stats={[{ v: reviews.ratingValue + '★', l: 'Google rating' }, { v: '449', l: 'reviews' }, { v: 'All ages', l: 'welcome' }]} />
+<div class="m-pad">
+  <Reviews
+    eyebrow="What people say"
+    heading="Real words from real members"
+    subhead="A snapshot of the reviews families and athletes leave us on Google."
+  />
+  <div class="m-stack" style="margin-top:8px">
+    <a href={links.googleReviews} target="_blank" rel="noopener" class="m-darkbtn">Read more on Google <i class="bi bi-box-arrow-up-right"></i></a>
+    <a href={url('get-started')} class="m-darkbtn" style="background:#fff;color:#211f1b;border:1px solid #ebe9e4">Start your first visit <i class="bi bi-arrow-right"></i></a>
+  </div>
+</div>

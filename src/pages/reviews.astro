@@ -1,9 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ReviewsScreen from '../components/mobile/ReviewsScreen.astro';
 import Reviews from '../components/Reviews.astro';
 import { seo, links, url } from '../data/site';
 ---
 <BaseLayout title={seo.reviews.title} description={seo.reviews.description} active="" mobileTab="more" appHeader="back" appTitle="Reviews">
+  <div class="mapp" data-chrome="app"><ReviewsScreen /></div>
+
+  <div data-chrome="site">
   <section class="pagehero">
     <div class="pagehero-glow"></div>
     <div class="container pagehero-inner">
@@ -22,6 +26,7 @@ import { seo, links, url } from '../data/site';
     heading="Real words from real members"
     subhead="A snapshot of the reviews families and athletes leave us on Google."
   />
+  </div>
 </BaseLayout>
 
 <style>

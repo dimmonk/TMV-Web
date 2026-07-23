@@ -1,0 +1,45 @@
+---
+/**
+ * Get Started — phone composition. MobileHero + the three numbered steps (waiver,
+ * pick how to start, what to bring/expect), reusing the shared first-session and
+ * first-visit data with their `mobile` overrides. See HomeScreen for the switch.
+ */
+import MobileHero from '../MobileHero.astro';
+import BookingCard from '../BookingCard.astro';
+import { links, url, cat } from '../../data/site';
+import { firstSessionOptions } from '../../data/first-session';
+import { firstVisitBring, firstVisitArrive } from '../../data/first-visit';
+import { forSurface } from '../../data/surface';
+import { sq } from '../../data/square-links';
+
+const fsHref: Record<string, string> = {
+  intro: sq.getStarted.introduction, private: sq.getStarted.privateClass, group: url('schedule'), opengym: `${url('train')}#opengym`,
+};
+const bring = forSurface(firstVisitBring, 'mobile');
+const arrive = forSurface(firstVisitArrive, 'mobile');
+---
+<MobileHero eyebrow="New here?" title="Your first visit, in three steps" desc="No experience needed. Sign your waiver, pick how to start, and show up ready to move." />
+<div class="m-pad">
+  <div class="m-step"><span class="m-stepn">1</span><div><div class="m-step-t">Sign our waiver</div><p class="m-step-p">Everyone needs a signed waiver before their first session — a couple of minutes online.</p></div></div>
+  <div class="m-note"><i class="bi bi-info-circle-fill" aria-hidden="true"></i><span>A parent or guardian must sign for anyone <strong>17 or younger</strong>.</span></div>
+  <a href={links.getStartedWaiver} target="_blank" rel="noopener" class="m-darkbtn" style="margin-bottom:28px">Sign our waiver <i class="bi bi-box-arrow-up-right"></i></a>
+
+  <div class="m-step"><span class="m-stepn">2</span><div><div class="m-step-t">Pick how to start</div><p class="m-step-p">Reserve an intro or private, or just drop into a group class or open gym.</p></div></div>
+  <div class="m-stack" style="margin:4px 0 28px">
+    {firstSessionOptions.map((o) => (
+      <BookingCard color={o.color} status={o.status} statusTone={o.statusTone} title={o.title} description={o.desc} actionLabel={o.cta} href={fsHref[o.key]} target={o.key === 'intro' || o.key === 'private' ? '_blank' : '_self'} />
+    ))}
+  </div>
+
+  <div class="m-step" style="margin-bottom:16px"><span class="m-stepn">3</span><div><div class="m-step-t">Show up ready</div></div></div>
+  <div class="m-gcard" style="margin-bottom:14px">
+    <div class="m-glabel" style="margin-bottom:12px">What to bring</div>
+    {bring.map((b) => <div class="m-visit-row" style="padding:6px 0"><i class="bi bi-check-circle-fill" style={`color:${cat.openGym}`} aria-hidden="true"></i><div><div class="m-visit-t" style="font-weight:600">{b.text}</div></div></div>)}
+  </div>
+  <div class="m-gcard">
+    <div class="m-glabel" style="margin-bottom:12px">When you arrive</div>
+    <div class="m-gtiers">
+      {arrive.map((a) => <div class="m-gtier"><span>{a.text}</span><span class="m-gtier-v">{a.n}</span></div>)}
+    </div>
+  </div>
+</div>

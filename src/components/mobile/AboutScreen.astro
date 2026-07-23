@@ -1,0 +1,39 @@
+---
+/**
+ * About — phone composition. MobileHero + facility tiles (using the facility
+ * data's `mobile` body override) + a Visit-us block. See HomeScreen for the switch.
+ */
+import MobileHero from '../MobileHero.astro';
+import { site, url } from '../../data/site';
+import { facility } from '../../data/facility';
+import { forSurface } from '../../data/surface';
+
+const cards = forSurface(facility, 'mobile');
+---
+<MobileHero eyebrow="About" title="A home for the movement" desc="10,000+ sq ft of parkour rigs, foam pits, a sprung gymnastics floor and a full strength section — all under one roof." stats={[{ v: '10k+', l: 'sq ft' }, { v: 'Ages 3+', l: 'all levels' }, { v: '7 days', l: 'a week' }]} />
+<div class="m-pad">
+  <h3 class="m-h3" style="margin:0 0 4px">Our facility</h3>
+  <p class="m-sub" style="margin-bottom:14px">Built for every kind of mover.</p>
+  <div class="m-tiles" style="margin-bottom:30px">
+    {cards.map((f) => (
+      <div class="tile m-tile" style="cursor:default">
+        <span class="m-tile-ic" style="background:#eceae4"><i class={`bi ${f.icon}`} style="color:#211f1b" aria-hidden="true"></i></span>
+        <div><div class="m-tile-t">{f.title}</div><div class="m-tile-s">{f.body}</div></div>
+      </div>
+    ))}
+  </div>
+
+  <div class="m-visit">
+    <div class="m-visit-eyebrow"><span class="mh-rule"></span>Visit us</div>
+    <div class="m-visit-rows">
+      <div class="m-visit-row"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i><div><div class="m-visit-t">{site.address.street}</div><div class="m-visit-s">{site.address.neighbourhood}, {site.address.locality}</div></div></div>
+      <div class="m-visit-row"><i class="bi bi-clock-fill" aria-hidden="true"></i><div><div class="m-visit-t">{site.hoursLabel}</div><div class="m-visit-s">Open gym to the public daily</div></div></div>
+      <div class="m-visit-btns">
+        <a href={site.mapUrl} target="_blank" rel="noopener" class="m-visit-btn"><i class="bi bi-geo-alt"></i> Directions</a>
+        <a href={`tel:${site.phone}`} class="m-visit-btn"><i class="bi bi-telephone-fill"></i> Call us</a>
+      </div>
+    </div>
+  </div>
+
+  <a href={url('get-started')} class="m-darkbtn" style="margin-top:18px">New here? Start your first visit <i class="bi bi-arrow-right"></i></a>
+</div>

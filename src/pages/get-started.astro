@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import GetStartedScreen from '../components/mobile/GetStartedScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import BookingCard from '../components/BookingCard.astro';
 import Faq from '../components/Faq.astro';
@@ -26,6 +27,9 @@ const otherFaqs = [
 ];
 ---
 <BaseLayout title={seo.getStarted.title} description={seo.getStarted.description} active="" mobileTab="more" appHeader="back" appTitle="Get Started">
+  <div class="mapp" data-chrome="app"><GetStartedScreen /></div>
+
+  <div data-chrome="site">
   <section class="pagehero">
     <div class="pagehero-glow"></div>
     <div class="gs-hero">
@@ -97,6 +101,7 @@ const otherFaqs = [
   </div>
 
   <Faq eyebrow="One more thing" heading="A few more questions" subhead="The other things people usually ask before their first visit." faqs={otherFaqs} />
+  </div>
 </BaseLayout>
 
 <style>

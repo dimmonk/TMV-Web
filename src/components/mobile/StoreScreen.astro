@@ -1,0 +1,41 @@
+---
+/**
+ * Store — phone composition. MobileHero + BookingCards grouped by section,
+ * using the store data's own `mobile` overrides. See HomeScreen for the switch.
+ */
+import MobileHero from '../MobileHero.astro';
+import BookingCard from '../BookingCard.astro';
+import { links, url } from '../../data/site';
+import { storeProducts } from '../../data/store';
+import { forSurface } from '../../data/surface';
+
+const products = forSurface(storeProducts, 'mobile');
+const bySection = (s: string) => products.filter((p) => p.section === s);
+const sections = [
+  { id: 'opengym', label: 'Open gym' },
+  { id: 'classes', label: 'Classes' },
+  { id: 'athletic', label: 'Athletic Program' },
+];
+---
+<MobileHero eyebrow="Store" title="Buy before you arrive" desc="Check out securely with Square — your passes are ready at the front desk when you walk in." />
+<div class="m-pad">
+  {sections.map((sec) => (
+    <div style="margin-bottom:26px">
+      <div class="m-label">{sec.label}</div>
+      <div class="m-stack">
+        {bySection(sec.id).map((p) => <BookingCard {...p} actionLabel="Buy" target="_blank" />)}
+      </div>
+    </div>
+  ))}
+
+  <a href={links.giftCard} target="_blank" rel="noopener" class="m-invite" style="--m-invite-accent:#6e6e6e;margin-bottom:6px">
+    <span class="m-invite-ic"><i class="bi bi-gift-fill" aria-hidden="true"></i></span>
+    <div class="m-invite-txt">
+      <div class="m-invite-t">Gift cards</div>
+      <div class="m-invite-s">Any amount — good for passes, classes, camps and parties. Emailed straight to them.</div>
+    </div>
+    <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
+  </a>
+
+  <p class="m-sub" style="margin-top:14px">All prices in CAD, HST included. Full rate sheet on the <a href={url('pricing')} style="color:inherit;text-decoration:underline">price list</a>.</p>
+</div>
