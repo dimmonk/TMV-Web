@@ -114,9 +114,11 @@ const jsonLd = {
 
     <!-- ICONS: self-hosted, subset to only the ~108 bi-* glyphs the site uses.
          The full jsdelivr bootstrap-icons font was 127KB from an external origin
-         (DNS+TLS+download on every cold load); this subset is 12KB, same-origin,
-         HTTP/2-multiplexed, and preloaded so icons render immediately. -->
-    <link rel="preload" as="font" type="font/woff2" href={url('fonts/bootstrap-icons-subset.woff2')} crossorigin />
+         (DNS+TLS+download on every cold load); this subset is 12KB, same-origin
+         and HTTP/2-multiplexed. This stylesheet is render-blocking in <head>, so
+         the browser discovers its @font-face and fetches the woff2 immediately —
+         a separate <link rel="preload"> for the font only raced that same request
+         and tripped Chrome's "preloaded but not used" warning, so it's omitted. -->
     <link rel="stylesheet" href={url('fonts/bootstrap-icons-subset.css')} />
 
     <!-- Archivo (display font) stays on Google Fonts: it lazy-loads only the
