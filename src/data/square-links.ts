@@ -91,7 +91,13 @@ const PUBLIC_CONFIG_URL = 'https://storage.googleapis.com/tmv-management.firebas
 
 async function fetchLiveLinks(): Promise<Record<string, Record<string, string>> | null> {
   try {
-    const res = await fetch(PUBLIC_CONFIG_URL, { signal: AbortSignal.timeout(8000), cache: 'no-store' });
+    // Cache-bust the CDN. The object is served `max-age=300`, so the canonical
+    // URL can hand back a copy up to 5 min stale — and an admin save triggers a
+    // rebuild immediately, well inside that window, so a plain fetch here races
+    // the edge cache and can bake in the PRE-save (stale) links. `cache:no-store`
+    // only governs this process's own HTTP cache, not Google's edge; a unique
+    // query param forces an edge miss so every build reads the latest publish.
+    const res = await fetch(`${PUBLIC_CONFIG_URL}?t=${Date.now()}`, { signal: AbortSignal.timeout(8000), cache: 'no-store' });
     if (!res.ok) throw new Error(`status ${res.status}`);
     const data = await res.json();
     return data && typeof data.links === 'object' ? data.links : null;
