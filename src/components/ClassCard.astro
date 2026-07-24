@@ -159,7 +159,7 @@ const mediaExists = !isLocal || existsSync(fileURLToPath(new URL(`../../public/$
 </style>
 
 <script>
-  // Wires card flips + the on-screen video observer. Runs once per page load.
+  // Re-init on every view-transition navigation (fresh cards each nav).
   function initClassCards() {
     document.querySelectorAll('.cc.flippable').forEach((card) => {
       card.addEventListener('click', (e) => {
@@ -183,5 +183,5 @@ const mediaExists = !isLocal || existsSync(fileURLToPath(new URL(`../../public/$
       vids.forEach((v) => io.observe(v));
     }
   }
-  initClassCards();
+  document.addEventListener('astro:page-load', initClassCards);
 </script>

@@ -92,5 +92,5 @@ const reviewItems = reviews.items.map((r) => ({ name: r.name, role: r.context, t
 <script>
   import { mountReviewCarousels } from '../../lib/review-carousel';
   // Re-init on every navigation; harmless on pages without a carousel (no-op).
-  mountReviewCarousels();
+  document.addEventListener('astro:page-load', () => mountReviewCarousels());
 </script>

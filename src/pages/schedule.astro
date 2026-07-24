@@ -221,5 +221,7 @@ import '../styles/print-schedule-sheet.css';
 
 <script>
   import { initEmbed } from '../lib/schedule-embed-sheet.js';
-  if (document.getElementById('embed-filters')) initEmbed();
+  document.addEventListener('astro:page-load', () => {
+    if (document.getElementById('embed-filters')) initEmbed();
+  });
 </script>

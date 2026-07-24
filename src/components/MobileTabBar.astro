@@ -51,12 +51,18 @@ const { active = '' } = Astro.props;
   // ResizeObserver (not a one-time read) keeps it correct across rotation and
   // safe-area changes — env(safe-area-inset-bottom) is baked into .mtab's own
   // padding, so its measured height already reflects the real device inset.
-  {
+  // Re-measure on every navigation (the tab bar is re-rendered per page under
+  // view transitions). The observer is module-scoped so the previous one is
+  // disconnected before a new one is attached — no accumulation across navs.
+  let tabObs: ResizeObserver | undefined;
+  function measureTabbar() {
     const bar = document.querySelector('.mtab');
-    if (bar) {
-      const set = () => document.documentElement.style.setProperty('--tabbar-h', bar.getBoundingClientRect().height + 'px');
-      set();
-      new ResizeObserver(set).observe(bar);
-    }
+    if (!bar) return;
+    const set = () => document.documentElement.style.setProperty('--tabbar-h', bar.getBoundingClientRect().height + 'px');
+    set();
+    tabObs?.disconnect();
+    tabObs = new ResizeObserver(set);
+    tabObs.observe(bar);
   }
+  document.addEventListener('astro:page-load', measureTabbar);
 </script>

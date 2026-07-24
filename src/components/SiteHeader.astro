@@ -74,8 +74,9 @@ const { active = '' } = Astro.props;
 </style>
 
 <script>
-  // Progressive enhancement: toggle the mobile menu.
-  {
+  // Progressive enhancement: toggle the mobile menu. Re-bound per view-transition
+  // navigation on the fresh header element.
+  document.addEventListener('astro:page-load', () => {
     const burger = document.querySelector('.sh-burger');
     const menu = document.getElementById('sh-menu');
     burger?.addEventListener('click', () => {
@@ -83,5 +84,5 @@ const { active = '' } = Astro.props;
       burger.setAttribute('aria-expanded', open ? 'true' : 'false');
       burger.querySelector('i')?.setAttribute('class', open ? 'bi bi-x-lg' : 'bi bi-list');
     });
-  }
+  });
 </script>

@@ -125,7 +125,9 @@ const vars = `--c:${color}; --oc-h:${height}; --oc-ratio:${mediaRatio}; --oc-tit
 </style>
 
 <script>
-  // Wires card flips + the on-screen video observer. Runs once per page load.
+  // Re-init on every view-transition navigation (fresh cards each nav). Fresh
+  // elements → binding fresh is safe; the observer's prior instance is dropped
+  // with the old page.
   function initOfferingCards() {
     document.querySelectorAll('.flip').forEach((card) => {
       card.addEventListener('click', (e) => {
@@ -146,5 +148,5 @@ const vars = `--c:${color}; --oc-h:${height}; --oc-ratio:${mediaRatio}; --oc-tit
       flipVids.forEach((v) => io.observe(v));
     }
   }
-  initOfferingCards();
+  document.addEventListener('astro:page-load', initOfferingCards);
 </script>

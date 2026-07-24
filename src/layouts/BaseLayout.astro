@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import '../styles/mobile-app.css';
+import { ViewTransitions } from 'astro:transitions';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import MobileTabBar from '../components/MobileTabBar.astro';
@@ -135,56 +136,40 @@ const jsonLd = {
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-    {/* Plain multi-page navigation, on purpose. There is no client-side router:
-        a tap is a normal browser navigation, so the new page paints the instant
-        it streams in — no JS interception, no snapshot, no dead pause between
-        the click and the page appearing. (A view-transition router was tried and
-        removed: with the cross-fade disabled it added ~250ms of snapshot/swap
-        work per tap and bought nothing visually.) Each page is a fresh document,
-        so component scripts re-run naturally on load. */}
+    {/* Client-side routing with animated cross-fades. Astro runs module scripts
+        ONCE (not per navigation), so every on-load init in this site
+        (status pill, --tabbar-h, More sheet, carousel, live schedule/pricing
+        fetches, invite + camp-reg mounts) is registered on `astro:page-load`,
+        which fires on first load AND after every transition. */}
+    <ViewTransitions />
 
-    {/* Cache warmer. On idle, fetch()es every on-screen internal link AND the
-        render-blocking assets each one references (its /_astro/* CSS+JS bundles),
-        so by the time a link is tapped the browser has the page's HTML and its
-        immutable styles/scripts already cached. The navigation is then a 0-byte
-        cache hit that paints immediately — no revalidation round-trip on the
-        blocking CSS, which was the real click-to-render delay. The immutable
-        cache headers on /_astro/** (see firebase.json hosting:web) are what make
-        the warmed assets persist. Inline in <head>, so it waits for
-        DOMContentLoaded to see the body's links. Each URL is fetched at most once. */}
+    {/* Cross-browser cache warmer. Astro's built-in prefetch uses
+        <link rel="prefetch">, which iOS Safari ignores — so on iPhone every tap
+        fetched the page fresh over the network (the click-to-load delay). This
+        instead fetch()es each on-screen internal link during idle time, warming
+        the HTTP cache (Firebase serves HTML with max-age), so the fetch the
+        view-transition router does on click hits cache and the page appears
+        instantly. Runs after every navigation; each URL is fetched at most once. */}
     <script is:inline>
       (function () {
-        var warmedPages = new Set();
-        var warmedAssets = new Set();
-        function warmAsset(u) {
-          if (warmedAssets.has(u)) return;
-          warmedAssets.add(u);
-          fetch(u, { credentials: 'same-origin' }).catch(function () {});
-        }
-        function warmPageAssets(html) {
-          // Pull the fingerprinted, cacheable render-blocking assets out of the
-          // fetched HTML and prime them into cache too.
-          var re = /(?:href|src)="(\/(?:_astro|fonts)\/[^"]+)"/g, m;
-          while ((m = re.exec(html))) warmAsset(m[1]);
-        }
+        var warmed = new Set();
         function warm() {
-          warmedPages.add(location.pathname.replace(/\/$/, ''));
+          var here = location.pathname.replace(/\/$/, '');
+          warmed.add(here);
+          var links = document.querySelectorAll('a[href^="/"]');
           var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 200); };
-          document.querySelectorAll('a[href^="/"]').forEach(function (a) {
+          links.forEach(function (a) {
             var href = a.getAttribute('href');
             if (!href || href.indexOf('#') !== -1 || a.target) return;
             var path = href.replace(/\/$/, '');
-            if (warmedPages.has(path)) return;
-            warmedPages.add(path);
+            if (warmed.has(path)) return;
+            warmed.add(path);
             idle(function () {
-              fetch(href, { credentials: 'same-origin' })
-                .then(function (r) { return r.text(); })
-                .then(warmPageAssets)
-                .catch(function () {});
+              fetch(href, { credentials: 'same-origin' }).catch(function () {});
             });
           });
         }
-        document.addEventListener('DOMContentLoaded', warm);
+        document.addEventListener('astro:page-load', warm);
       })();
     </script>
   </head>

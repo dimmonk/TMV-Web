@@ -4,9 +4,28 @@
  * site-config.json. Change a value here and every page follows.
  */
 
-/** Prefix an internal path with the deploy base (`/TMV-Web/`). */
-export const url = (p: string): string =>
-  import.meta.env.BASE_URL.replace(/\/$/, '') + '/' + p.replace(/^\//, '');
+/**
+ * Resolve an internal path against the deploy base.
+ *
+ * Page routes get a TRAILING SLASH; assets do not. This is load-bearing, not
+ * cosmetic: directory hosting (Firebase) serves `/route/` as 200 and 301-
+ * redirects `/route` to it. A link to the un-slashed form makes Astro's
+ * client-side router `fetch()` the page, see the redirect, and bail to a full
+ * browser navigation — the flash + loading bar between page switches. Emitting
+ * the already-canonical `/route/` form means every tap is a clean client swap,
+ * and it also sidesteps any `/route → /route/` 301 a browser cached before this
+ * fix (that redirect is simply never requested again). Assets — the last path
+ * segment carries a file extension (.png/.css/.woff2/.json/…) — are returned
+ * verbatim, since a trailing slash there would break the URL.
+ */
+export const url = (p: string): string => {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const path = p.replace(/^\//, '');
+  const full = base + '/' + path;
+  if (full.endsWith('/')) return full; // home ('') and already-slashed paths
+  const lastSegment = path.split('/').pop() || '';
+  return lastSegment.includes('.') ? full : full + '/';
+};
 
 export const site = {
   name: 'The Monkey Vault',

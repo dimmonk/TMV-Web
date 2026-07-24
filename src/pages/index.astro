@@ -214,24 +214,25 @@ const camps = [
 </style>
 
 <script>
-  // Hero photo carousel: cross-fade every 4s.
-  {
+  // Hero photo carousel: cross-fade every 4s. Re-inits per view-transition nav;
+  // the rotation interval is guarded/cleared so navs don't stack timers.
+  document.addEventListener('astro:page-load', () => {
+    if ((window as any).__heroTimer) { clearInterval((window as any).__heroTimer); (window as any).__heroTimer = null; }
     const carousel = document.getElementById('hero-carousel');
-    if (carousel) {
-      const slides = Array.from(carousel.querySelectorAll<HTMLElement>('.hero-slide'));
-      // Hydrate the other slides' backgrounds now that the DOM is ready.
-      slides.forEach((s) => {
-        const bg = s.getAttribute('data-bg');
-        if (bg) { s.style.backgroundImage = `url('${bg}')`; s.removeAttribute('data-bg'); }
-      });
-      let idx = 0;
-      if (slides.length > 1) {
-        setInterval(() => {
-          slides[idx].style.opacity = '0';
-          idx = (idx + 1) % slides.length;
-          slides[idx].style.opacity = '1';
-        }, 4000);
-      }
+    if (!carousel) return;
+    const slides = Array.from(carousel.querySelectorAll<HTMLElement>('.hero-slide'));
+    // Hydrate the other slides' backgrounds now (page-load means the page is ready).
+    slides.forEach((s) => {
+      const bg = s.getAttribute('data-bg');
+      if (bg) { s.style.backgroundImage = `url('${bg}')`; s.removeAttribute('data-bg'); }
+    });
+    let idx = 0;
+    if (slides.length > 1) {
+      (window as any).__heroTimer = setInterval(() => {
+        slides[idx].style.opacity = '0';
+        idx = (idx + 1) % slides.length;
+        slides[idx].style.opacity = '1';
+      }, 4000);
     }
-  }
+  });
 </script>
