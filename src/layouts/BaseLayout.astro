@@ -142,6 +142,36 @@ const jsonLd = {
         fetches, invite + camp-reg mounts) is registered on `astro:page-load`,
         which fires on first load AND after every transition. */}
     <ViewTransitions />
+
+    {/* Cross-browser cache warmer. Astro's built-in prefetch uses
+        <link rel="prefetch">, which iOS Safari ignores — so on iPhone every tap
+        fetched the page fresh over the network (the click-to-load delay). This
+        instead fetch()es each on-screen internal link during idle time, warming
+        the HTTP cache (Firebase serves HTML with max-age), so the fetch the
+        view-transition router does on click hits cache and the page appears
+        instantly. Runs after every navigation; each URL is fetched at most once. */}
+    <script is:inline>
+      (function () {
+        var warmed = new Set();
+        function warm() {
+          var here = location.pathname.replace(/\/$/, '');
+          warmed.add(here);
+          var links = document.querySelectorAll('a[href^="/"]');
+          var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 200); };
+          links.forEach(function (a) {
+            var href = a.getAttribute('href');
+            if (!href || href.indexOf('#') !== -1 || a.target) return;
+            var path = href.replace(/\/$/, '');
+            if (warmed.has(path)) return;
+            warmed.add(path);
+            idle(function () {
+              fetch(href, { credentials: 'same-origin' }).catch(function () {});
+            });
+          });
+        }
+        document.addEventListener('astro:page-load', warm);
+      })();
+    </script>
   </head>
   <body style={`--brand:${brand}`}>
     <a href="#main" class="visually-hidden">Skip to content</a>
