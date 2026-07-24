@@ -180,13 +180,11 @@ const facts = [
 </style>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
-    document.querySelectorAll('.campflip').forEach((card) => {
-      card.addEventListener('click', (e) => {
-        if ((e.target as HTMLElement).closest('a')) return;
-        card.classList.toggle('flipped');
-        card.setAttribute('aria-pressed', card.classList.contains('flipped') ? 'true' : 'false');
-      });
+  document.querySelectorAll('.campflip').forEach((card) => {
+    card.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) return;
+      card.classList.toggle('flipped');
+      card.setAttribute('aria-pressed', card.classList.contains('flipped') ? 'true' : 'false');
     });
   });
 </script>

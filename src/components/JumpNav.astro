@@ -55,15 +55,9 @@ const hasActions = actions.length > 0;
 </style>
 
 <script>
-  // Re-init per view-transition navigation. The scroll listeners live on
-  // window, so they'd accumulate across navs — a stored cleanup list removes
-  // the previous page's listeners before wiring the current page's.
-  (window as any).__jnCleanups = (window as any).__jnCleanups || [];
-  function initJumpNav() {
-    ((window as any).__jnCleanups as Array<() => void>).forEach((fn) => fn());
-    (window as any).__jnCleanups = [];
-    const add = (fn: () => void) => ((window as any).__jnCleanups as Array<() => void>).push(fn);
-
+  // Wires scroll-spy on the jump nav + the back-to-top button. Runs once per
+  // page load (each navigation is a fresh document, so listeners never stack).
+  {
     document.querySelectorAll('.jn').forEach((nav) => {
       const ids = (nav.getAttribute('data-ids') || '').split(',').filter(Boolean);
       const links = Array.from(nav.querySelectorAll('.jn-link'));
@@ -78,7 +72,6 @@ const hasActions = actions.length > 0;
         links.forEach((l) => l.classList.toggle('active', l.getAttribute('data-anchor') === current));
       }
       window.addEventListener('scroll', onScroll, { passive: true });
-      add(() => window.removeEventListener('scroll', onScroll));
       onScroll();
     });
 
@@ -86,7 +79,6 @@ const hasActions = actions.length > 0;
     if (topBtn) {
       const toggle = () => { topBtn.hidden = window.scrollY <= 700; };
       window.addEventListener('scroll', toggle, { passive: true });
-      add(() => window.removeEventListener('scroll', toggle));
       toggle();
       topBtn.addEventListener('click', () => {
         const y = window.scrollY;
@@ -95,5 +87,4 @@ const hasActions = actions.length > 0;
       });
     }
   }
-  document.addEventListener('astro:page-load', initJumpNav);
 </script>

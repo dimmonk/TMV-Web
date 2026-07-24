@@ -15,5 +15,5 @@ import MobileHero from '../MobileHero.astro';
   import { mountMobileSchedule } from '../../lib/mobile-schedule';
   // Re-fetch/re-render on every navigation; mountMobileSchedule no-ops when the
   // schedule targets aren't on the page.
-  document.addEventListener('astro:page-load', () => mountMobileSchedule());
+  mountMobileSchedule();
 </script>

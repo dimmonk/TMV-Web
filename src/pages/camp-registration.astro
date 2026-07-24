@@ -37,7 +37,7 @@ import '../styles/camp-reg-form.css';
   <script>
     import { mountCampRegForm } from '../lib/camp-reg-form';
     import { links, site } from '../data/site';
-    document.addEventListener('astro:page-load', () => {
+    (() => {
       const root = document.getElementById('reg-root');
       if (!root || root.dataset.mounted) return;
       root.dataset.mounted = '1';
@@ -47,7 +47,7 @@ import '../styles/camp-reg-form.css';
         address: `${site.name} · ${site.address.street}, ${site.address.locality} (Downsview Park)`,
         showHero: false,
       });
-    });
+    })();
   </script>
 </BaseLayout>
 

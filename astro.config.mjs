@@ -19,11 +19,9 @@ export default defineConfig({
   // Dev-only overlay (never ships in `astro build`/production) — off because
   // it sits over the phone-width preview during mobile work.
   devToolbar: { enabled: false },
-  // Every internal link is prefetched as soon as it scrolls into view, so by
-  // the time it's tapped the target HTML is already cached and the swap is
-  // instant. The previous 'hover' default never fired on touch devices — a tap
-  // then had to fetch the page on click, which is the delay between clicking a
-  // link and the page appearing. 'viewport' is the right default for a small
-  // static site: pages are tiny HTML on a CDN, and it makes taps feel instant.
-  prefetch: { prefetchAll: true, defaultStrategy: 'viewport' },
+  // No Astro prefetch integration: it injects <link rel="prefetch">, which iOS
+  // Safari ignores and which would double up on the fetch()-based cache warmer
+  // in BaseLayout. The warmer is the single owner of cache warming — it works
+  // cross-browser and warms every on-screen internal link on idle, so a tap is
+  // a 0-byte browser navigation that paints immediately.
 });

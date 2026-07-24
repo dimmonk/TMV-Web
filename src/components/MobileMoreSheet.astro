@@ -127,11 +127,10 @@ const tiles = forSurface(exploreTiles, 'mobile');
 </style>
 
 <script>
-  // Under view transitions the sheet + its triggers are re-rendered per page, so
-  // all element lookups happen LIVE (inside each handler) rather than being
-  // captured in closures at first load. wireSheet() re-binds the per-page
-  // trigger/backdrop clicks on every navigation; the document-level keydown is
-  // added exactly once (guarded) and queries the current sheet each time.
+  // Element lookups happen LIVE (inside each handler) rather than being captured
+  // in closures, so the handlers always act on the current sheet. wireSheet()
+  // binds the trigger/backdrop clicks and the document keydown handles Esc + a
+  // focus trap while the sheet is open.
   let opener: HTMLElement | null = null;
 
   function focusablesIn(el: HTMLElement) {
@@ -157,36 +156,28 @@ const tiles = forSurface(exploreTiles, 'mobile');
   }
 
   function wireSheet() {
-    // A tile is a real <a href> — tapping it navigates while the sheet is open.
-    // The body element persists across a view transition, so clear any leftover
-    // scroll lock (and open state) so the new page starts clean and scrollable.
-    document.body.style.overflow = '';
     const root = document.querySelector<HTMLElement>('[data-more-root]');
     if (!root) return;
-    root.classList.remove('open');
     // The More tab is the only way in AND out — tap again to close, so no
-    // floating close button. Fresh elements each nav → binding fresh is safe.
+    // floating close button.
     document.querySelectorAll<HTMLElement>('[data-more-open]').forEach((btn) => {
       btn.setAttribute('aria-expanded', 'false');
       btn.addEventListener('click', () => (root.classList.contains('open') ? close() : open(btn)));
     });
     root.querySelector('[data-more-backdrop]')?.addEventListener('click', close);
   }
-  document.addEventListener('astro:page-load', wireSheet);
+  wireSheet();
 
-  if (!(window as any).__moreKeydown) {
-    (window as any).__moreKeydown = true;
-    document.addEventListener('keydown', (e) => {
-      const root = document.querySelector<HTMLElement>('[data-more-root]');
-      const panel = root?.querySelector<HTMLElement>('[data-more-panel]');
-      if (!root || !panel || !root.classList.contains('open')) return;
-      if (e.key === 'Escape') { close(); return; }
-      if (e.key !== 'Tab') return;
-      const items = focusablesIn(panel);
-      if (!items.length) return;
-      const first = items[0], last = items[items.length - 1];
-      if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
-      else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
-    });
-  }
+  document.addEventListener('keydown', (e) => {
+    const root = document.querySelector<HTMLElement>('[data-more-root]');
+    const panel = root?.querySelector<HTMLElement>('[data-more-panel]');
+    if (!root || !panel || !root.classList.contains('open')) return;
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key !== 'Tab') return;
+    const items = focusablesIn(panel);
+    if (!items.length) return;
+    const first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+    else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+  });
 </script>

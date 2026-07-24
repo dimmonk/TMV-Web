@@ -110,9 +110,7 @@ const { variant = 'brand', title = 'Back', backHref = url('') } = Astro.props;
       if (label) label.textContent = s.label;
     });
   }
-  // Repaint on every view-transition navigation (astro:page-load fires on first
-  // load AND after each client nav) so the new page's pill is correct; the
-  // 60s ticker is guarded so it's created only once, not one per navigation.
-  document.addEventListener('astro:page-load', paintStatus);
-  if (!window.__tmvStatusTimer) window.__tmvStatusTimer = setInterval(paintStatus, 60000);
+  // Paint the pill on load, then keep it fresh with a 60s ticker.
+  paintStatus();
+  setInterval(paintStatus, 60000);
 </script>
