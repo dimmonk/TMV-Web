@@ -143,25 +143,44 @@ const jsonLd = {
         work per tap and bought nothing visually.) Each page is a fresh document,
         so component scripts re-run naturally on load. */}
 
-    {/* Cache warmer. On idle, fetch()es every on-screen internal link so its HTML
-        sits in the HTTP cache (Firebase serves HTML with max-age) before it's
-        tapped — the subsequent browser navigation is then a 0-byte cache hit and
-        paints immediately. Inline in <head>, so it waits for DOMContentLoaded to
-        see the body's links. Each URL is fetched at most once. */}
+    {/* Cache warmer. On idle, fetch()es every on-screen internal link AND the
+        render-blocking assets each one references (its /_astro/* CSS+JS bundles),
+        so by the time a link is tapped the browser has the page's HTML and its
+        immutable styles/scripts already cached. The navigation is then a 0-byte
+        cache hit that paints immediately — no revalidation round-trip on the
+        blocking CSS, which was the real click-to-render delay. The immutable
+        cache headers on /_astro/** (see firebase.json hosting:web) are what make
+        the warmed assets persist. Inline in <head>, so it waits for
+        DOMContentLoaded to see the body's links. Each URL is fetched at most once. */}
     <script is:inline>
       (function () {
-        var warmed = new Set();
+        var warmedPages = new Set();
+        var warmedAssets = new Set();
+        function warmAsset(u) {
+          if (warmedAssets.has(u)) return;
+          warmedAssets.add(u);
+          fetch(u, { credentials: 'same-origin' }).catch(function () {});
+        }
+        function warmPageAssets(html) {
+          // Pull the fingerprinted, cacheable render-blocking assets out of the
+          // fetched HTML and prime them into cache too.
+          var re = /(?:href|src)="(\/(?:_astro|fonts)\/[^"]+)"/g, m;
+          while ((m = re.exec(html))) warmAsset(m[1]);
+        }
         function warm() {
-          warmed.add(location.pathname.replace(/\/$/, ''));
+          warmedPages.add(location.pathname.replace(/\/$/, ''));
           var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 200); };
           document.querySelectorAll('a[href^="/"]').forEach(function (a) {
             var href = a.getAttribute('href');
             if (!href || href.indexOf('#') !== -1 || a.target) return;
             var path = href.replace(/\/$/, '');
-            if (warmed.has(path)) return;
-            warmed.add(path);
+            if (warmedPages.has(path)) return;
+            warmedPages.add(path);
             idle(function () {
-              fetch(href, { credentials: 'same-origin' }).catch(function () {});
+              fetch(href, { credentials: 'same-origin' })
+                .then(function (r) { return r.text(); })
+                .then(warmPageAssets)
+                .catch(function () {});
             });
           });
         }
