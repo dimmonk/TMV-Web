@@ -55,33 +55,45 @@ const hasActions = actions.length > 0;
 </style>
 
 <script>
-  document.querySelectorAll('.jn').forEach((nav) => {
-    const ids = (nav.getAttribute('data-ids') || '').split(',').filter(Boolean);
-    const links = Array.from(nav.querySelectorAll('.jn-link'));
-    const els = ids.map((id) => document.getElementById(id)).filter((el) => !!el);
-    const top = parseInt(getComputedStyle(nav).getPropertyValue('--top'), 10);
-    const offset = (isNaN(top) ? 66 : top) + 90;
+  // Re-init per view-transition navigation. The scroll listeners live on
+  // window, so they'd accumulate across navs — a stored cleanup list removes
+  // the previous page's listeners before wiring the current page's.
+  (window as any).__jnCleanups = (window as any).__jnCleanups || [];
+  function initJumpNav() {
+    ((window as any).__jnCleanups as Array<() => void>).forEach((fn) => fn());
+    (window as any).__jnCleanups = [];
+    const add = (fn: () => void) => ((window as any).__jnCleanups as Array<() => void>).push(fn);
 
-    function onScroll() {
-      let current = els[0] ? els[0].id : '';
-      for (const el of els) {
-        if (el.getBoundingClientRect().top - offset <= 0) current = el.id;
+    document.querySelectorAll('.jn').forEach((nav) => {
+      const ids = (nav.getAttribute('data-ids') || '').split(',').filter(Boolean);
+      const links = Array.from(nav.querySelectorAll('.jn-link'));
+      const els = ids.map((id) => document.getElementById(id)).filter((el) => !!el);
+      const top = parseInt(getComputedStyle(nav).getPropertyValue('--top'), 10);
+      const offset = (isNaN(top) ? 66 : top) + 90;
+      function onScroll() {
+        let current = els[0] ? els[0].id : '';
+        for (const el of els) {
+          if (el!.getBoundingClientRect().top - offset <= 0) current = el!.id;
+        }
+        links.forEach((l) => l.classList.toggle('active', l.getAttribute('data-anchor') === current));
       }
-      links.forEach((l) => l.classList.toggle('active', l.getAttribute('data-anchor') === current));
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-  });
-
-  const topBtn = document.querySelector('.jn-top');
-  if (topBtn) {
-    const toggle = () => { topBtn.hidden = window.scrollY <= 700; };
-    window.addEventListener('scroll', toggle, { passive: true });
-    toggle();
-    topBtn.addEventListener('click', () => {
-      const y = window.scrollY;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setTimeout(() => { if (window.scrollY >= y && y > 0) window.scrollTo(0, 0); }, 250);
+      window.addEventListener('scroll', onScroll, { passive: true });
+      add(() => window.removeEventListener('scroll', onScroll));
+      onScroll();
     });
+
+    const topBtn = document.querySelector('.jn-top') as HTMLElement | null;
+    if (topBtn) {
+      const toggle = () => { topBtn.hidden = window.scrollY <= 700; };
+      window.addEventListener('scroll', toggle, { passive: true });
+      add(() => window.removeEventListener('scroll', toggle));
+      toggle();
+      topBtn.addEventListener('click', () => {
+        const y = window.scrollY;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => { if (window.scrollY >= y && y > 0) window.scrollTo(0, 0); }, 250);
+      });
+    }
   }
+  document.addEventListener('astro:page-load', initJumpNav);
 </script>

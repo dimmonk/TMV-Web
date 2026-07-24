@@ -159,25 +159,29 @@ const mediaExists = !isLocal || existsSync(fileURLToPath(new URL(`../../public/$
 </style>
 
 <script>
-  document.querySelectorAll('.cc.flippable').forEach((card) => {
-    card.addEventListener('click', (e) => {
-      if ((e.target as HTMLElement).closest('a')) return;
-      card.classList.toggle('flipped');
-      card.setAttribute('aria-pressed', card.classList.contains('flipped') ? 'true' : 'false');
-    });
-  });
-
-  // Card videos play only while on screen — a page like Train has 11 of them,
-  // and autoplaying all at once downloads every file up front.
-  const vids = document.querySelectorAll<HTMLVideoElement>('.cc video');
-  if (vids.length) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const v = entry.target as HTMLVideoElement;
-        if (entry.isIntersecting) v.play().catch(() => {});
-        else v.pause();
+  // Re-init on every view-transition navigation (fresh cards each nav).
+  function initClassCards() {
+    document.querySelectorAll('.cc.flippable').forEach((card) => {
+      card.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('a')) return;
+        card.classList.toggle('flipped');
+        card.setAttribute('aria-pressed', card.classList.contains('flipped') ? 'true' : 'false');
       });
-    }, { rootMargin: '120px' });
-    vids.forEach((v) => io.observe(v));
+    });
+    // Card videos play only while on screen — a page like Train has ~11, and
+    // autoplaying all at once would download every file up front (they are
+    // preload="none", so the observer's play() is what triggers the download).
+    const vids = document.querySelectorAll<HTMLVideoElement>('.cc video');
+    if (vids.length) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const v = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) v.play().catch(() => {});
+          else v.pause();
+        });
+      }, { rootMargin: '120px' });
+      vids.forEach((v) => io.observe(v));
+    }
   }
+  document.addEventListener('astro:page-load', initClassCards);
 </script>

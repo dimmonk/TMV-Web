@@ -45,7 +45,7 @@ const vars = `--c:${color}; --oc-h:${height}; --oc-ratio:${mediaRatio}; --oc-tit
       <div class="flip-media">
         {image ? (
           isVideo
-            ? <video class="flip-img" src={src} muted loop playsinline webkit-playsinline preload="metadata"></video>
+            ? <video class="flip-img" src={src} muted loop playsinline webkit-playsinline preload="none"></video>
             : <img class="flip-img" src={src} alt={title} loading="lazy" />
         ) : (
           <div class="flip-ph">
@@ -125,24 +125,28 @@ const vars = `--c:${color}; --oc-h:${height}; --oc-ratio:${mediaRatio}; --oc-tit
 </style>
 
 <script>
-  // Click the card (not a link) to flip; the flip buttons toggle too.
-  document.querySelectorAll('.flip').forEach((card) => {
-    card.addEventListener('click', (e) => {
-      if ((e.target as HTMLElement).closest('a')) return;
-      card.classList.toggle('flipped');
-    });
-  });
-
-  // Card videos play only while on screen (saves the up-front download).
-  const flipVids = document.querySelectorAll<HTMLVideoElement>('.flip-media video');
-  if (flipVids.length) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const v = entry.target as HTMLVideoElement;
-        if (entry.isIntersecting) v.play().catch(() => {});
-        else v.pause();
+  // Re-init on every view-transition navigation (fresh cards each nav). Fresh
+  // elements → binding fresh is safe; the observer's prior instance is dropped
+  // with the old page.
+  function initOfferingCards() {
+    document.querySelectorAll('.flip').forEach((card) => {
+      card.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('a')) return;
+        card.classList.toggle('flipped');
       });
-    }, { rootMargin: '120px' });
-    flipVids.forEach((v) => io.observe(v));
+    });
+    // Card videos play only while on screen (saves the up-front download).
+    const flipVids = document.querySelectorAll<HTMLVideoElement>('.flip-media video');
+    if (flipVids.length) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const v = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) v.play().catch(() => {});
+          else v.pause();
+        });
+      }, { rootMargin: '120px' });
+      flipVids.forEach((v) => io.observe(v));
+    }
   }
+  document.addEventListener('astro:page-load', initOfferingCards);
 </script>
