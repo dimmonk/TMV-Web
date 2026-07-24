@@ -136,36 +136,50 @@ const jsonLd = {
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-    {/* Client-side routing with animated cross-fades. Astro runs module scripts
-        ONCE (not per navigation), so every on-load init in this site
-        (status pill, --tabbar-h, More sheet, carousel, live schedule/pricing
-        fetches, invite + camp-reg mounts) is registered on `astro:page-load`,
-        which fires on first load AND after every transition. */}
+    {/* Client-side routing. Astro runs module scripts ONCE (not per navigation),
+        so every on-load init in this site (status pill, --tabbar-h, More sheet,
+        carousel, live schedule/pricing fetches, invite + camp-reg mounts) is
+        registered on `astro:page-load`, which fires on first load AND after
+        every transition. */}
     <ViewTransitions />
 
-    {/* Cross-browser cache warmer. Astro's built-in prefetch uses
-        <link rel="prefetch">, which iOS Safari ignores — so on iPhone every tap
-        fetched the page fresh over the network (the click-to-load delay). This
-        instead fetch()es each on-screen internal link during idle time, warming
-        the HTTP cache (Firebase serves HTML with max-age), so the fetch the
-        view-transition router does on click hits cache and the page appears
-        instantly. Runs after every navigation; each URL is fetched at most once. */}
+    {/* Cache warmer — this is what makes a tap instant. The click-to-render
+        delay was the router fetching the target page's HTML on click; HTML is
+        served stale-while-revalidate (see firebase.json hosting:web), so once a
+        page is in the HTTP cache the router serves it from cache with no network
+        round-trip and the swap is immediate. On idle this fetch()es every
+        on-screen internal link AND the render-blocking /_astro assets it
+        references, so both the HTML and its immutable CSS/JS are cached before
+        the tap — and a stale-served page always has the exact assets it needs
+        (they're immutable, so they never 404 against a newer deploy). Each URL
+        is fetched at most once. */}
     <script is:inline>
       (function () {
-        var warmed = new Set();
+        var warmedPages = new Set();
+        var warmedAssets = new Set();
+        function warmAsset(u) {
+          if (warmedAssets.has(u)) return;
+          warmedAssets.add(u);
+          fetch(u, { credentials: 'same-origin' }).catch(function () {});
+        }
+        function warmPageAssets(html) {
+          var re = /(?:href|src)="(\/(?:_astro|fonts)\/[^"]+)"/g, m;
+          while ((m = re.exec(html))) warmAsset(m[1]);
+        }
         function warm() {
-          var here = location.pathname.replace(/\/$/, '');
-          warmed.add(here);
-          var links = document.querySelectorAll('a[href^="/"]');
+          warmedPages.add(location.pathname.replace(/\/$/, ''));
           var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 200); };
-          links.forEach(function (a) {
+          document.querySelectorAll('a[href^="/"]').forEach(function (a) {
             var href = a.getAttribute('href');
             if (!href || href.indexOf('#') !== -1 || a.target) return;
             var path = href.replace(/\/$/, '');
-            if (warmed.has(path)) return;
-            warmed.add(path);
+            if (warmedPages.has(path)) return;
+            warmedPages.add(path);
             idle(function () {
-              fetch(href, { credentials: 'same-origin' }).catch(function () {});
+              fetch(href, { credentials: 'same-origin' })
+                .then(function (r) { return r.text(); })
+                .then(warmPageAssets)
+                .catch(function () {});
             });
           });
         }
