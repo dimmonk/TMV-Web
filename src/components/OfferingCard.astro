@@ -125,6 +125,7 @@ const vars = `--c:${color}; --oc-h:${height}; --oc-ratio:${mediaRatio}; --oc-tit
 </style>
 
 <script>
+  import { mountCardVideos } from '../lib/card-video';
   // Re-init on every view-transition navigation (fresh cards each nav). Fresh
   // elements → binding fresh is safe; the observer's prior instance is dropped
   // with the old page.
@@ -136,17 +137,7 @@ const vars = `--c:${color}; --oc-h:${height}; --oc-ratio:${mediaRatio}; --oc-tit
       });
     });
     // Card videos play only while on screen (saves the up-front download).
-    const flipVids = document.querySelectorAll<HTMLVideoElement>('.flip-media video');
-    if (flipVids.length) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          const v = entry.target as HTMLVideoElement;
-          if (entry.isIntersecting) v.play().catch(() => {});
-          else v.pause();
-        });
-      }, { rootMargin: '120px' });
-      flipVids.forEach((v) => io.observe(v));
-    }
+    mountCardVideos('.flip-media video');
   }
   document.addEventListener('astro:page-load', initOfferingCards);
 </script>
