@@ -5,7 +5,7 @@
  */
 import MobileHero from '../MobileHero.astro';
 import BookingCard from '../BookingCard.astro';
-import { cat, url } from '../../data/site';
+import { cat } from '../../data/site';
 import { sq } from '../../data/square-links';
 import { privateWays } from '../../data/private-lessons';
 import { camps } from '../../data/camps';
@@ -28,13 +28,6 @@ const bookOptions = [
     color: g.color, bookingTag: g.bookingTag, title: g.title, description: g.desc,
     pills: g.pills, price: g.price, priceNote: g.priceNote, actionLabel: 'Enquire', href: g.href,
   })),
-];
-// Desktop's sixth group. Not bookings — these check out immediately — so they
-// get their own labelled section rather than sitting in the "reserve" stack.
-const buyOptions = [
-  { color: cat.openGym, bookingTag: 'Store', title: 'Passes & pre-paid packs', description: 'Open gym day passes and pre-paid visit packs, plus class passes — valid 10–20 months depending on size.', pills: 'All ages | Online store', price: 'From $25', priceNote: 'day passes · packs', actionLabel: 'Browse', href: `${url('store')}#opengym` },
-  { color: cat.athletic, bookingTag: 'Membership', title: 'Athletic Program membership', description: 'One month of unlimited Athletic Program training — single month or a subscription you can pause any time.', pills: 'Ages 9+ | Membership', price: '$150', priceNote: '/ month', actionLabel: 'Buy', href: `${url('store')}#athletic` },
-  { color: cat.intro, bookingTag: 'Gift', title: 'Gift cards', description: 'Good for passes, classes, camps and parties. Buy online and send it straight to the recipient.', pills: 'No expiry', price: 'Any amount', priceNote: 'emailed', actionLabel: 'Buy', href: sq.book.giftCards },
 ];
 ---
 <MobileHero eyebrow="Book" title="Reserve your spot" desc="Drop by with no booking, or reserve a private lesson, camp or party online." />
@@ -64,13 +57,7 @@ const buyOptions = [
 
   <div class="m-label">Reserve online</div>
   <p class="m-sub" style="margin-bottom:14px">Each opens its exact page on Square.</p>
-  <div class="m-stack" style="margin-bottom:28px">
-    {bookOptions.map((b) => <BookingCard {...b} target="_blank" />)}
-  </div>
-
-  <div class="m-label">Buying, not booking</div>
-  <p class="m-sub" style="margin-bottom:14px">These check out right away and are ready at the front desk.</p>
   <div class="m-stack">
-    {buyOptions.map((b) => <BookingCard {...b} target={b.href.startsWith('http') ? '_blank' : '_self'} />)}
+    {bookOptions.map((b) => <BookingCard {...b} target="_blank" />)}
   </div>
 </div>

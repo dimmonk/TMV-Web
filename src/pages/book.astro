@@ -64,15 +64,6 @@ const groups: Group[] = [
   { id: 'open-gym', title: 'Early Gym Access', icon: 'bi-unlock-fill', color: cat.openGym,
     blurb: 'Reserve The Monkey Vault before we open to the public. (Open gym itself needs no booking — just drop in.)',
     items: [groupItem('earlyAccess', 'Reserve')] },
-  {
-    id: 'passes', title: 'Passes & Memberships', icon: 'bi-ticket-perforated-fill', color: cat.openGym,
-    blurb: 'Buying, not booking — these check out securely with Square and are ready at the front desk when you arrive. Browse the full store for every pack size.',
-    items: [
-      { title: 'Passes & pre-paid packs', price: 'From $25', priceNote: 'day passes · visit packs', color: cat.openGym, desc: 'Open gym day passes and pre-paid visit packs — valid 10–20 months depending on size. Class passes and packs live in the same store.', pills: 'All ages | Online store', cta: 'Browse the store', href: `${url('store')}#opengym` },
-      { title: 'Athletic Program membership', price: '$150 / month', priceNote: 'one-time or auto-renew', color: cat.athletic, desc: 'One month of unlimited Athletic Program training — buy a single month or set up a subscription you can pause or cancel any time.', pills: 'Ages 9+ | Membership', cta: 'Buy membership', href: `${url('store')}#athletic` },
-      { title: 'Gift cards', price: 'Any amount', priceNote: 'delivered by email', color: cat.intro, desc: 'The easy gift — good for passes, classes, camps and parties. Buy online and send it straight to the recipient.', pills: 'No expiry', cta: 'Buy a gift card', href: sq.book.giftCards, target: '_blank' },
-    ],
-  },
 ];
 
 const jumpItems = groups.map((g) => ({ label: g.title, id: g.id }));
@@ -86,7 +77,7 @@ const jumpItems = groups.map((g) => ({ label: g.title, id: g.id }));
     <div class="container pagehero-inner">
       <div class="pagehero-kicker"><span class="rule"></span>Book online · real-time availability</div>
       <h1 class="pagehero-title">Pick what you want to book.</h1>
-      <p class="pagehero-lead">Everything you can book or buy, in one place — tap one and you'll land right on its booking or checkout page. For bookings, your card is never charged up front; it just holds the slot.</p>
+      <p class="pagehero-lead">Everything you can reserve, in one place — tap one and you'll land right on its booking page. Your card is never charged up front; it just holds the slot.</p>
     </div>
   </section>
 

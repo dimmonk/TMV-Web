@@ -31,7 +31,6 @@ const DEFAULTS = {
     privateDayCamp: B,
     groupEvents: B,
     earlyGymAccess: B,
-    giftCards: links.giftCard,
   },
 
   /* -------------------------------------------------- Home page ----------- */
