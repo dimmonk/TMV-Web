@@ -1,5 +1,5 @@
 /**
- * Specialized-classes tab card — one discipline visible at a time.
+ * Specialized-classes list/detail card — one discipline visible at a time.
  *
  * Every panel is SERVER-RENDERED; this only swaps which one is shown, so the
  * first discipline reads with JS off and all eleven are in the HTML for search.
@@ -21,7 +21,13 @@ function mountOne(root: HTMLElement): void {
   const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-class-panel]'));
   if (!tabs.length || !panels.length) return;
 
-  const show = (id: string, focusTab = false): void => {
+  const detail = root.querySelector<HTMLElement>('[data-class-detail]');
+  /** Stacked layout = the detail pane sits UNDER the list, so a tap that only
+   *  swaps it can look like nothing happened. Side-by-side needs no scroll. */
+  const isStacked = (): boolean =>
+    !!detail && detail.getBoundingClientRect().top > root.getBoundingClientRect().top + 4;
+
+  const show = (id: string, focusTab = false, scrollDetail = false): void => {
     tabs.forEach((t) => {
       const on = t.dataset.classTab === id;
       t.classList.toggle('on', on);
@@ -29,8 +35,7 @@ function mountOne(root: HTMLElement): void {
       t.tabIndex = on ? 0 : -1;
       if (on && focusTab) {
         t.focus();
-        // Keep the active tab in view in the horizontal strip on a phone.
-        t.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        t.scrollIntoView({ block: 'nearest' });
       }
     });
     panels.forEach((p) => {
@@ -41,12 +46,18 @@ function mountOne(root: HTMLElement): void {
       if (on) playClip(v);
       else v.pause();
     });
+    if (scrollDetail && detail && isStacked()) {
+      detail.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
   };
 
   tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => show(tab.dataset.classTab!));
+    tab.addEventListener('click', () => show(tab.dataset.classTab!, false, true));
+    // The list is a vertical column, so Up/Down are the natural keys (Left/
+    // Right still work — a roving tablist is expected to accept both).
     tab.addEventListener('keydown', (e) => {
-      const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      const dir = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1
+        : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0;
       if (!dir) return;
       e.preventDefault();
       show(tabs[(i + dir + tabs.length) % tabs.length].dataset.classTab!, true);

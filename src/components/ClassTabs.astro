@@ -1,20 +1,26 @@
 ---
 /**
- * The Specialized Classes card — ONE card, a tab per discipline.
+ * The Specialized Classes card — a vertical discipline LIST on the left, the
+ * selected discipline's detail on the right.
  *
  * Eleven specialized classes used to render as eleven full flip cards, which
- * was the single biggest source of visual overload on the Train page. Here the
- * whole discipline LIST stays visible as a tab strip (so nothing is hidden from
- * a skimmer, or from search — every panel is server-rendered), but only one
- * discipline is shown at a time.
+ * was the biggest source of visual overload on the Train page. The fix is not
+ * to hide the list — it's to stop rendering eleven *cards*. So the list stays
+ * whole and scannable in one vertical column (name + who it's for + when, so
+ * you can compare disciplines without clicking anything), and only the detail
+ * pane changes.
  *
- * Nothing is lost in the collapse: the flip card's front (clip, booking tag,
- * pills, action) and its back (headline, body, spec table) are merged into the
- * one panel, so there is no second side to discover.
+ * A horizontal tab strip was tried first and was wrong: eleven names in a
+ * scroller can't be skimmed — you can only ever see four of them at once.
  *
- * Content only — no chrome, no fixed width. The same component renders in both
- * chromes; `variant="compact"` is a density knob, not a second implementation.
- * Logic is src/lib/class-tabs.ts.
+ * Nothing is lost in the collapse: the old flip card's front (clip, booking
+ * tag, pills, action) and back (headline, body, spec table) are merged into
+ * the one detail pane, so there is no second side to discover.
+ *
+ * Content only — no chrome, no fixed width. Both chromes render this one
+ * component; `variant="compact"` is a density knob, not a second
+ * implementation. Below 860px (and in compact) the two columns stack: list
+ * first, detail under it. Logic is src/lib/class-tabs.ts.
  */
 import { url, cat } from '../data/site';
 import { isVideoAsset, classMediaExists } from '../lib/class-media';
@@ -33,126 +39,151 @@ const bookingIconMap: Record<string, string> = {
   'Register': 'bi-calendar-event', 'Direct with coach': 'bi-chat-dots',
 };
 
-// Every specialized class carries the shared `classes` accent (same mapping
-// ClassCard uses), so the strip reads as one family rather than eleven colours.
+// Every specialized class carries the shared `classes` accent (the same mapping
+// ClassCard uses), so the list reads as one family rather than eleven colours.
 const accent = cat.classes;
 
-const items = classes.map((c) => ({
-  id: slug(c.title),
-  title: c.title,
-  headline: c.backHeadline,
-  body: c.backBody || c.description,
-  bookingTag: c.bookingTag,
-  bookingIcon: bookingIconMap[c.bookingTag] || 'bi-info-circle',
-  pills: c.pills.split('|').map((s) => s.trim()).filter(Boolean),
-  specs: c.specs.split('||').map((s) => s.trim()).filter(Boolean).map((row) => {
-    const i = row.indexOf(':');
-    return i >= 0 ? { label: row.slice(0, i).trim(), value: row.slice(i + 1).trim() } : { label: '', value: row };
-  }),
-  actionLabel: c.actionLabel,
-  href: 'external' in c.link ? c.link.external : url(c.link.screen),
-  external: 'external' in c.link,
-  src: c.image.startsWith('assets/') ? url(c.image) : c.image,
-  isVideo: isVideoAsset(c.image),
-  mediaExists: classMediaExists(c.image),
-}));
+const items = classes.map((c) => {
+  const pills = c.pills.split('|').map((s) => s.trim()).filter(Boolean);
+  return {
+    id: slug(c.title),
+    title: c.title,
+    /** The list row's skim line — who it's for and when, without a click. */
+    meta: pills.join(' · '),
+    headline: c.backHeadline,
+    body: c.backBody || c.description,
+    bookingTag: c.bookingTag,
+    bookingIcon: bookingIconMap[c.bookingTag] || 'bi-info-circle',
+    pills,
+    specs: c.specs.split('||').map((s) => s.trim()).filter(Boolean).map((row) => {
+      const i = row.indexOf(':');
+      return i >= 0 ? { label: row.slice(0, i).trim(), value: row.slice(i + 1).trim() } : { label: '', value: row };
+    }),
+    actionLabel: c.actionLabel,
+    href: 'external' in c.link ? c.link.external : url(c.link.screen),
+    external: 'external' in c.link,
+    src: c.image.startsWith('assets/') ? url(c.image) : c.image,
+    isVideo: isVideoAsset(c.image),
+    mediaExists: classMediaExists(c.image),
+  };
+});
 ---
 <div class:list={['ct', variant]} style={`--cat:${accent}`} data-class-tabs>
-  <div class="ct-tabs" role="tablist" aria-label="Specialized classes">
+  <div class="ct-list" role="tablist" aria-orientation="vertical" aria-label="Specialized classes">
     {items.map((it, i) => (
       <button
-        type="button" class:list={['ct-tab', { on: i === 0 }]} data-class-tab={it.id}
+        type="button" class:list={['ct-row', { on: i === 0 }]} data-class-tab={it.id}
         role="tab" aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}
-      >{it.title}</button>
+      >
+        <span class="ct-row-txt">
+          <span class="ct-row-t">{it.title}</span>
+          <span class="ct-row-m">{it.meta}</span>
+        </span>
+        <i class="bi bi-chevron-right ct-row-chev" aria-hidden="true"></i>
+      </button>
     ))}
   </div>
 
-  {items.map((it, i) => (
-    <div class="ct-panel" data-class-panel={it.id} role="tabpanel" aria-label={it.title} hidden={i !== 0}>
-      <div class="ct-media">
-        {!it.mediaExists
-          ? <div class="ct-media-ph" aria-hidden="true"><i class="bi bi-person-arms-up"></i></div>
-          : it.isVideo
-          ? <video class="ct-img" src={it.src} muted loop playsinline webkit-playsinline preload="none"></video>
-          : <img class="ct-img" src={it.src} alt={it.title} loading="lazy" />}
-      </div>
-
-      <div class="ct-body">
-        {it.bookingTag && <span class="ct-booking"><i class={`bi ${it.bookingIcon}`} aria-hidden="true"></i>{it.bookingTag}</span>}
-        <h3 class="ct-title">{it.title}</h3>
-        {it.headline && <p class="ct-headline">{it.headline}</p>}
-        <p class="ct-desc">{it.body}</p>
-        {it.pills.length > 0 && <div class="ct-pills">{it.pills.map((p) => <span class="ct-pill">{p}</span>)}</div>}
-        <div class="ct-specs">
-          {it.specs.map((s) => (
-            <div class="ct-spec"><span class="ct-spec-l">{s.label}</span><span class="ct-spec-v">{s.value}</span></div>
-          ))}
+  <div class="ct-detail" data-class-detail>
+    {items.map((it, i) => (
+      <div class="ct-panel" data-class-panel={it.id} role="tabpanel" aria-label={it.title} hidden={i !== 0}>
+        <div class="ct-media">
+          {!it.mediaExists
+            ? <div class="ct-media-ph" aria-hidden="true"><i class="bi bi-person-arms-up"></i></div>
+            : it.isVideo
+            ? <video class="ct-img" src={it.src} muted loop playsinline webkit-playsinline preload="none"></video>
+            : <img class="ct-img" src={it.src} alt={it.title} loading="lazy" />}
+          {it.bookingTag && <span class="ct-booking"><i class={`bi ${it.bookingIcon}`} aria-hidden="true"></i>{it.bookingTag}</span>}
         </div>
-        <a href={it.href} class="ct-act" {...(it.external ? { target: '_blank', rel: 'noopener' } : {})}>
-          {it.actionLabel} <i class={`bi ${it.external ? 'bi-arrow-up-right' : 'bi-arrow-right'}`} aria-hidden="true"></i>
-        </a>
+
+        <div class="ct-body">
+          <h3 class="ct-title">{it.title}</h3>
+          {it.headline && <p class="ct-headline">{it.headline}</p>}
+          <p class="ct-desc">{it.body}</p>
+          <div class="ct-specs">
+            {it.specs.map((s) => (
+              <div class="ct-spec"><span class="ct-spec-l">{s.label}</span><span class="ct-spec-v">{s.value}</span></div>
+            ))}
+          </div>
+          <a href={it.href} class="ct-act" {...(it.external ? { target: '_blank', rel: 'noopener' } : {})}>
+            {it.actionLabel} <i class={`bi ${it.external ? 'bi-arrow-up-right' : 'bi-arrow-right'}`} aria-hidden="true"></i>
+          </a>
+        </div>
       </div>
-    </div>
-  ))}
+    ))}
+  </div>
 </div>
 
 <style>
-  .ct { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; }
+  .ct {
+    display: grid; grid-template-columns: minmax(240px, 300px) 1fr; align-items: stretch;
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm); overflow: hidden;
+  }
 
-  /* The discipline list. Scrolls horizontally rather than wrapping to four
-     rows — the strip is meant to read as one line you run your eye along. */
-  .ct-tabs { display: flex; gap: 8px; padding: 14px 16px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--line); background: #faf9f6; }
-  .ct-tabs::-webkit-scrollbar { display: none; }
-  .ct-tab {
-    flex: none; cursor: pointer; white-space: nowrap; min-height: 44px;
-    font: 700 13px/1 var(--font-display); border-radius: 999px; padding: 12px 16px;
-    background: #fff; color: var(--text-2); border: 1.5px solid #e3e0d9;
+  /* THE LIST — the whole point: all eleven readable in one glance. */
+  .ct-list { display: flex; flex-direction: column; background: #faf9f6; border-right: 1px solid var(--line); padding: 10px; gap: 2px; }
+  .ct-row {
+    cursor: pointer; text-align: left; width: 100%; display: flex; align-items: center; gap: 12px;
+    min-height: 44px; padding: 11px 13px; border-radius: 11px; border: 1px solid transparent;
+    background: transparent; color: var(--text-2);
     transition: background .15s ease, color .15s ease, border-color .15s ease;
   }
-  .ct-tab:hover { border-color: var(--cat); color: var(--ink); }
-  /* Active tab = the same solid category chip ClassCard puts on its media. */
-  .ct-tab.on { background: var(--cat); color: #fff; border-color: var(--cat); }
+  .ct-row:hover { background: #fff; border-color: var(--line); }
+  .ct-row-txt { flex: 1; min-width: 0; }
+  .ct-row-t { display: block; font: 800 14.5px/1.2 var(--font-display); letter-spacing: -.008em; color: var(--ink); }
+  .ct-row-m { display: block; font: 500 11.5px/1.35 var(--font-body); color: var(--muted-2); margin-top: 3px; }
+  .ct-row-chev { flex: none; font-size: 11px; color: var(--faint); opacity: 0; transition: opacity .15s ease; }
+  .ct-row:hover .ct-row-chev { opacity: 1; }
+  /* Selected: a tint + a full border, never a single-side stripe. */
+  .ct-row.on { background: color-mix(in srgb, var(--cat) 11%, #fff); border-color: color-mix(in srgb, var(--cat) 34%, #fff); }
+  .ct-row.on .ct-row-t { color: color-mix(in srgb, var(--cat) 66%, #000); }
+  .ct-row.on .ct-row-m { color: color-mix(in srgb, var(--cat) 45%, #3a3833); }
+  .ct-row.on .ct-row-chev { opacity: 1; color: var(--cat); }
 
-  .ct-panel { display: grid; grid-template-columns: .95fr 1.05fr; align-items: stretch; }
+  /* THE DETAIL */
+  .ct-detail { min-width: 0; }
+  .ct-panel { display: flex; flex-direction: column; height: 100%; }
   .ct-panel[hidden] { display: none; }
 
-  .ct-media { position: relative; overflow: hidden; background: var(--ink); min-height: 320px; }
-  .ct-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ct-media { position: relative; aspect-ratio: 16/7; overflow: hidden; background: var(--ink); flex: none; }
+  .ct-img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .ct-media-ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(150deg, color-mix(in srgb, var(--cat) 28%, var(--ink)), var(--ink)); }
-  .ct-media-ph i { font-size: 46px; color: color-mix(in srgb, var(--cat) 60%, #fff); opacity: .85; }
-
-  .ct-body { padding: 30px 32px 32px; display: flex; flex-direction: column; gap: 13px; }
-  .ct-booking { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; background: var(--cat); color: #fff; font: 800 10.5px/1 var(--font-display); letter-spacing: .07em; text-transform: uppercase; }
+  .ct-media-ph i { font-size: 44px; color: color-mix(in srgb, var(--cat) 60%, #fff); opacity: .85; }
+  .ct-booking { position: absolute; top: 14px; left: 14px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; background: var(--cat); color: #fff; font: 800 10.5px/1 var(--font-display); letter-spacing: .07em; text-transform: uppercase; box-shadow: 0 3px 10px rgba(0,0,0,.3); }
   .ct-booking i { font-size: 12px; }
-  .ct-title { font: 800 28px/1.08 var(--font-display); letter-spacing: -.018em; color: var(--ink); margin: 0; }
-  .ct-headline { font: 700 15.5px/1.35 var(--font-display); color: color-mix(in srgb, var(--cat) 62%, #000); margin: 0; }
-  .ct-desc { font: 400 14px/1.6 var(--font-body); color: var(--text-3); margin: 0; max-width: 560px; }
-  .ct-pills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .ct-pill { font: 600 12.5px/1 var(--font-body); color: color-mix(in srgb, var(--cat) 62%, #000); background: color-mix(in srgb, var(--cat) 10%, #fff); border: 1px solid color-mix(in srgb, var(--cat) 24%, #fff); border-radius: 999px; padding: 6px 11px; white-space: nowrap; }
-  .ct-specs { margin-top: auto; padding-top: 8px; display: flex; flex-direction: column; }
-  .ct-spec { display: grid; grid-template-columns: max-content 1fr; gap: 14px; padding: 9px 0; border-top: 1px solid #efeee8; }
+
+  .ct-body { padding: 26px 30px 28px; display: flex; flex-direction: column; gap: 11px; flex: 1; }
+  .ct-title { font: 800 27px/1.08 var(--font-display); letter-spacing: -.018em; color: var(--ink); margin: 0; }
+  .ct-headline { font: 700 15px/1.35 var(--font-display); color: color-mix(in srgb, var(--cat) 62%, #000); margin: 0; }
+  .ct-desc { font: 400 14px/1.6 var(--font-body); color: var(--text-3); margin: 0; max-width: 620px; }
+  .ct-specs { margin-top: auto; padding-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 26px; }
+  .ct-spec { display: grid; grid-template-columns: max-content 1fr; gap: 12px; padding: 9px 0; border-top: 1px solid #efeee8; }
   .ct-spec-l { font: 700 10px/1.4 var(--font-display); letter-spacing: .07em; text-transform: uppercase; color: color-mix(in srgb, var(--cat) 62%, #000); white-space: nowrap; }
   .ct-spec-v { font: 600 13px/1.3 var(--font-body); color: var(--text-2); }
-  .ct-act { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; margin-top: 6px; font: 800 14px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); text-decoration: none; transition: gap .15s; }
+  .ct-act { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; margin-top: 8px; font: 800 14px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); text-decoration: none; transition: gap .15s; }
   .ct-act:hover { gap: 11px; }
   .ct-act i { color: var(--cat); }
 
-  /* Phone: strip on top, media above the copy. */
-  .ct.compact { border-radius: var(--radius); }
-  .ct.compact .ct-tabs { padding: 12px 14px; gap: 7px; }
-  .ct.compact .ct-tab { font-size: 12.5px; padding: 12px 14px; }
-  .ct.compact .ct-panel { grid-template-columns: 1fr; }
-  .ct.compact .ct-media { min-height: 0; aspect-ratio: 16/10; }
-  .ct.compact .ct-body { padding: 18px; gap: 11px; }
+  /* Stacked: the list stays whole and the detail sits under it. */
+  .ct.compact { grid-template-columns: 1fr; border-radius: var(--radius); }
+  .ct.compact .ct-list { border-right: 0; border-bottom: 1px solid var(--line); padding: 8px; }
+  .ct.compact .ct-row-chev { opacity: 1; }
+  .ct.compact .ct-media { aspect-ratio: 16/9; }
+  .ct.compact .ct-body { padding: 18px; }
   .ct.compact .ct-title { font-size: 22px; }
   .ct.compact .ct-headline { font-size: 14px; }
   .ct.compact .ct-desc { font-size: 13px; }
+  .ct.compact .ct-specs { grid-template-columns: 1fr; gap: 0; }
 
   @media (max-width: 860px) {
-    .ct-panel { grid-template-columns: 1fr; }
-    .ct-media { min-height: 0; aspect-ratio: 16/10; }
+    .ct { grid-template-columns: 1fr; }
+    .ct-list { border-right: 0; border-bottom: 1px solid var(--line); }
+    .ct-row-chev { opacity: 1; }
+    .ct-media { aspect-ratio: 16/9; }
     .ct-body { padding: 22px; }
-    .ct-title { font-size: 24px; }
+    .ct-title { font-size: 23px; }
+    .ct-specs { grid-template-columns: 1fr; gap: 0; }
   }
 </style>
 
