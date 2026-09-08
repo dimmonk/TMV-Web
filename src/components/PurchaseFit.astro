@@ -1,0 +1,42 @@
+---
+/**
+ * "Which one is you?" — match the purchase to the goal, from
+ * `purchaseFit` in src/data/progression.ts.
+ *
+ * Sits ABOVE the live price list so value comes before price: a visitor
+ * recognises themselves in one of four profiles first, then reads the numbers.
+ * Content only — auto-fit grid, so it works in any column width.
+ */
+import { purchaseFit } from '../data/progression';
+---
+<div class="fit">
+  {purchaseFit.map((f) => (
+    <div class="fit-card">
+      <div class="fit-who"><span class="fit-dot" style={`background:${f.color}`}></span>{f.who}</div>
+      <div class="fit-t">{f.title}</div>
+      <div class="fit-rec">{f.rec}</div>
+      <p class="fit-b">{f.body}</p>
+      <div class="fit-price">
+        <span>{f.price.value} <small>{f.price.note}</small></span>
+        {f.price2 && <span>{f.price2.value} <small>{f.price2.note}</small></span>}
+      </div>
+      <a class="fit-go" href={f.href}>{f.cta} <i class={`bi ${f.onPage ? 'bi-arrow-down' : 'bi-arrow-right'}`} aria-hidden="true"></i></a>
+    </div>
+  ))}
+</div>
+
+<style>
+  .fit { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+  .fit-card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 24px 24px 22px; display: flex; flex-direction: column; gap: 12px; box-shadow: var(--shadow-sm); }
+  .fit-who { display: inline-flex; align-items: center; gap: 8px; font: 700 11px/1 var(--font-display); letter-spacing: .13em; text-transform: uppercase; color: var(--muted-3); }
+  .fit-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .fit-t { font: 800 24px/1.05 var(--font-display); letter-spacing: -.015em; }
+  .fit-rec { font: 800 14px/1.3 var(--font-display); color: var(--ink); }
+  .fit-b { font: 400 13.5px/1.55 var(--font-body); color: var(--muted); flex: 1; margin: 0; }
+  .fit-price { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; font: 800 18px/1 var(--font-display); color: var(--ink); padding-top: 14px; border-top: 1px solid #efeee8; }
+  .fit-price small { font: 600 12px/1.3 var(--font-body); color: var(--muted-3); }
+  /* A real tap target, not just a text link — full thumb height on a phone. */
+  .fit-go { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin-bottom: -8px; font: 800 12.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); text-decoration: none; transition: gap .15s ease; }
+  .fit-go:hover { gap: 9px; }
+  .fit-go i { color: var(--brand); }
+</style>

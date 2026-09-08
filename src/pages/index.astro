@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import OfferingCard from '../components/OfferingCard.astro';
 import HomeScreen from '../components/mobile/HomeScreen.astro';
+import GoalPicker from '../components/GoalPicker.astro';
 import Reviews from '../components/Reviews.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { seo, links, cat, url, heroStats } from '../data/site';
@@ -51,15 +52,15 @@ const camps = [
         <h1 class="hero-title">Move better.<br>Have more fun.</h1>
         <p class="hero-lead">Toronto's home for parkour, flips and movement. Drop in to play, book a class, train like an athlete, or throw a party — every age, every level, under one big roof.</p>
         <div class="hero-actions">
-          <a href={links.booking} target="_blank" rel="noopener" class="btn btn-primary">Book a session <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-          <a href="#offerings" class="btn btn-ghost-light">Explore the gym</a>
+          <a href={sq.getStarted.introduction} target="_blank" rel="noopener" class="btn btn-primary">Book an intro lesson <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+          <a href="#start" class="btn btn-ghost-light">Explore the gym</a>
         </div>
         <div class="hero-stats">
           {heroStats.map((st, i) => (
             <div class:list={['hero-stat', { last: i === heroStats.length - 1 }]}><div class="hero-statnum">{st.value}</div><div class="hero-statlabel">{st.label}</div></div>
           ))}
         </div>
-        <p class="hero-new">New here? <a href={url('get-started')}>Start with our 3-step first-visit guide →</a></p>
+        <p class="hero-new">Just here to play? <a href={`${url('store')}#opengym`}>Open gym day passes from $25 →</a></p>
       </div>
       <div class="hero-media">
         <div class="hero-frame" id="hero-carousel">
@@ -83,10 +84,18 @@ const camps = [
     </div>
   </div>
 
+  <!-- GOAL PICKER — ASK → RECOMMEND → REASON → INVITE (see data/goals.ts) -->
+  <section id="start" class="section container goalsec">
+    <div class="goalsec-head">
+      <SectionHeader num="01" eyebrow="Where to start" title="What are you here for?" description="Tell us the goal and we'll point you to one next step — not six programs." />
+    </div>
+    <GoalPicker />
+  </section>
+
   <!-- OFFERINGS -->
   <section id="offerings" class="section container offerings">
     <div class="offerings-head">
-      <SectionHeader num="01" eyebrow="Where to start" title="Three ways to get moving" description="Drop in to play, book a class, send the kids to camp, or throw a party. Tap a card for what's inside." />
+      <SectionHeader num="02" eyebrow="Or browse" title="Three ways to get moving" description="Drop in to play, book a class, send the kids to camp, or throw a party. Tap a card for what's inside." />
     </div>
     <div class="grid-cards">
       {offerings.map((o) => <OfferingCard {...o} href={url(o.key)} />)}
@@ -98,7 +107,7 @@ const camps = [
     <div class="container">
       <div class="camps-head">
         <div>
-          <div class="camps-eyebrow">02 — Dated &amp; filling up</div>
+          <div class="camps-eyebrow">03 — Dated &amp; filling up</div>
           <h2 class="camps-title">Camps booking now</h2>
           <p class="camps-lead">Dated sessions open for registration — Summer weeks and the next P.A. Day. 9 AM–2 PM with a late-pickup option. $350 a week or $90 a single day.</p>
         </div>
@@ -130,7 +139,7 @@ const camps = [
     </div>
   </section>
 
-  <Reviews eyebrow="03 — What people say" />
+  <Reviews eyebrow="04 — What people say" />
 
   <section class="section container final-cta">
     <CtaBand cards={[
@@ -171,8 +180,12 @@ const camps = [
   .bookstrip-inner span { font: 600 14px/1.6 var(--font-body); color: rgba(255,255,255,.7); }
   .bookstrip-inner a { margin-left: auto; font: 800 13px/1 var(--font-display); text-transform: uppercase; letter-spacing: .04em; color: var(--brand); text-decoration: none; display: inline-flex; align-items: center; gap: 7px; }
 
+  /* GOAL PICKER (the picker itself lives in GoalPicker.astro) */
+  .goalsec { scroll-margin-top: 80px; padding-block: 52px 40px; }
+  .goalsec-head { margin-bottom: 26px; }
+
   /* OFFERINGS (flip cards live in OfferingCard.astro) */
-  .offerings { scroll-margin-top: 80px; padding-block: 48px 56px; }
+  .offerings { scroll-margin-top: 80px; padding-block: 40px 56px; }
   .offerings-head { margin-bottom: 26px; }
 
   /* CAMPS BAND */

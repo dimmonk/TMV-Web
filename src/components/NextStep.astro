@@ -1,0 +1,44 @@
+---
+/**
+ * "Every interaction ends with a next step" — the closing band on every
+ * program page, rendered from `nextSteps` in src/data/progression.ts.
+ *
+ * Deliberately NOT a new visual pattern: it's the dark band the site already
+ * uses for the Get Started intro bonus and the Private Lessons help strip, so
+ * a page gains a closer without gaining a new card style. Content only — no
+ * width, no container; the page decides where it sits.
+ */
+import { nextSteps, type NextStepKey } from '../data/progression';
+
+interface Props { step: NextStepKey; }
+const { step } = Astro.props;
+const s = nextSteps[step];
+---
+<div class="ns">
+  <span class="ns-ic"><i class={`bi ${s.icon}`} aria-hidden="true"></i></span>
+  <div class="ns-txt">
+    <div class="ns-eyebrow">{s.eyebrow}</div>
+    <div class="ns-t">{s.title}</div>
+    <p class="ns-b">{s.body}</p>
+  </div>
+  <a href={s.href} {...(s.external ? { target: '_blank', rel: 'noopener' } : {})} class="btn btn-primary ns-cta">
+    {s.cta} <i class={`bi ${s.external ? 'bi-arrow-up-right' : 'bi-arrow-right'}`} aria-hidden="true"></i>
+  </a>
+</div>
+
+<style>
+  .ns { display: flex; align-items: center; gap: 22px; background: var(--ink); color: #fff; border-radius: 18px; padding: 28px 32px; flex-wrap: wrap; }
+  .ns-ic { flex: none; width: 52px; height: 52px; border-radius: 14px; background: rgba(255,212,0,.16); display: flex; align-items: center; justify-content: center; font-size: 23px; color: var(--brand); }
+  .ns-txt { flex: 1; min-width: 240px; }
+  .ns-eyebrow { font: 700 11px/1 var(--font-display); letter-spacing: .13em; text-transform: uppercase; color: var(--brand); margin-bottom: 8px; }
+  .ns-t { font: 800 22px/1.15 var(--font-display); letter-spacing: -.012em; margin-bottom: 6px; }
+  .ns-b { font: 400 14px/1.6 var(--font-body); color: rgba(255,255,255,.72); max-width: 620px; margin: 0; }
+  .ns-cta { flex: none; }
+
+  @media (max-width: 640px) {
+    .ns { padding: 22px; gap: 16px; border-radius: 16px; }
+    .ns-ic { width: 44px; height: 44px; font-size: 20px; }
+    .ns-t { font-size: 19px; }
+    .ns-cta { width: 100%; justify-content: center; min-height: 44px; }
+  }
+</style>

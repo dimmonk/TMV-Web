@@ -19,6 +19,7 @@
  */
 import MobileHero from '../MobileHero.astro';
 import BookingCard from '../BookingCard.astro';
+import NextStep from '../NextStep.astro';
 import { cat, url, links } from '../../data/site';
 import { sq } from '../../data/square-links';
 
@@ -98,4 +99,6 @@ const structure = [
       <a href={links.store} target="_blank" rel="noopener" class="m-darkbtn-sm">Get the pass <i class="bi bi-arrow-up-right"></i></a>
     </div>
   </div>
+
+  <div style="margin-top:14px"><NextStep step="athletic-intro" /></div>
 </div>

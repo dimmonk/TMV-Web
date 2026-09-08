@@ -1,0 +1,1 @@
+const o=s=>{const n="/".replace(/\/$/,""),e=s.replace(/^\//,""),t=n+"/"+e;return t.endsWith("/")||(e.split("/").pop()||"").includes(".")?t:t+"/"},l={name:"The Monkey Vault",address:{street:"75 Carl Hall Rd, Unit 15",locality:"Toronto"}},r={booking:"https://www.themonkeyvault.com/s/appointments",waiver:"https://tmv-members.web.app/waiver"};export{r as l,l as s,o as u};

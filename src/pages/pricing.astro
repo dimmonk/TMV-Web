@@ -2,12 +2,21 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CtaBand from '../components/CtaBand.astro';
 import MobileHero from '../components/MobileHero.astro';
+import PurchaseFit from '../components/PurchaseFit.astro';
+import SectionHeader from '../components/SectionHeader.astro';
 import { seo, links, url } from '../data/site';
+import { sq } from '../data/square-links';
 import '../styles/price-list-sheet.css';
 ---
 <BaseLayout title={seo.pricing.title} description={seo.pricing.description} active="pricing" mobileTab="more" appHeader="back" appTitle="Pricing">
   <div class="mapp" data-chrome="app">
     <MobileHero eyebrow="Pricing" title="One price list" desc="Live from our booking system — buy before you arrive and skip the front-desk line." />
+    {/* Value before price: four buyer profiles, then the numbers. */}
+    <div class="m-pad">
+      <h3 class="m-h3">Which one is you?</h3>
+      <p class="m-sub">Find yourself here first — the prices make more sense after.</p>
+      <PurchaseFit />
+    </div>
   </div>
 
   <section class="pagehero" data-chrome="site">
@@ -22,6 +31,15 @@ import '../styles/price-list-sheet.css';
       </div>
       <p class="pagehero-fine">All prices in CAD, HST included. Pre-paid packs are valid 10–20 months depending on size.</p>
     </div>
+  </section>
+
+  {/* MATCH THE PURCHASE TO THE GOAL — value before price (data/progression.ts) */}
+  <section class="container pl-fit" data-chrome="site">
+    <div class="pl-fit-head">
+      <SectionHeader num="01" eyebrow="Before the price list" title="Which one is you?" description="Four kinds of people buy passes here. Find yours — the price makes a lot more sense once you know what you're getting." />
+    </div>
+    <PurchaseFit />
+    <p class="pl-fit-foot">New and not sure? <a href={sq.getStarted.introduction} target="_blank" rel="noopener">Book an intro lesson ($45)</a> — the coach will tell you which of these actually fits.</p>
   </section>
 
   <!-- LIVE PRICE LIST — production renderer running natively (no iframe).
@@ -64,7 +82,12 @@ import '../styles/price-list-sheet.css';
 
 <style>
 
-  .pl-main { max-width: 1440px; margin: 0 auto; padding: 44px 20px 24px; }
+  .pl-fit { max-width: 1168px; padding-block: 52px 8px; }
+  .pl-fit-head { margin-bottom: 28px; }
+  .pl-fit-foot { font: 500 13.5px/1.5 var(--font-body); color: var(--muted); margin-top: 18px; }
+  .pl-fit-foot a { font-weight: 700; color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--brand); }
+
+  .pl-main { max-width: 1440px; margin: 0 auto; padding: 28px 20px 24px; }
   .pl-foot { font: 500 12.5px/1.5 var(--font-body); color: #9b9890; text-align: center; margin: 16px 0 44px; }
   .pl-foot i { color: var(--brand); }
   .pl-cta { max-width: 1120px; margin: 0 auto 44px; }

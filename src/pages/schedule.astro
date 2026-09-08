@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ScheduleScreen from '../components/mobile/ScheduleScreen.astro';
+import NextStep from '../components/NextStep.astro';
 import { seo, url } from '../data/site';
 import '../styles/print-schedule-sheet.css';
 ---
@@ -47,6 +48,8 @@ import '../styles/print-schedule-sheet.css';
     <p class="sched-foot">
       <i class="bi bi-arrow-repeat" aria-hidden="true"></i>&nbsp; Times update automatically from our booking system — the same schedule our front desk runs from.
     </p>
+
+    <div class="sched-next"><NextStep step="weekly-athletic" /></div>
   </main>
 
   <!-- Popup modal (verbatim from the embed page) -->
@@ -74,7 +77,8 @@ import '../styles/print-schedule-sheet.css';
 <style>
 
   .sched-main { max-width: 1440px; margin: 0 auto; padding: 40px 20px 20px; }
-  .sched-foot { font: 500 12.5px/1.5 var(--font-body); color: #9b9890; text-align: center; margin: 20px 0 44px; }
+  .sched-foot { font: 500 12.5px/1.5 var(--font-body); color: #9b9890; text-align: center; margin: 20px 0 32px; }
+  .sched-next { max-width: 1120px; margin: 0 auto 44px; }
   .sched-foot i { color: var(--brand); }
 </style>
 

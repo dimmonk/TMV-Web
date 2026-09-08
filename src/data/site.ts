@@ -135,9 +135,15 @@ export const reviews = {
 } as const;
 
 /** Home-hero stat tiles — SSOT for both surfaces (desktop uses `label`, the
- * narrower mobile hero uses `mobileLabel` where set). */
+ * narrower mobile hero uses `mobileLabel` where set).
+ *
+ * The lead figure is the INTRO LESSON, not the day pass: the client-progression
+ * procedure makes the intro the designed first step for anyone who wants to
+ * learn, and the hero's primary action books it. The $25 day pass hasn't gone
+ * anywhere — it's the line directly under these tiles, for people who are only
+ * here to play. */
 export const heroStats = [
-  { value: '$25', label: 'open gym day pass', mobileLabel: 'day pass' },
+  { value: '$45', label: 'intro lesson · 1-on-1', mobileLabel: 'intro · 1-on-1' },
   { value: '7 days', label: 'open 11 AM – 10 PM', mobileLabel: '11a – 10p' },
   { value: 'Ages 3+', label: 'all levels' },
 ] as const;

@@ -6,6 +6,7 @@
 import MobileHero from '../MobileHero.astro';
 import BookingCard from '../BookingCard.astro';
 import ClassCard from '../ClassCard.astro';
+import NextStep from '../NextStep.astro';
 import { coreClasses, specializedClasses, partnershipClasses } from '../../data/classes';
 import type { ClassItem } from '../../data/classes';
 import { cat, links, url } from '../../data/site';
@@ -21,6 +22,9 @@ const classHref = (c: ClassItem): string =>
 <div class="m-pad">
   <BookingCard color={cat.openGym} bookingTag="Drop-in" duration="No limit" title="Open Gym" description="Drop in any day and stay as long as you like. Sign the waiver, grab a pass, the floor is yours." pills="All ages | 11 AM – 10 PM | No booking" price="From $25" priceNote="day pass" actionLabel="Get a pass" href={links.store} target="_blank" />
 
+  {/* Every section ends with a next step — same NextStep the desktop page uses. */}
+  <div style="margin-top:16px"><NextStep step="opengym-intro" /></div>
+
   <div class="m-rowhead" style="margin:26px 0 6px">
     <h3 class="m-h3" style="margin:0">Core programs</h3>
     <a class="m-alllink" href={url('schedule')}>Times <i class="bi bi-calendar3" style={`color:${cat.classes}`} aria-hidden="true"></i></a>
@@ -29,6 +33,8 @@ const classHref = (c: ClassItem): string =>
   <div class="m-stack" style="margin-bottom:30px">
     {coreClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}
   </div>
+
+  <div style="margin-bottom:30px"><NextStep step="group-private" /></div>
 
   <h3 class="m-h3">Specialized classes</h3>
   <p class="m-sub" style="margin-bottom:14px">Focused, skill-specific sessions for one discipline.</p>
@@ -51,6 +57,8 @@ const classHref = (c: ClassItem): string =>
       <a href={`${url('store')}#classes`} class="m-darkbtn-sm">Get it <i class="bi bi-arrow-right"></i></a>
     </div>
   </div>
+
+  <div style="margin-bottom:30px"><NextStep step="weekly-athletic" /></div>
 
   <h3 class="m-h3">Partnerships</h3>
   <p class="m-sub" style="margin-bottom:14px">Run by trusted partner coaches who share our space.</p>

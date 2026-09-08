@@ -1,0 +1,39 @@
+---
+/**
+ * "Three ways to come back" — the coach's end-of-party wrap-up, on the page.
+ *
+ * The procedure makes every party end with the group hearing that parties are
+ * only ONE way to use the gym (all-day open gym, drop-in classes, camps). This
+ * is that speech as content, from `partyReturn` in src/data/progression.ts,
+ * rendered with the shared BookingCard so it carries no new card style.
+ */
+import BookingCard from './BookingCard.astro';
+import { partyReturn, partyReturnIntro } from '../data/progression';
+---
+<div class="pr">
+  <div class="pr-cards">
+    {partyReturn.map((c) => (
+      <BookingCard
+        color={c.color} bookingTag={c.bookingTag} status={c.status} statusTone={c.statusTone}
+        title={c.title} description={c.desc} pills={c.pills} price={c.price} priceNote={c.priceNote}
+        actionLabel={c.cta} href={c.href}
+      />
+    ))}
+  </div>
+  <div class="pr-intro">
+    <span class="pr-intro-ic"><i class="bi bi-flag" aria-hidden="true"></i></span>
+    <div class="pr-intro-txt"><strong>{partyReturnIntro.lead}</strong> {partyReturnIntro.body}</div>
+    <a href={partyReturnIntro.href} target="_blank" rel="noopener" class="btn btn-dark pr-intro-cta">{partyReturnIntro.cta} <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+  </div>
+</div>
+
+<style>
+  .pr { display: flex; flex-direction: column; gap: 18px; }
+  .pr-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .pr-intro { display: flex; align-items: center; gap: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 22px; flex-wrap: wrap; }
+  .pr-intro-ic { flex: none; width: 40px; height: 40px; border-radius: 11px; background: #fbf3cf; display: flex; align-items: center; justify-content: center; font-size: 17px; color: #b78900; }
+  .pr-intro-txt { flex: 1; min-width: 220px; font: 500 14px/1.5 var(--font-body); color: var(--text-2); }
+  .pr-intro-cta { flex: none; }
+
+  @media (max-width: 560px) { .pr-intro-cta { width: 100%; justify-content: center; } }
+</style>

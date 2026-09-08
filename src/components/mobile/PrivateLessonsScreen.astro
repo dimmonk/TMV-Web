@@ -20,6 +20,7 @@
  */
 import MobileHero from '../MobileHero.astro';
 import BookingCard from '../BookingCard.astro';
+import NextStep from '../NextStep.astro';
 import { privateWays } from '../../data/private-lessons';
 import { sq } from '../../data/square-links';
 import { cat } from '../../data/site';
@@ -69,6 +70,8 @@ const notes = [
       </a>
     ))}
   </div>
+
+  <div style="margin-top:28px"><NextStep step="private-pack" /></div>
 
   <h3 class="m-h3" style="margin:28px 0 4px">Good to know</h3>
   <p class="m-sub" style="margin-bottom:14px">Before you book.</p>

@@ -4,6 +4,7 @@ import EventsScreen from '../components/mobile/EventsScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import PartyCard from '../components/PartyCard.astro';
+import PartyReturn from '../components/PartyReturn.astro';
 import { seo, links, site, cat, url } from '../data/site';
 import { partyCards } from '../data/parties';
 import { sq } from '../data/square-links';
@@ -57,13 +58,22 @@ const faqGroups = [
     </div>
   </section>
 
-  <JumpNav items={[{ label: 'Birthdays', id: 'birthdays' }, { label: 'Birthday FAQ', id: 'faq' }]} actions={[{ label: 'Book a party', href: links.booking, icon: 'bi bi-calendar-check' }]} top={66} />
+  <JumpNav items={[{ label: 'Birthdays', id: 'birthdays' }, { label: 'Come Back', id: 'comeback' }, { label: 'Birthday FAQ', id: 'faq' }]} actions={[{ label: 'Book a party', href: links.booking, icon: 'bi bi-calendar-check' }]} top={66} />
 
   <section id="birthdays" class="section container" style={`scroll-margin-top:120px; --party:${cat.parties}`}>
     <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Birthdays" title="Two ways to celebrate" description="Go all-in with the full package, or keep it nimble with a Mini party for smaller groups and last-minute plans." color={cat.parties} /></div>
     <div class="ev-parties">
       {partyCards.map((card) => <PartyCard card={card} />)}
     </div>
+  </section>
+
+  {/* THE WRAP-UP, ON THE PAGE — every party ends with the group hearing that
+      a party is only one of the ways back in (data/progression.ts). */}
+  <section id="comeback" class="section container" style={`scroll-margin-top:120px; padding-block:8px; --party:${cat.parties}`}>
+    <div style="margin-bottom:28px">
+      <SectionHeader num="02" eyebrow="After the party" title="Three ways to come back" description="The party is one way to use the gym. Every kid who came already knows the floor — here's how they keep moving." color={cat.parties} />
+    </div>
+    <PartyReturn />
   </section>
 
   <section class="section container" style="padding-block:56px 12px">

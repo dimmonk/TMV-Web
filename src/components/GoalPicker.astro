@@ -1,0 +1,119 @@
+---
+/**
+ * "What are you here for?" — the site's ASK → RECOMMEND → REASON → INVITE
+ * entry point, from the client-progression procedure. One goal in, ONE
+ * recommendation out (with the reason, the price and where it leads next) —
+ * deliberately not a menu of every program.
+ *
+ * Content only, no chrome and no fixed width: it fills whatever column the
+ * layout hands it and reflows to a single column on a phone, so the desktop
+ * home and the mobile home screen render the SAME component. Logic is
+ * src/lib/goal-picker.ts; every panel is server-rendered and the first one is
+ * visible without JS.
+ */
+import { goals } from '../data/goals';
+
+interface Props {
+  /** 'full' = desktop two-column card; 'compact' = phone single column. */
+  variant?: 'full' | 'compact';
+}
+const { variant = 'full' } = Astro.props;
+---
+<div class:list={['gp', variant]} data-goal-picker>
+  <div class="gp-chips" role="tablist" aria-label="What are you here for?">
+    {goals.map((g, i) => (
+      <button
+        type="button" class:list={['gp-chip', { on: i === 0 }]} data-goal-chip={g.id}
+        role="tab" aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}
+      >{g.label}</button>
+    ))}
+  </div>
+
+  {goals.map((g, i) => (
+    <div class:list={['gp-card', { on: i === 0 }]} data-goal-panel={g.id} role="tabpanel" hidden={i !== 0}>
+      <div class="gp-main">
+        <div class="gp-eyebrow" style={`color:${g.color}`}><span class="gp-dot" style={`background:${g.color}`}></span>{g.eyebrow}</div>
+        <h3 class="gp-title">{g.title}</h3>
+        <p class="gp-reason">{g.reason}</p>
+        <div class="gp-actions">
+          <a href={g.href} {...(g.external ? { target: '_blank', rel: 'noopener' } : {})} class="btn btn-primary">
+            {g.cta} <i class={`bi ${g.external ? 'bi-arrow-up-right' : 'bi-arrow-right'}`} aria-hidden="true"></i>
+          </a>
+          <span class="gp-price">{g.price}</span>
+        </div>
+        <p class="gp-alt">{g.altLead} <a href={g.altHref}>{g.altLink}</a></p>
+      </div>
+
+      <div class="gp-side">
+        <div class="gp-side-label">{g.sideLabel}</div>
+        {g.leads.map((l) => (
+          <a class="gp-lead" href={l.href}>
+            <span class="gp-lead-ic" style={`background:color-mix(in srgb,${l.color} 13%,#fff); color:${l.color}`}><i class="bi bi-chevron-right" aria-hidden="true"></i></span>
+            <span><span class="gp-lead-t">{l.title}</span><span class="gp-lead-s">{l.sub}</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .gp { display: flex; flex-direction: column; gap: 22px; }
+
+  .gp-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .gp-chip {
+    cursor: pointer; font: 700 14px/1 var(--font-display); border-radius: 999px;
+    padding: 13px 18px; border: 1.5px solid #ddd9d0; background: #fff; color: var(--ink);
+    min-height: 44px; transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .gp-chip:hover { border-color: var(--ink); }
+  .gp-chip.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  .gp-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm); display: grid; grid-template-columns: 1.25fr .75fr; overflow: hidden;
+  }
+  .gp-card[hidden] { display: none; }
+
+  .gp-main { padding: 32px 36px 34px; display: flex; flex-direction: column; gap: 14px; }
+  .gp-eyebrow { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; }
+  .gp-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .gp-title { font: 800 30px/1.08 var(--font-display); letter-spacing: -.018em; color: var(--ink); }
+  .gp-reason { font: 400 15px/1.6 var(--font-body); color: var(--text-2); max-width: 560px; }
+  .gp-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 6px; }
+  .gp-price { font: 800 15px/1 var(--font-display); color: var(--ink); }
+  .gp-alt { font: 600 13.5px/1.4 var(--font-body); color: var(--muted); }
+  .gp-alt a { font-weight: 700; color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--brand); }
+
+  .gp-side { background: #faf9f6; border-left: 1px solid var(--line); padding: 30px; display: flex; flex-direction: column; gap: 14px; }
+  .gp-side-label { font: 700 11px/1 var(--font-display); letter-spacing: .13em; text-transform: uppercase; color: var(--muted-3); }
+  .gp-lead { display: flex; align-items: flex-start; gap: 12px; text-decoration: none; color: inherit; }
+  .gp-lead-ic { flex: none; width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  .gp-lead-t { display: block; font: 800 14.5px/1.2 var(--font-display); color: var(--ink); }
+  .gp-lead-s { display: block; font: 500 12.5px/1.45 var(--font-body); color: var(--muted); margin-top: 3px; }
+  .gp-lead:hover .gp-lead-t { text-decoration: underline; }
+
+  /* Phone variant: single column, tighter type. */
+  .gp.compact .gp-card { grid-template-columns: 1fr; }
+  .gp.compact .gp-main { padding: 18px; gap: 11px; }
+  .gp.compact .gp-title { font-size: 20px; line-height: 1.1; }
+  .gp.compact .gp-reason { font-size: 13px; line-height: 1.55; }
+  .gp.compact .gp-chip { font-size: 12.5px; padding: 13px 14px; }
+  .gp.compact .gp-side { border-left: 0; border-top: 1px solid var(--line); padding: 18px; }
+  .gp.compact .btn { width: 100%; justify-content: center; min-height: 44px; }
+  .gp.compact .gp-actions { gap: 10px; }
+  /* Thumb-sized rows on a phone: the lead links are real tap targets. */
+  .gp.compact .gp-lead { padding: 3px 0; min-height: 44px; align-items: center; }
+
+  @media (max-width: 860px) {
+    .gp-card { grid-template-columns: 1fr; }
+    .gp-main { padding: 24px 22px 26px; }
+    .gp-title { font-size: 24px; }
+    .gp-side { border-left: 0; border-top: 1px solid var(--line); padding: 22px; }
+  }
+</style>
+
+<script>
+  import { mountGoalPickers } from '../lib/goal-picker';
+  document.addEventListener('astro:page-load', () => mountGoalPickers());
+</script>

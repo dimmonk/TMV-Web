@@ -1,25 +1,34 @@
 /**
- * The four "ways to start" for a first visit — SINGLE SOURCE OF TRUTH shared by
- * the Get Started page (src/pages/get-started.astro), rendered with the shared
- * BookingCard, which resolves the action href from the semantic `key`.
+ * Get Started · step two — SINGLE SOURCE OF TRUTH for "book your intro lesson"
+ * (components/IntroStep.astro, rendered by both chromes).
+ *
+ * There used to be four equal cards here (intro / private / group / open gym).
+ * The client-progression procedure makes the Intro Lesson THE first step for
+ * anyone who wants to learn, so step two is now one recommendation with the
+ * why beside it, and the other ways in are a quiet row underneath. The intro's
+ * own copy and price stay in ./private-lessons (privateWays[0]) — this file
+ * only holds what's specific to the Get Started framing.
  */
-import { cat } from './site';
+import { cat, url } from './site';
 
-export type FirstSessionKey = 'intro' | 'private' | 'group' | 'opengym';
+export interface IntroWhy { title: string; sub: string; }
 
-export interface FirstSessionOption {
-  key: FirstSessionKey;
-  title: string;
-  color: string;
-  status: string;
-  statusTone: 'neutral' | 'go';
-  desc: string;
-  cta: string;
-}
+export const introWhy: IntroWhy[] = [
+  { title: "A coach sees where you're at", sub: 'Not a tour — a real hour of coaching, scaled to you or your kid.' },
+  { title: 'You leave with one next step', sub: 'The coach tells you which class, pack or program fits — and why.' },
+  { title: 'Any question, answered in person', sub: 'Ages, levels, safety, schedule — easier face to face than on a website.' },
+];
 
-export const firstSessionOptions: FirstSessionOption[] = [
-  { key: 'intro', title: 'Introduction Class', color: cat.intro, status: 'Reservation required', statusTone: 'neutral', desc: 'A one-on-one intro on a set beginner curriculum — the best place to start.', cta: 'Book intro' },
-  { key: 'private', title: 'Private Class', color: cat.private, status: 'Reservation required', statusTone: 'neutral', desc: 'One-on-one or your own friend group, fully tailored to your goals.', cta: 'Book private' },
-  { key: 'group', title: 'Group Class', color: cat.classes, status: 'No reservation', statusTone: 'go', desc: 'Drop into a scheduled class with other beginners — just show up.', cta: 'See schedule' },
-  { key: 'opengym', title: 'Open Gym', color: cat.openGym, status: 'No reservation', statusTone: 'go', desc: 'Grab a day pass and train on your own, any time.', cta: 'Open gym info' },
+/** The same-day bonus — was step three's closer, now part of the intro pitch. */
+export const introBonus = {
+  strong: '15% off',
+  text: 'any pass or class you buy the same day as your intro.',
+};
+
+export interface OtherWayIn { label: string; color: string; href: string; }
+
+export const otherWaysIn: OtherWayIn[] = [
+  { label: 'Open Gym day pass · $25', color: cat.openGym, href: `${url('train')}#opengym` },
+  { label: 'Drop into a group class · $30', color: cat.classes, href: url('schedule') },
+  { label: 'Birthday parties', color: cat.parties, href: url('events') },
 ];

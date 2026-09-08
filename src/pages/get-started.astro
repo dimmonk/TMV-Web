@@ -2,20 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import GetStartedScreen from '../components/mobile/GetStartedScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
-import BookingCard from '../components/BookingCard.astro';
+import IntroStep from '../components/IntroStep.astro';
+import PathStrip from '../components/PathStrip.astro';
 import Faq from '../components/Faq.astro';
 import { seo, links, url } from '../data/site';
-import { sq } from '../data/square-links';
-import { firstSessionOptions } from '../data/first-session';
 import { firstVisitBring, firstVisitArrive } from '../data/first-visit';
 import { forSurface } from '../data/surface';
 
-// The four options are the shared first-session SSOT; only the href/target
-// (which routes differ per surface) is resolved here for the desktop site.
-const fsHref: Record<string, string> = {
-  intro: sq.getStarted.introduction, private: sq.getStarted.privateClass, group: url('schedule'), opengym: `${url('train')}#opengym`,
-};
-const fsTarget = (key: string): '_blank' | '_self' => (key === 'intro' || key === 'private' ? '_blank' : '_self');
 const bring = forSurface(firstVisitBring, 'desktop');
 const arrive = forSurface(firstVisitArrive, 'desktop');
 const otherFaqs = [
@@ -35,11 +28,11 @@ const otherFaqs = [
     <div class="gs-hero">
       <div class="gs-kicker"><span class="rule"></span>New here? Start here<span class="rule"></span></div>
       <h1 class="gs-title">Your first visit,<br>in three steps.</h1>
-      <p class="gs-lead">Never trained with us before? No experience needed. Sign your waiver, pick how you want to start, and show up ready to move — we'll take care of the rest.</p>
+      <p class="gs-lead">Never trained with us before? No experience needed. Sign your waiver, book an intro with a coach, and show up ready to move — we'll take care of the rest.</p>
     </div>
   </section>
 
-  <JumpNav items={[{ label: '1 · Waiver', id: 'step-1' }, { label: '2 · First Session', id: 'step-2' }, { label: '3 · What to Bring', id: 'step-3' }, { label: 'Questions', id: 'questions' }]} top={66} />
+  <JumpNav items={[{ label: '1 · Waiver', id: 'step-1' }, { label: '2 · Intro Lesson', id: 'step-2' }, { label: '3 · What to Bring', id: 'step-3' }, { label: 'Your Path', id: 'path' }, { label: 'Questions', id: 'questions' }]} top={66} />
 
   <div class="gswrap">
     <section id="step-1" class="gsstep">
@@ -61,15 +54,11 @@ const otherFaqs = [
         <div class="gsnum">2</div>
         <div>
           <div class="gseyebrow">Step two</div>
-          <h2 class="gsh2">Book your first session</h2>
-          <p class="gsp">Four ways to get started — pick whichever fits how you like to learn. Prefer your own pace or a friend group? Reserve an <strong>Introduction</strong> or <strong>Private</strong> class. Happy to jump in with others? Drop into a <strong>Group</strong> class or <strong>Open Gym</strong> anytime — no reservation needed.</p>
+          <h2 class="gsh2">Book your intro lesson</h2>
+          <p class="gsp">Everyone who wants to learn starts the same way: one hour, one coach, our beginner curriculum. It's a real lesson, and it's how we work out what to recommend next — face to face, not from a price list.</p>
         </div>
       </div>
-      <div class="gsopts">
-        {firstSessionOptions.map((o) => (
-          <BookingCard color={o.color} status={o.status} statusTone={o.statusTone} title={o.title} description={o.desc} actionLabel={o.cta} href={fsHref[o.key]} target={fsTarget(o.key)} />
-        ))}
-      </div>
+      <div class="gsopts"><IntroStep /></div>
       <div class="gsdiv"></div>
     </section>
 
@@ -89,9 +78,16 @@ const otherFaqs = [
         </div>
       </div>
       <div class="gsarrival"><i class="bi bi-clock-history" aria-hidden="true"></i><span>Please arrive <strong>15 minutes early</strong> to sign in. To be fair to those who arrive on time, there's a 15-minute cutoff — anyone more than 15 minutes late can't be admitted to a class.</span></div>
-      <div class="gsbonus">
-        <span class="gsbonus-ic"><i class="bi bi-piggy-bank" aria-hidden="true"></i></span>
-        <div><div class="gsbonus-t">Took an Introduction Class? Here's a bonus.</div><div class="gsbonus-b">You get <strong>15% off</strong> any class or open-gym pass you buy the same day. Just ask the coach at the front desk.</div></div>
+    </section>
+
+    {/* The client path — where the intro leads. */}
+    <section id="path" class="gsstep">
+      <div class="gsdiv" style="margin:48px 0 0"></div>
+      <div class="gspath">
+        <div class="gseyebrow">After your intro</div>
+        <h2 class="gsh2">Where it goes from here</h2>
+        <p class="gsp" style="margin-bottom:30px">Most people move through the gym in three stages. You don't have to follow it in order — your coach will tell you where you fit.</p>
+        <PathStrip here="learn" />
       </div>
     </section>
 
@@ -123,7 +119,8 @@ const otherFaqs = [
   .gsnote i { font-size: 17px; color: var(--ink); margin-top: 1px; }
   .gsnote span { font: 600 14px/1.6 var(--font-body); color: var(--text-2); }
   .gsdiv { height: 1px; background: #e6e4dd; margin-top: 48px; }
-  .gsopts { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-top: 30px; }
+  .gsopts { margin-top: 30px; }
+  .gspath { padding-top: 48px; }
   .gsknow { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 26px; }
   .gscard { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 30px 32px; box-shadow: var(--shadow-sm); }
   .gscard-title { font: 800 18px/1.1 var(--font-display); letter-spacing: -.01em; margin: 0 0 18px; display: flex; align-items: center; gap: 10px; }
@@ -134,11 +131,6 @@ const otherFaqs = [
   .gslin { flex: none; width: 22px; height: 22px; border-radius: 7px; background: #f3f2ee; display: flex; align-items: center; justify-content: center; font: 800 11px/1 var(--font-display); color: var(--ink); margin-top: 1px; }
   .gsarrival { display: flex; align-items: flex-start; gap: 13px; background: #fff7d6; border: 1px solid #f1e4a0; border-radius: 14px; padding: 18px 22px; margin-top: 18px; font: 600 14px/1.6 var(--font-body); color: #5c4d12; }
   .gsarrival i { font-size: 18px; color: #9a7b00; margin-top: 1px; flex: none; }
-  .gsbonus { display: flex; align-items: center; gap: 16px; background: var(--ink); color: #fff; border-radius: 16px; padding: 24px 30px; margin-top: 18px; flex-wrap: wrap; }
-  .gsbonus-ic { flex: none; width: 46px; height: 46px; border-radius: 12px; background: rgba(255,212,0,.16); display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--brand); }
-  .gsbonus-t { font: 800 17px/1.2 var(--font-display); margin-bottom: 5px; }
-  .gsbonus-b { font: 500 14px/1.6 var(--font-body); color: rgba(255,255,255,.72); }
-  .gsbonus-b strong { color: var(--brand); }
 
   @media (max-width: 700px) {
     .gsrow { grid-template-columns: 1fr; gap: 14px; }

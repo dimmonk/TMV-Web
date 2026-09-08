@@ -1,0 +1,1 @@
+import"./hoisted.DO0m55IW.js";import"./hoisted.D70Dt7xu.js";import"./index.Bel2lkwj.js";document.addEventListener("astro:page-load",()=>{document.querySelectorAll(".campflip").forEach(e=>{e.addEventListener("click",t=>{t.target.closest("a")||(e.classList.toggle("flipped"),e.setAttribute("aria-pressed",e.classList.contains("flipped")?"true":"false"))})})});

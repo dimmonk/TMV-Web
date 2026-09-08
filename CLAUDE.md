@@ -65,3 +65,55 @@ The primary nav (`nav` in `data/site.ts`) is deliberately capped at **six**. The
 long tail lives in **`src/data/explore.ts`** — one array rendered by both the
 mobile More sheet and the desktop footer's Explore column. Add a revenue stream
 there once and it appears on both surfaces.
+
+## The guidance layer: sell the progress, not the program
+
+The site carries a second layer on top of the program catalog, lifted from the
+staff **Client Progression & Program Recommendation Procedure**. The catalog
+answers "what do you offer"; the guidance layer answers "what should *I* do
+next". Both are needed — the nav stays catalog-shaped for findability, and the
+guidance sits on top of it.
+
+Four rules, and the data module that owns each:
+
+1. **The client path** — Experience → Learn → Progress. `stages` in
+   `data/progression.ts`, rendered by `PathStrip`. Camps live in **Learn**
+   (recreational: learn and play), not Experience.
+2. **The Intro Lesson is THE first step** for anyone who wants to learn. It is
+   the simplest thing that gets a person into the gym *with a coach*, so the
+   real recommendation can be made face to face. The home hero books it, the
+   goal picker resolves every "learn" goal to it, and Get Started step two is
+   it — not a menu of four equal options.
+3. **One clear next step** — `goals` in `data/goals.ts` → `GoalPicker`
+   (ASK → RECOMMEND → REASON → INVITE). One goal in, ONE recommendation out,
+   with the reason and where it leads. Never a list of every program.
+4. **Every page ends with a next step** — `nextSteps` in `data/progression.ts`
+   → `NextStep`. Open Gym → intro; group class → private; training weekly →
+   Athletic; private → pack; Athletic → intro as the assessment.
+
+Two more from the same procedure: **value before price** (`purchaseFit` →
+`PurchaseFit`, above the live price list) and **the party wrap-up**
+(`partyReturn` → `PartyReturn`, under the party cards — a party is only one of
+the ways back in).
+
+### Adding to it
+
+Change the copy in the data module, never in a page. Every one of these
+components is content-only and width-agnostic per THE RULE above, so the same
+component renders in both chromes — `variant="compact"` is a density knob, not
+a second implementation. If you find yourself writing a second copy of a
+recommendation for the phone, stop: that's the drift this layer exists to
+prevent.
+
+## `/*-bu` — frozen review snapshots
+
+`public/home-bu/`, `get-started-bu/`, `pricing-bu/`, `train-bu/`,
+`private-lessons-bu/`, `athletic-program-bu/`, `events-bu/`, `schedule-bu/`
+are **static snapshots of the pre-guidance-layer build**, kept so the new pages
+can be compared against the old ones side by side. They are plain HTML with
+their own frozen CSS/JS under `public/bu/_astro/` and carry
+`<meta name="robots" content="noindex, nofollow">`.
+
+They are deliberately NOT Astro routes — a snapshot that rebuilds is not a
+snapshot. Nothing imports them and they never drift. **Delete the whole set
+once the comparison is done**; they are not a permanent surface.

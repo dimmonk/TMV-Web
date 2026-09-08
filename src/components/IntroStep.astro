@@ -1,0 +1,130 @@
+---
+/**
+ * Get Started · step two — "Book your intro lesson".
+ *
+ * The client-progression procedure makes the Intro Lesson THE first step for
+ * anyone who wants to learn: the simplest way to get someone into the gym,
+ * with a coach, so the recommendation can be made face to face. So this is ONE
+ * recommendation plus the reasons it's the start — not the four equal options
+ * that used to sit here. The other ways in survive as a quiet row underneath,
+ * for people who aren't here to learn yet.
+ *
+ * Copy/price come from `privateWays[0]` (the intro's SSOT) and
+ * src/data/first-session.ts. Content only — both chromes render this.
+ */
+import { introWhy, introBonus, otherWaysIn } from '../data/first-session';
+import { privateWays } from '../data/private-lessons';
+import { sq } from '../data/square-links';
+import { cat } from '../data/site';
+
+interface Props { variant?: 'full' | 'compact'; }
+const { variant = 'full' } = Astro.props;
+
+const intro = privateWays.find((w) => w.key === 'intro')!;
+---
+<div class:list={['is', variant]}>
+  <div class="is-grid">
+    <div class="is-card">
+      <span class="is-strip"></span>
+      <div class="is-body">
+        <div class="is-tags">
+          <span class="is-tag"><i class="bi bi-calendar-check" aria-hidden="true"></i>By appointment</span>
+          <span class="is-dur"><i class="bi bi-clock" aria-hidden="true"></i>1 hr</span>
+        </div>
+        <h3 class="is-title">Introduction Lesson</h3>
+        <p class="is-desc">{intro.desc}</p>
+        <div class="is-pills">
+          <span class="is-pill">All ages</span>
+          <span class="is-pill">1-on-1</span>
+          <span class="is-pill">No experience needed</span>
+          <span class="is-pill">{intro.sub}</span>
+        </div>
+        <div class="is-foot">
+          <div><div class="is-price">{intro.price}</div><div class="is-note">{intro.per} · tax included</div></div>
+          <a href={sq.getStarted.introduction} target="_blank" rel="noopener" class="btn btn-primary">Book an intro <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="is-why">
+      <div class="is-why-label">Why we start here</div>
+      <div class="is-why-rows">
+        {introWhy.map((w) => (
+          <div class="is-why-row">
+            <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+            <div><div class="is-why-t">{w.title}</div><div class="is-why-s">{w.sub}</div></div>
+          </div>
+        ))}
+      </div>
+      <div class="is-bonus">
+        <span class="is-bonus-ic"><i class="bi bi-piggy-bank" aria-hidden="true"></i></span>
+        <div><strong>{introBonus.strong}</strong> {introBonus.text}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="is-other">
+    <div class="is-other-label">Not here to learn yet?</div>
+    <div class="is-other-links">
+      {otherWaysIn.map((o) => (
+        <a class="is-other-link" href={o.href}><span class="is-other-dot" style={`background:${o.color}`}></span>{o.label} <i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .is { display: flex; flex-direction: column; gap: 22px; }
+  .is-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; align-items: stretch; }
+
+  .is-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; display: flex; flex-direction: column; }
+  .is-strip { height: 5px; background: var(--c-intro); flex: none; }
+  .is-body { padding: 28px 30px 30px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+  .is-tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .is-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; background: var(--c-intro); color: #fff; font: 800 10.5px/1 var(--font-display); letter-spacing: .07em; text-transform: uppercase; }
+  .is-dur { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 999px; background: #f3f2ee; color: var(--text-2); font: 700 10px/1 var(--font-display); letter-spacing: .09em; text-transform: uppercase; }
+  .is-title { font: 800 28px/1.1 var(--font-display); letter-spacing: -.015em; }
+  .is-desc { font: 400 14.5px/1.6 var(--font-body); color: var(--text-3); margin: 0; }
+  .is-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .is-pill { font: 600 12.5px/1 var(--font-body); color: var(--text-2); background: #f7f6f3; border: 1px solid #e6e4dd; border-radius: 999px; padding: 6px 11px; }
+  .is-foot { margin-top: auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding-top: 18px; border-top: 1px solid #efeee8; }
+  .is-price { font: 800 26px/1 var(--font-display); }
+  .is-note { font: 600 12.5px/1.3 var(--font-body); color: var(--muted-3); margin-top: 6px; }
+
+  .is-why { background: var(--ink); color: #fff; border-radius: var(--radius-lg); padding: 28px 30px; display: flex; flex-direction: column; gap: 18px; }
+  .is-why-label { font: 700 11px/1 var(--font-display); letter-spacing: .13em; text-transform: uppercase; color: var(--brand); }
+  .is-why-rows { display: flex; flex-direction: column; gap: 15px; }
+  .is-why-row { display: flex; gap: 12px; align-items: flex-start; }
+  .is-why-row i { color: var(--brand); font-size: 16px; margin-top: 2px; flex: none; }
+  .is-why-t { font: 700 14.5px/1.3 var(--font-display); }
+  .is-why-s { font: 400 13px/1.5 var(--font-body); color: rgba(255,255,255,.65); margin-top: 3px; }
+  .is-bonus { margin-top: auto; display: flex; align-items: center; gap: 14px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.12); font: 500 13px/1.5 var(--font-body); color: rgba(255,255,255,.72); }
+  .is-bonus strong { color: var(--brand); }
+  .is-bonus-ic { flex: none; width: 40px; height: 40px; border-radius: 11px; background: rgba(255,212,0,.16); display: flex; align-items: center; justify-content: center; font-size: 19px; color: var(--brand); }
+
+  .is-other { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 22px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+  .is-other-label { font: 700 12px/1 var(--font-display); letter-spacing: .13em; text-transform: uppercase; color: var(--muted-3); flex: none; }
+  .is-other-links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .is-other-link { display: inline-flex; align-items: center; gap: 8px; font: 700 13.5px/1 var(--font-display); padding: 11px 15px; border-radius: 999px; border: 1.5px solid #ddd9d0; background: #fff; color: var(--ink); text-decoration: none; min-height: 44px; transition: border-color .15s ease; }
+  .is-other-link:hover { border-color: var(--ink); }
+  .is-other-link i { font-size: 11px; color: var(--faint); }
+  .is-other-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+
+  /* Phone variant */
+  .is.compact .is-grid { grid-template-columns: 1fr; gap: 14px; }
+  .is.compact .is-body { padding: 18px; gap: 11px; }
+  .is.compact .is-title { font-size: 22px; }
+  .is.compact .is-desc { font-size: 13px; }
+  .is.compact .is-why { padding: 18px 20px; border-radius: 16px; gap: 12px; }
+  .is.compact .is-foot .btn { width: 100%; justify-content: center; }
+  .is.compact .is-other { flex-direction: column; align-items: stretch; gap: 12px; padding: 16px 18px; }
+  .is.compact .is-other-links { flex-direction: column; }
+  .is.compact .is-other-link { justify-content: flex-start; }
+  .is.compact .is-other-link i { margin-left: auto; }
+
+  @media (max-width: 900px) { .is-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) {
+    .is-other { flex-direction: column; align-items: stretch; }
+    .is-foot .btn { width: 100%; justify-content: center; }
+  }
+</style>

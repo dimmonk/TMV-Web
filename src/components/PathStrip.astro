@@ -1,0 +1,75 @@
+---
+/**
+ * Experience → Learn → Progress — the client path, rendered from
+ * `stages` in src/data/progression.ts. Marks one stage as "you are here".
+ *
+ * Content only: three equal columns with arrows between on wide containers,
+ * a stacked list with down-arrows on narrow ones. Same component on both
+ * chromes.
+ */
+import { stages, type StageKey } from '../data/progression';
+
+interface Props {
+  /** which stage carries the "you are here" flag */
+  here?: StageKey;
+  variant?: 'full' | 'compact';
+}
+const { here = 'learn', variant = 'full' } = Astro.props;
+---
+<div class:list={['path', variant]}>
+  {stages.map((s, i) => (
+    <>
+      {i > 0 && (
+        <div class="path-arrow" aria-hidden="true">
+          <i class="bi bi-arrow-right wide"></i><i class="bi bi-arrow-down narrow"></i>
+        </div>
+      )}
+      <div class:list={['stage', { here: s.key === here }]}>
+        {s.key === here && <span class="stage-here">You are here</span>}
+        <div class="stage-n">{s.n}</div>
+        <div class="stage-t">{s.title}</div>
+        <p class="stage-d">{s.desc}</p>
+        <div class="stage-items">
+          {s.items.map((it) => (
+            <span class="stage-item"><span class="stage-dot" style={`background:${it.color}`}></span>{it.label}</span>
+          ))}
+        </div>
+      </div>
+    </>
+  ))}
+</div>
+
+<style>
+  .path { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 14px; align-items: stretch; }
+  .path-arrow { display: flex; align-items: center; justify-content: center; color: var(--faint); font-size: 18px; }
+  .path-arrow .narrow { display: none; }
+
+  .stage { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px; display: flex; flex-direction: column; gap: 10px; }
+  .stage.here { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .stage-n { font: 700 11px/1 var(--font-display); letter-spacing: .13em; text-transform: uppercase; color: var(--faint); }
+  .stage.here .stage-n { color: var(--brand); }
+  .stage-t { font: 800 22px/1.1 var(--font-display); letter-spacing: -.012em; }
+  .stage-d { font: 400 13.5px/1.5 var(--font-body); color: var(--muted); margin: 0; }
+  .stage.here .stage-d { color: rgba(255,255,255,.72); }
+  .stage-items { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .stage-item { display: inline-flex; align-items: center; gap: 6px; font: 600 12.5px/1 var(--font-body); border-radius: 999px; padding: 7px 11px; background: #fff; color: var(--text-2); border: 1px solid #e6e4dd; }
+  .stage.here .stage-item { background: rgba(255,255,255,.08); color: rgba(255,255,255,.85); border-color: rgba(255,255,255,.16); }
+  .stage-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .stage-here { position: absolute; top: -12px; left: 22px; background: var(--brand); color: var(--ink); font: 800 10px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; padding: 7px 10px; border-radius: 999px; }
+
+  .path.compact { grid-template-columns: 1fr; gap: 8px; }
+  .path.compact .path-arrow { font-size: 15px; }
+  .path.compact .path-arrow .wide { display: none; }
+  .path.compact .path-arrow .narrow { display: inline; }
+  .path.compact .stage { padding: 16px 18px; border-radius: 16px; }
+  .path.compact .stage-t { font-size: 18px; }
+  .path.compact .stage-d { font-size: 12.5px; }
+  .path.compact .stage-here { left: auto; right: 14px; top: -10px; }
+
+  @media (max-width: 900px) {
+    .path { grid-template-columns: 1fr; gap: 8px; }
+    .path-arrow .wide { display: none; }
+    .path-arrow .narrow { display: inline; }
+    .stage-here { left: auto; right: 16px; }
+  }
+</style>
