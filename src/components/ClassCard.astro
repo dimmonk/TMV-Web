@@ -1,7 +1,6 @@
 ---
-import { existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { url, cat } from '../data/site';
+import { isVideoAsset, classMediaExists } from '../lib/class-media';
 interface Props {
   category?: string;
   color?: string;
@@ -55,13 +54,8 @@ const backAction = backActionLabel.trim() || actionLabel;
 // external links (mailto:, http) open as-is; internal ".dc.html" refs are mapped by callers
 const isExternal = /^(https?:|mailto:)/.test(href);
 const src = image.startsWith('assets/') ? url(image) : image;
-const isVideo = /\.(mp4|webm|ogv|mov)(\?|$)/i.test(image);
-// Some class clips (acrodance/flexibility/handstand/…) were referenced by the
-// design but never delivered. Check at BUILD time whether the local asset
-// actually exists — if not, render a branded placeholder instead of a <video>
-// that 404s and shows a broken box. Auto-heals the moment the file is added.
-const isLocal = image.startsWith('assets/');
-const mediaExists = !isLocal || existsSync(fileURLToPath(new URL(`../../public/${image}`, import.meta.url)));
+const isVideo = isVideoAsset(image);
+const mediaExists = classMediaExists(image);
 ---
 <article class:list={['cc', { flippable: hasBack }]} style={`--cat:${catColor}; --cat-ink:${catInk}`} aria-pressed="false">
   <div class="cc-inner">

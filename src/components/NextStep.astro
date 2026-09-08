@@ -1,12 +1,14 @@
 ---
 /**
- * "Every interaction ends with a next step" — the closing band on every
- * program page, rendered from `nextSteps` in src/data/progression.ts.
+ * The page's closing next step — ONE quiet line, never a banner.
  *
- * Deliberately NOT a new visual pattern: it's the dark band the site already
- * uses for the Get Started intro bonus and the Private Lessons help strip, so
- * a page gains a closer without gaining a new card style. Content only — no
- * width, no container; the page decides where it sits.
+ * This started as a dark band and was cut back: three banners on Train alone
+ * added more page than the guidance was worth. It is now a single bordered row
+ * — a sentence and a link — so a page can end with a recommendation without
+ * gaining a whole block. One per page is the cap; see `nextSteps` in
+ * src/data/progression.ts for why.
+ *
+ * Content only — no width, no container.
  */
 import { nextSteps, type NextStepKey } from '../data/progression';
 
@@ -15,30 +17,20 @@ const { step } = Astro.props;
 const s = nextSteps[step];
 ---
 <div class="ns">
-  <span class="ns-ic"><i class={`bi ${s.icon}`} aria-hidden="true"></i></span>
-  <div class="ns-txt">
-    <div class="ns-eyebrow">{s.eyebrow}</div>
-    <div class="ns-t">{s.title}</div>
-    <p class="ns-b">{s.body}</p>
-  </div>
-  <a href={s.href} {...(s.external ? { target: '_blank', rel: 'noopener' } : {})} class="btn btn-primary ns-cta">
+  <i class={`bi ${s.icon} ns-ic`} aria-hidden="true"></i>
+  <p class="ns-txt">{s.text}</p>
+  <a href={s.href} {...(s.external ? { target: '_blank', rel: 'noopener' } : {})} class="ns-cta">
     {s.cta} <i class={`bi ${s.external ? 'bi-arrow-up-right' : 'bi-arrow-right'}`} aria-hidden="true"></i>
   </a>
 </div>
 
 <style>
-  .ns { display: flex; align-items: center; gap: 22px; background: var(--ink); color: #fff; border-radius: 18px; padding: 28px 32px; flex-wrap: wrap; }
-  .ns-ic { flex: none; width: 52px; height: 52px; border-radius: 14px; background: rgba(255,212,0,.16); display: flex; align-items: center; justify-content: center; font-size: 23px; color: var(--brand); }
-  .ns-txt { flex: 1; min-width: 240px; }
-  .ns-eyebrow { font: 700 11px/1 var(--font-display); letter-spacing: .13em; text-transform: uppercase; color: var(--brand); margin-bottom: 8px; }
-  .ns-t { font: 800 22px/1.15 var(--font-display); letter-spacing: -.012em; margin-bottom: 6px; }
-  .ns-b { font: 400 14px/1.6 var(--font-body); color: rgba(255,255,255,.72); max-width: 620px; margin: 0; }
-  .ns-cta { flex: none; }
+  .ns { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 20px; }
+  .ns-ic { flex: none; font-size: 17px; color: var(--brand); }
+  .ns-txt { flex: 1; min-width: 200px; font: 500 14px/1.5 var(--font-body); color: var(--text-2); margin: 0; }
+  .ns-cta { flex: none; display: inline-flex; align-items: center; gap: 7px; min-height: 44px; font: 800 12.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); text-decoration: none; white-space: nowrap; transition: gap .15s ease; }
+  .ns-cta:hover { gap: 10px; }
+  .ns-cta i { color: var(--brand); }
 
-  @media (max-width: 640px) {
-    .ns { padding: 22px; gap: 16px; border-radius: 16px; }
-    .ns-ic { width: 44px; height: 44px; font-size: 20px; }
-    .ns-t { font-size: 19px; }
-    .ns-cta { width: 100%; justify-content: center; min-height: 44px; }
-  }
+  @media (max-width: 560px) { .ns { gap: 10px; padding: 14px 16px; } }
 </style>

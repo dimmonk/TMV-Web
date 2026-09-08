@@ -4,6 +4,7 @@ import TrainScreen from '../components/mobile/TrainScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import ClassCard from '../components/ClassCard.astro';
+import ClassTabs from '../components/ClassTabs.astro';
 import Pill from '../components/Pill.astro';
 import CtaBand from '../components/CtaBand.astro';
 import NextStep from '../components/NextStep.astro';
@@ -74,18 +75,16 @@ const jumpItems = [
           </div>
         </div>
       </div>
-      <div class="trainsec-next"><NextStep step="opengym-intro" /></div>
     </section>
 
     <section id="core" class="trainsec">
       <div class="trainsec-head"><SectionHeader num="01" eyebrow="The Foundation" title="Core Programs" description="Where everyone starts. Pick your pace — relaxed and recreational, fully personal, or athlete-level training." /></div>
       <div class="cc-grid wide">{coreClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}</div>
-      <div class="trainsec-next"><NextStep step="group-private" /></div>
     </section>
 
     <section id="specialized" class="trainsec trainsec-specialized">
-      <div class="trainsec-head"><SectionHeader num="02" eyebrow="Go Deeper" title="Specialized Classes" description="Focused, skill-specific sessions for when you want to chase one discipline hard." color={cat.classes} /></div>
-      <div class="cc-grid">{specializedClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}</div>
+      <div class="trainsec-head"><SectionHeader num="02" eyebrow="Go Deeper" title="Specialized Classes" description="Eleven disciplines, one at a time — pick the one you want to chase hard." color={cat.classes} /></div>
+      <ClassTabs classes={specializedClasses} />
 
       <div class="membership">
         <div class="membership-body">
@@ -104,7 +103,7 @@ const jumpItems = [
           <span class="membership-note">90 / 180 / 360-day terms save more</span>
         </div>
       </div>
-      <div class="trainsec-next"><NextStep step="weekly-athletic" /></div>
+      <div class="trainsec-next"><NextStep step="group-private" /></div>
     </section>
 
     <section id="partnership" class="trainsec trainsec-partnership">

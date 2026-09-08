@@ -59,18 +59,26 @@ export const stages: Stage[] = [
 
 /* ------------------------------------------------ every page's next step -- */
 
+/**
+ * "Every interaction ends with a next step" — ONE per page, and one LINE.
+ *
+ * The procedure's rule is about the coach in person, where the next step costs
+ * nothing to say. On the web the same rule, applied per section, just becomes
+ * more page to scroll — so it is deliberately capped at one quiet line at the
+ * end of each program page, never a stack of banners. The open-gym → intro
+ * nudge that used to live here is gone: the goal picker's "just play" answer
+ * already says it, and saying it twice is the overload this cap exists to stop.
+ */
 export type NextStepKey =
-  | 'opengym-intro'   // Train · after Open Gym
-  | 'group-private'   // Train · after the group-class grid
-  | 'weekly-athletic' // Train · after the membership band · Schedule
-  | 'private-pack'    // Private Lessons · bottom
-  | 'athletic-intro'; // Athletic Program · under Join
+  | 'group-private'   // Train
+  | 'weekly-athletic' // Schedule
+  | 'private-pack'    // Private Lessons
+  | 'athletic-intro'; // Athletic Program
 
 export interface NextStep {
   icon: string;
-  eyebrow: string;
-  title: string;
-  body: string;
+  /** One sentence: the observation and the recommendation, together. */
+  text: string;
   cta: string;
   href: string;
   external?: boolean;
@@ -79,34 +87,24 @@ export interface NextStep {
 const INTRO_PRICE = '$45';
 
 export const nextSteps: Record<NextStepKey, NextStep> = {
-  'opengym-intro': {
-    icon: 'bi-bullseye', eyebrow: 'Working on the same move every visit?',
-    title: 'Get a coach on it — book an intro lesson.',
-    body: "One hour, one coach, the skill you're stuck on. You'll leave with a plan and a straight answer on which class fits.",
-    cta: `Book an intro · ${INTRO_PRICE}`, href: sq.getStarted.introduction, external: true,
-  },
   'group-private': {
-    icon: 'bi-person-arms-up', eyebrow: 'Chasing one specific skill?',
-    title: 'A private lesson builds the whole hour around it.',
-    body: "Group classes are great for steady progress. When it's one move you keep almost landing, a private gets you there faster — pick the time, the coach and what you work on.",
+    icon: 'bi-person-arms-up',
+    text: 'Chasing one specific skill? A private lesson builds the whole hour around it.',
     cta: 'See private options', href: url('private-lessons'),
   },
   'weekly-athletic': {
-    icon: 'bi-trophy', eyebrow: 'Coming every week and want to improve?',
-    title: 'You might be a better fit for the Athletic Program.',
-    body: "Two coached 90-minute sessions a week, unlimited open gym, monthly evaluations so progress is tracked, not guessed. Ages 9+ — your coach will tell you when you're ready.",
+    icon: 'bi-trophy',
+    text: 'Training every week? The Athletic Program is built for exactly that — ages 9+.',
     cta: 'See the program', href: url('athletic-program'),
   },
   'private-pack': {
-    icon: 'bi-arrow-repeat', eyebrow: 'Made progress in a session?',
-    title: 'Keep the momentum — book a pack, not a one-off.',
-    body: 'Progress is repetition. A 5-pack means each session builds on the last instead of starting over, and it can be shared with friends and family.',
+    icon: 'bi-arrow-repeat',
+    text: 'Progress is repetition — a pack means each session builds on the last.',
     cta: 'See 5-packs', href: `${url('store')}#classes`,
   },
   'athletic-intro': {
-    icon: 'bi-flag', eyebrow: 'Not sure you meet the prerequisite?',
-    title: "Start with an intro lesson — it's your assessment.",
-    body: "One session with a coach and you'll know whether to enroll now or build a base in classes first. Either way you leave with a next step.",
+    icon: 'bi-flag',
+    text: "Not sure you meet the prerequisite? An intro lesson is how a coach checks.",
     cta: `Book an intro · ${INTRO_PRICE}`, href: sq.getStarted.introduction, external: true,
   },
 };

@@ -6,6 +6,7 @@
 import MobileHero from '../MobileHero.astro';
 import BookingCard from '../BookingCard.astro';
 import ClassCard from '../ClassCard.astro';
+import ClassTabs from '../ClassTabs.astro';
 import NextStep from '../NextStep.astro';
 import { coreClasses, specializedClasses, partnershipClasses } from '../../data/classes';
 import type { ClassItem } from '../../data/classes';
@@ -22,9 +23,6 @@ const classHref = (c: ClassItem): string =>
 <div class="m-pad">
   <BookingCard color={cat.openGym} bookingTag="Drop-in" duration="No limit" title="Open Gym" description="Drop in any day and stay as long as you like. Sign the waiver, grab a pass, the floor is yours." pills="All ages | 11 AM – 10 PM | No booking" price="From $25" priceNote="day pass" actionLabel="Get a pass" href={links.store} target="_blank" />
 
-  {/* Every section ends with a next step — same NextStep the desktop page uses. */}
-  <div style="margin-top:16px"><NextStep step="opengym-intro" /></div>
-
   <div class="m-rowhead" style="margin:26px 0 6px">
     <h3 class="m-h3" style="margin:0">Core programs</h3>
     <a class="m-alllink" href={url('schedule')}>Times <i class="bi bi-calendar3" style={`color:${cat.classes}`} aria-hidden="true"></i></a>
@@ -34,13 +32,9 @@ const classHref = (c: ClassItem): string =>
     {coreClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}
   </div>
 
-  <div style="margin-bottom:30px"><NextStep step="group-private" /></div>
-
   <h3 class="m-h3">Specialized classes</h3>
-  <p class="m-sub" style="margin-bottom:14px">Focused, skill-specific sessions for one discipline.</p>
-  <div class="m-stack" style="margin-bottom:30px">
-    {specializedClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}
-  </div>
+  <p class="m-sub" style="margin-bottom:14px">Eleven disciplines — swipe the strip, one at a time.</p>
+  <div style="margin-bottom:30px"><ClassTabs classes={specializedClasses} variant="compact" /></div>
 
   {/* Desktop's Class Membership block — a $180 unlimited offer that covers
       every class on this screen. Was missing from mobile entirely, so the
@@ -58,7 +52,8 @@ const classHref = (c: ClassItem): string =>
     </div>
   </div>
 
-  <div style="margin-bottom:30px"><NextStep step="weekly-athletic" /></div>
+  {/* ONE closing next step for the page — see data/progression.ts. */}
+  <div style="margin-bottom:30px"><NextStep step="group-private" /></div>
 
   <h3 class="m-h3">Partnerships</h3>
   <p class="m-sub" style="margin-bottom:14px">Run by trusted partner coaches who share our space.</p>
