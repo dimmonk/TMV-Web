@@ -44,7 +44,8 @@ import '../styles/price-list-sheet.css';
 
   <!-- LIVE PRICE LIST — production renderer running natively (no iframe).
        Same price-list-renderer.js + price-list-sheet.css the members app
-       uses; data from getPublicPriceList (SSOT). -->
+       uses; data from the public price-list projection (SSOT, read through
+       fetchPublicPriceList in src/lib/public-projections.js). -->
   <main class="pl-main">
     <div class="pl-embed-shell">
       <div class="pl-embed-desktop">

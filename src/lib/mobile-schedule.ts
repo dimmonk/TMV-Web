@@ -1,7 +1,10 @@
 /**
  * The phone Schedule screen's live class list — extracted verbatim from the /m/
  * app so the mobile schedule behaves exactly as it did: age-filter chips, live
- * fetch from the booking system, per-day cards, retry on failure.
+ * schedule, per-day cards, retry on failure. The schedule is the static public
+ * projection the members app publishes, read through `fetchPublicSchedule()`
+ * (public-projections.js — a verbatim copy of the members app's reader, which
+ * also resolves the NEW / ENDING badges; ADR-0154 in TMV-Members).
  *
  * Markup is generated here (not in the .astro file), so its styles live in
  * src/styles/mobile-app.css rather than being component-scoped.
@@ -11,7 +14,6 @@ export function mountMobileSchedule() {
   const chipsEl = document.querySelector<HTMLElement>('[data-sched-chips]');
   const schedBody = document.querySelector<HTMLElement>('[data-sched-body]');
   if (!chipsEl || !schedBody) return;
-  const SCHEDULE_API = 'https://us-central1-tmv-management.cloudfunctions.net/getPublicSchedule';
   let _matchesFilter: (c: any, f: string) => boolean;
   let _fmtRange: (s: string, e: string) => string;
   // ---- schedule (live SSOT via src/lib) ----
@@ -89,12 +91,12 @@ export function mountMobileSchedule() {
     schedErr = false; schedClasses = null; renderSchedule();
     Promise.all([
       import('./print-schedule-sheet.js'),
-      fetch(SCHEDULE_API).then((r) => r.json()),
+      import('./public-projections.js').then((m) => m.fetchPublicSchedule()),
     ])
-      .then(([mod, json]) => {
+      .then(([mod, schedule]) => {
         _matchesFilter = mod.matchesFilter;
         _fmtRange = (s: string, e: string) => mod.fmtClassTimeRange(s, e, { suffix: 'long', sep: ' – ' });
-        schedClasses = (json && json.success && json.data && json.data.classes) || [];
+        schedClasses = schedule.classes;
         renderSchedule();
       })
       .catch((e) => { console.warn('[schedule] load failed', e); schedErr = true; renderSchedule(); });

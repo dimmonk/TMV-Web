@@ -2,8 +2,8 @@
  * Print Schedule Sheet renderer (vanilla JS, port of design_handoff_print_schedule/schedule-sheet.jsx).
  *
  * Pure presentational module for the new typographic print sheet design.
- * Reads from the public Cloud Function `getPublicSchedule` (same contract
- * as the legacy renderer that was deleted in May 2026 once this design hit parity).
+ * Reads the public schedule projection through `public-projections.js`
+ * (`fetchPublicSchedule`, ADR-0154) unless the caller hands it a schedule.
  *
  * Three editions: color | editorial | bw
  * Filters: all | kids | teens | adults | athletic (program-based, cross-cuts age)
@@ -13,8 +13,7 @@
  */
 
 import { contrastText } from './color-utils.js';
-
-const DEFAULT_API_URL = 'https://us-central1-tmv-management.cloudfunctions.net/getPublicSchedule';
+import { fetchPublicSchedule } from './public-projections.js';
 
 const DAY_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const DAY_ORDER = [1, 2, 3, 4, 5, 6, 0]; // Mon..Sun
@@ -169,7 +168,7 @@ function todayLabel() {
  * Format a Firestore-or-ISO last-modified timestamp into the "Effective"
  * label format. Returns null if the input is missing/invalid so callers
  * can fall back. The schedule's lastModifiedAt is auto-bumped by the
- * Firestore triggers in functions/schedule-metadata.js whenever the
+ * Firestore triggers in functions/schedule-change-triggers.js whenever the
  * weeklySchedule, disciplines, or ageGroups collections change.
  */
 function formatEffectiveDate(input) {
@@ -208,7 +207,7 @@ function buildClassCard(c, variant, layout, onClick) {
   // Admin-only: classes hidden from the public schedule are marked
   // `_hidden: true` by the denormalizer. The CSS scope
   // `.schedule-admin-wrap .class.is-hidden` dims/dashes them. The public
-  // CF never sets `_hidden` so this is a no-op for print/embed paths.
+  // projection never sets `_hidden` so this is a no-op for print/embed paths.
   if (c._hidden) cls.push('is-hidden');
 
   const style = (variant === 'editorial' || variant === 'bw')
@@ -526,8 +525,9 @@ function buildOpenGymCard({ start, end, ageLabel, variant, isLate }) {
  * @param {'all'|'kids'|'teens'|'adults'|'athletic'} [opts.filter='all']
  * @param {{ width: number, height: number }} [opts.canvasPx] - Pixel size for the .sheet container (required for cqh/cqi).
  * @param {string} [opts.week] - Override "Effective" date label (defaults to today).
- * @param {string} [opts.apiUrl] - Override schedule API endpoint.
  * @param {Object} [opts.schedule] - Pre-fetched schedule (skips fetch).
+ * @param {boolean} [opts.fresh] - Bypass the CDN cache on the fetch (staff
+ *        surfaces: `fresh=1` on the print page URL, for on-screen QA).
  * @param {(c: Object) => void} [opts.onClassClick] - Optional click handler.
  *        When provided, class cards become clickable and the handler
  *        receives the class object. Used by the public embed for popup
@@ -542,7 +542,6 @@ function buildOpenGymCard({ start, end, ageLabel, variant, isLate }) {
 export async function renderPrintSheet(root, opts = {}) {
   const variant = ['color', 'editorial', 'bw'].includes(opts.variant) ? opts.variant : 'color';
   const filter = ['all', 'kids', 'teens', 'adults', 'athletic', 'open-gym'].includes(opts.filter) ? opts.filter : 'all';
-  const apiUrl = opts.apiUrl || DEFAULT_API_URL;
   // "Effective <date>" priority:
   //   1. opts.week ; explicit caller override (e.g. preview a draft date)
   //   2. scheduleData.lastModifiedAt ; auto-bumped by Firestore triggers on
@@ -563,11 +562,7 @@ export async function renderPrintSheet(root, opts = {}) {
   let scheduleData = opts.schedule;
   if (!scheduleData) {
     try {
-      const res = await fetch(apiUrl);
-      if (!res.ok) throw new Error('Failed to fetch schedule');
-      const result = await res.json();
-      if (!result.success) throw new Error(result.error || 'Unknown error');
-      scheduleData = result.data;
+      scheduleData = await fetchPublicSchedule({ fresh: !!opts.fresh });
     } catch (err) {
       console.error('Error loading schedule:', err);
       root.innerHTML = '';

@@ -17,8 +17,9 @@ Must be served over HTTP(S) — opening the files directly from disk (`file://`)
 
 These load from the network at runtime (so the host needs internet, which live sites have):
 
-- **Class schedule** — `getPublicSchedule` Cloud Function (Schedule page + mobile Schedule tab).
-- **Price list** — `getPublicPriceList` Cloud Function (Pricing page).
+- **Class schedule** — `public/schedule.json`, the static CDN projection the members app publishes to Cloud Storage (Schedule page + mobile Schedule tab), read through `fetchPublicSchedule()` in `src/lib/public-projections.js`.
+- **Price list** — `public/price-list.json`, same pattern (Pricing page), read through `fetchPublicPriceList()`.
+- `src/lib/public-projections.js` and `src/lib/schedule-tags.js` are verbatim copies of the members app's reader (only the import paths differ; TMV-Members ADR-0154). Re-copy them, never edit them here — a mirror test in TMV-Members fails when they drift.
 - Fonts (Google Fonts) and icons (Bootstrap Icons) via CDN; gym photos via CDN.
 
 ## Editing links & prices in one place

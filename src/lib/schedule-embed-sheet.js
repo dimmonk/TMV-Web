@@ -15,6 +15,7 @@
 
 import { renderPrintSheet, ageKeyOf, matchesFilter, fmtClassTimeRange } from './print-schedule-sheet.js';
 import { contrastText } from './color-utils.js';
+import { fetchPublicSchedule } from './public-projections.js';
 
 const DAY_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const DAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -22,11 +23,6 @@ const DAY_ORDER = [1, 2, 3, 4, 5, 6, 0];
 
 const VALID_FILTERS = ['all', 'kids', 'teens', 'adults', 'athletic', 'open-gym'];
 const VALID_VARIANTS = ['color', 'editorial', 'bw'];
-
-// Public schedule endpoint — same URL used internally by renderPrintSheet.
-// Pre-fetched here so initEmbed can read `scheduleDisplay` before first
-// paint to apply the admin's saved variant/filter defaults.
-const SCHEDULE_API_URL = 'https://us-central1-tmv-management.cloudfunctions.net/getPublicSchedule';
 
 // Filter / age-key helpers are imported from print-schedule-sheet.js so the
 // desktop sheet and the mobile day-list view always share one source of
@@ -57,7 +53,7 @@ function el(tag, opts = {}, children = []) {
 // ── Open Gym synthetic entries (mobile only ; desktop sheet uses its
 //    own dedicated buildOpenGymBody renderer in print-schedule-sheet.js) ──
 
-function buildOpenGymMobileEntries() {
+export function buildOpenGymMobileEntries() {
   // One entry per day showing the daily window. Friday adds a second
   // entry for the 10pm-12am adults-only block. Colors match the desktop
   // sheet's Open Gym cards: --color-opengym (#4caf50) for the daily
@@ -86,7 +82,7 @@ function buildOpenGymMobileEntries() {
 
 // ── Mobile list view ──────────────────────────────────────────────────────
 
-function buildMobileList(root, filtered, variant, onClick) {
+export function buildMobileList(root, filtered, variant, onClick) {
   // Group by day in DAY_ORDER (Mon..Sun), then by hour, sorted ascending.
   const byDay = {};
   DAY_ORDER.forEach(d => { byDay[d] = {}; });
@@ -321,30 +317,28 @@ export async function initEmbed(opts = {}) {
   const params = new URLSearchParams(window.location.search);
   const urlVariant = params.get('variant');
   const urlFilter = params.get('filter');
+  // `fresh=1` (the admin Open-preview link) skips the CDN cache so staff see
+  // the edit they just saved (ADR-0154).
+  const fresh = params.get('fresh') === '1';
 
   const desktopRoot = document.getElementById('embed-desktop-root');
   const mobileRoot = document.getElementById('embed-mobile-root');
   const filterButtons = document.querySelectorAll('.embed-filter');
 
-  // Pre-fetch the schedule so we can read scheduleDisplay (the admin's
-  // saved variant/filter defaults) before deciding which filter pill is
-  // active on first paint. URL params still win for ad-hoc previews;
-  // saved defaults win over hard-coded fallbacks. Mirrors the price
-  // list embed behavior on priceListDisplay.
+  // Pre-fetch the schedule (the same public projection renderPrintSheet
+  // reads) so we can read scheduleDisplay (the admin's saved variant/filter
+  // defaults) before deciding which filter pill is active on first paint.
+  // URL params still win for ad-hoc previews; saved defaults win over
+  // hard-coded fallbacks. Mirrors the price list embed behavior on
+  // priceListDisplay.
   let cachedSchedule = null;
   let savedVariant = opts.variant || 'color';
   let savedFilter = opts.filter || 'all';
   try {
-    const res = await fetch(SCHEDULE_API_URL);
-    if (res.ok) {
-      const json = await res.json();
-      if (json?.success && json.data) {
-        cachedSchedule = json.data;
-        const d = cachedSchedule.scheduleDisplay || {};
-        if (VALID_VARIANTS.includes(d.variant)) savedVariant = d.variant;
-        if (VALID_FILTERS.includes(d.filter)) savedFilter = d.filter;
-      }
-    }
+    cachedSchedule = await fetchPublicSchedule({ fresh });
+    const d = cachedSchedule.scheduleDisplay || {};
+    if (VALID_VARIANTS.includes(d.variant)) savedVariant = d.variant;
+    if (VALID_FILTERS.includes(d.filter)) savedFilter = d.filter;
   } catch (err) {
     // Non-fatal: renderPrintSheet below will surface a load error if
     // the API is truly unreachable. Falling back to defaults here lets
@@ -365,6 +359,7 @@ export async function initEmbed(opts = {}) {
           variant,
           filter,
           schedule: cachedSchedule || undefined,
+          fresh,
           onClassClick,
         });
         if (!cachedSchedule && result) cachedSchedule = result;

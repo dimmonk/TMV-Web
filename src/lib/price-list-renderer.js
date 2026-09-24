@@ -4,7 +4,8 @@
  * Renders the editorial OR index layouts for the price list. Reads the
  * presentation schema from price-list-layout.js and joins it with the
  * raw priceList map (keys → numeric values) coming from the public
- * Cloud Function `getPublicPriceList`.
+ * price-list projection (`fetchPublicPriceList`, public-projections.js,
+ * ADR-0154).
  *
  * Used by:
  *   - public/print-price-list.html (Puppeteer-renderable PDF source)
@@ -22,8 +23,7 @@ import {
   formatPrice,
   formatEffective,
 } from './price-list-layout.js';
-
-const DEFAULT_API_URL = 'https://us-central1-tmv-management.cloudfunctions.net/getPublicPriceList';
+import { fetchPublicPriceList } from './public-projections.js';
 
 const VALID_VARIANTS = ['editorial', 'index'];
 const VALID_TITLE_SIZES = ['small', 'hidden'];
@@ -412,7 +412,8 @@ function buildIndexPage({ priceList, bwMode, titleSize, effective, aboutOverride
  * @param {{width:number,height:number}} [opts.canvasPx]
  * @param {Object} [opts.data] - Pre-fetched data { priceList, priceListAbout,
  *   priceListDisplay, lastModifiedAt }
- * @param {string} [opts.apiUrl]
+ * @param {boolean} [opts.fresh] - Bypass the CDN cache on the fetch (staff
+ *   surfaces: the admin Open-preview link).
  */
 export async function renderPriceListSheet(root, opts = {}) {
   if (!root) throw new Error('renderPriceListSheet: root element required');
@@ -427,11 +428,7 @@ export async function renderPriceListSheet(root, opts = {}) {
   let data = opts.data;
   if (!data) {
     try {
-      const res = await fetch(opts.apiUrl || DEFAULT_API_URL);
-      if (!res.ok) throw new Error('Failed to fetch price list');
-      const result = await res.json();
-      if (!result.success) throw new Error(result.error || 'Unknown error');
-      data = result.data;
+      data = await fetchPublicPriceList({ fresh: !!opts.fresh });
     } catch (err) {
       console.error('[price-list] fetch failed', err);
       root.innerHTML = '';
