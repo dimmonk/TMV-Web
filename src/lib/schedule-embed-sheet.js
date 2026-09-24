@@ -193,8 +193,8 @@ function renderMarkdown(text) {
   const inline = (s) => s
     .replace(/`([^`\n]+)`/g, '<code>$1</code>')
     .replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/(^|[^*\w])\*(?!\s)([^*\n]+?)(?<!\s)\*(?=$|[^*\w])/g, '$1<em>$2</em>')
-    .replace(/(^|[^_\w])_(?!\s)([^_\n]+?)(?<!\s)_(?=$|[^_\w])/g, '$1<em>$2</em>')
+    .replace(/(^|[^*\w])\*(?!\s)([^*\n]*?[^\s*])\*(?=$|[^*\w])/g, '$1<em>$2</em>')
+    .replace(/(^|[^_\w])_(?!\s)([^_\n]*?[^\s_])_(?=$|[^_\w])/g, '$1<em>$2</em>')
     .replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g,
       '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
 
