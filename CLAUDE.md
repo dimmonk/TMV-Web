@@ -104,16 +104,3 @@ component renders in both chromes — `variant="compact"` is a density knob, not
 a second implementation. If you find yourself writing a second copy of a
 recommendation for the phone, stop: that's the drift this layer exists to
 prevent.
-
-## `/*-bu` — frozen review snapshots
-
-`public/home-bu/`, `get-started-bu/`, `pricing-bu/`, `train-bu/`,
-`private-lessons-bu/`, `athletic-program-bu/`, `events-bu/`, `schedule-bu/`
-are **static snapshots of the pre-guidance-layer build**, kept so the new pages
-can be compared against the old ones side by side. They are plain HTML with
-their own frozen CSS/JS under `public/bu/_astro/` and carry
-`<meta name="robots" content="noindex, nofollow">`.
-
-They are deliberately NOT Astro routes — a snapshot that rebuilds is not a
-snapshot. Nothing imports them and they never drift. **Delete the whole set
-once the comparison is done**; they are not a permanent surface.
