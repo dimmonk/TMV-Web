@@ -52,17 +52,16 @@ export const site = {
 
 /** Square / external booking + store URLs. */
 export const links = {
-  booking: 'https://www.themonkeyvault.com/s/appointments',
-  store: 'https://www.themonkeyvault.com/s/order',
+  booking: 'https://the-monkey-vault-inc.square.site/s/appointments',
+  store: 'https://the-monkey-vault-inc.square.site/s/order',
   waiver: 'https://tmv-members.web.app/waiver',
   giftCard: 'https://squareup.com/gift/4PQGSAK7CK7FB/order',
   summerCamp:
-    'https://www.themonkeyvault.com/product/summer-camps-2026/R2Z7XNZMEXSG6EFR5YQRAFLO',
+    'https://the-monkey-vault-inc.square.site/product/summer-camps-2026/R2Z7XNZMEXSG6EFR5YQRAFLO',
   paDayCamp:
-    'https://www.themonkeyvault.com/product/pa-day-camps/7PGIQLBT3X2QUL5I4XL2VMK7',
+    'https://the-monkey-vault-inc.square.site/product/pa-day-camps/7PGIQLBT3X2QUL5I4XL2VMK7',
   athleticMembership:
-    'https://www.themonkeyvault.com/product/athletic-program-monthly-membership/NXP3HEIUKLFQXQT6JBVXMIDW',
-  getStartedWaiver: 'https://www.themonkeyvault.com/get-started',
+    'https://the-monkey-vault-inc.square.site/product/athletic-program-monthly-membership/NXP3HEIUKLFQXQT6JBVXMIDW',
   googleReviews: 'https://www.google.com/maps/place/The+Monkey+Vault',
 } as const;
 
