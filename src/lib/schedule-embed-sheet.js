@@ -297,6 +297,14 @@ function setupAutoResize() {
     try { parent.postMessage({ tmvScheduleEmbedHeight: h }, '*'); } catch {}
   }
 
+  // Report now: this runs after the first render, when `load` has usually
+  // already fired, and a browser skips rendering updates (so ResizeObserver
+  // and requestAnimationFrame) in an off-screen or hidden iframe — without
+  // this the host sits at its min-height until the frame scrolls into view.
+  // A web-font swap after that changes the height too, and nothing rendering-
+  // driven reports it in such a frame; fonts.ready resolves regardless.
+  report();
+  if (document.fonts) document.fonts.ready.then(report);
   window.addEventListener('load', report);
   window.addEventListener('resize', report);
   if ('ResizeObserver' in window) {
