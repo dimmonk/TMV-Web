@@ -7,6 +7,21 @@
  */
 import { cat } from './site';
 
+/**
+ * PER-COACH BOOKING IS OFF until the Square side exists.
+ *
+ * Booking a NAMED coach needs each coach set up as a bookable Square staff
+ * member with their own availability and rate. That is not configured yet, so
+ * every "book with <coach>" link would land on the generic booking page and
+ * silently book whoever is on shift — the opposite of what the card promises.
+ *
+ * While this is false the site offers the two ways that DO work (a discounted
+ * Introduction, and an ongoing Private with whoever is on). Turn it true once
+ * the Square staff booking pages exist, and re-add the coach links in
+ * Settings -> Website.
+ */
+export const perCoachBookingEnabled = false;
+
 export interface PrivateWayHub {
   dur?: string;
   flag?: string;
@@ -31,7 +46,7 @@ export interface PrivateWay {
   hub: PrivateWayHub;
 }
 
-export const privateWays: PrivateWay[] = [
+const allPrivateWays: PrivateWay[] = [
   {
     key: 'intro', color: cat.intro, title: 'Introduction',
     price: '$45', per: 'first session', sub: '$35 each for 2 · $30 each for 3+',
@@ -54,3 +69,9 @@ export const privateWays: PrivateWay[] = [
     hub: { flag: 'Pick your coach', priceNote: 'Coach sets their own rate', bookingTag: 'By appointment', desc: 'Pick a coach and stick with them — one instructor who follows your whole progress and comes in just for your session, even on a day off.', pills: '1-on-1 | Your coach' },
   },
 ];
+
+/** What the surfaces render. The per-coach way is hidden until its Square
+ *  staff booking pages exist (see `perCoachBookingEnabled`). */
+export const privateWays: PrivateWay[] = allPrivateWays.filter(
+  (w) => w.key !== 'coach' || perCoachBookingEnabled,
+);

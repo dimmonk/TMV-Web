@@ -28,13 +28,48 @@ export interface Camp extends Surfaced {
   hub: { dur: string; desc: string; pills: string; priceNote: string; bookingTag: string; cta: string; href: string };
 }
 
+/* ---------------------------------------------------------------- seasons --
+ * The weekly camp runs three times a year as three separate Square products.
+ * One card described all three but carried ONE link, so booking a season meant
+ * pasting its URL over another season's. Each season is its own row now, with
+ * its own editable link.
+ *
+ * `bookable` is what the surfaces read: the home band shows the bookable
+ * seasons, and the Camps page's Weekly card books the first of them. Flip a
+ * season on when its Square product is live.
+ */
+export interface WeeklySeason {
+  key: 'winter' | 'march' | 'summer';
+  /** card title and the Settings -> Website field label */
+  label: string;
+  /** short badge on the card */
+  badge: string;
+  /** when it runs, in the gym's words */
+  when: string;
+  price: string;
+  href: string;
+  bookable: boolean;
+}
+
+export const weeklySeasons: WeeklySeason[] = [
+  { key: 'winter', label: 'Winter Camp', badge: 'Winter break', when: 'Over the winter break — dates on the booking page', price: '$350 / week', href: sq.camps.winterCamp, bookable: true },
+  { key: 'march', label: 'March Break Camp', badge: 'March Break', when: 'March Break week — dates on the booking page', price: '$350 / week', href: sq.camps.marchCamp, bookable: false },
+  { key: 'summer', label: 'Summer Camp', badge: 'Summer', when: 'Weekly sessions all summer — dates on the booking page', price: '$350 / week', href: sq.camps.summerCamp, bookable: true },
+];
+
+/** The seasons a visitor can book today, in calendar order. */
+export const bookableSeasons = (): WeeklySeason[] => weeklySeasons.filter((s) => s.bookable);
+
+/** What the Weekly Camps card books: the next season that is actually open. */
+export const nextSeason = (): WeeklySeason => bookableSeasons()[0] ?? weeklySeasons[0];
+
 export const camps: Camp[] = [
   {
     title: 'Weekly Camps', tag: 'Winter · March · Summer', image: 'assets/camp-weekly.png',
     desc: 'A full week of parkour adventure over school breaks — skill-building, games, friendship and unforgettable memories.',
     facts: [{ icon: 'bi-calendar-week', text: 'Mon–Fri, full weeks' }, { icon: 'bi-people', text: 'Ages 5+, all levels' }, { icon: 'bi-stopwatch', text: '9 AM–2 PM · late pickup to 4 PM' }],
     back: 'A full week of parkour', included: 'Daily structured lessons, flips, individual skills, games and a cool-down — plus a lunch break. Sessions run over Winter, March Break and Summer.',
-    price: '$350 / week', cta: 'Reserve', href: sq.camps.weeklyCamps,
+    price: '$350 / week', cta: 'Reserve', href: nextSeason().href,
     bookingTag: 'Register', pills: 'Ages 5+ | Mon–Fri | All levels', priceNote: 'late pickup to 4 PM',
     mobile: { desc: 'A full week of parkour over school breaks — skills, flips, games and friends.' },
     hub: { dur: '9–2 daily', desc: 'A full week of parkour over Winter, March Break and Summer — coached skills, flips, games and friends. All levels.', pills: 'Ages 5+ | Mon–Fri | All levels', priceNote: 'late pickup to 4 PM', bookingTag: 'Register', cta: 'See camps', href: '' },

@@ -21,7 +21,7 @@ type Group = { id: string; title: string; icon: string; color: string; blurb: st
 // SSOT (privateWays / parties / camps / groupHubCards). The condensed hub copy
 // lives on each module's `hub` field; only hrefs/targets are resolved here.
 const lessonHref = (key: string) =>
-  key === 'intro' ? sq.book.introduction : key === 'private' ? sq.book.privateLesson : `${url('private-lessons')}#coaches`;
+  (key === 'intro' ? sq.book.introduction : sq.book.privateLesson);
 
 const lessonItems: Item[] = privateWays.map((w) => ({
   title: w.title, color: w.color, dur: w.hub.dur, price: w.hub.price, priceNote: w.hub.priceNote,

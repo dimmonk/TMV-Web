@@ -17,6 +17,7 @@ import GoalPicker from '../GoalPicker.astro';
 import { offerings } from '../../data/offerings';
 import { cat, reviews, url, heroStats } from '../../data/site';
 import { sq } from '../../data/square-links';
+import { nextSeason } from '../../data/camps';
 
 // Compact size props for the mobile OfferingCard variant.
 const OC = {
@@ -63,7 +64,7 @@ const reviewItems = reviews.items.map((r) => ({ name: r.name, role: r.context, t
     <a class="m-alllink" href={url('book')}>All <i class="bi bi-arrow-right" style={`color:${cat.camps}`} aria-hidden="true"></i></a>
   </div>
   <div style="margin-bottom:30px">
-    <BookingCard color={cat.camps} duration="9–2 daily" bookingTag="Register" title="Summer Camps 2026" description="A full week of parkour over the break — skills, flips, games and friends." pills="Ages 5+ | Mon–Fri | All levels" price="$350 / week" priceNote="booking now" actionLabel="Reserve" href={sq.home.summerCamps} target="_blank" />
+    <BookingCard color={cat.camps} duration="9–2 daily" bookingTag="Register" title={nextSeason().label} description="A full week of parkour over the break — skills, flips, games and friends." pills="Ages 5+ | Mon–Fri | All levels" price={nextSeason().price} priceNote="booking now" actionLabel="Reserve" href={nextSeason().href} target="_blank" />
   </div>
 
   <div class="m-revstrip">

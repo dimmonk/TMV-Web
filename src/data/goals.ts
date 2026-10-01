@@ -79,7 +79,7 @@ export const goals: Goal[] = [
     sideLabel: 'Where it usually leads',
     leads: [
       { title: 'Athletic Program', sub: '2 × 90 min a week + open gym · ages 9+', color: cat.athletic, href: url('athletic-program') },
-      { title: 'Train with a specific coach', sub: 'Ongoing 1-on-1, they follow your whole progress', color: cat.private, href: `${url('private-lessons')}#coaches` },
+      { title: 'Private lessons', sub: 'Ongoing 1-on-1, built around your goals · from $65', color: cat.private, href: url('private-lessons') },
     ],
   },
   {

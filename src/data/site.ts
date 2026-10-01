@@ -56,7 +56,15 @@ export const links = {
   store: 'https://the-monkey-vault-inc.square.site/s/order',
   waiver: 'https://tmv-members.web.app/waiver',
   giftCard: 'https://squareup.com/gift/4PQGSAK7CK7FB/order',
+  /* One link PER SEASON. A single "weekly camp" link could only ever point at
+     one Square product, which is why the winter link kept getting pasted into
+     the summer field. Winter and March fall back to the summer product until an
+     admin sets them in Settings -> Website, so a season is never a dead link. */
   summerCamp:
+    'https://the-monkey-vault-inc.square.site/product/summer-camps-2026/R2Z7XNZMEXSG6EFR5YQRAFLO',
+  winterCamp:
+    'https://the-monkey-vault-inc.square.site/product/summer-camps-2026/R2Z7XNZMEXSG6EFR5YQRAFLO',
+  marchCamp:
     'https://the-monkey-vault-inc.square.site/product/summer-camps-2026/R2Z7XNZMEXSG6EFR5YQRAFLO',
   paDayCamp:
     'https://the-monkey-vault-inc.square.site/product/pa-day-camps/7PGIQLBT3X2QUL5I4XL2VMK7',

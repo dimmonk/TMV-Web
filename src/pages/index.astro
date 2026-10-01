@@ -9,25 +9,29 @@ import CtaBand from '../components/CtaBand.astro';
 import { seo, links, cat, url, heroStats } from '../data/site';
 import { sq } from '../data/square-links';
 import { offerings } from '../data/offerings';
+import { bookableSeasons } from '../data/camps';
 
 const heroPhotos = [
   'gym-01.jpg', 'gym-02.jpg', 'gym-03.jpg', 'gym-04.jpg',
   'gym-05.jpg', 'gym-06.jpg', 'gym-07.jpg', 'gym-08.jpg',
 ].map((f) => url(`assets/${f}`));
 
+/* Built from `weeklySeasons`, not hardcoded: the old card said "Summer Camps
+   2026" all year round, so it was wrong every autumn. Flip a season's
+   `bookable` in data/camps.ts and this band follows. */
 const camps = [
-  {
-    title: 'Summer Camps 2026', badge: 'Summer 2026', color: cat.camps, status: 'Booking now', statusColor: cat.openGym,
-    price: '$350 / week', href: sq.home.summerCamps,
+  ...bookableSeasons().map((s) => ({
+    title: s.label, badge: s.badge, color: cat.camps, status: 'Booking now', statusColor: cat.openGym,
+    price: s.price, href: s.href,
     rows: [
-      { icon: 'bi-calendar-week', text: 'Weekly sessions · all summer — dates on the booking page' },
+      { icon: 'bi-calendar-week', text: s.when },
       { icon: 'bi-clock', text: '9 AM – 2 PM · late pickup to 4 PM' },
       { icon: 'bi-people', text: 'Ages 5+ · all levels' },
     ],
-  },
+  })),
   {
     title: 'P.A. Day Camps', badge: 'School year', color: cat.camps, status: 'Single days', statusColor: cat.classes,
-    price: '$90 / day', href: sq.home.paDayCamps,
+    price: '$90 / day', href: sq.camps.paDayCamp,
     rows: [
       { icon: 'bi-sun', text: 'Single days off school' },
       { icon: 'bi-clock', text: '9 AM – 2 PM · late pickup to 4 PM' },

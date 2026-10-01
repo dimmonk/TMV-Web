@@ -13,13 +13,8 @@ const wayStyle = [
   { num: 'red', tag: '', tagLabel: '', featured: false },
   { num: 'solid', tag: 'solid', tagLabel: 'Ongoing · on demand', featured: true },
 ];
-const plHref = (key: string) => key === 'intro' ? sq.privateLessons.introduction : key === 'private' ? sq.privateLessons.privateLesson : '#coaches';
+const plHref = (key: string) => (key === 'intro' ? sq.privateLessons.introduction : sq.privateLessons.privateLesson);
 
-const coaches = [
-  { name: 'Taigh Smullen', role: 'Manager', hint: 'Photo of Taigh', bio: 'Trampoline and parkour specialist — explosive air awareness built on solid fundamentals. Great if you want big, controlled movement.', tags: ['Trampoline', 'Parkour'], cta: 'Book with Taigh', href: sq.privateLessons.coachTaigh },
-  { name: 'Steven Leblanc', role: 'Manager', hint: 'Photo of Steven', bio: '24+ years of parkour and a true all-around mover — flips, acrobatics and conditioning. Methodical, progression-driven coaching, with an app to track your progress between sessions.', tags: ['Parkour', 'Flips', 'Acrobatics', 'Conditioning'], cta: 'Book with Steven', href: sq.privateLessons.coachSteven },
-  { name: 'Nelson Lin', role: 'Coach', hint: 'Photo of Nelson', bio: 'Tricking, calisthenics and gymnastics — high-energy flips and bodyweight strength. From your first kick to your cleanest combos.', tags: ['Tricking', 'Calisthenics', 'Flips', 'Gymnastics'], cta: 'Book with Nelson', href: sq.privateLessons.coachNelson },
-];
 const notes = [
   { icon: 'bi-graph-up-arrow', title: 'One coach, your whole journey', body: 'Sticking with a specific coach means continuity — they know your history, track your progress and build each session on the last.' },
   { icon: 'bi-calendar-heart', title: 'They come in just for you', body: "Book a specific coach outside their regular shift — even on their day off — and they'll come in only for your session. Coaching on demand, on your schedule." },
@@ -36,14 +31,14 @@ const notes = [
     <div class="pl-hero container">
       <div class="pl-kicker"><span class="rule"></span>Private · 1-on-1 coaching</div>
       <h1 class="pl-title">Private lessons, built around you.</h1>
-      <p class="pl-lead">One-on-one coaching shaped entirely around your goals and pace — bring your own small group if you like. There are three ways in: start with a discounted intro, book standard sessions with whoever's on, or pick the specific coach you want to train with.</p>
+      <p class="pl-lead">One-on-one coaching shaped entirely around your goals and pace — bring your own small group if you like. There are two ways in: start with a discounted intro, or book ongoing sessions with whoever's on.</p>
     </div>
   </section>
 
-  <JumpNav items={[{ label: 'Three Ways', id: 'ways' }, { label: 'Choose a Coach', id: 'coaches' }, { label: 'Good to Know', id: 'know' }]} actions={[{ label: 'Price List', href: url('pricing'), icon: 'bi bi-tag' }]} top={66} />
+  <JumpNav items={[{ label: 'Ways to Train', id: 'ways' }, { label: 'Good to Know', id: 'know' }]} actions={[{ label: 'Price List', href: url('pricing'), icon: 'bi bi-tag' }]} top={66} />
 
   <div class="plwrap">
-    <div id="ways" class="pl-label" style="scroll-margin-top:120px">Three ways to train privately</div>
+    <div id="ways" class="pl-label" style="scroll-margin-top:120px">Two ways to train privately</div>
     <div class="pl-ways">
       {privateWays.map((w, i) => {
         const st = wayStyle[i];
@@ -67,27 +62,10 @@ const notes = [
       <span><i class="bi bi-people" aria-hidden="true"></i>Packs can be shared with friends &amp; family</span>
     </div>
 
-    <section id="coaches" class="pl-section">
-      <div class="pl-cintro">
-        <div class="pl-ceyebrow">Choose your coach</div>
-        <h2 class="pl-ctitle">The coaches taking private students</h2>
-        <p class="pl-clead">A few of our coaches are building their own roster of private students — the ones taking the initiative to train you one-on-one, on your schedule. Reserve one outside their regular shift and they'll come in just for your session, at their own rate.</p>
-      </div>
-      <div class="pl-coaches">
-        {coaches.map((c) => (
-          <div class="pl-coach">
-            <div class="pl-cphoto"><div class="pl-cphoto-ph"><i class="bi bi-camera" aria-hidden="true"></i><span>{c.hint}</span></div><span class="pl-crole">{c.role}</span></div>
-            <div class="pl-cbody">
-              <h3 class="pl-cname">{c.name}</h3>
-              <p class="pl-cbio">{c.bio}</p>
-              <div class="pl-ctags">{c.tags.map((t) => <span class="pl-ctag">{t}</span>)}</div>
-              <a href={c.href} target="_blank" rel="noopener" class="pl-book">{c.cta} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
+    {/* The "choose your coach" roster is removed while per-coach booking is
+        off (see `perCoachBookingEnabled` in data/private-lessons.ts): naming a
+        coach and then booking whoever is on shift is a promise the Square side
+        cannot keep yet. */}
     <section id="know" class="pl-section">
       <div class="pl-label">Good to know</div>
       <div class="pl-notes">

@@ -28,21 +28,21 @@ const DEFAULTS = {
     privateLesson: B, // ongoing private (any coach)
     fullBirthday: B,
     miniBirthday: B,
-    privateDayCamp: B,
     groupEvents: B,
     earlyGymAccess: B,
   },
 
   /* -------------------------------------------------- Home page ----------- */
-  home: {
-    heroBook: B,
-    summerCamps: links.summerCamp,
-    paDayCamps: links.paDayCamp,
-  },
+  /* The Home page has no editable links left: its camp cards read the seasons
+     below, and its hero books the intro via `getStarted.introduction`. Two
+     admin fields once held the SAME camp product (home.summerCamps and
+     camps.weeklyCamps) — one slot per camp now. */
 
   /* -------------------------------------------------- Camps page ---------- */
   camps: {
-    weeklyCamps: links.summerCamp,
+    winterCamp: links.winterCamp,
+    marchCamp: links.marchCamp,
+    summerCamp: links.summerCamp,
     paDayCamp: links.paDayCamp,
     privateDayCamp: B,
   },
@@ -61,7 +61,6 @@ const DEFAULTS = {
   /* -------------------------------------------------- Athletic page ------- */
   athletic: {
     membership: links.athleticMembership,
-    trial: B,
   },
 
   /* -------------------------------------------------- Private Lessons ----- */
@@ -70,15 +69,13 @@ const DEFAULTS = {
   privateLessons: {
     introduction: B,
     privateLesson: B,
-    coachTaigh: B,
-    coachSteven: B,
-    coachNelson: B,
+    /* Per-coach slots removed with the roster — see `perCoachBookingEnabled`.
+       They come back when each coach has a real Square staff booking page. */
   },
 
   /* -------------------------------------------------- Get Started --------- */
   getStarted: {
     introduction: B,
-    privateClass: B,
   },
 } as const;
 
