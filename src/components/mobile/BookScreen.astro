@@ -5,10 +5,10 @@
  */
 import MobileHero from '../MobileHero.astro';
 import BookingCard from '../BookingCard.astro';
-import { cat } from '../../data/site';
+import { cat, url } from '../../data/site';
 import { sq } from '../../data/square-links';
 import { privateWays } from '../../data/private-lessons';
-import { camps, nextSeason } from '../../data/camps';
+import { campByKey, nextSeason } from '../../data/camps';
 import { partyHubCards } from '../../data/parties';
 import { groupHubCards } from '../../data/events';
 
@@ -19,7 +19,7 @@ const dropIns = [
 const priv = privateWays.find((w) => w.key === 'private')!;
 const bookOptions = [
   { color: priv.color, bookingTag: priv.hub.bookingTag, title: priv.title, description: priv.hub.desc, pills: priv.hub.pills, price: priv.hub.price, priceNote: priv.hub.priceNote, actionLabel: 'Book', href: sq.book.privateLesson },
-  { color: cat.camps, bookingTag: camps[0].hub.bookingTag, title: camps[0].title, description: camps[0].mobile?.desc ?? camps[0].desc, pills: camps[0].pills, price: camps[0].price, priceNote: camps[0].priceNote, actionLabel: 'Reserve', href: nextSeason().href },
+  ...(campByKey('weekly') ? [{ color: cat.camps, bookingTag: campByKey('weekly')!.hub.bookingTag, title: campByKey('weekly')!.title, description: campByKey('weekly')!.mobile?.desc ?? campByKey('weekly')!.desc, pills: campByKey('weekly')!.pills, price: campByKey('weekly')!.price, priceNote: campByKey('weekly')!.priceNote, actionLabel: 'Reserve', href: nextSeason()?.href ?? url('camps') }] : []),
   { color: partyHubCards[0].color, bookingTag: partyHubCards[0].bookingTag, title: partyHubCards[0].title, description: partyHubCards[0].desc, pills: partyHubCards[0].pills, price: partyHubCards[0].price, priceNote: partyHubCards[0].priceNote, actionLabel: 'Book', href: sq.book.fullBirthday },
   // Desktop's Book hub lists SIX bookable groups; this screen only had three.
   // Groups & Early Gym Access were missing entirely — both are appointment-only

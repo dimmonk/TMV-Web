@@ -7,7 +7,7 @@ import { seo, cat, site, url } from '../data/site';
 import { sq } from '../data/square-links';
 import { privateWays } from '../data/private-lessons';
 import { partyHubCards } from '../data/parties';
-import { camps } from '../data/camps';
+import { campByKey } from '../data/camps';
 import { groupHubCards } from '../data/events';
 
 type Item = {
@@ -35,12 +35,16 @@ const birthdayItems: Item[] = partyHubCards.map((c) => ({
   bookingTag: c.bookingTag, desc: c.desc, pills: c.pills, cta: 'Book', href: c.href, target: '_blank',
 }));
 
-// Book lists camps in Weekly / P.A. Day / Private order (camps.ts is Weekly / Private / P.A. Day).
-const campItems: Item[] = [camps[0], camps[2], camps[1]].map((c) => ({
-  title: c.title, color: cat.camps, dur: c.hub.dur, price: c.price, priceNote: c.hub.priceNote,
-  bookingTag: c.hub.bookingTag, desc: c.hub.desc, pills: c.hub.pills, cta: c.hub.cta,
-  href: c.hub.href || url('camps'), target: (c.hub.href ? '_blank' : '_self'),
-}));
+// Book lists camps Weekly / P.A. Day / Private. Picked BY KEY, not by array
+// index: the weekly card drops out entirely when no season is bookable.
+const campItems: Item[] = (['weekly', 'paday', 'private'] as const)
+  .map(campByKey)
+  .filter((c): c is NonNullable<typeof c> => Boolean(c))
+  .map((c) => ({
+    title: c.title, color: cat.camps, dur: c.hub.dur, price: c.price, priceNote: c.hub.priceNote,
+    bookingTag: c.hub.bookingTag, desc: c.hub.desc, pills: c.hub.pills, cta: c.hub.cta,
+    href: c.hub.href || url('camps'), target: (c.hub.href ? '_blank' : '_self'),
+  }));
 
 const groupItem = (key: 'groupEvents' | 'earlyAccess', cta: string): Item => {
   const c = groupHubCards.find((g) => g.key === key)!;

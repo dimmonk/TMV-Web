@@ -24,6 +24,7 @@ const OC = {
   height: '360px', mediaRatio: '16/9', titleSize: '17px', descSize: '12.5px',
   backTitleSize: '18px', padFront: '16px 16px 18px', padBack: '20px 20px 18px',
 };
+const season = nextSeason();
 const reviewItems = reviews.items.map((r) => ({ name: r.name, role: r.context, text: r.quote }));
 ---
 <div class="m-home-hero">
@@ -59,13 +60,19 @@ const reviewItems = reviews.items.map((r) => ({ name: r.name, role: r.context, t
     {offerings.map((o) => <OfferingCard {...o} href={url(o.key)} {...OC} />)}
   </div>
 
-  <div class="m-rowhead">
-    <h3 class="m-h3" style="margin:0">Booking now</h3>
-    <a class="m-alllink" href={url('book')}>All <i class="bi bi-arrow-right" style={`color:${cat.camps}`} aria-hidden="true"></i></a>
-  </div>
-  <div style="margin-bottom:30px">
-    <BookingCard color={cat.camps} duration="9–2 daily" bookingTag="Register" title={nextSeason().label} description="A full week of parkour over the break — skills, flips, games and friends." pills="Ages 5+ | Mon–Fri | All levels" price={nextSeason().price} priceNote="booking now" actionLabel="Reserve" href={nextSeason().href} target="_blank" />
-  </div>
+  {/* The whole block goes when no season is open — a "Booking now" heading
+      with nothing under it is worse than no section. */}
+  {season && (
+    <>
+      <div class="m-rowhead">
+        <h3 class="m-h3" style="margin:0">Booking now</h3>
+        <a class="m-alllink" href={url('book')}>All <i class="bi bi-arrow-right" style={`color:${cat.camps}`} aria-hidden="true"></i></a>
+      </div>
+      <div style="margin-bottom:30px">
+        <BookingCard color={cat.camps} duration="9–2 daily" bookingTag="Register" title={season.label} description="A full week of parkour over the break — skills, flips, games and friends." pills="Ages 5+ | Mon–Fri | All levels" price={season.price} priceNote="booking now" actionLabel="Reserve" href={season.href} target="_blank" />
+      </div>
+    </>
+  )}
 
   <div class="m-revstrip">
     <div class="m-revstrip-top">

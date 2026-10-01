@@ -125,6 +125,18 @@ const liveLinks = await fetchLiveLinks();
 /** Every card's resolved Square link — live admin value where set, static default otherwise. */
 export const sq: LinkPages = mergeLive(DEFAULTS, liveLinks);
 
+/**
+ * Did an admin actually SET this link, or is the value just the static
+ * fallback?
+ *
+ * For most slots a blank field falling back to the generic booking/store page
+ * is the right behaviour. For anything seasonal it is not: a blank field means
+ * "there is no active Square item for this right now", so the surface must not
+ * offer it rather than quietly sending people to a different product's page.
+ */
+export const isLinkSet = (page: PageKey, field: string): boolean =>
+  typeof liveLinks?.[page]?.[field] === 'string' && liveLinks[page][field].trim() !== '';
+
 /** Flat helper: resolve a "page.key" path to its URL (used where handy). */
 export const sqUrl = (page: PageKey, key: string): string =>
   (sq[page] as Record<string, string>)[key] ?? links.booking;
