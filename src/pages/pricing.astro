@@ -113,6 +113,19 @@ import '../styles/price-list-sheet.css';
   document.addEventListener('astro:page-load', () => {
     const root = document.getElementById('pl-embed-root');
     if (!root) return;
-    renderPriceListSheet(root).catch((err) => console.error('[pricing] render failed', err));
+    renderPriceListSheet(root)
+      .then(() => {
+        // The sheet renders as a standalone document, so it titles itself with an
+        // <h1> — correct for the printed PDF, a second <h1> on this page. Demote
+        // them here rather than forking price-list-renderer.js, which is
+        // byte-identical with TMV-Members' copy.
+        root.querySelectorAll('h1').forEach((h) => {
+          const h2 = document.createElement('h2');
+          h2.className = h.className;
+          h2.append(...h.childNodes);
+          h.replaceWith(h2);
+        });
+      })
+      .catch((err) => console.error('[pricing] render failed', err));
   });
 </script>

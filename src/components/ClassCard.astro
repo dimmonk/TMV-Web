@@ -128,6 +128,12 @@ const mediaExists = classMediaExists(image);
   .cc-badge i { font-size: 10px; }
   .cc-flipbtn { position: absolute; top: 12px; right: 12px; z-index: 2; width: 30px; height: 30px; border-radius: 50%; background: rgba(28,25,23,.5); backdrop-filter: blur(4px); border: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; cursor: pointer; transition: all .15s; }
   .cc-flipbtn:hover { background: var(--cat); }
+  /* 30px and 14px rendered — too small to hit. Expand the target without
+     changing the layout these sit in. */
+  .cc-flipbtn { position: absolute; }
+  .cc-flipbtn::after { content: ''; position: absolute; inset: -7px; }
+  .cc-flipback { position: relative; }
+  .cc-flipback::after { content: ''; position: absolute; inset: -15px -10px; }
   .cc-body { display: flex; flex-direction: column; gap: 13px; padding: 20px 20px 22px; flex: 1; }
   .cc-booking { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; background: var(--cat); font: 800 10.5px/1 var(--font-display); letter-spacing: .07em; text-transform: uppercase; }
   .cc-booking i { font-size: 12px; }

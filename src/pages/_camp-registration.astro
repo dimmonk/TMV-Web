@@ -1,5 +1,20 @@
 ---
 /**
+ * PARKED FOR PHASE 1 — the leading underscore keeps Astro from routing this,
+ * so it is not in the build and not reachable.
+ *
+ * Why: its Square checkout is STUBBED. "Register & pay" advances to the
+ * printable confirmation without taking a payment, under a "Secure checkout by
+ * Square" lock. Shipping that in Phase 1 — where every real payment still goes
+ * to Square — means a parent can believe they registered and paid when no
+ * money moved.
+ *
+ * It comes back in Phase 2 wired to the real charge (ADR-0058 / ADR-0063 /
+ * `purchaseCamp`); see TMV-Members/docs/domain-cutover.md §0.2 and §6. To
+ * restore: drop the underscore and re-add 'camp-registration' to
+ * src/pages/sitemap.xml.ts.
+ */
+/**
  * Camp registration. The form is the shared module src/lib/camp-reg-form.ts — a
  * SINGLE mount (#reg-root), rendered once and shared by both chromes. Its own
  * hero is turned off (showHero:false); the hero above it switches instead:

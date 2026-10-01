@@ -234,6 +234,8 @@ const items = classes.map((c) => {
   .ct.compact { grid-template-columns: 1fr; border-radius: var(--radius); }
   .ct.compact .ct-list { border-right: 0; border-bottom: 1px solid var(--line); }
   .ct.compact .ct-row-chev { opacity: 1; }
+  /* 32px rows are pointer targets; a thumb needs 44. */
+  .ct.compact .ct-row { min-height: 44px; }
   .ct.compact .ct-panel { grid-template-columns: 1fr; gap: 14px; padding: 18px; height: auto; }
   .ct.compact .ct-media { order: -1; }
   .ct.compact .ct-title { font-size: 21px; }
@@ -243,6 +245,7 @@ const items = classes.map((c) => {
     .ct { grid-template-columns: 1fr; }
     .ct-list { border-right: 0; border-bottom: 1px solid var(--line); }
     .ct-row-chev { opacity: 1; }
+    .ct-row { min-height: 44px; }
     .ct-panel { grid-template-columns: 1fr; gap: 16px; padding: 22px; height: auto; }
     /* Stacked, the plate would run the full tablet width (~550px tall). Cap it. */
     .ct-media { order: -1; max-width: 520px; }

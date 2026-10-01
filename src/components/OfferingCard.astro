@@ -107,6 +107,10 @@ const vars = `--c:${color}; --oc-h:${height}; --oc-ratio:${mediaRatio}; --oc-tit
   .flip-tag { position: absolute; top: 12px; left: 12px; z-index: 2; font: 700 10px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: #fff; padding: 6px 10px; border-radius: 999px; }
   .flip-btn { position: absolute; top: 12px; right: 12px; z-index: 2; width: 30px; height: 30px; border-radius: 50%; background: rgba(28,25,23,.5); backdrop-filter: blur(4px); border: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; cursor: pointer; transition: all .15s; }
   .flip-btn:hover { background: var(--c); }
+  /* Same too-small-to-hit fix as ClassCard's flip controls. */
+  .flip-btn::after { content: ''; position: absolute; inset: -7px; }
+  .flip-back-btn { position: relative; }
+  .flip-back-btn::after { content: ''; position: absolute; inset: -15px -10px; }
   .flip-body { padding: var(--oc-pad-front); display: flex; flex-direction: column; flex: 1; }
   .flip-title { font: 800 var(--oc-title)/1.1 var(--font-display); letter-spacing: -.01em; margin-bottom: 8px; }
   .flip-desc { font: 400 var(--oc-desc)/1.5 var(--font-body); color: var(--text-3); margin-bottom: 16px; }
