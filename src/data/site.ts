@@ -52,7 +52,7 @@ export const site = {
 
 /** Square / external booking + store URLs. */
 export const links = {
-  booking: 'https://the-monkey-vault-inc.square.site/s/appointments',
+  booking: 'https://book.squareup.com/appointments/n4zdjvxlwo48zk/location/0QZNE6RQ46VRQ/services',
   store: 'https://the-monkey-vault-inc.square.site/s/order',
   waiver: 'https://tmv-members.web.app/waiver',
   giftCard: 'https://squareup.com/gift/4PQGSAK7CK7FB/order',
