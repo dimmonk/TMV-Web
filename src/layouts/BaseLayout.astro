@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import '../styles/mobile-app.css';
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import MobileTabBar from '../components/MobileTabBar.astro';
@@ -143,7 +143,7 @@ const jsonLd = {
         carousel, live schedule/pricing fetches, invite + camp-reg mounts) is
         registered on `astro:page-load`, which fires on first load AND after
         every transition. */}
-    <ViewTransitions />
+    <ClientRouter />
 
     {/* Cache warmer — this is what makes a tap instant. The click-to-render
         delay was the router fetching the target page's HTML on click; HTML is
