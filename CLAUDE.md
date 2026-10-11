@@ -88,6 +88,19 @@ On `BaseLayout`:
 A page cannot forget its nav: both chromes are unconditional, so there is no
 opt-out flag to get wrong.
 
+## Build toolchain gotchas (Astro 7 / Vite 8)
+
+- **Prefixed CSS pairs: the unprefixed property goes LAST** (`-webkit-backdrop-filter`
+  then `backdrop-filter`; same for `backface-visibility`). The build's CSS
+  minifier (Lightning CSS) keeps only the last of a prefixed/unprefixed pair, so
+  the other order silently drops the property Chrome and Firefox need.
+- **Build-time file checks resolve from the project root** (`process.cwd()`, see
+  `src/lib/class-media.ts`), never from `import.meta.url`: the bundler relocates
+  modules, so a source-relative path points at nothing in the build.
+- The router is `<ClientRouter />` (Astro 5 renamed `ViewTransitions`).
+- Node 22.12+ is required (`undici`, pulled in by Astro's font code, wants 22.19+;
+  the build runs on 22.16 with an `EBADENGINE` warning and works).
+
 ## Navigation IA
 
 The primary nav (`nav` in `data/site.ts`) is deliberately capped at **six**. The

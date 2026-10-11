@@ -246,7 +246,7 @@
   screen-level sticky UI (e.g. the registration form's pay bar, z-index 40) —
   otherwise the Book button, which protrudes ~15px above the bar, gets
   clipped. Keep this above every in-screen z-index. */
-  .mapp .m-nav { flex: none; position: relative; z-index: 50; background: rgba(28,26,23,.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid rgba(255,255,255,.08); padding: 9px 12px calc(13px + env(safe-area-inset-bottom, 10px)); display: flex; align-items: flex-end; }
+  .mapp .m-nav { flex: none; position: relative; z-index: 50; background: rgba(28,26,23,.92); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-top: 1px solid rgba(255,255,255,.08); padding: 9px 12px calc(13px + env(safe-area-inset-bottom, 10px)); display: flex; align-items: flex-end; }
   .mapp .m-navbtn { flex: 1; cursor: pointer; background: none; border: 0; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 7px; color: rgba(255,255,255,.42); }
   .mapp .m-navbtn i { font-size: 26px; }
   .mapp .m-navbtn span { font: 700 12px/1 'Archivo', sans-serif; letter-spacing: .02em; }

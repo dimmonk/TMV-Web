@@ -93,7 +93,7 @@ const vars = `--c:${color}; --oc-h:${height}; --oc-ratio:${mediaRatio}; --oc-tit
   .flip { position: relative; perspective: 1600px; }
   .flip-inner { position: relative; width: 100%; display: grid; transition: transform .6s cubic-bezier(.2,.75,.25,1); transform-style: preserve-3d; }
   .flip.flipped .flip-inner { transform: rotateY(180deg); }
-  .flip-face { grid-area: 1 / 1; min-height: var(--oc-h); backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: var(--shadow-sm); }
+  .flip-face { grid-area: 1 / 1; min-height: var(--oc-h); -webkit-backface-visibility: hidden; backface-visibility: hidden; box-shadow: var(--shadow-sm); }
   .flip:hover .flip-face { box-shadow: var(--shadow-lg); }
   .flip-front { position: relative; display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
   .flip-back { transform: rotateY(180deg); background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: var(--oc-pad-back); display: flex; flex-direction: column; }

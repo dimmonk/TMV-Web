@@ -37,7 +37,7 @@ const hasActions = actions.length > 0;
 </button>
 
 <style>
-  .jn { position: sticky; top: var(--top); z-index: 40; background: rgba(245,244,241,.92); backdrop-filter: saturate(140%) blur(8px); -webkit-backdrop-filter: saturate(140%) blur(8px); border-bottom: 1px solid var(--line); }
+  .jn { position: sticky; top: var(--top); z-index: 40; background: rgba(245,244,241,.92); -webkit-backdrop-filter: saturate(140%) blur(8px); backdrop-filter: saturate(140%) blur(8px); border-bottom: 1px solid var(--line); }
   .jn-scroll { max-width: 1120px; margin-inline: auto; padding: 13px 24px; display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; }
   .jn-scroll::-webkit-scrollbar { display: none; }
   .jn-label { flex: none; font: 700 11px/1 var(--font-display); letter-spacing: .13em; text-transform: uppercase; color: var(--muted-3); margin-right: 6px; }
