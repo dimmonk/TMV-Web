@@ -2,9 +2,31 @@
 
 Astro static site for The Monkey Vault. Built to `dist/`, deployed to Firebase
 Hosting (`themonkeyvault` / themonkeyvault.com) from the **TMV-Members** repo:
-`cd ../TMV-Members && firebase deploy --only hosting:web` (its predeploy runs
-`scripts/build-web.sh`, which copies this repo's fresh `dist/`). So the deploy
-flow is: `npm run build` here → deploy from TMV-Members.
+
+```bash
+cd ../TMV-Members && npm run deploy -- --only hosting:web
+```
+
+That one command is the website's only deploy path. It is a counted release:
+
+1. It refuses unless **this checkout is clean and `HEAD == origin/main`** (modified
+   tracked files, or untracked files under `src/` or `public/`, would ship code no
+   clone has; a checkout that is not main would ship, or roll back, something
+   main does not hold).
+2. It cuts the next revision in **`release.json`** (`{ revision, date, commit }`:
+   the count of website releases, the day, and the first 8 characters of the
+   commit being released), commits it here as `chore: release N`, and pushes it to
+   `origin/main`. You never edit `release.json` by hand.
+3. Its predeploy (`scripts/build-web.sh` in TMV-Members) re-checks the gates, runs
+   `npm run build` **in this repo** (never a stale `dist/`), and assembles the site
+   with `release.json` copied to `/version.json`.
+4. It then checks the live site (`/version.json` names the revision, `/index.html`
+   answers, `/_astro/**` is immutable, nothing private is served) and exits 2 with
+   the rollback if it is not that release.
+
+Nothing a visitor sees names the revision: `/version.json` exists for the daily
+status report only, and no page, footer or meta tag shows it. This is a public
+repository, so `release.json` carries only those three values.
 
 ## One responsive document, two chromes
 
