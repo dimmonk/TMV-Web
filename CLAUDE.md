@@ -7,7 +7,8 @@ Hosting (`themonkeyvault` / themonkeyvault.com) from the **TMV-Members** repo:
 cd ../TMV-Members && npm run deploy -- --only hosting:web
 ```
 
-That one command is the website's only deploy path. It is a counted release:
+That one command is the website's only deploy path. It is a counted release, in the order **cut, build, commit, push,
+deploy, check**:
 
 1. It refuses unless **this checkout is clean and `HEAD == origin/main`** (modified
    tracked files, or untracked files under `src/` or `public/`, would ship code no
@@ -15,12 +16,18 @@ That one command is the website's only deploy path. It is a counted release:
    main does not hold).
 2. It cuts the next revision in **`release.json`** (`{ revision, date, commit }`:
    the count of website releases, the day, and the first 8 characters of the
-   commit being released), commits it here as `chore: release N`, and pushes it to
-   `origin/main`. You never edit `release.json` by hand.
-3. Its predeploy (`scripts/build-web.sh` in TMV-Members) re-checks the gates, runs
-   `npm run build` **in this repo** (never a stale `dist/`), and assembles the site
-   with `release.json` copied to `/version.json`.
-4. It then checks the live site (`/version.json` names the revision, `/index.html`
+   commit being released), in this working tree and **uncommitted**. You never edit
+   `release.json` by hand.
+3. It builds the site with that release (`scripts/build-web.sh --cut` in
+   TMV-Members: `npm run build` **in this repo**, never a stale `dist/`, with
+   `release.json` copied to `/version.json`). If the build fails, `release.json` is
+   restored and nothing is committed, pushed or deployed.
+4. Only then does it commit `chore: release N` here (that file alone) and push it to
+   `origin/main`. A rejected push undoes the commit. A Ctrl-C at any point before the
+   push lands puts this checkout back as it was.
+5. It deploys; the deploy's predeploy (`scripts/build-web.sh`, strict) builds the
+   pushed tree once more.
+6. It then checks the live site (`/version.json` names the revision, `/index.html`
    answers, `/_astro/**` is immutable, nothing private is served) and exits 2 with
    the rollback if it is not that release.
 
