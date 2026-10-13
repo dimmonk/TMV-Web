@@ -42,6 +42,13 @@ export const SOCIAL_KEYS = Object.freeze(['instagram', 'facebook', 'youtube']);
 /** @param {unknown} v @returns {string} */
 const text = (v) => (typeof v === 'string' ? v.trim() : '');
 
+/**
+ * Is any social link set? Decides whether the wrapper around them shows.
+ * @param {Record<string, string>} social
+ * @returns {boolean}
+ */
+export const hasSocial = (social) => Object.values(social).some(Boolean);
+
 /** @param {unknown} v @returns {string} Only http(s) survives. */
 function safeUrl(v) {
   const s = text(v);
@@ -58,6 +65,25 @@ function safeUrl(v) {
 const obj = (v) => (v && typeof v === 'object' && !Array.isArray(v) ? /** @type {Record<string, any>} */ (v) : {});
 
 /**
+ * The per-card Square links: every value is a http(s) URL or '' (unset, so the
+ * card keeps its default). They reach `href`s on the build and in the browser,
+ * so they get the same gate as the social links.
+ * @param {unknown} v
+ * @returns {Record<string, Record<string, string>>|null} null when the object carried no `links` object at all.
+ */
+function readLinks(v) {
+  if (!v || typeof v !== 'object') return null;
+  /** @type {Record<string, Record<string, string>>} */
+  const links = {};
+  Object.entries(v).forEach(([page, fields]) => {
+    if (!fields || typeof fields !== 'object') return;
+    links[page] = {};
+    Object.entries(fields).forEach(([field, url]) => { links[page][field] = safeUrl(url); });
+  });
+  return links;
+}
+
+/**
  * @param {unknown} data - the parsed published JSON, or null when there is none
  * @returns {PublishedConfig}
  */
@@ -69,7 +95,7 @@ export function readPublishedConfig(data) {
   const social = {};
   SOCIAL_KEYS.forEach((k) => { social[k] = safeUrl(s[k]); });
   return {
-    links: d.links && typeof d.links === 'object' ? d.links : null,
+    links: readLinks(d.links),
     promo: {
       active: p.active === true,
       headline: text(p.headline),

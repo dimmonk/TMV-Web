@@ -87,6 +87,13 @@ const rangeLabel = (span) => `${formatClock(span.open)} – ${formatClock(span.c
 const openSpans = (week) => WEEK_ORDER.flatMap((day) => (week[day] ? [/** @type {OpenSpan} */ (week[day])] : []));
 
 /**
+ * Is any day open? No open day means no pill.
+ * @param {Week} week
+ * @returns {boolean}
+ */
+export const hasOpenDays = (week) => openSpans(week).length > 0;
+
+/**
  * Runs of consecutive open days (Monday first) that share one range.
  * @param {Week} week
  * @returns {{from: number, to: number, label: string}[]}
@@ -197,7 +204,7 @@ function whileOpen(closeAt, minutes) {
  * @returns {OpenStatus|null}
  */
 export function openStatus(week, day, minutes) {
-  if (openSpans(week).length === 0) return null;
+  if (!hasOpenDays(week)) return null;
   const today = week[day];
   const yesterday = week[(day + 6) % 7];
   // A close after midnight (10 PM - 2 AM) is still open in the small hours of the next day.

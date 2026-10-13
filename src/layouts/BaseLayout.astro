@@ -11,6 +11,7 @@ import PromoBanner from '../components/PromoBanner.astro';
 import { site, links, url } from '../data/site';
 import { hours, social } from '../data/site-config';
 import { openingHoursSpec } from '../lib/opening-hours.js';
+import { jsonForScript } from '../lib/json-for-script.js';
 
 interface Props {
   title: string;
@@ -136,7 +137,7 @@ const jsonLd = {
       <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
     </noscript>
 
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script type="application/ld+json" set:html={jsonForScript(jsonLd)} />
 
     {/* Client-side routing. Astro runs module scripts ONCE (not per navigation),
         so every on-load init in this site (status pill, --tabbar-h, More sheet,

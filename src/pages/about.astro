@@ -6,6 +6,7 @@ import SectionHeader from '../components/SectionHeader.astro';
 import { seo, site, links, url } from '../data/site';
 import { hours, social } from '../data/site-config';
 import { hoursHeading } from '../lib/opening-hours.js';
+import { hasSocial } from '../lib/published-config.js';
 import { facility } from '../data/facility';
 import { forSurface } from '../data/surface';
 
@@ -30,7 +31,7 @@ const socials = [
   { key: 'youtube', icon: 'bi-youtube', label: 'YouTube', href: social.youtube },
   { key: 'facebook', icon: 'bi-facebook', label: 'Facebook', href: social.facebook },
 ];
-const anySocial = socials.some((s) => s.href);
+const anySocial = hasSocial(social);
 ---
 <BaseLayout title={seo.about.title} description={seo.about.description} active="about" mobileTab="more" appHeader="back" appTitle="About">
   <div class="mapp" data-chrome="app"><AboutScreen /></div>

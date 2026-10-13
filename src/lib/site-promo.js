@@ -39,6 +39,15 @@ export function isExpired(stored, wallNow) {
 }
 
 /**
+ * The banner's button: it needs both a label and a link; one without the other is not a button.
+ * @param {import('./published-config.js').Promo} promo
+ * @returns {{label: string, href: string}|null}
+ */
+export function promoButton(promo) {
+  return promo.ctaLabel !== '' && promo.ctaUrl !== '' ? { label: promo.ctaLabel, href: promo.ctaUrl } : null;
+}
+
+/**
  * Should the banner show right now?
  * @param {import('./published-config.js').Promo} promo
  * @param {string} wallNow - `GymNow.wall`

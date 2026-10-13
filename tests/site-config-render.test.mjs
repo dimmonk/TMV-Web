@@ -11,10 +11,11 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import { spawn } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { JSDOM } from 'jsdom';
+import { transformSync } from 'rolldown/utils';
 import { readPublishedConfig } from '../src/lib/published-config.js';
 import { applyPublishedConfig } from '../src/lib/apply-site-config.js';
 import { gymNow } from '../src/lib/gym-clock.js';
@@ -67,7 +68,7 @@ async function build({ expectFetch = true } = {}) {
   assert.equal(code, 0, `astro build failed:\n${log}`);
   assert.equal(/live config fetch failed/.test(log), !expectFetch, `the build ${expectFetch ? 'must read' : 'must fail to read'} the fixture:\n${log}`);
   const html = (path) => readFileSync(join(out, path, 'index.html'), 'utf8');
-  return { page: html, dom: (path) => new JSDOM(html(path)).window.document, log };
+  return { page: html, dom: (path) => new JSDOM(html(path)).window.document, log, out };
 }
 
 /** Serve this config (over the empty one) to the next build. */
@@ -176,6 +177,61 @@ test('when the published object cannot be read the build still succeeds and show
   const site = await build({ expectFetch: false });
   const home = site.dom('');
   assert.ok(!shown(home, '[data-promo]') && !shown(home, '[data-status]') && !shown(home, '[data-socials-wrap]'));
+});
+
+test('a social link cannot break out of the structured data script', async () => {
+  // A scheme-valid URL may still carry `</script>`: it must reach the page as data, never as markup.
+  const evil = 'https://www.instagram.com/x</script><script>window.pwned=1</script>';
+  serve({ hours: WEEK, social: { ...NO_SOCIAL, instagram: evil } });
+  const site = await build();
+  for (const path of ['', 'about']) {
+    const doc = site.dom(path);
+    const ld = [...doc.querySelectorAll('script[type="application/ld+json"]')];
+    assert.equal(ld.length, 1);
+    assert.deepEqual(JSON.parse(ld[0].textContent).sameAs, [evil], 'the URL arrives whole, as data');
+    const others = [...doc.querySelectorAll('script:not([type="application/ld+json"])')];
+    assert.ok(!others.some((s) => s.textContent.includes('pwned')), 'no other script element carries the payload');
+  }
+});
+
+test('a published link that is not http(s) never reaches an href', async () => {
+  serve({
+    links: { getStarted: { introduction: 'javascript:alert(1)' }, camps: { paDayCamp: 'https://example.com/ok' }, store: { dayPasses: 'data:text/html,x' } },
+    hours: WEEK,
+  });
+  const site = await build();
+  for (const path of ['', 'store']) {
+    for (const a of site.dom(path).querySelectorAll('a[href]')) assert.doesNotMatch(a.getAttribute('href'), /^\s*(javascript|data|vbscript):/i, `${path || 'home'}: ${a.outerHTML}`);
+  }
+  const home = site.dom('');
+  const fallback = home.querySelector('a[data-sq="book.fullBirthday"]').getAttribute('href');
+  assert.equal(home.querySelector('a[data-sq="getStarted.introduction"]').getAttribute('href'), fallback, 'a bad link falls back to the default');
+  assert.equal(home.querySelector('a[data-sq="camps.paDayCamp"]').getAttribute('href'), 'https://example.com/ok');
+  const store = site.dom('store');
+  assert.equal(
+    store.querySelector('a[data-sq="store.dayPasses"]').getAttribute('href'),
+    store.querySelector('a[data-sq="store.openGymMembership"]').getAttribute('href'),
+    'a bad store link falls back to the generic store page',
+  );
+});
+
+test('the shipped client scripts need no syntax lowering for the browser floor (Safari 13.1 / iOS 13.4)', async () => {
+  // `||=`, `&&=` and `??=` are Safari 14: a module that holds one does not parse at all on the floor,
+  // so none of its code runs. `?.` and `??` are fine there. Lowering for the floor must change nothing.
+  serve({ hours: WEEK });
+  const site = await build();
+  const needsLowering = (name, code) => {
+    const modern = transformSync(name, code, { target: 'esnext' });
+    const floor = transformSync(name, code, { target: 'safari13.1' });
+    assert.equal(modern.errors.length + floor.errors.length, 0, `${name} parses`);
+    return modern.code !== floor.code;
+  };
+  const files = readdirSync(join(site.out, '_astro')).filter((f) => f.endsWith('.js'));
+  assert.ok(files.length > 5, 'the build emitted its scripts');
+  const offenders = files.filter((f) => needsLowering(f, readFileSync(join(site.out, '_astro', f), 'utf8')));
+  const inline = [...site.page('').matchAll(/<script(?![^>]*\bsrc=)(?![^>]*ld\+json)[^>]*>([\s\S]*?)<\/script>/g)]
+    .filter(([, code], i) => code.trim() && needsLowering(`inline-${i}.js`, code)).map((_, i) => `inline script ${i}`);
+  assert.deepEqual([...offenders, ...inline], [], 'these scripts use syntax newer than the floor');
 });
 
 // ---- the browser's refresh over a built page --------------------------------

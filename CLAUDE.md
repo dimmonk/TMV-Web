@@ -75,6 +75,15 @@ copy that staff edits no longer reach.
   Square link slot travels in the href as `#tmv-sq=page.field`, which the build
   (`astro.config.mjs` + `src/lib/sq-slot-marker.js`) moves into `data-sq`. Add a
   new surface by adding the hook and teaching `apply-site-config.js` about it.
+- **A published value is data, never markup.** Text reaches the page through Astro's escaping or `textContent`
+  (never `innerHTML`); every URL (social, banner button, every Square link) passes `safeUrl` in
+  `src/lib/published-config.js`, so only http(s) reaches an `href` and a bad link reads as unset (the card keeps
+  its default); the structured data is written with `jsonForScript` (`src/lib/json-for-script.js`), because a valid
+  URL can still carry `</script>`.
+- **The browser floor is Safari 13.1 / iOS 13.4.** The `browserFloor` plugin in `astro.config.mjs` targets it for the
+  CLIENT bundle only (the server build and the CSS keep Astro's `esnext`), so the bundler lowers `||=`, `&&=` and
+  `??=` (Safari 14) in every script it emits; a module holding one does not parse on the floor and none of its code
+  runs. `?.` and `??` are fine there. The render test fails if any built script needs lowering for the floor.
 - `TMV_SITE_CONFIG_URL` points the build at a fixture (tests only).
 - `npm test` builds the site against fixtures, asserts the rendered HTML, then
   plays the browser refresh over the built pages (jsdom).

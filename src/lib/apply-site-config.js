@@ -22,8 +22,9 @@
  * is `hidden`, never left empty and visible. JSON-LD is not touched (build only).
  */
 
-import { promoIsShown } from './site-promo.js';
-import { weekSchedule, hoursSummary, hoursHeading, hoursStat } from './opening-hours.js';
+import { promoIsShown, promoButton } from './site-promo.js';
+import { hasSocial } from './published-config.js';
+import { weekSchedule, hasOpenDays, hoursSummary, hoursHeading, hoursStat } from './opening-hours.js';
 
 /** Fired on the document after the config was applied; the pill repaints on it. */
 export const SITE_CONFIG_APPLIED = 'tmv:site-config';
@@ -69,9 +70,9 @@ function applyPromo(doc, promo, wall) {
   if (body) body.hidden = promo.body === '';
   const cta = /** @type {HTMLAnchorElement|null} */ (el.querySelector('[data-promo-cta]'));
   if (cta) {
-    const hasButton = promo.ctaLabel !== '' && promo.ctaUrl !== '';
-    cta.hidden = !hasButton;
-    if (hasButton) { setText(cta, promo.ctaLabel); cta.setAttribute('href', promo.ctaUrl); }
+    const button = promoButton(promo);
+    cta.hidden = !button;
+    if (button) { setText(cta, button.label); cta.setAttribute('href', button.href); }
   }
   el.hidden = false;
 }
@@ -97,7 +98,7 @@ function applyHours(doc, hours) {
   const week = weekSchedule(hours);
   doc.querySelectorAll('[data-status]').forEach((pill) => {
     pill.setAttribute('data-week', JSON.stringify(week));
-    /** @type {HTMLElement} */ (pill).hidden = !week.some(Boolean);
+    /** @type {HTMLElement} */ (pill).hidden = !hasOpenDays(week);
   });
 }
 
@@ -133,6 +134,6 @@ function applySocial(doc, social) {
     if (url) a.setAttribute('href', url); else a.removeAttribute('href');
   });
   doc.querySelectorAll('[data-socials-wrap]').forEach((wrap) => {
-    /** @type {HTMLElement} */ (wrap).hidden = !Object.values(social).some(Boolean);
+    /** @type {HTMLElement} */ (wrap).hidden = !hasSocial(social);
   });
 }

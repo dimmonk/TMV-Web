@@ -13,7 +13,7 @@
  */
 import { url, site } from '../data/site';
 import { hours } from '../data/site-config';
-import { weekSchedule, openStatus } from '../lib/opening-hours.js';
+import { weekSchedule, hasOpenDays } from '../lib/opening-hours.js';
 
 interface Props {
   /** 'brand' for the tab-bar destinations; 'back' for everything underneath them. */
@@ -26,7 +26,7 @@ interface Props {
 const { variant = 'brand', title = 'Back', backHref = url('') } = Astro.props;
 // The pill is drawn from the published opening hours; no readable hours, no pill.
 const week = weekSchedule(hours);
-const hasHours = openStatus(week, 0, 0) !== null;
+const hasHours = hasOpenDays(week);
 ---
 
 <header class="m-head" data-chrome="app">

@@ -16,9 +16,9 @@
  * browser reads the gym's clock, the same one the build uses.
  */
 import { promo } from '../data/site-config';
+import { promoButton } from '../lib/site-promo.js';
 
-// The button needs both halves; one without the other is not a link.
-const button = promo && promo.ctaLabel && promo.ctaUrl ? { label: promo.ctaLabel, href: promo.ctaUrl } : null;
+const button = promo ? promoButton(promo) : null;
 ---
 <aside class="promo" data-promo data-expires={promo?.expiresAt ?? ''} hidden={!promo} aria-label="Announcement">
   <div class="promo-in container">

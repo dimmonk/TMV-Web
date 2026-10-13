@@ -2,6 +2,7 @@
 import { site, links, url } from '../data/site';
 import { hours, social } from '../data/site-config';
 import { hoursSummary } from '../lib/opening-hours.js';
+import { hasSocial } from '../lib/published-config.js';
 import { exploreTiles } from '../data/explore';
 import { forSurface } from '../data/surface';
 const year = new Date().getFullYear();
@@ -48,7 +49,7 @@ const socials = [
   { key: 'facebook', icon: 'bi-facebook', label: 'Facebook', href: social.facebook },
   { key: 'youtube', icon: 'bi-youtube', label: 'YouTube', href: social.youtube },
 ];
-const anySocial = socials.some((s) => s.href);
+const anySocial = hasSocial(social);
 ---
 <footer class="sf" data-chrome="site">
   <div class="sf-grid container">

@@ -23,6 +23,23 @@ const squareSlotMarkers = {
   },
 };
 
+/**
+ * The browser floor is Safari 13.1 / iOS 13.4 (TMV-Members runs on the same floor). Astro builds the client
+ * for 'esnext', and the minifier then writes logical assignment (`a ||= b`), which Safari 14 added: a module
+ * holding one does not parse on the floor, so none of its code runs. Target the floor for the CLIENT bundle
+ * so the bundler lowers such syntax in every script it emits (ours, and Astro's router and prefetch alike).
+ * `?.` and `??` are already Safari 13.1 and stay as written. The server build keeps its own target (its
+ * top-level await needs it), and CSS stays as authored ('esnext', as Astro builds it), so this changes
+ * the client scripts only. `tests/site-config-render.test.mjs` fails if a built script needs lowering.
+ */
+const browserFloor = {
+  name: 'tmv-browser-floor',
+  configEnvironment(name) {
+    if (name !== 'client') return undefined;
+    return { build: { target: ['safari13.1', 'ios13.4'], cssTarget: 'esnext' } };
+  },
+};
+
 // Production host: Firebase Hosting (site `themonkeyvault` in project
 // tmv-management), deployed by the TMV-Members repo's `hosting:web` target
 // (scripts/build-web.sh assembles this dist/ + the /account and /waiver
@@ -44,6 +61,7 @@ export default defineConfig({
   // page load. 'always' makes Astro's own canonical + sitemap URLs match.
   trailingSlash: 'always',
   build: { format: 'directory' },
+  vite: { plugins: [browserFloor] },
   // Dev-only overlay (never ships in `astro build`/production) — off because
   // it sits over the phone-width preview during mobile work.
   devToolbar: { enabled: false },

@@ -2,12 +2,13 @@
 // what the pages render. Run: npm test
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readPublishedConfig, fetchPublishedConfig } from '../src/lib/published-config.js';
+import { readPublishedConfig, fetchPublishedConfig, hasSocial } from '../src/lib/published-config.js';
 import { moveSlotMarkers } from '../src/lib/sq-slot-marker.js';
-import { expiryStamp, isExpired, promoIsShown } from '../src/lib/site-promo.js';
+import { expiryStamp, isExpired, promoIsShown, promoButton } from '../src/lib/site-promo.js';
 import { gymNow } from '../src/lib/gym-clock.js';
+import { jsonForScript } from '../src/lib/json-for-script.js';
 import {
-  weekSchedule, hoursSummary, hoursHeading, hoursStat, openingHoursSpec, openStatus, formatClock,
+  weekSchedule, hasOpenDays, hoursSummary, hoursHeading, hoursStat, openingHoursSpec, openStatus, formatClock,
 } from '../src/lib/opening-hours.js';
 
 const ALL_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -33,6 +34,16 @@ test('only http(s) URLs survive into social and the promo button', () => {
   assert.equal(c.social.facebook, 'https://facebook.com/x');
   assert.equal(c.social.youtube, '');
   assert.equal(c.promo.ctaUrl, '');
+});
+
+test('a published Square link that is not http(s) reads as unset, so the card keeps its default', () => {
+  const c = readPublishedConfig({ links: {
+    book: { introduction: 'javascript:alert(1)', privateLesson: ' https://sq.example/p ', fullBirthday: 7, miniBirthday: 'data:text/html,x' },
+    store: 'x',
+  } });
+  assert.deepEqual(c.links, { book: { introduction: '', privateLesson: 'https://sq.example/p', fullBirthday: '', miniBirthday: '' } });
+  assert.equal(readPublishedConfig({ links: 'x' }).links, null);
+  assert.equal(readPublishedConfig({}).links, null);
 });
 
 test('hours keep their order and their text; rows with neither day nor time are dropped', () => {
@@ -65,6 +76,17 @@ test('a date-only or minute-only expiry means the end of that day / minute', () 
   assert.equal(isExpired('', '2099-01-01T00:00:00'), false);
 });
 
+test('the banner button needs both a label and a link', () => {
+  assert.deepEqual(promoButton({ ...live, ctaLabel: 'Go', ctaUrl: 'https://x.example' }), { label: 'Go', href: 'https://x.example' });
+  assert.equal(promoButton({ ...live, ctaLabel: 'Go' }), null);
+  assert.equal(promoButton({ ...live, ctaUrl: 'https://x.example' }), null);
+});
+
+test('the social wrapper shows when any one link is set', () => {
+  assert.equal(hasSocial({ instagram: '', facebook: '', youtube: '' }), false);
+  assert.equal(hasSocial({ instagram: '', facebook: 'https://f.example', youtube: '' }), true);
+});
+
 // ---- gym clock --------------------------------------------------------------
 
 test('the gym clock is Toronto time whatever the host zone is', () => {
@@ -75,6 +97,29 @@ test('the gym clock is Toronto time whatever the host zone is', () => {
   assert.equal(n.dayIndex, 3);
   // Midnight is hour 00, never 24.
   assert.equal(gymNow(new Date('2026-01-15T05:00:00Z')).wall, '2026-01-15T00:00:00');
+});
+
+test('the gym clock follows Toronto through both daylight-saving changes', () => {
+  // Spring forward, Sunday 2026-03-08: 02:00 EST jumps to 03:00 EDT.
+  assert.equal(gymNow(new Date('2026-03-08T06:59:59Z')).wall, '2026-03-08T01:59:59');
+  assert.equal(gymNow(new Date('2026-03-08T07:00:00Z')).wall, '2026-03-08T03:00:00');
+  // The end of that day is 23:59:59 EDT, which is 03:59:59 UTC the next day.
+  assert.equal(gymNow(new Date('2026-03-09T03:59:59Z')).wall, '2026-03-08T23:59:59');
+  assert.equal(gymNow(new Date('2026-03-09T04:00:00Z')).wall, '2026-03-09T00:00:00');
+  // Fall back, Sunday 2026-11-01: 02:00 EDT returns to 01:00 EST, so 01:30 happens twice.
+  assert.equal(gymNow(new Date('2026-11-01T05:30:00Z')).wall, '2026-11-01T01:30:00');
+  assert.equal(gymNow(new Date('2026-11-01T06:30:00Z')).wall, '2026-11-01T01:30:00');
+  // The end of that day is 23:59:59 EST, which is 04:59:59 UTC the next day.
+  assert.equal(gymNow(new Date('2026-11-02T04:59:59Z')).wall, '2026-11-01T23:59:59');
+  assert.equal(gymNow(new Date('2026-11-02T05:00:00Z')).wall, '2026-11-02T00:00:00');
+});
+
+test('a banner expiring on a daylight-saving day comes down at the gym\'s midnight, not an hour early or late', () => {
+  const shownAt = (expiresAt, iso) => promoIsShown({ ...live, expiresAt }, gymNow(new Date(iso)).wall);
+  assert.equal(shownAt('2026-03-08T23:59:59', '2026-03-09T03:59:59Z'), true);
+  assert.equal(shownAt('2026-03-08T23:59:59', '2026-03-09T04:00:00Z'), false);
+  assert.equal(shownAt('2026-11-01', '2026-11-02T04:59:59Z'), true);
+  assert.equal(shownAt('2026-11-01', '2026-11-02T05:00:00Z'), false);
 });
 
 // ---- opening hours ----------------------------------------------------------
@@ -101,6 +146,8 @@ test('a mixed week summarises in runs; closed days and free text are left out', 
 
 test('no readable hours means no summary, no tile, no spec and no pill', () => {
   const rows = [{ day: 'Holidays', time: 'By appointment' }];
+  assert.equal(hasOpenDays(weekSchedule(rows)), false);
+  assert.equal(hasOpenDays(weekSchedule(ALL_WEEK)), true);
   assert.equal(hoursSummary([]), '');
   assert.equal(hoursSummary(rows), '');
   assert.equal(hoursStat(rows), null);
@@ -135,6 +182,15 @@ test('clock formatting drops :00 and keeps minutes', () => {
   assert.equal(formatClock(11 * 60), '11 AM');
   assert.equal(formatClock(22 * 60 + 30), '10:30 PM');
   assert.equal(formatClock(24 * 60), '12 AM');
+});
+
+// ---- data inside a <script> element -------------------------------------------
+
+test('JSON placed in a script element can not close it or open a comment, and still reads back whole', () => {
+  const value = { u: 'https://x.example/</script><script>alert(1)</script>', c: '<!-- x', sep: 'a\u2028b\u2029c' };
+  const out = jsonForScript(value);
+  assert.doesNotMatch(out, /<|\u2028|\u2029/);
+  assert.deepEqual(JSON.parse(out), value);
 });
 
 // ---- the shared reader (build and browser) -----------------------------------
