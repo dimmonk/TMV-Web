@@ -1,7 +1,11 @@
 /**
- * Single source of truth for site-wide data: brand, contact, hours, Square
- * links, socials, per-page SEO, nav. Ported from the design export's
- * site-config.json. Change a value here and every page follows.
+ * Single source of truth for site-wide data: brand, contact, Square links,
+ * per-page SEO, nav. Change a value here and every page follows.
+ *
+ * NOT here, because staff edit them in the members app (Settings -> Banner,
+ * hours & social) and the website reads them from the published site config:
+ * the announcement banner, the opening hours and the social links
+ * (`site-config.ts`). This module holds no copy of any of them.
  */
 
 /**
@@ -47,7 +51,6 @@ export const site = {
   email: 'info@themonkeyvault.com',
   geo: { lat: 43.7276, lng: -79.4788 },
   mapUrl: 'https://maps.google.com/?q=75+Carl+Hall+Rd+Unit+15+Toronto',
-  hoursLabel: 'Open 7 days · 11 AM – 10 PM',
 } as const;
 
 /** Square / external booking + store URLs. */
@@ -72,36 +75,6 @@ export const links = {
     'https://the-monkey-vault-inc.square.site/product/athletic-program-monthly-membership/NXP3HEIUKLFQXQT6JBVXMIDW',
   googleReviews: 'https://www.google.com/maps/place/The+Monkey+Vault',
 } as const;
-
-export const social = {
-  instagram: 'https://www.instagram.com/themonkeyvault',
-  facebook: 'https://www.facebook.com/themonkeyvault',
-  youtube: 'https://www.youtube.com/@TheMonkeyVault',
-} as const;
-
-/**
- * General public hours as NUMBERS — the single source for anything that has to
- * compute against the clock (the app header's open/closed pill) or emit a
- * machine-readable time (the LocalBusiness JSON-LD). The display strings in
- * `hours` and `hoursLabel` below must agree with these.
- *
- * Deliberately 22:00 EVERY day, including Friday. The gym does stay open until
- * midnight on Fridays, but that window is ADULTS ONLY, which is exactly why it
- * is not part of the advertised general hours — so it must not drive a generic
- * "Open now" pill or the structured data either, or a family reads 11 PM Friday
- * as open to them.
- */
-export const hoursRange = { open: 11, close: 22 } as const;
-
-export const hours = [
-  { day: 'Monday', time: '11:00 AM – 10:00 PM' },
-  { day: 'Tuesday', time: '11:00 AM – 10:00 PM' },
-  { day: 'Wednesday', time: '11:00 AM – 10:00 PM' },
-  { day: 'Thursday', time: '11:00 AM – 10:00 PM' },
-  { day: 'Friday', time: '11:00 AM – 10:00 PM' },
-  { day: 'Saturday', time: '11:00 AM – 10:00 PM' },
-  { day: 'Sunday', time: '11:00 AM – 10:00 PM' },
-] as const;
 
 /**
  * Featured customer reviews — SSOT for the Reviews component on both the Home
@@ -140,20 +113,6 @@ export const reviews = {
     },
   ],
 } as const;
-
-/** Home-hero stat tiles — SSOT for both surfaces (desktop uses `label`, the
- * narrower mobile hero uses `mobileLabel` where set).
- *
- * The lead figure is the INTRO LESSON, not the day pass: the client-progression
- * procedure makes the intro the designed first step for anyone who wants to
- * learn, and the hero's primary action books it. The $25 day pass hasn't gone
- * anywhere — it's the line directly under these tiles, for people who are only
- * here to play. */
-export const heroStats = [
-  { value: '$45', label: 'intro lesson · 1-on-1', mobileLabel: 'intro · 1-on-1' },
-  { value: '7 days', label: 'open 11 AM – 10 PM', mobileLabel: '11a – 10p' },
-  { value: 'Ages 3+', label: 'all levels' },
-] as const;
 
 /** Category accent colors (matches the export's categories.js). SSOT — the
  * `--c-*` vars in styles/global.css mirror these; keep both in sync. */

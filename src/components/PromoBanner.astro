@@ -1,0 +1,50 @@
+---
+/**
+ * The announcement banner staff set in the members app (Settings -> Banner,
+ * hours & social): a headline, an optional message, an optional button.
+ *
+ * It renders only when `site-config.ts` says it should show (switched on, has a
+ * headline, not past its end-of-day expiry), and renders NOTHING otherwise, not
+ * an empty strip. It sits above both chromes and scrolls away with the page.
+ *
+ * The site is built, so the expiry is checked twice: at build time by
+ * `site-config.ts`, and again in the browser (the script below) so a banner that
+ * expires between two releases still comes down by itself on the day. The
+ * browser reads the gym's clock, the same one the build uses.
+ */
+import { promo } from '../data/site-config';
+
+// The button needs both halves; one without the other is not a link.
+const button = promo && promo.ctaLabel && promo.ctaUrl ? { label: promo.ctaLabel, href: promo.ctaUrl } : null;
+---
+{promo && (
+  <aside class="promo" data-promo data-expires={promo.expiresAt} aria-label="Announcement">
+    <div class="promo-in container">
+      <strong class="promo-head">{promo.headline}</strong>
+      {promo.body && <span class="promo-body">{promo.body}</span>}
+      {button && <a class="promo-cta" href={button.href} target="_blank" rel="noopener">{button.label}</a>}
+    </div>
+  </aside>
+)}
+
+<style>
+  .promo { background: var(--brand); color: var(--ink); }
+  .promo[hidden] { display: none; }
+  .promo-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 14px; padding-block: 10px; text-align: center; }
+  .promo-head { font: 800 14px/1.25 var(--font-display); letter-spacing: .01em; }
+  .promo-body { font: 500 13.5px/1.35 var(--font-body); }
+  .promo-cta { font: 800 12px/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; background: var(--ink); color: #fff; text-decoration: none; padding: 8px 12px; border-radius: 8px; }
+</style>
+
+<script>
+  import { isExpired } from '../lib/site-promo.js';
+  import { gymNow } from '../lib/gym-clock.js';
+
+  function expireBanner() {
+    const wall = gymNow().wall;
+    document.querySelectorAll<HTMLElement>('[data-promo]').forEach((el) => {
+      if (isExpired(el.dataset.expires ?? '', wall)) el.hidden = true;
+    });
+  }
+  document.addEventListener('astro:page-load', expireBanner);
+</script>

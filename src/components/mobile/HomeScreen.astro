@@ -15,7 +15,8 @@ import OfferingCard from '../OfferingCard.astro';
 import BookingCard from '../BookingCard.astro';
 import GoalPicker from '../GoalPicker.astro';
 import { offerings } from '../../data/offerings';
-import { cat, reviews, url, heroStats } from '../../data/site';
+import { cat, reviews, url } from '../../data/site';
+import { heroStats } from '../../data/hero-stats';
 import { sq } from '../../data/square-links';
 import { nextSeason } from '../../data/camps';
 
@@ -36,7 +37,7 @@ const reviewItems = reviews.items.map((r) => ({ name: r.name, role: r.context, t
     <a class="m-brandbtn" href={sq.getStarted.introduction} target="_blank" rel="noopener" style="margin-bottom:22px">Book an intro lesson <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
     <div class="m-home-stats">
       {heroStats.map((st, i) => (
-        <div class:list={['m-home-stat', { mid: i === 1, end: i === heroStats.length - 1 }]}><div class="m-home-statv">{st.value}</div><div class="m-home-statl">{st.mobileLabel ?? st.label}</div></div>
+        <div class:list={['m-home-stat', { mid: i > 0 && i < heroStats.length - 1, end: i === heroStats.length - 1 }]}><div class="m-home-statv">{st.value}</div><div class="m-home-statl">{st.mobileLabel ?? st.label}</div></div>
       ))}
     </div>
   </div>

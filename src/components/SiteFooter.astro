@@ -1,8 +1,11 @@
 ---
-import { site, social, links, url } from '../data/site';
+import { site, links, url } from '../data/site';
+import { hours, social } from '../data/site-config';
+import { hoursSummary } from '../lib/opening-hours.js';
 import { exploreTiles } from '../data/explore';
 import { forSurface } from '../data/surface';
 const year = new Date().getFullYear();
+const hoursLine = hoursSummary(hours);
 
 const columns = [
   {
@@ -23,7 +26,7 @@ const columns = [
     items: [
       { text: site.address.street, static: true },
       { text: `${site.address.locality}, ${site.address.region}`, static: true },
-      { text: site.hoursLabel, static: true },
+      ...(hoursLine ? [{ text: hoursLine, static: true }] : []),
       { text: 'New here? Get started', href: url('get-started'), accent: true },
     ],
   },
@@ -52,11 +55,13 @@ const socials = [
         <span>The Monkey Vault</span>
       </div>
       <p class="sf-blurb">Toronto's home for parkour, flips and movement. Train, play and level up — every age, every level.</p>
-      <div class="sf-socials">
-        {socials.map((s) => (
-          <a href={s.href} aria-label={s.label} class="sf-soc" target="_blank" rel="noopener"><i class={`bi ${s.icon}`} aria-hidden="true"></i></a>
-        ))}
-      </div>
+      {socials.length > 0 && (
+        <div class="sf-socials">
+          {socials.map((s) => (
+            <a href={s.href} aria-label={s.label} class="sf-soc" target="_blank" rel="noopener"><i class={`bi ${s.icon}`} aria-hidden="true"></i></a>
+          ))}
+        </div>
+      )}
     </div>
 
     {columns.map((col) => (

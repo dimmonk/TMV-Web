@@ -3,7 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import AboutScreen from '../components/mobile/AboutScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import { seo, site, social, hours, links, url } from '../data/site';
+import { seo, site, links, url } from '../data/site';
+import { hours, social } from '../data/site-config';
+import { hoursHeading } from '../lib/opening-hours.js';
 import { facility } from '../data/facility';
 import { forSurface } from '../data/surface';
 
@@ -83,15 +85,18 @@ const socials = [
         <div class="ab-crow"><span class="ab-cic"><i class="bi bi-shield-check" aria-hidden="true"></i></span><div><div class="ab-clabel">Before your first visit</div><div class="ab-cval">Everyone needs a signed waiver. <a href={links.waiver} target="_blank" rel="noopener" class="ab-waiver">Sign it online →</a></div></div></div>
         <a href={site.mapUrl} target="_blank" rel="noopener" class="btn btn-primary" style="align-self:flex-start">Get directions <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
       </div>
-      <div class="ab-hours">
-        <div class="ab-hlabel">Hours</div>
-        <div class="ab-htitle">Open 7 days a week</div>
-        <p class="ab-hnote">Listed times are "lights out, doors locked" — give yourself time to be out by close.</p>
-        <div class="ab-hlist">{hours.map((h) => <div class="ab-hrow"><span>{h.day}</span><span class="ab-htime">{h.time}</span></div>)}</div>
-      </div>
+      {hours.length > 0 && (
+        <div class="ab-hours">
+          <div class="ab-hlabel">Hours</div>
+          <div class="ab-htitle">{hoursHeading(hours)}</div>
+          <p class="ab-hnote">Listed times are "lights out, doors locked" — give yourself time to be out by close.</p>
+          <div class="ab-hlist">{hours.map((h) => <div class="ab-hrow"><span>{h.day}</span><span class="ab-htime">{h.time}</span></div>)}</div>
+        </div>
+      )}
     </div>
   </section>
 
+  {socials.length > 0 && (
   <section class="container" style="padding-bottom:80px">
     <div class="ab-social">
       <div>
@@ -104,6 +109,7 @@ const socials = [
       </div>
     </div>
   </section>
+  )}
   </div>
 </BaseLayout>
 

@@ -15,6 +15,8 @@
  * no math at all.
  */
 import { url, site } from '../data/site';
+import { hours } from '../data/site-config';
+import { hoursSummary } from '../lib/opening-hours.js';
 import { exploreTiles } from '../data/explore';
 import { forSurface } from '../data/surface';
 
@@ -22,6 +24,7 @@ import { forSurface } from '../data/surface';
 // (e.g. Events -> "Birthday Parties") — desktop (SiteFooter) resolves the
 // same array for 'desktop' and keeps the base label untouched.
 const tiles = forSurface(exploreTiles, 'mobile');
+const hoursLine = hoursSummary(hours);
 ---
 
 <div class="m-sheet-root" data-more-root data-chrome="app">
@@ -54,7 +57,7 @@ const tiles = forSurface(exploreTiles, 'mobile');
           <div class="m-visit-eyebrow"><span class="mh-rule"></span>Visit us</div>
           <div class="m-visit-rows">
             <div class="m-visit-row"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i><div><div class="m-visit-t">{site.address.street}</div><div class="m-visit-s">{site.address.neighbourhood}, {site.address.locality}</div></div></div>
-            <div class="m-visit-row"><i class="bi bi-clock-fill" aria-hidden="true"></i><div><div class="m-visit-t">{site.hoursLabel}</div><div class="m-visit-s">Open gym to the public daily</div></div></div>
+            {hoursLine && <div class="m-visit-row"><i class="bi bi-clock-fill" aria-hidden="true"></i><div><div class="m-visit-t">{hoursLine}</div></div></div>}
             <div class="m-visit-btns">
               <a href={site.mapUrl} target="_blank" rel="noopener" class="m-visit-btn"><i class="bi bi-geo-alt"></i> Directions</a>
               <a href={`tel:${site.phone}`} class="m-visit-btn"><i class="bi bi-telephone-fill"></i> Call us</a>

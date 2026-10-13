@@ -5,10 +5,10 @@
  * This is the LIVE side of the contract the members-app "Settings → Website"
  * page edits (`public/js/core/site-config-service.js` → `LINK_PAGES`, mirrored
  * server-side in `functions/site-config-publish.js`): one section per website
- * page, one entry per card. Per the build-time-bake decision, this module
- * fetches the admin-edited public JSON ONCE at build time and merges it over
- * the static defaults below — a specific link an admin has filled in wins;
- * anything still blank (or if the fetch fails) falls back to the generic
+ * page, one entry per card. Per the build-time-bake decision, the admin-edited
+ * public JSON is fetched ONCE at build time (`site-config.ts`, which also feeds
+ * the banner, hours and socials) and merged here over the static defaults
+ * below: a specific link an admin has filled in wins; anything still blank (or if the fetch fails) falls back to the generic
  * booking/store/gift link so the site never links to nothing. A members-app
  * save triggers a site rebuild to pick up the change.
  *
@@ -16,6 +16,7 @@
  * their Square link lives under the page they land on.
  */
 import { links } from './site';
+import { publishedLinks } from './site-config';
 
 const B = links.booking; // generic appointments booking (fallback)
 const S = links.store; // generic online store (fallback)
@@ -82,27 +83,6 @@ const DEFAULTS = {
 type LinkPages = typeof DEFAULTS;
 type PageKey = keyof LinkPages;
 
-/** Public CDN projection of `settings/siteConfig`, republished on every admin save. */
-const PUBLIC_CONFIG_URL = 'https://storage.googleapis.com/tmv-management.firebasestorage.app/public/site-config.json';
-
-async function fetchLiveLinks(): Promise<Record<string, Record<string, string>> | null> {
-  try {
-    // Cache-bust the CDN. The object is served `max-age=300`, so the canonical
-    // URL can hand back a copy up to 5 min stale — and an admin save triggers a
-    // rebuild immediately, well inside that window, so a plain fetch here races
-    // the edge cache and can bake in the PRE-save (stale) links. `cache:no-store`
-    // only governs this process's own HTTP cache, not Google's edge; a unique
-    // query param forces an edge miss so every build reads the latest publish.
-    const res = await fetch(`${PUBLIC_CONFIG_URL}?t=${Date.now()}`, { signal: AbortSignal.timeout(8000), cache: 'no-store' });
-    if (!res.ok) throw new Error(`status ${res.status}`);
-    const data = await res.json();
-    return data && typeof data.links === 'object' ? data.links : null;
-  } catch (e) {
-    console.warn('[square-links] live config fetch failed at build time — using static defaults:', (e as Error).message);
-    return null;
-  }
-}
-
 /** A non-empty admin-set link wins; anything blank keeps the static default. */
 function mergeLive(defaults: LinkPages, live: Record<string, Record<string, string>> | null): LinkPages {
   const out = {} as LinkPages;
@@ -120,7 +100,7 @@ function mergeLive(defaults: LinkPages, live: Record<string, Record<string, stri
   return out;
 }
 
-const liveLinks = await fetchLiveLinks();
+const liveLinks = publishedLinks;
 
 /** Every card's resolved Square link — live admin value where set, static default otherwise. */
 export const sq: LinkPages = mergeLive(DEFAULTS, liveLinks);

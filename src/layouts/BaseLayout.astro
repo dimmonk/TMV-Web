@@ -7,7 +7,10 @@ import SiteFooter from '../components/SiteFooter.astro';
 import MobileTabBar from '../components/MobileTabBar.astro';
 import MobileAppHeader from '../components/MobileAppHeader.astro';
 import MobileMoreSheet from '../components/MobileMoreSheet.astro';
-import { site, social, hours, hoursRange, links, url } from '../data/site';
+import PromoBanner from '../components/PromoBanner.astro';
+import { site, links, url } from '../data/site';
+import { hours, social } from '../data/site-config';
+import { openingHoursSpec } from '../lib/opening-hours.js';
 
 interface Props {
   title: string;
@@ -40,6 +43,8 @@ const image = new URL(ogImage ?? url('assets/tmvlogo.png'), Astro.site).href;
 
 // LocalBusiness structured data — powers Google's business panel (hours, map,
 // rating, socials). Built from the single-source-of-truth `site` data.
+const hoursSpec = openingHoursSpec(hours);
+const sameAs = Object.values(social).filter(Boolean);
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SportsActivityLocation',
@@ -61,13 +66,8 @@ const jsonLd = {
     addressCountry: site.address.country,
   },
   geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng },
-  openingHoursSpecification: hours.map((h) => ({
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: h.day,
-    opens: `${String(hoursRange.open).padStart(2, '0')}:00`,
-    closes: `${String(hoursRange.close).padStart(2, '0')}:00`,
-  })),
-  sameAs: [social.instagram, social.facebook, social.youtube].filter(Boolean),
+  ...(hoursSpec.length > 0 ? { openingHoursSpecification: hoursSpec } : {}),
+  ...(sameAs.length > 0 ? { sameAs } : {}),
   hasMap: site.mapUrl,
   potentialAction: {
     '@type': 'ReserveAction',
@@ -195,6 +195,7 @@ const jsonLd = {
         exactly one. Because they are unconditional, a new page cannot forget its
         nav or end up a dead-end on a phone — the old failure mode that the
         redirect + per-page opt-out flags kept producing. */}
+    <PromoBanner />
     <MobileAppHeader variant={appHeader} title={appTitle ?? title} backHref={backHref} />
     <SiteHeader active={active} />
     <main id="main">

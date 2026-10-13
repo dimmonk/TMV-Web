@@ -3,6 +3,9 @@ node_modules/
 dist/
 .astro/
 
+# agent worktrees
+.claude/worktrees/
+
 # os / editor
 .DS_Store
 *.log

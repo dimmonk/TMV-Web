@@ -11,7 +11,9 @@
  * simply declares which variant it wears, and the back chevron is a real link,
  * so it works even on a cold deep-link in from search.
  */
-import { url, site, hoursRange } from '../data/site';
+import { url, site } from '../data/site';
+import { hours } from '../data/site-config';
+import { weekSchedule, openStatus } from '../lib/opening-hours.js';
 
 interface Props {
   /** 'brand' for the tab-bar destinations; 'back' for everything underneath them. */
@@ -22,6 +24,9 @@ interface Props {
   backHref?: string;
 }
 const { variant = 'brand', title = 'Back', backHref = url('') } = Astro.props;
+// The pill is drawn from the published opening hours; no readable hours, no pill.
+const week = weekSchedule(hours);
+const hasHours = openStatus(week, 0, 0) !== null;
 ---
 
 <header class="m-head" data-chrome="app">
@@ -36,9 +41,11 @@ const { variant = 'brand', title = 'Back', backHref = url('') } = Astro.props;
         <i class="bi bi-chevron-left" aria-hidden="true"></i><span>{title}</span>
       </a>
     )}
-    <span class="m-status" data-status>
-      <span class="m-status-dot"></span><span class="m-status-label">Open now</span>
-    </span>
+    {hasHours && (
+      <span class="m-status" data-status data-week={JSON.stringify(week)}>
+        <span class="m-status-dot"></span><span class="m-status-label">Open now</span>
+      </span>
+    )}
   </div>
 </header>
 
@@ -70,49 +77,40 @@ const { variant = 'brand', title = 'Back', backHref = url('') } = Astro.props;
   .tmv-pulse { animation: tmv-pulse 1.6s ease-in-out infinite; }
 </style>
 
-<script define:vars={{ OPEN_H: hoursRange.open, CLOSE_H: hoursRange.close }}>
+<script>
   // Live "Open now / Closes at X / Opens 11 AM" pill.
   //
-  // Hours come from hoursRange (src/data/site.ts) via define:vars — the same
-  // numbers the LocalBusiness JSON-LD emits — rather than being hardcoded here.
-  // This previously special-cased Friday to a midnight close, which was wrong:
-  // the Friday late window is ADULTS ONLY and deliberately excluded from the
-  // advertised general hours, so a family saw "Open now" at 11 PM Friday.
-  //
-  // NOTE: define:vars makes this an inline script, so it is plain JS — no TS
-  // annotations in here.
-  function formatHour12(totalMinutes) {
-    var h24 = Math.floor(totalMinutes / 60) % 24;
-    var h12 = h24 % 12 === 0 ? 12 : h24 % 12;
-    return h12 + ' ' + (h24 < 12 ? 'AM' : 'PM');
-  }
-  function openStatus() {
-    var hour = 12, minute = 0;
-    try {
-      var parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Toronto', hour12: false, hour: '2-digit', minute: '2-digit' }).formatToParts(new Date());
-      var m = Object.fromEntries(parts.map(function (p) { return [p.type, p.value]; }));
-      hour = parseInt(m.hour, 10) % 24; minute = parseInt(m.minute, 10) || 0;
-    } catch (e) { /* fall back to open */ }
-    var mins = hour * 60 + minute;
-    var openAt = OPEN_H * 60, closeAt = CLOSE_H * 60;
-    var isOpen = mins >= openAt && mins < closeAt;
-    if (isOpen && closeAt - mins <= 120) return { label: 'Closes at ' + formatHour12(closeAt), fg: '#ffb84d', bg: 'rgba(255,184,77,.14)', bd: 'rgba(255,184,77,.3)', dot: '#ffb84d', pulse: false };
-    if (isOpen) return { label: 'Open now', fg: '#5fd07f', bg: 'rgba(95,208,127,.13)', bd: 'rgba(95,208,127,.28)', dot: '#5fd07f', pulse: true };
-    return { label: 'Opens ' + formatHour12(openAt), fg: 'rgba(255,255,255,.6)', bg: 'rgba(255,255,255,.07)', bd: 'rgba(255,255,255,.15)', dot: 'rgba(255,255,255,.4)', pulse: false };
-  }
+  // The week comes from the published opening hours (rendered into data-week by
+  // the frontmatter above) and the status from the same lib the build uses
+  // (src/lib/opening-hours.js), read against the GYM's clock, not the visitor's.
+  // The general hours staff publish are what this follows: a late adults-only
+  // window that is not in them never makes a family see "Open now".
+  import { openStatus } from '../lib/opening-hours.js';
+  import { gymNow } from '../lib/gym-clock.js';
+
+  const LOOKS = {
+    closing: { fg: '#ffb84d', bg: 'rgba(255,184,77,.14)', bd: 'rgba(255,184,77,.3)', dot: '#ffb84d', pulse: false },
+    open: { fg: '#5fd07f', bg: 'rgba(95,208,127,.13)', bd: 'rgba(95,208,127,.28)', dot: '#5fd07f', pulse: true },
+    closed: { fg: 'rgba(255,255,255,.6)', bg: 'rgba(255,255,255,.07)', bd: 'rgba(255,255,255,.15)', dot: 'rgba(255,255,255,.4)', pulse: false },
+  };
+
   function paintStatus() {
-    var s = openStatus();
-    document.querySelectorAll('[data-status]').forEach(function (el) {
-      el.style.color = s.fg; el.style.background = s.bg; el.style.borderColor = s.bd;
-      var dot = el.querySelector('.m-status-dot');
-      var label = el.querySelector('.m-status-label');
-      if (dot) { dot.style.background = s.dot; dot.classList.toggle('tmv-pulse', s.pulse); }
-      if (label) label.textContent = s.label;
+    const now = gymNow();
+    document.querySelectorAll<HTMLElement>('[data-status]').forEach((el) => {
+      const status = openStatus(JSON.parse(el.dataset.week ?? '[]'), now.dayIndex, now.minutes);
+      if (!status) return;
+      const look = LOOKS[status.state];
+      el.style.color = look.fg; el.style.background = look.bg; el.style.borderColor = look.bd;
+      const dot = el.querySelector<HTMLElement>('.m-status-dot');
+      const label = el.querySelector('.m-status-label');
+      if (dot) { dot.style.background = look.dot; dot.classList.toggle('tmv-pulse', look.pulse); }
+      if (label) label.textContent = status.label;
     });
   }
   // Repaint on every view-transition navigation (astro:page-load fires on first
   // load AND after each client nav) so the new page's pill is correct; the
   // 60s ticker is guarded so it's created only once, not one per navigation.
   document.addEventListener('astro:page-load', paintStatus);
-  if (!window.__tmvStatusTimer) window.__tmvStatusTimer = setInterval(paintStatus, 60000);
+  const w = window as unknown as { __tmvStatusTimer?: number };
+  if (!w.__tmvStatusTimer) w.__tmvStatusTimer = window.setInterval(paintStatus, 60000);
 </script>

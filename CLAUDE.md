@@ -35,6 +35,35 @@ Nothing a visitor sees names the revision: `/version.json` exists for the daily
 status report only, and no page, footer or meta tag shows it. This is a public
 repository, so `release.json` carries only those three values.
 
+## The published site config: banner, hours, social, links
+
+Staff own the announcement banner, the opening hours, the social links and the
+per-card Square links (TMV-Members, Settings -> Banner, hours & social and
+Booking & buy links). TMV-Members republishes them on every save to a static
+object, and **`src/data/site-config.ts` reads it once per build**: the ONLY
+fetch. `square-links.ts` takes `links` from it; `PromoBanner.astro` takes the
+banner, the About page/footer/mobile sheets take the hours and socials, the
+header pill and the LocalBusiness JSON-LD take the hours. **Do not type a banner,
+an hours table or a social URL anywhere in this repo.** That would be a second
+copy that staff edits no longer reach.
+
+- **Empty renders nothing**: no banner strip, no Hours card, no pill, no social
+  row, no `sameAs`/`openingHoursSpecification`, never an empty section.
+- **Fetch failure** is the same for all of it: the build warns
+  (`[site-config] live config fetch failed`) and carries on with nothing
+  published (links use their static fallbacks; the rest renders nothing).
+- **Hours are shown verbatim** (`{day, time}` rows in staff's order, free text
+  included). Numbers derived from them (pill, JSON-LD, the one-line summary, the
+  hero tile) come from `src/lib/opening-hours.js`, which mirrors TMV-Members
+  `core/site-hours.js` `parseHours`; rows it cannot read feed no number.
+- **Banner shows** only when on, with a headline, and before its expiry (the END
+  of the chosen day, gym time, `America/Toronto`: `src/lib/site-promo.js`,
+  `gym-clock.js`). Checked at build and again in the browser, so an expired one
+  comes down between releases.
+- A staff save reaches the site on the next release; `TMV_SITE_CONFIG_URL` points
+  the build at a fixture (tests only).
+- `npm test` builds the site against fixtures and asserts the rendered HTML.
+
 ## One responsive document, two chromes
 
 There is **one** front-end. Every route is a normal Astro page using
