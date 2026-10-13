@@ -23,11 +23,14 @@ const photos = [
   { file: 'gym-11.jpg', alt: 'Concrete walls and vault structures' },
 ].map((p) => ({ src: url(`assets/${p.file}`), alt: p.alt }));
 const facilityCards = forSurface(facility, 'desktop');
+// All three are always in the markup (hidden when blank) so the browser can show one
+// that is added after the build; the wrapper is hidden when none is set.
 const socials = [
-  { icon: 'bi-instagram', label: 'Instagram', href: social.instagram },
-  { icon: 'bi-youtube', label: 'YouTube', href: social.youtube },
-  { icon: 'bi-facebook', label: 'Facebook', href: social.facebook },
-].filter((s) => s.href);
+  { key: 'instagram', icon: 'bi-instagram', label: 'Instagram', href: social.instagram },
+  { key: 'youtube', icon: 'bi-youtube', label: 'YouTube', href: social.youtube },
+  { key: 'facebook', icon: 'bi-facebook', label: 'Facebook', href: social.facebook },
+];
+const anySocial = socials.some((s) => s.href);
 ---
 <BaseLayout title={seo.about.title} description={seo.about.description} active="about" mobileTab="more" appHeader="back" appTitle="About">
   <div class="mapp" data-chrome="app"><AboutScreen /></div>
@@ -85,19 +88,19 @@ const socials = [
         <div class="ab-crow"><span class="ab-cic"><i class="bi bi-shield-check" aria-hidden="true"></i></span><div><div class="ab-clabel">Before your first visit</div><div class="ab-cval">Everyone needs a signed waiver. <a href={links.waiver} target="_blank" rel="noopener" class="ab-waiver">Sign it online →</a></div></div></div>
         <a href={site.mapUrl} target="_blank" rel="noopener" class="btn btn-primary" style="align-self:flex-start">Get directions <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
       </div>
-      {hours.length > 0 && (
-        <div class="ab-hours">
-          <div class="ab-hlabel">Hours</div>
-          <div class="ab-htitle">{hoursHeading(hours)}</div>
-          <p class="ab-hnote">Listed times are "lights out, doors locked" — give yourself time to be out by close.</p>
-          <div class="ab-hlist">{hours.map((h) => <div class="ab-hrow"><span>{h.day}</span><span class="ab-htime">{h.time}</span></div>)}</div>
+      <div class="ab-hours" data-hours-card hidden={hours.length === 0}>
+        <div class="ab-hlabel">Hours</div>
+        <div class="ab-htitle" data-hours-heading>{hoursHeading(hours)}</div>
+        <p class="ab-hnote">Listed times are "lights out, doors locked" — give yourself time to be out by close.</p>
+        <div class="ab-hlist" data-hours-list>
+          <template data-hours-row><div class="ab-hrow"><span data-day></span><span class="ab-htime" data-time></span></div></template>
+          {hours.map((h) => <div class="ab-hrow" data-hours-line><span data-day>{h.day}</span><span class="ab-htime" data-time>{h.time}</span></div>)}
         </div>
-      )}
+      </div>
     </div>
   </section>
 
-  {socials.length > 0 && (
-  <section class="container" style="padding-bottom:80px">
+  <section class="container" style="padding-bottom:80px" data-socials-wrap hidden={!anySocial}>
     <div class="ab-social">
       <div>
         <div class="ab-social-eyebrow">Follow along</div>
@@ -105,11 +108,10 @@ const socials = [
         <p class="ab-social-lead">Drops, edits and event news live on our Instagram, YouTube and Facebook.</p>
       </div>
       <div class="ab-social-links">
-        {socials.map((s) => <a href={s.href} target="_blank" rel="noopener" aria-label={s.label} class="ab-soc"><i class={`bi ${s.icon}`} aria-hidden="true"></i></a>)}
+        {socials.map((s) => <a href={s.href || undefined} hidden={!s.href} data-social={s.key} target="_blank" rel="noopener" aria-label={s.label} class="ab-soc"><i class={`bi ${s.icon}`} aria-hidden="true"></i></a>)}
       </div>
     </div>
   </section>
-  )}
   </div>
 </BaseLayout>
 

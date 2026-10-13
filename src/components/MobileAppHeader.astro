@@ -41,11 +41,9 @@ const hasHours = openStatus(week, 0, 0) !== null;
         <i class="bi bi-chevron-left" aria-hidden="true"></i><span>{title}</span>
       </a>
     )}
-    {hasHours && (
-      <span class="m-status" data-status data-week={JSON.stringify(week)}>
-        <span class="m-status-dot"></span><span class="m-status-label">Open now</span>
-      </span>
-    )}
+    <span class="m-status" data-status data-week={JSON.stringify(week)} hidden={!hasHours}>
+      <span class="m-status-dot"></span><span class="m-status-label">Open now</span>
+    </span>
   </div>
 </header>
 
@@ -87,6 +85,7 @@ const hasHours = openStatus(week, 0, 0) !== null;
   // window that is not in them never makes a family see "Open now".
   import { openStatus } from '../lib/opening-hours.js';
   import { gymNow } from '../lib/gym-clock.js';
+  import { SITE_CONFIG_APPLIED } from '../lib/apply-site-config.js';
 
   const LOOKS = {
     closing: { fg: '#ffb84d', bg: 'rgba(255,184,77,.14)', bd: 'rgba(255,184,77,.3)', dot: '#ffb84d', pulse: false },
@@ -111,6 +110,8 @@ const hasHours = openStatus(week, 0, 0) !== null;
   // load AND after each client nav) so the new page's pill is correct; the
   // 60s ticker is guarded so it's created only once, not one per navigation.
   document.addEventListener('astro:page-load', paintStatus);
+  // The live site config can change the week after the page was built.
+  document.addEventListener(SITE_CONFIG_APPLIED, paintStatus);
   const w = window as unknown as { __tmvStatusTimer?: number };
   if (!w.__tmvStatusTimer) w.__tmvStatusTimer = window.setInterval(paintStatus, 60000);
 </script>

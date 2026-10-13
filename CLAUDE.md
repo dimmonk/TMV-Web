@@ -60,9 +60,24 @@ copy that staff edits no longer reach.
   of the chosen day, gym time, `America/Toronto`: `src/lib/site-promo.js`,
   `gym-clock.js`). Checked at build and again in the browser, so an expired one
   comes down between releases.
-- A staff save reaches the site on the next release; `TMV_SITE_CONFIG_URL` points
-  the build at a fixture (tests only).
-- `npm test` builds the site against fixtures and asserts the rendered HTML.
+- **The build is the first paint; the browser keeps it current.** On page load
+  `src/lib/live-site-config.ts` fetches the SAME object (`PUBLISHED_CONFIG_URL`,
+  the same reader `fetchPublishedConfig` the build uses, `cache: 'no-cache'` so
+  it revalidates by ETag) and `src/lib/apply-site-config.js` re-applies links,
+  banner, hours (+ pill, summaries, hero tile) and socials in place, using the
+  same pure rules as the build. So a staff save shows within minutes with no
+  release. A failed fetch keeps what was built and warns in the console. JSON-LD
+  and a seasonal card that is offered or not (`isLinkSet`) stay build-time.
+- **Hooks, not copies**: every live-updatable element carries a `data-*` hook
+  (`data-promo`, `data-hours-card|list|summary|stat`, `data-status`,
+  `data-social`, `data-socials-wrap`) and is always in the markup, `hidden`
+  when there is nothing to show (global `[hidden]` wins over any display). A
+  Square link slot travels in the href as `#tmv-sq=page.field`, which the build
+  (`astro.config.mjs` + `src/lib/sq-slot-marker.js`) moves into `data-sq`. Add a
+  new surface by adding the hook and teaching `apply-site-config.js` about it.
+- `TMV_SITE_CONFIG_URL` points the build at a fixture (tests only).
+- `npm test` builds the site against fixtures, asserts the rendered HTML, then
+  plays the browser refresh over the built pages (jsdom).
 
 ## One responsive document, two chromes
 

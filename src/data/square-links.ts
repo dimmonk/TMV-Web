@@ -5,105 +5,41 @@
  * This is the LIVE side of the contract the members-app "Settings → Website"
  * page edits (`public/js/core/site-config-service.js` → `LINK_PAGES`, mirrored
  * server-side in `functions/site-config-publish.js`): one section per website
- * page, one entry per card. Per the build-time-bake decision, the admin-edited
- * public JSON is fetched ONCE at build time (`site-config.ts`, which also feeds
- * the banner, hours and socials) and merged here over the static defaults
- * below: a specific link an admin has filled in wins; anything still blank (or if the fetch fails) falls back to the generic
- * booking/store/gift link so the site never links to nothing. A members-app
- * save triggers a site rebuild to pick up the change.
+ * page, one entry per card. The admin-edited public JSON is fetched ONCE at
+ * build time (`site-config.ts`, which also feeds the banner, hours and socials)
+ * and merged over the static defaults (`square-link-defaults.ts`): a specific
+ * link an admin has filled in wins; anything blank (or if the fetch fails)
+ * falls back to the generic booking/store/gift link so the site never links to
+ * nothing. The browser re-resolves the same slots against the freshly fetched
+ * object on page load (`lib/live-site-config.ts`), so a save shows within the
+ * object's cache window without waiting for a release.
  *
  * Cards that navigate to another site page (e.g. "See camps") are NOT here —
  * their Square link lives under the page they land on.
  */
 import { links } from './site';
 import { publishedLinks } from './site-config';
-
-const B = links.booking; // generic appointments booking (fallback)
-const S = links.store; // generic online store (fallback)
-
-/** Static fallback shape — used until a per-card override is fetched. */
-const DEFAULTS = {
-  /* -------------------------------------------------- Book Now page ------- */
-  book: {
-    introduction: B, // intro / first private lesson
-    privateLesson: B, // ongoing private (any coach)
-    fullBirthday: B,
-    miniBirthday: B,
-    groupEvents: B,
-    earlyGymAccess: B,
-  },
-
-  /* -------------------------------------------------- Home page ----------- */
-  /* The Home page has no editable links left: its camp cards read the seasons
-     below, and its hero books the intro via `getStarted.introduction`. Two
-     admin fields once held the SAME camp product (home.summerCamps and
-     camps.weeklyCamps) — one slot per camp now. */
-
-  /* -------------------------------------------------- Camps page ---------- */
-  camps: {
-    winterCamp: links.winterCamp,
-    marchCamp: links.marchCamp,
-    summerCamp: links.summerCamp,
-    paDayCamp: links.paDayCamp,
-    privateDayCamp: B,
-  },
-
-  /* -------------------------------------------------- Store page ---------- */
-  store: {
-    dayPasses: S,
-    openGymMembership: S,
-    classPasses: S,
-    classMembership: S,
-    privateClassPack: S,
-    athleticMembership: links.athleticMembership,
-    giftCard: links.giftCard,
-  },
-
-  /* -------------------------------------------------- Athletic page ------- */
-  athletic: {
-    membership: links.athleticMembership,
-  },
-
-  /* -------------------------------------------------- Private Lessons ----- */
-  // Per-coach booking links: each coach can have their own Square staff
-  // booking URL, set at Settings -> Website in the members app.
-  privateLessons: {
-    introduction: B,
-    privateLesson: B,
-    /* Per-coach slots removed with the roster — see `perCoachBookingEnabled`.
-       They come back when each coach has a real Square staff booking page. */
-  },
-
-  /* -------------------------------------------------- Get Started --------- */
-  getStarted: {
-    introduction: B,
-  },
-} as const;
-
-type LinkPages = typeof DEFAULTS;
-type PageKey = keyof LinkPages;
-
-/** A non-empty admin-set link wins; anything blank keeps the static default. */
-function mergeLive(defaults: LinkPages, live: Record<string, Record<string, string>> | null): LinkPages {
-  const out = {} as LinkPages;
-  (Object.keys(defaults) as PageKey[]).forEach((pageKey) => {
-    const merged = { ...defaults[pageKey] } as Record<string, string>;
-    const livePage = live?.[pageKey];
-    if (livePage) {
-      Object.keys(merged).forEach((fieldKey) => {
-        const v = livePage[fieldKey];
-        if (typeof v === 'string' && v.trim()) merged[fieldKey] = v.trim();
-      });
-    }
-    (out as Record<string, unknown>)[pageKey] = merged;
-  });
-  return out;
-}
+import { DEFAULTS, mergeLive, B, S, type LinkPages, type PageKey } from './square-link-defaults';
 
 const liveLinks = publishedLinks;
 
-/** Every card's resolved Square link — live admin value where set, static default otherwise. */
-export const sq: LinkPages = mergeLive(DEFAULTS, liveLinks);
+/**
+ * Where a slot is written in a built page. Every card's href carries its slot
+ * as a `#tmv-sq=page.field` fragment, and the build (`astro.config.mjs`,
+ * `lib/sq-slot-marker.js`) moves it into a `data-sq` attribute on the anchor,
+ * so the browser knows which slot an anchor is when it re-resolves the links.
+ */
+const tagged = (resolved: LinkPages): LinkPages => {
+  const out: Record<string, Record<string, string>> = {};
+  (Object.keys(resolved) as PageKey[]).forEach((page) => {
+    out[page] = {};
+    Object.entries(resolved[page]).forEach(([field, url]) => { out[page][field] = `${url}#tmv-sq=${page}.${field}`; });
+  });
+  return out as unknown as LinkPages;
+};
+
+/** Every card's resolved Square link, live admin value where set, static default otherwise (slot-tagged, see above). */
+export const sq: LinkPages = tagged(mergeLive(DEFAULTS, liveLinks));
 
 /**
  * Did an admin actually SET this link, or is the value just the static

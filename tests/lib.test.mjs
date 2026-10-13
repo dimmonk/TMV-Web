@@ -2,7 +2,8 @@
 // what the pages render. Run: npm test
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readPublishedConfig } from '../src/lib/published-config.js';
+import { readPublishedConfig, fetchPublishedConfig } from '../src/lib/published-config.js';
+import { moveSlotMarkers } from '../src/lib/sq-slot-marker.js';
 import { expiryStamp, isExpired, promoIsShown } from '../src/lib/site-promo.js';
 import { gymNow } from '../src/lib/gym-clock.js';
 import {
@@ -134,4 +135,29 @@ test('clock formatting drops :00 and keeps minutes', () => {
   assert.equal(formatClock(11 * 60), '11 AM');
   assert.equal(formatClock(22 * 60 + 30), '10:30 PM');
   assert.equal(formatClock(24 * 60), '12 AM');
+});
+
+// ---- the shared reader (build and browser) -----------------------------------
+
+const reply = (body, ok = true, statusCode = 200) => async () => ({ ok, status: statusCode, json: async () => body });
+
+test('the shared reader returns the validated config', async () => {
+  const c = await fetchPublishedConfig('http://x', { fetchFn: reply({ hours: [{ day: 'Monday', time: '9 AM' }], social: { instagram: 'https://i.example' } }) });
+  assert.deepEqual(c.hours, [{ day: 'Monday', time: '9 AM' }]);
+  assert.equal(c.social.instagram, 'https://i.example');
+});
+
+test('the shared reader throws on a bad status, a non-object body and a timeout, so each caller can keep what it has', async () => {
+  await assert.rejects(fetchPublishedConfig('http://x', { fetchFn: reply({}, false, 503) }), /status 503/);
+  await assert.rejects(fetchPublishedConfig('http://x', { fetchFn: reply(null) }), /not an object/);
+  const never = (_url, init) => new Promise((_ok, fail) => init.signal.addEventListener('abort', () => fail(new Error('aborted'))));
+  await assert.rejects(fetchPublishedConfig('http://x', { fetchFn: never, timeoutMs: 10 }), /aborted/);
+});
+
+test('a Square slot marker moves into data-sq on its anchor, and any stray marker is stripped', () => {
+  const html = '<a href="https://sq.example/x#tmv-sq=book.introduction" target="_blank">Go</a><i data-x="https://sq.example/y#tmv-sq=store.dayPasses"></i>';
+  assert.equal(
+    moveSlotMarkers(html),
+    '<a href="https://sq.example/x" data-sq="book.introduction" target="_blank">Go</a><i data-x="https://sq.example/y"></i>',
+  );
 });

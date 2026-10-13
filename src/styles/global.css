@@ -158,6 +158,9 @@ a { color: inherit; }
 }
 
 /* ---- layout primitives ---- */
+/* A hidden hook (banner, hours, pill, social) shows nothing whatever display its class sets. */
+[hidden] { display: none !important; }
+
 .container { max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
 .section { padding-block: clamp(48px, 8vw, 72px); }
 

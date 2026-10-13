@@ -57,7 +57,7 @@ const hoursLine = hoursSummary(hours);
           <div class="m-visit-eyebrow"><span class="mh-rule"></span>Visit us</div>
           <div class="m-visit-rows">
             <div class="m-visit-row"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i><div><div class="m-visit-t">{site.address.street}</div><div class="m-visit-s">{site.address.neighbourhood}, {site.address.locality}</div></div></div>
-            {hoursLine && <div class="m-visit-row"><i class="bi bi-clock-fill" aria-hidden="true"></i><div><div class="m-visit-t">{hoursLine}</div></div></div>}
+            <div class="m-visit-row" data-hours-wrap hidden={!hoursLine}><i class="bi bi-clock-fill" aria-hidden="true"></i><div><div class="m-visit-t" data-hours-summary>{hoursLine}</div></div></div>
             <div class="m-visit-btns">
               <a href={site.mapUrl} target="_blank" rel="noopener" class="m-visit-btn"><i class="bi bi-geo-alt"></i> Directions</a>
               <a href={`tel:${site.phone}`} class="m-visit-btn"><i class="bi bi-telephone-fill"></i> Call us</a>

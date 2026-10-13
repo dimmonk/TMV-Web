@@ -26,7 +26,7 @@ const columns = [
     items: [
       { text: site.address.street, static: true },
       { text: `${site.address.locality}, ${site.address.region}`, static: true },
-      ...(hoursLine ? [{ text: hoursLine, static: true }] : []),
+      { text: hoursLine, static: true, hours: true },
       { text: 'New here? Get started', href: url('get-started'), accent: true },
     ],
   },
@@ -41,11 +41,14 @@ const columns = [
   },
 ];
 
+// All three are always in the markup (hidden when blank) so the browser can show one
+// that is added after the build; the wrapper is hidden when none is set.
 const socials = [
-  { icon: 'bi-instagram', label: 'Instagram', href: social.instagram },
-  { icon: 'bi-facebook', label: 'Facebook', href: social.facebook },
-  { icon: 'bi-youtube', label: 'YouTube', href: social.youtube },
-].filter((s) => s.href);
+  { key: 'instagram', icon: 'bi-instagram', label: 'Instagram', href: social.instagram },
+  { key: 'facebook', icon: 'bi-facebook', label: 'Facebook', href: social.facebook },
+  { key: 'youtube', icon: 'bi-youtube', label: 'YouTube', href: social.youtube },
+];
+const anySocial = socials.some((s) => s.href);
 ---
 <footer class="sf" data-chrome="site">
   <div class="sf-grid container">
@@ -55,13 +58,11 @@ const socials = [
         <span>The Monkey Vault</span>
       </div>
       <p class="sf-blurb">Toronto's home for parkour, flips and movement. Train, play and level up — every age, every level.</p>
-      {socials.length > 0 && (
-        <div class="sf-socials">
-          {socials.map((s) => (
-            <a href={s.href} aria-label={s.label} class="sf-soc" target="_blank" rel="noopener"><i class={`bi ${s.icon}`} aria-hidden="true"></i></a>
-          ))}
-        </div>
-      )}
+      <div class="sf-socials" data-socials-wrap hidden={!anySocial}>
+        {socials.map((s) => (
+          <a href={s.href || undefined} hidden={!s.href} data-social={s.key} aria-label={s.label} class="sf-soc" target="_blank" rel="noopener"><i class={`bi ${s.icon}`} aria-hidden="true"></i></a>
+        ))}
+      </div>
     </div>
 
     {columns.map((col) => (
@@ -70,7 +71,9 @@ const socials = [
         <div class="sf-collist">
           {col.items.map((l) => (
             l.static
-              ? <span class="sf-text">{l.text}</span>
+              ? (l.hours
+                ? <span class="sf-text" data-hours-summary hidden={!l.text}>{l.text}</span>
+                : <span class="sf-text">{l.text}</span>)
               : <a href={l.href} class:list={['sf-link', { accent: l.accent }]} {...(l.ext ? { target: '_blank', rel: 'noopener' } : {})}>{l.text}</a>
           ))}
         </div>

@@ -18,39 +18,33 @@
  * the hours and the socials simply do not render. Empty means nothing is shown,
  * never an empty section.
  *
- * A members-app save only reaches the site on the next release (rebuild); the
- * banner's expiry is re-checked in the browser (`PromoBanner.astro`) so an
- * expired one still comes down between releases.
+ * The build is the first paint (no-JS, SEO, structured data). On page load the
+ * browser fetches the same object through the same reader and re-applies links,
+ * banner, hours and socials in place (`lib/live-site-config.ts`), so a members
+ * app save shows within the object's cache window without a release.
  */
-import { readPublishedConfig, type PublishedConfig } from '../lib/published-config.js';
+import { readPublishedConfig, fetchPublishedConfig, PUBLISHED_CONFIG_URL, type PublishedConfig } from '../lib/published-config.js';
 import { gymNow } from '../lib/gym-clock.js';
 import { promoIsShown } from '../lib/site-promo.js';
 
-/** Public CDN projection of `settings/siteConfig`, republished on every admin save. */
-const PUBLIC_CONFIG_URL = 'https://storage.googleapis.com/tmv-management.firebasestorage.app/public/site-config.json';
-
 /** Tests point the build at a fixture server; production never sets it. */
-const CONFIG_URL = process.env.TMV_SITE_CONFIG_URL || PUBLIC_CONFIG_URL;
+const CONFIG_URL = process.env.TMV_SITE_CONFIG_URL || PUBLISHED_CONFIG_URL;
 
-async function fetchPublished(): Promise<PublishedConfig> {
+async function readAtBuild(): Promise<PublishedConfig> {
   try {
     // Cache-bust the CDN. The object is served `max-age=300`, so the canonical
     // URL can hand back a copy up to 5 min stale, and a release right after a
     // staff save would bake in the PRE-save values. `cache:no-store` only governs
     // this process's own HTTP cache, not Google's edge; a unique query param
     // forces an edge miss so every build reads the latest publish.
-    const res = await fetch(`${CONFIG_URL}?t=${Date.now()}`, { signal: AbortSignal.timeout(8000), cache: 'no-store' });
-    if (!res.ok) throw new Error(`status ${res.status}`);
-    const data = await res.json();
-    if (!data || typeof data !== 'object') throw new Error('not an object');
-    return readPublishedConfig(data);
+    return await fetchPublishedConfig(`${CONFIG_URL}?t=${Date.now()}`, { init: { cache: 'no-store' } });
   } catch (e) {
     console.warn('[site-config] live config fetch failed at build time; nothing published (links use static defaults, no banner, hours or socials):', (e as Error).message);
     return readPublishedConfig(null);
   }
 }
 
-const published = await fetchPublished();
+const published = await readAtBuild();
 
 /** The per-card Square links staff set, by page then card. Null when none were published. */
 export const publishedLinks = published.links;

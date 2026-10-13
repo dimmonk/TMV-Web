@@ -9,10 +9,17 @@
  * fetches it once per build and hands it here, and every consumer takes its
  * part from the result.
  *
+ * Build and browser share this one reader: `fetchPublishedConfig` fetches and
+ * validates, and the visibility rules downstream (`site-promo.js`,
+ * `opening-hours.js`) are pure functions of its result.
+ *
  * The server already validated the payload; this is the last gate before a
  * value reaches an href on the public page, so it validates again and never
  * trusts the shape (a partial or older object reads as empty, not as a throw).
  */
+
+/** The published object. Server side: `SITE_CONFIG_OBJECT_PATH` (`functions/site-config-publish.js`). */
+export const PUBLISHED_CONFIG_URL = 'https://storage.googleapis.com/tmv-management.firebasestorage.app/public/site-config.json';
 
 export const SOCIAL_KEYS = Object.freeze(['instagram', 'facebook', 'youtube']);
 
@@ -76,4 +83,31 @@ export function readPublishedConfig(data) {
       .filter((h) => h.day || h.time),
     social,
   };
+}
+
+/**
+ * Fetch the published object and read it. Throws on a network failure, a
+ * timeout, a non-OK status or a body that is not an object; the caller decides
+ * what failing means (the build warns and renders nothing, the browser warns and
+ * keeps what was built).
+ *
+ * @param {string} url
+ * @param {Object} [opts]
+ * @param {RequestInit} [opts.init] - e.g. `{cache: 'no-cache'}` in the browser
+ * @param {number} [opts.timeoutMs]
+ * @param {typeof fetch} [opts.fetchFn]
+ * @returns {Promise<PublishedConfig>}
+ */
+export async function fetchPublishedConfig(url, { init = {}, timeoutMs = 8000, fetchFn = fetch } = {}) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetchFn(url, { ...init, signal: controller.signal });
+    if (!res.ok) throw new Error(`status ${res.status}`);
+    const data = await res.json();
+    if (!data || typeof data !== 'object') throw new Error('not an object');
+    return readPublishedConfig(data);
+  } finally {
+    clearTimeout(timer);
+  }
 }

@@ -62,7 +62,7 @@ const camps = [
         </div>
         <div class="hero-stats">
           {heroStats.map((st, i) => (
-            <div class:list={['hero-stat', { last: i === heroStats.length - 1 }]}><div class="hero-statnum">{st.value}</div><div class="hero-statlabel">{st.label}</div></div>
+            <div class:list={['hero-stat', { last: i === heroStats.length - 1 }]} data-hours-stat={st.hours ? '' : undefined} data-stat-variant={st.hours ? 'desktop' : undefined} hidden={st.hidden}><div class="hero-statnum" data-stat-value={st.hours ? '' : undefined}>{st.value}</div><div class="hero-statlabel" data-stat-label={st.hours ? '' : undefined}>{st.label}</div></div>
           ))}
         </div>
         <p class="hero-new">Just here to play? <a href={`${url('store')}#opengym`}>Open gym day passes from $25 →</a></p>

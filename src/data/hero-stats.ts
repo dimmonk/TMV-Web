@@ -9,7 +9,7 @@
  * here to play.
  *
  * The hours tile is not typed here. It is read off the published opening hours
- * (`site-config.ts`), and when there are none to read the tile is left out.
+ * (`site-config.ts`), and when there are none to read the tile is hidden.
  */
 import { hours } from './site-config';
 import { hoursStat } from '../lib/opening-hours.js';
@@ -18,12 +18,18 @@ export interface HeroStat {
   value: string;
   label: string;
   mobileLabel?: string;
+  /** The opening-hours tile: the browser keeps it current. */
+  hours?: boolean;
+  /** No readable hours at build time: the tile stays in the markup, hidden. */
+  hidden?: boolean;
 }
 
 const hoursTile = hoursStat(hours);
 
 export const heroStats: readonly HeroStat[] = [
   { value: '$45', label: 'intro lesson · 1-on-1', mobileLabel: 'intro · 1-on-1' },
-  ...(hoursTile ? [hoursTile] : []),
+  // Always in the markup (hidden when there is nothing to say) so the browser can show it
+  // when hours are published after the build.
+  { value: hoursTile?.value ?? '', label: hoursTile?.label ?? '', mobileLabel: hoursTile?.mobileLabel ?? '', hours: true, hidden: !hoursTile },
   { value: 'Ages 3+', label: 'all levels' },
 ];
