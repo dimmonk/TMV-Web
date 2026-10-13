@@ -78,7 +78,7 @@ export function mountMobileSchedule() {
         <div class="m-sched-card">
           ${day.sessions.map((s: any) => `
             <div class="m-sess" style="opacity:${s.isCancelled ? '.55' : '1'}">
-              <span class="m-sess-bar" style="background:${s.color}"></span>
+              <span class="m-sess-bar" style="background:${escapeHtml(s.color)}"></span>
               <div style="flex:1;min-width:0">
                 <div style="display:flex;align-items:center"><span class="m-sess-name" style="text-decoration:${s.isCancelled ? 'line-through' : 'none'}">${escapeHtml(s.name)}</span>${s.isNew ? '<span class="m-sess-badge" style="color:#1b6b2f;background:#e6f4ea;border:1px solid #c7e4cf">New</span>' : ''}${s.isCancelled ? '<span class="m-sess-badge" style="color:#8b1f1f;background:#fbeaea;border:1px solid #ecc6c6">Ending</span>' : ''}</div>
                 <div class="m-sess-meta">${escapeHtml(s.range)} · ${escapeHtml(s.age)}</div>
