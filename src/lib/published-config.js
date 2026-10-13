@@ -24,6 +24,30 @@ export const PUBLISHED_CONFIG_URL = 'https://storage.googleapis.com/tmv-manageme
 export const SOCIAL_KEYS = Object.freeze(['instagram', 'facebook', 'youtube']);
 
 /**
+ * The most each published value may hold, in characters (rows for
+ * `hoursRows`). TMV-Members holds the document to these in its rules, refuses
+ * them at Save and never publishes past them (`SITE_CONFIG_LIMITS` in
+ * `functions/site-config-publish.js`, kept in step by hand); this reader drops a
+ * value past its limit again (as unset), so a value that got round all of that
+ * still cannot take over a page.
+ */
+export const LIMITS = Object.freeze({
+  url: 500,
+  headline: 120,
+  body: 280,
+  ctaLabel: 40,
+  hoursRows: 14,
+  hoursDay: 40,
+  hoursTime: 80,
+});
+
+/** A stored banner expiry: gym-time `YYYY-MM-DDTHH:MM:SS`, what the members app writes. */
+const EXPIRY_FORMAT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/;
+
+/** @type {Promo} The banner when there is none to show: no text at all. */
+const NO_PROMO = Object.freeze({ active: false, headline: '', body: '', ctaLabel: '', ctaUrl: '', expiresAt: '' });
+
+/**
  * @typedef {Object} Promo
  * @property {boolean} active
  * @property {string} headline
@@ -42,6 +66,12 @@ export const SOCIAL_KEYS = Object.freeze(['instagram', 'facebook', 'youtube']);
 /** @param {unknown} v @returns {string} */
 const text = (v) => (typeof v === 'string' ? v.trim() : '');
 
+/** @param {unknown} v @param {number} limit @returns {string} The text, or '' when it is past its limit. */
+const bounded = (v, limit) => {
+  const t = text(v);
+  return t.length <= limit ? t : '';
+};
+
 /**
  * Is any social link set? Decides whether the wrapper around them shows.
  * @param {Record<string, string>} social
@@ -49,9 +79,9 @@ const text = (v) => (typeof v === 'string' ? v.trim() : '');
  */
 export const hasSocial = (social) => Object.values(social).some(Boolean);
 
-/** @param {unknown} v @returns {string} Only http(s) survives. */
+/** @param {unknown} v @returns {string} Only http(s) within the URL limit survives. */
 function safeUrl(v) {
-  const s = text(v);
+  const s = bounded(v, LIMITS.url);
   if (!s) return '';
   try {
     const u = new URL(s);
@@ -96,18 +126,33 @@ export function readPublishedConfig(data) {
   SOCIAL_KEYS.forEach((k) => { social[k] = safeUrl(s[k]); });
   return {
     links: readLinks(d.links),
-    promo: {
-      active: p.active === true,
-      headline: text(p.headline),
-      body: text(p.body),
-      ctaLabel: text(p.ctaLabel),
-      ctaUrl: safeUrl(p.ctaUrl),
-      expiresAt: text(p.expiresAt),
-    },
+    promo: readPromo(p),
     hours: (Array.isArray(d.hours) ? d.hours : [])
       .map((h) => ({ day: text(obj(h).day), time: text(obj(h).time) }))
-      .filter((h) => h.day || h.time),
+      .filter((h) => h.day.length <= LIMITS.hoursDay && h.time.length <= LIMITS.hoursTime)
+      .filter((h) => h.day || h.time)
+      .slice(0, LIMITS.hoursRows),
     social,
+  };
+}
+
+/**
+ * The banner, read the way the members app publishes it: off means no text at
+ * all, and an expiry that is not `YYYY-MM-DDTHH:MM:SS` means off (an expiry
+ * nobody can read must not mean "never expires").
+ * @param {Record<string, any>} p
+ * @returns {Promo}
+ */
+function readPromo(p) {
+  const expiresAt = text(p.expiresAt);
+  if (p.active !== true || (expiresAt !== '' && !EXPIRY_FORMAT.test(expiresAt))) return { ...NO_PROMO };
+  return {
+    active: true,
+    headline: bounded(p.headline, LIMITS.headline),
+    body: bounded(p.body, LIMITS.body),
+    ctaLabel: bounded(p.ctaLabel, LIMITS.ctaLabel),
+    ctaUrl: safeUrl(p.ctaUrl),
+    expiresAt,
   };
 }
 

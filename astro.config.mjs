@@ -61,7 +61,13 @@ export default defineConfig({
   // page load. 'always' makes Astro's own canonical + sitemap URLs match.
   trailingSlash: 'always',
   build: { format: 'directory' },
-  vite: { plugins: [browserFloor] },
+  // `assetsInlineLimit: 0`: Astro would otherwise inline every script under 4 KB
+  // into the page as an inline <script type="module">. The hosting
+  // Content-Security-Policy (TMV-Members firebase.json, hosting:web) allows no
+  // inline script, and a per-release hash list would drift; so every script is a
+  // file under /_astro/ ('self'). The render test fails if a built page carries
+  // an inline executable script or an inline event handler.
+  vite: { plugins: [browserFloor], build: { assetsInlineLimit: 0 } },
   // Dev-only overlay (never ships in `astro build`/production) — off because
   // it sits over the phone-width preview during mobile work.
   devToolbar: { enabled: false },

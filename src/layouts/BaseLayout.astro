@@ -131,7 +131,7 @@ const jsonLd = {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap"
-      rel="stylesheet" media="print" onload="this.media='all'"
+      rel="stylesheet" media="print" data-async-css
     />
     <noscript>
       <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -146,48 +146,12 @@ const jsonLd = {
         every transition. */}
     <ClientRouter />
 
-    {/* Cache warmer — this is what makes a tap instant. The click-to-render
-        delay was the router fetching the target page's HTML on click; HTML is
-        served stale-while-revalidate (see firebase.json hosting:web), so once a
-        page is in the HTTP cache the router serves it from cache with no network
-        round-trip and the swap is immediate. On idle this fetch()es every
-        on-screen internal link AND the render-blocking /_astro assets it
-        references, so both the HTML and its immutable CSS/JS are cached before
-        the tap — and a stale-served page always has the exact assets it needs
-        (they're immutable, so they never 404 against a newer deploy). Each URL
-        is fetched at most once. */}
-    <script is:inline>
-      (function () {
-        var warmedPages = new Set();
-        var warmedAssets = new Set();
-        function warmAsset(u) {
-          if (warmedAssets.has(u)) return;
-          warmedAssets.add(u);
-          fetch(u, { credentials: 'same-origin' }).catch(function () {});
-        }
-        function warmPageAssets(html) {
-          var re = /(?:href|src)="(\/(?:_astro|fonts)\/[^"]+)"/g, m;
-          while ((m = re.exec(html))) warmAsset(m[1]);
-        }
-        function warm() {
-          warmedPages.add(location.pathname.replace(/\/$/, ''));
-          var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 200); };
-          document.querySelectorAll('a[href^="/"]').forEach(function (a) {
-            var href = a.getAttribute('href');
-            if (!href || href.indexOf('#') !== -1 || a.target) return;
-            var path = href.replace(/\/$/, '');
-            if (warmedPages.has(path)) return;
-            warmedPages.add(path);
-            idle(function () {
-              fetch(href, { credentials: 'same-origin' })
-                .then(function (r) { return r.text(); })
-                .then(warmPageAssets)
-                .catch(function () {});
-            });
-          });
-        }
-        document.addEventListener('astro:page-load', warm);
-      })();
+    {/* No inline script anywhere (the hosting Content-Security-Policy allows
+        none): the Google Fonts sheet's media swap and the cache warmer are
+        modules. See src/lib/async-stylesheets.js and src/lib/cache-warmer.js. */}
+    <script>
+      import '../lib/async-stylesheets.js';
+      import '../lib/cache-warmer.js';
     </script>
   </head>
   <body style={`--brand:${brand}`}>

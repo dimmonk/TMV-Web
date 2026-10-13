@@ -234,6 +234,29 @@ test('the shipped client scripts need no syntax lowering for the browser floor (
   assert.deepEqual([...offenders, ...inline], [], 'these scripts use syntax newer than the floor');
 });
 
+test('no built page carries an inline script or an inline event handler (the hosting CSP allows neither)', async () => {
+  // TMV-Members firebase.json (hosting:web) sends a Content-Security-Policy whose script-src is 'self' plus one
+  // pinned file, with no 'unsafe-inline'. An inline <script> or an on*= attribute would be blocked in every browser,
+  // silently. JSON-LD is data, not script, and is the one inline <script> a page may carry.
+  serve({ hours: WEEK, social: SOCIAL, promo: LIVE_PROMO });
+  const site = await build();
+  const pages = [];
+  const walk = (dir) => readdirSync(dir, { withFileTypes: true }).forEach((e) => {
+    const f = join(dir, e.name);
+    if (e.isDirectory()) walk(f); else if (e.name.endsWith('.html')) pages.push(f);
+  });
+  walk(site.out);
+  assert.ok(pages.length > 10, 'the build emitted its pages');
+  const offenders = [];
+  for (const file of pages) {
+    const html = readFileSync(file, 'utf8');
+    for (const [tag] of html.matchAll(/<script(?![^>]*\bsrc=)(?![^>]*application\/ld\+json)[^>]*>/g)) offenders.push(`${file.slice(site.out.length)}: ${tag}`);
+    for (const [attr] of html.matchAll(/\son[a-z]+\s*=\s*["'][^"']*["']/gi)) offenders.push(`${file.slice(site.out.length)}: ${attr}`);
+    for (const [url] of html.matchAll(/(?:href|src|action)\s*=\s*["']\s*javascript:[^"']*/gi)) offenders.push(`${file.slice(site.out.length)}: ${url}`);
+  }
+  assert.deepEqual(offenders, []);
+});
+
 // ---- the browser's refresh over a built page --------------------------------
 
 test('the refresh updates a changed hours row, adds a row and keeps the build\'s styling hooks', async () => {

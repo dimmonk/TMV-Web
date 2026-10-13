@@ -79,7 +79,16 @@ copy that staff edits no longer reach.
   (never `innerHTML`); every URL (social, banner button, every Square link) passes `safeUrl` in
   `src/lib/published-config.js`, so only http(s) reaches an `href` and a bad link reads as unset (the card keeps
   its default); the structured data is written with `jsonForScript` (`src/lib/json-for-script.js`), because a valid
-  URL can still carry `</script>`.
+  URL can still carry `</script>`. Every value is bounded (`LIMITS` in `published-config.js`: URLs 500, headline 120,
+  message 280, button text 40, 14 hours rows of day 40 / hours 80, mirroring TMV-Members `SITE_CONFIG_LIMITS` by hand):
+  a value past its limit reads as unset. A switched-off banner carries no text, and a banner whose expiry is not
+  `YYYY-MM-DDTHH:MM:SS` reads as off.
+- **No inline script, anywhere.** The hosting sends a Content-Security-Policy (TMV-Members `firebase.json`,
+  `hosting:web`, ADR-0169) whose `script-src` allows no inline script. So every script is a file
+  (`vite.build.assetsInlineLimit: 0` stops Astro inlining small ones), there is no `is:inline` script, no `on*=`
+  handler (the fonts media swap is `src/lib/async-stylesheets.js`) and no `javascript:` URL; the render test fails on
+  any of them. JSON-LD is data and may stay inline. A new third-party load (script, embed, fetch, image host) needs its
+  origin added to that policy in TMV-Members, or it is blocked.
 - **The browser floor is Safari 13.1 / iOS 13.4.** The `browserFloor` plugin in `astro.config.mjs` targets it for the
   CLIENT bundle only (the server build and the CSS keep Astro's `esnext`), so the bundler lowers `||=`, `&&=` and
   `??=` (Safari 14) in every script it emits; a module holding one does not parse on the floor and none of its code

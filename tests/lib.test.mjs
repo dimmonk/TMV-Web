@@ -2,7 +2,7 @@
 // what the pages render. Run: npm test
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readPublishedConfig, fetchPublishedConfig, hasSocial } from '../src/lib/published-config.js';
+import { readPublishedConfig, fetchPublishedConfig, hasSocial, LIMITS } from '../src/lib/published-config.js';
 import { moveSlotMarkers } from '../src/lib/sq-slot-marker.js';
 import { expiryStamp, isExpired, promoIsShown, promoButton } from '../src/lib/site-promo.js';
 import { gymNow } from '../src/lib/gym-clock.js';
@@ -15,6 +15,49 @@ const ALL_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satur
   .map((day) => ({ day, time: '11:00 AM – 10:00 PM' }));
 
 // ---- published-config -------------------------------------------------------
+
+test('a value past its limit reads as unset, a value at its limit is kept', () => {
+  const url = (n) => `https://x.example/${'a'.repeat(n - 18)}`;
+  const at = readPublishedConfig({
+    links: { book: { introduction: url(LIMITS.url) } },
+    social: { instagram: url(LIMITS.url) },
+    promo: { active: true, headline: 'h'.repeat(LIMITS.headline), body: 'b'.repeat(LIMITS.body), ctaLabel: 'c'.repeat(LIMITS.ctaLabel), ctaUrl: url(LIMITS.url), expiresAt: '' },
+  });
+  assert.equal(at.links.book.introduction.length, LIMITS.url);
+  assert.equal(at.social.instagram.length, LIMITS.url);
+  assert.equal(at.promo.headline.length, LIMITS.headline);
+  assert.equal(at.promo.ctaUrl.length, LIMITS.url);
+  const over = readPublishedConfig({
+    links: { book: { introduction: url(LIMITS.url + 1) } },
+    social: { instagram: url(LIMITS.url + 1) },
+    promo: { active: true, headline: 'h'.repeat(LIMITS.headline + 1), body: 'b'.repeat(LIMITS.body + 1), ctaLabel: 'c'.repeat(LIMITS.ctaLabel + 1), ctaUrl: url(LIMITS.url + 1), expiresAt: '' },
+  });
+  assert.equal(over.links.book.introduction, '');
+  assert.equal(over.social.instagram, '');
+  assert.deepEqual(over.promo, { active: true, headline: '', body: '', ctaLabel: '', ctaUrl: '', expiresAt: '' });
+});
+
+test('hours rows past a limit are left out, and only the first rows up to the limit are read', () => {
+  const rows = [
+    { day: 'd'.repeat(LIMITS.hoursDay + 1), time: 'Closed' },
+    { day: 'Monday', time: 't'.repeat(LIMITS.hoursTime + 1) },
+    ...Array.from({ length: LIMITS.hoursRows + 3 }, (_, i) => ({ day: `Row ${i}`, time: 'Closed' })),
+  ];
+  const { hours } = readPublishedConfig({ hours: rows });
+  assert.equal(hours.length, LIMITS.hoursRows);
+  assert.deepEqual(hours[0], { day: 'Row 0', time: 'Closed' });
+});
+
+test('a switched-off banner carries no text, and an expiry nobody can read means off', () => {
+  const live = { active: true, headline: 'Spring camp', body: 'b', ctaLabel: 'Go', ctaUrl: 'https://e.com', expiresAt: '2099-12-31T23:59:59' };
+  const blank = { active: false, headline: '', body: '', ctaLabel: '', ctaUrl: '', expiresAt: '' };
+  assert.deepEqual(readPublishedConfig({ promo: { ...live, active: false } }).promo, blank);
+  for (const expiresAt of ['2099-12-31', 'someday', '2099-12-31T23:59']) {
+    assert.deepEqual(readPublishedConfig({ promo: { ...live, expiresAt } }).promo, blank, expiresAt);
+  }
+  assert.deepEqual(readPublishedConfig({ promo: live }).promo, live);
+});
+
 
 test('a missing or malformed object reads as empty, not as a throw', () => {
   for (const bad of [null, undefined, 'x', 7, [], { promo: 'x', hours: 'x', social: 'x' }]) {
