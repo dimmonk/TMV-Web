@@ -201,7 +201,7 @@ export const PRICE_LIST_SECTIONS = [
     intro: true,
     about: [
       'Come use our facility for your own personal training or just play around and have fun',
-      'Hours: 11 AM to 10 PM',
+      'Hours: {openingHours}',
       'No reservation required',
     ],
     groups: [
@@ -337,4 +337,19 @@ export function formatEffective(input) {
   else d = new Date(input);
   if (!d || isNaN(d.getTime())) return null;
   return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+}
+
+/**
+ * A section's "about" lines with the live word filled: `{openingHours}` is the opening hours from `settings/siteConfig`
+ * (ADR-0202), carried in the published price list as `openingHours`. With no hours set the line says nothing and is
+ * left out, rather than printing a word or an hour nobody entered.
+ * @param {string[]} lines
+ * @param {string} openingHours  `payload.openingHours`, '' when the hours are not set
+ * @returns {string[]}
+ */
+export function aboutWithHours(lines, openingHours) {
+  return lines.flatMap((line) => {
+    if (!line.includes('{openingHours}')) return [line];
+    return openingHours ? [line.replace('{openingHours}', openingHours)] : [];
+  });
 }

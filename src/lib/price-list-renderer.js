@@ -22,6 +22,7 @@ import {
   PRICE_LIST_FOOTNOTES,
   formatPrice,
   formatEffective,
+  aboutWithHours,
 } from './price-list-layout.js';
 import { fetchPublicPriceList } from './public-projections.js';
 
@@ -190,13 +191,12 @@ function buildEditorialItems(items, priceList, accent) {
   return ul;
 }
 
-function resolveAbout(section, aboutOverrides) {
+function resolveAbout(section, aboutOverrides, openingHours) {
   const override = aboutOverrides?.[section.id];
-  if (Array.isArray(override) && override.length > 0) return override;
-  return section.about || [];
+  return aboutWithHours(Array.isArray(override) && override.length > 0 ? override : (section.about || []), openingHours);
 }
 
-function buildEditorialPage({ priceList, bwMode, titleSize, effective, aboutOverrides }) {
+function buildEditorialPage({ priceList, bwMode, titleSize, effective, aboutOverrides, openingHours }) {
   const cls = ['pl-page', 'pl-editorial', `ed-title-${titleSize}`];
   const page = el('div', { className: cls.join(' ') });
 
@@ -241,7 +241,7 @@ function buildEditorialPage({ priceList, bwMode, titleSize, effective, aboutOver
       const section = PRICE_LIST_SECTIONS.find(s => s.id === id);
       if (!section) continue;
       const palette = bwPalette(PRICE_LIST_PALETTE[section.color] || PRICE_LIST_PALETTE.gray, bwMode);
-      colEl.appendChild(buildEditorialCard(section, priceList, palette, resolveAbout(section, aboutOverrides)));
+      colEl.appendChild(buildEditorialCard(section, priceList, palette, resolveAbout(section, aboutOverrides, openingHours)));
     }
     grid.appendChild(colEl);
   }
@@ -351,7 +351,7 @@ function buildIndexItems(items, priceList) {
   return ul;
 }
 
-function buildIndexPage({ priceList, bwMode, titleSize, effective, aboutOverrides }) {
+function buildIndexPage({ priceList, bwMode, titleSize, effective, aboutOverrides, openingHours }) {
   const cls = ['pl-page', 'pl-index', `ix-title-${titleSize}`];
   const page = el('div', { className: cls.join(' ') });
 
@@ -383,7 +383,7 @@ function buildIndexPage({ priceList, bwMode, titleSize, effective, aboutOverride
       const section = PRICE_LIST_SECTIONS.find(s => s.id === id);
       if (!section) continue;
       const palette = bwPalette(PRICE_LIST_PALETTE[section.color] || PRICE_LIST_PALETTE.gray, bwMode);
-      colEl.appendChild(buildIndexCard(section, priceList, palette, resolveAbout(section, aboutOverrides)));
+      colEl.appendChild(buildIndexCard(section, priceList, palette, resolveAbout(section, aboutOverrides, openingHours)));
     }
     grid.appendChild(colEl);
   }
@@ -411,7 +411,7 @@ function buildIndexPage({ priceList, bwMode, titleSize, effective, aboutOverride
  *   When omitted, falls back to `priceListDisplay.titleSize`, then 'small'.
  * @param {{width:number,height:number}} [opts.canvasPx]
  * @param {Object} [opts.data] - Pre-fetched data { priceList, priceListAbout,
- *   priceListDisplay, lastModifiedAt }
+ *   priceListDisplay, lastModifiedAt, openingHours }
  * @param {boolean} [opts.fresh] - Bypass the CDN cache on the fetch (staff
  *   surfaces: the admin Open-preview link).
  */
@@ -458,14 +458,15 @@ export async function renderPriceListSheet(root, opts = {}) {
 
   const priceList = data?.priceList || {};
   const aboutOverrides = data?.priceListAbout || {};
+  const openingHours = typeof data?.openingHours === 'string' ? data.openingHours : '';
   // Effective date — null when the metadata trigger hasn't fired yet
   // (e.g. fresh install before any save). Don't fabricate a fake "now"
   // date that drifts during a render session — leave it blank instead.
   const effective = formatEffective(data?.lastModifiedAt) || '';
 
   const page = variant === 'index'
-    ? buildIndexPage({ priceList, bwMode, titleSize, effective, aboutOverrides })
-    : buildEditorialPage({ priceList, bwMode, titleSize, effective, aboutOverrides });
+    ? buildIndexPage({ priceList, bwMode, titleSize, effective, aboutOverrides, openingHours })
+    : buildEditorialPage({ priceList, bwMode, titleSize, effective, aboutOverrides, openingHours });
 
   if (opts.canvasPx) {
     // Caller supplied a fixed canvas (Puppeteer PDF generation passes
