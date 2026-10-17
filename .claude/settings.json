@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"$CLAUDE_PROJECT_DIR/.claude/hooks/standard/run-node.sh\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/standard/enforce.js\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"$CLAUDE_PROJECT_DIR/.claude/hooks/standard/run-node.sh\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/standard/enforce.js\""
+          }
+        ]
+      }
+    ]
+  }
+}
