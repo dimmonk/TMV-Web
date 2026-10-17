@@ -6,6 +6,9 @@ dist/
 # agent worktrees
 .claude/worktrees/
 
+# Throwaway worktree of origin/main that `npm run deploy` (TMV-Members) cuts and builds the website release in
+.deploy-worktree/
+
 # os / editor
 .DS_Store
 *.log

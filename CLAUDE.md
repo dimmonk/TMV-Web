@@ -7,33 +7,30 @@ Hosting (`themonkeyvault` / themonkeyvault.com) from the **TMV-Members** repo:
 cd ../TMV-Members && npm run deploy -- --only hosting:web
 ```
 
-That one command is the website's only deploy path. It is a counted release, in the order **cut, build, commit, push,
-deploy, check**:
+That one command is the website's only deploy path. It is a counted release run by the shared deploy core
+(`TMV-Members/.claude/standard/deploy/`, configured by `TMV-Members/deploy.config.mjs`, `hosting:web` with
+`repo: '../TMV-Web'`), in the order **cut, build, commit, tag, push, deploy, check**:
 
-1. It refuses unless **this checkout is clean and `HEAD == origin/main`** (modified
-   tracked files, or untracked files under `src/` or `public/`, would ship code no
-   clone has; a checkout that is not main would ship, or roll back, something
-   main does not hold).
-2. It cuts the next revision in **`release.json`** (`{ revision, date, commit }`:
-   the count of website releases, the day, and the first 8 characters of the
-   commit being released), in this working tree and **uncommitted**. You never edit
-   `release.json` by hand.
-3. It builds the site with that release (`scripts/build-web.sh --cut` in
-   TMV-Members: `npm run build` **in this repo**, never a stale `dist/`, with
-   `release.json` copied to `/version.json`). If the build fails, `release.json` is
-   restored and nothing is committed, pushed or deployed.
-4. Only then does it commit `chore: release N` here (that file alone) and push it to
-   `origin/main`. A rejected push undoes the commit. A Ctrl-C at any point before the
-   push lands puts this checkout back as it was.
-5. It deploys; the deploy's predeploy (`scripts/build-web.sh`, strict) builds the
-   pushed tree once more.
+1. It adds a throwaway worktree of **this repo's `origin/main`** at `.deploy-worktree/` (gitignored) and ships that, never
+   your working tree: uncommitted work, an untracked file, a checkout that is not main or is behind it cannot reach the site,
+   and nothing here is gated or touched. Work you have not pushed does not ship; the command prints what it is leaving behind.
+2. It cuts the next revision in **`public/version.json`** (`{ revision, date, commit }`: the count of website releases, the
+   day, and the first 8 characters of the commit being released), in that worktree. You never edit `public/version.json` by
+   hand. Astro copies `public/` verbatim into `dist/`, so the file is served at `/version.json` with no copy step.
+3. It builds the site in that worktree with the cut release (`npm run build`, never a stale `dist/`). If the build fails, the
+   worktree is discarded and nothing is committed, pushed or deployed.
+4. Only then does it commit `chore: release N` here (that file alone), tag it `release-N`, and push both to `origin/main`
+   atomically. A rejected push is re-cut on the new `origin/main` (up to five times). The core refuses to cut unless origin's
+   highest `release-*` tag equals the revision in `public/version.json`.
+5. It assembles the public site in TMV-Members (`web-dist/`: this build plus the waiver surfaces) and deploys it. A hand-typed
+   `firebase deploy` is refused by the guard on every target.
 6. It then checks the live site (`/version.json` names the revision, `/index.html`
    answers, `/_astro/**` is immutable, nothing private is served) and exits 2 with
-   the rollback if it is not that release.
+   the rollback if it is not that release (`npm run deploy-check -- hosting:web N` re-checks a revision).
 
 Nothing a visitor sees names the revision: `/version.json` exists for the daily
 status report only, and no page, footer or meta tag shows it. This is a public
-repository, so `release.json` carries only those three values.
+repository, so `public/version.json` carries only those three values.
 
 ## The published site config: banner, hours, social, links
 
