@@ -1,0 +1,51 @@
+# The rationed GitHub check (claude-config standard: edit it in claude-config, never in a project; `npm run test:standard`
+# fails on a hand-edited copy). It runs the same fast checks a deploy runs, .claude/standard/checks.mjs (typecheck, lint,
+# unit tests, whichever the project defines), so GitHub's verdict and the deploy's can never disagree.
+#
+# Rationed so the free Actions minutes last the month across every project:
+#   - only on a pull request into main, never on a push (release commits and deploys cost nothing here);
+#   - never on a draft pull request, and never when only docs or release notes changed;
+#   - one run per pull request at a time: a new push cancels the run it replaces;
+#   - a project that defines no check scripts stops after the checkout, before any install;
+#   - one job, capped at 10 minutes. The slow suites (rules, e2e) never run here; they stay scoped and local.
+# A run can also be started by hand from the Actions tab (workflow_dispatch).
+name: Checks
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore: ['**/*.md', 'docs/**', 'release-notes/**']
+  workflow_dispatch:
+
+concurrency:
+  group: checks-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    if: github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find the checks
+        id: find
+        run: echo "count=$(node --input-type=module -e "import { checksFor, readPackage } from './.claude/standard/checks.mjs'; console.log(checksFor(readPackage('.')).length)")" >> "$GITHUB_OUTPUT"
+      - if: steps.find.outputs.count != '0'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: '**/package-lock.json'
+      - name: Install
+        if: steps.find.outputs.count != '0'
+        run: |
+          if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; fi
+          if [ -f functions/package-lock.json ]; then (cd functions && npm ci --no-audit --no-fund); fi
+      - name: Checks
+        if: steps.find.outputs.count != '0'
+        run: node .claude/standard/checks.mjs

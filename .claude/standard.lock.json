@@ -1,6 +1,6 @@
 {
   "source": "github.com/dimmonk/claude-config",
-  "commit": "aa36680ec562bba3f863a0269a1d84f039a86e7c",
+  "commit": "cde14df1bfabea97d713a56a334d8cb7e1b545f1",
   "kinds": [
     "all",
     "ui"
@@ -54,7 +54,9 @@
     ".claude/hooks/standard/lib/hook-core.js": "5aed5d1d511ad2fc2b81a97f910ba8278402def3c87ef4bd96acbb5f93b7cd7b",
     ".claude/hooks/standard/run-node.sh": "6256930560ae66a8d712045dfa41ffda456b9a37a584f74fac5dbeca274eb693",
     ".claude/hooks/standard/package.json": "8005a3491db7d92f36ac66369861589f9c47123d3a7c71e643fc2c06168cd45a",
-    ".claude/rules/standard/vendored-standard.md": "79ccd1ba5fbb85b3573179438303decb162920657eca985d0b6f7d343ba1d519",
-    ".claude/standard/verify.mjs": "7186d12bbdbefb8215b7d8605c57e309a8929be787737a68c30391e00c23d329"
+    ".claude/rules/standard/vendored-standard.md": "b28eaac53298de4ed79ece04164084ae03b11fe591e632078bdd5790235223ac",
+    ".claude/standard/verify.mjs": "7186d12bbdbefb8215b7d8605c57e309a8929be787737a68c30391e00c23d329",
+    ".claude/standard/checks.mjs": "b15a47a30d3346d6461680a13eb2f5658df2bef45763c552969429d1587ba59d",
+    ".github/workflows/checks.yml": "c38c68c2a8e99fff7228f40bd91433d82b794f42554e1bea368b91944882cdd2"
   }
 }
