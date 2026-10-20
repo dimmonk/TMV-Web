@@ -3,43 +3,44 @@
  * The Specialized Classes card: the class LIST, one BLOCK for what every class
  * shares, and one PANEL that changes with the selected class.
  *
- * Booking, price and the action are identical for every class, so they are said
- * once in the shared block and never repeated per class; the panel carries only
- * what differs (headline, body, who it is for, when it runs, the clip). A list
- * row names only the days a class runs, on one line; exact times are in the
- * panel, and comparing classes side by side is the schedule page's job, which
- * the shared block links to.
+ * Every class here comes from the Members schedule (`specializedView`,
+ * src/lib/specialized-classes.js): a class is listed while it has sessions, and
+ * its name, headline, description, days, times and ages are the schedule's. The
+ * price comes from the Members price list. Only the clips live in this repo.
+ *
+ * Booking, price and the action are the same for every class, so they are said
+ * once in the shared block; the panel carries only what differs. A list row
+ * names only the days a class runs; exact times are in the panel, and comparing
+ * classes side by side is the schedule page's job, which the shared block links to.
+ *
+ * Live: the browser re-reads the schedule and updates the card in place
+ * (lib/class-tabs.ts, lib/apply-specialized-classes.js), through the `data-class-*`
+ * hooks below, which are always in the markup (`hidden` when empty).
  *
  * Sizing: the list sets the card's height. The panel's clip fills its column
  * (object-fit: cover) so the panel never leaves a hole beside it, and the
  * shared block sits under the panel.
  *
  * Content only: no chrome, no fixed width. Below `lg` everything stacks: list,
- * then the panel with its clip on top, then the shared block. Shaping (and the
- * check that the shared facts really are shared) is src/lib/specialized-classes.js;
- * switching is src/lib/class-tabs.ts.
+ * then the panel with its clip on top, then the shared block.
  */
 import { url, cat } from '../data/site';
 import { isVideoAsset, classMediaExists } from '../lib/class-media';
-import { specializedView } from '../lib/specialized-classes.js';
-import type { ClassItem } from '../data/classes';
+import type { ClassRow } from '../lib/specialized-classes.js';
+import type { ClassOffer } from '../data/class-schedule';
 
 interface Props {
-  classes: ClassItem[];
+  rows: ClassRow[];
+  offer: ClassOffer;
 }
-const { classes } = Astro.props;
+const { rows, offer } = Astro.props;
 
-const { offer, rows } = specializedView(classes);
 const items = rows.map((r) => ({
   ...r,
   src: r.image.startsWith('assets/') ? url(r.image) : r.image,
   isVideo: isVideoAsset(r.image),
-  hasMedia: classMediaExists(r.image),
+  hasMedia: r.image !== '' && classMediaExists(r.image),
 }));
-
-const actionHref = 'external' in offer.link ? offer.link.external : url(offer.link.screen);
-const external = 'external' in offer.link;
-const bookingNote = offer.bookingNote && offer.bookingNote[0].toUpperCase() + offer.bookingNote.slice(1);
 ---
 <div class="ct" style={`--cat:${cat.classes}`} data-class-tabs>
   <div class="ct-list" role="tablist" aria-orientation="vertical" aria-label="Specialized classes">
@@ -49,7 +50,7 @@ const bookingNote = offer.bookingNote && offer.bookingNote[0].toUpperCase() + of
         role="tab" aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}
       >
         <span class="ct-row-t">{it.name}</span>
-        {it.days && <span class="ct-row-days">{it.days}</span>}
+        <span class="ct-row-days" data-class-days hidden={!it.days}>{it.days}</span>
         <i class="bi bi-chevron-right ct-row-chev" aria-hidden="true"></i>
       </button>
     ))}
@@ -61,11 +62,11 @@ const bookingNote = offer.bookingNote && offer.bookingNote[0].toUpperCase() + of
         <div class="ct-panel" data-class-panel={it.id} role="tabpanel" aria-label={it.name} hidden={i !== 0}>
           <div class="ct-copy">
             <h3 class="ct-title">{it.name}</h3>
-            {it.headline && <p class="ct-headline">{it.headline}</p>}
-            {it.body && <p class="ct-desc">{it.body}</p>}
+            <p class="ct-headline" data-class-headline hidden={!it.headline}>{it.headline}</p>
+            <p class="ct-desc" data-class-body hidden={!it.body}>{it.body}</p>
             <div class="ct-facts">
-              {it.who && <div class="ct-spec"><span class="ct-spec-l">Who it's for</span><span class="ct-spec-v">{it.who}</span></div>}
-              <div class="ct-spec"><span class="ct-spec-l">When</span><span class="ct-spec-v">{it.when}</span></div>
+              <div class="ct-spec" data-class-who-row hidden={!it.who}><span class="ct-spec-l">Who it's for</span><span class="ct-spec-v" data-class-who>{it.who}</span></div>
+              <div class="ct-spec"><span class="ct-spec-l">When</span><span class="ct-spec-v" data-class-when>{it.when.map((line) => <span class="ct-when-line">{line}</span>)}</span></div>
             </div>
           </div>
 
@@ -82,11 +83,10 @@ const bookingNote = offer.bookingNote && offer.bookingNote[0].toUpperCase() + of
 
     <div class="ct-offer">
       <p class="ct-offer-t">
-        <strong>All {offer.booking.toLowerCase()}: {offer.price}.</strong>
-        {bookingNote && ` ${bookingNote}.`}
+        <strong>All drop-in{offer.price && `: ${offer.price}`}.</strong> No reservation needed.
       </p>
-      <a href={actionHref} class="btn btn-dark ct-act" {...(external ? { target: '_blank', rel: 'noopener' } : {})}>
-        {offer.actionLabel} <i class={`bi ${external ? 'bi-arrow-up-right' : 'bi-arrow-right'}`} aria-hidden="true"></i>
+      <a href={url('schedule')} class="btn btn-dark ct-act">
+        View schedule <i class="bi bi-arrow-right" aria-hidden="true"></i>
       </a>
     </div>
   </div>
@@ -130,6 +130,9 @@ const bookingNote = offer.bookingNote && offer.bookingNote[0].toUpperCase() + of
   .ct-spec { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 8px 0; border-top: 1px solid #efeee8; }
   .ct-spec-l { font: 700 10px/1.4 var(--font-display); letter-spacing: .07em; text-transform: uppercase; color: color-mix(in srgb, var(--cat) 62%, #000); }
   .ct-spec-v { font: 600 13px/1.3 var(--font-body); color: var(--text-2); }
+  /* Lines the browser rebuilds carry no scope attribute, hence :global. */
+  .ct-spec-v :global(.ct-when-line) { display: block; }
+  .ct-spec-v :global(.ct-when-line + .ct-when-line) { margin-top: 4px; }
 
   /* The clip FILLS its column, so the panel never leaves a hole beside it. */
   .ct-media { position: relative; background: var(--ink); overflow: hidden; min-height: 240px; }

@@ -8,7 +8,7 @@
  * mobile screen exists. Everything else — copy, media, specs — lives here once.
  */
 
-export type ClassGroup = 'core' | 'specialized' | 'partnership';
+export type ClassGroup = 'core' | 'partnership';
 
 /** Semantic action target, resolved per surface. */
 export type ClassLink =
@@ -61,23 +61,31 @@ export const classes: ClassItem[] = [
     specs: 'Level: Prerequisite required || Ages: 9+ || Schedule: 2 × 90 min / week || Booking: Membership · join any time || Price: $150 / month · $5 class add-on',
   },
 
-  // ---- Specialized classes ----
-  { group: 'specialized', category: 'Flips', tag: 'Flips', title: 'Flip Class', image: 'assets/flips.mp4', description: 'Master your flips, safely — a levelled path from first roll to full aerials.', bookingTag: 'Drop-in', pills: 'Ages 7+ | Levels 1–2', actionLabel: 'View schedule', link: { screen: 'schedule' }, backEyebrow: 'Flips', backHeadline: 'A levelled path through the air', backBody: 'A safe, progressive route through the flipping fundamentals — Level 1 into Level 2. Always spotted and matted.', specs: 'Level: Levels 1–2 || Ages: 7+ || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { group: 'specialized', category: 'Flips', tag: 'Backflip Only', title: 'Backflip Only', image: 'assets/backflip.mp4', description: 'One goal, one class — land your first standing backflip.', bookingTag: 'Drop-in', pills: 'Adults (18+) | Sat — 12 PM', actionLabel: 'View schedule', link: { screen: 'schedule' }, backEyebrow: 'Backflip Only', backHeadline: 'Chase the one move', backBody: 'A focused session built around a single skill: the standing backflip. Progressions, spotting and reps until it’s yours — always matted.', specs: 'Level: All levels || Ages: Adults (18+) || Schedule: Sat — 12 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { group: 'specialized', category: 'Strength', tag: 'Strength', title: 'Calisthenics', image: 'assets/calisthenics.mp4', description: 'Build serious bodyweight strength and control.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Weekday evenings', actionLabel: 'View schedule', link: { screen: 'schedule' }, backEyebrow: 'Strength', backHeadline: 'Bodyweight strength & control', backBody: 'Bodyweight strength, control and mobility. Stands alone or powers up everything else you train.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Weekday evenings · exact times on the schedule || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { group: 'specialized', category: 'Tricking', tag: 'Tricking', title: 'Tricking', image: 'assets/tricking.mp4', description: 'Kicks, flips and twists — martial arts meets acrobatics.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Tue & Thu — 7 PM', actionLabel: 'View schedule', link: { screen: 'schedule' }, backEyebrow: 'Tricking', backHeadline: 'Martial arts meets acrobatics', backBody: 'Kicks, flips and twists chained into flowing combos. High-energy — and you build your own style.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Tue · Thu — 7 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { group: 'specialized', category: 'Gymnastics', tag: 'Gymnastics', title: 'Gymnastics', image: 'assets/gymnastics.mp4', description: 'Strength, flexibility and clean form — the base for everything.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Tue & Fri — 6 PM', actionLabel: 'View schedule', link: { screen: 'schedule' }, backEyebrow: 'Gymnastics', backHeadline: 'The foundation under everything', backBody: 'Strength, flexibility and clean form — the fundamentals that make everything else safer and sharper.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Tue · Fri — 6 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { group: 'specialized', category: 'Strength', tag: 'Strength', title: 'Strength', image: 'assets/strength.mp4', description: 'Targeted strength training to build raw power and resilience.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Thu & Fri evenings', actionLabel: 'View schedule', link: { screen: 'schedule' }, backEyebrow: 'Strength', backHeadline: 'Raw power & resilience', backBody: 'Focused, progressive strength work — heavier loading and conditioning that translates straight into everything else you train.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Thu — 6 PM · Fri — 9 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { group: 'specialized', category: 'Flexibility', tag: 'Flexibility', title: 'Flexibility', image: 'assets/flexibility.mp4', description: 'Open up your range with active mobility and flexibility.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Fri — 7 PM', actionLabel: 'View schedule', link: { screen: 'schedule' }, backEyebrow: 'Flexibility', backHeadline: 'More range, safer movement', backBody: 'Active mobility and flexibility drills that unlock deeper positions and keep you moving well for the long haul.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Fri — 7 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { group: 'specialized', category: 'Tricking', tag: 'Acro Dance', title: 'Acro Dance', image: 'assets/acrodance.mp4', description: 'Acrobatics for dancers — line, expression and performance-ready flow. Levels 1 & 2.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Mon evenings | Levels 1–2', actionLabel: 'View schedule', link: { screen: 'schedule' }, backEyebrow: 'Acro Dance', backHeadline: 'Where acrobatics turns into artistry', backBody: 'Acrobatic technique through a dancer’s lens — clean lines, extension and controlled transitions built into expressive, performance-ready sequences. A levelled path: start in Level 1 and grow into Level 2.', specs: 'Level: Levels 1–2 || Ages: Teens & Adults (13+) || Schedule: Mon — 7 PM (L1) · 8 PM (L2) || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { group: 'specialized', category: 'Gymnastics', tag: 'Handstand', title: 'Handstand', image: 'assets/handstand.mp4', description: 'Balance, alignment and the path to a solid handstand.', bookingTag: 'Drop-in', pills: 'Teens & Adults (13+) | Thu — 8 PM', actionLabel: 'View schedule', link: { screen: 'schedule' }, backEyebrow: 'Handstand', backHeadline: 'Find your line, hold it', backBody: 'Wrist prep, alignment and balance drills that build toward a strong, controlled freestanding handstand.', specs: 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Thu — 8 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-  { group: 'specialized', category: 'Parkour', tag: 'Speed League', title: 'Speed League', image: 'assets/speedleague.mp4', description: 'Timed parkour runs with coaching feedback — times posted to a public leaderboard.', bookingTag: 'Drop-in', pills: 'Ages 9+ | Wed evenings', actionLabel: 'View schedule', link: { screen: 'schedule' }, backEyebrow: 'Speed League', backHeadline: 'Run it. Beat the clock.', backBody: 'Timed parkour runs with coaching feedback, times posted to a public leaderboard. Open to everyone as a drop-in class and part of the Athletic Program.', specs: 'Level: All levels || Ages: 9+ · split 9–14 and 15+ || Schedule: Wed — 6 PM (9–14) · 7 PM (15+) || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275' },
-
   // ---- Partnership classes (booked directly with the partner coach) ----
   { group: 'partnership', category: 'Partner', tag: 'Partner', title: 'Stick Fighting Toronto', image: 'assets/stickfighting.mp4', description: 'Filipino stick fighting with our partner, coach Peter.', bookingTag: 'Direct with coach', pills: 'Adults (18+) | Saturdays', actionLabel: 'Contact coach', backActionLabel: 'Contact coach Peter', link: { external: 'mailto:coachpeter@stickfightingtoronto.com' }, backEyebrow: 'Partner · Adults', backHeadline: 'Filipino stick fighting', backBody: 'Footwork, timing and weapon flow with coach Peter. Welcoming adult class — booked directly with the coach.', specs: 'Level: All levels || Ages: Adults (18+) || Schedule: Sat — 10 AM to 12 PM || Booking: Direct with coach Peter || Price: $30 drop-in · $100 / month' },
   { group: 'partnership', category: 'Partner', tag: 'Partner', title: 'Martial Arts', image: 'assets/martialarts.mp4', description: 'Jiu Jitsu, Wrestling, Boxing & Muay Thai.', bookingTag: 'Direct with coach', pills: 'Ages 16+ | Grappling | Striking', actionLabel: 'Get in touch', link: { external: 'mailto:info@themonkeyvault.com?subject=Martial%20Arts%20classes%20(for%20Ryan)' }, backEyebrow: 'Partner · Teens 16+ & Adults', backHeadline: 'Grappling & striking', backBody: 'Jiu Jitsu, Wrestling, Boxing and Muay Thai under partner coaches. Beginner to competitor — booked directly via WhatsApp.', specs: 'Level: All levels · beginner to competitor || Ages: 16+ || Booking: Direct via WhatsApp · ask for Ryan || Disciplines: BJJ · Wrestling · Boxing · Muay Thai' },
 ];
 
 export const coreClasses = classes.filter((c) => c.group === 'core');
-export const specializedClasses = classes.filter((c) => c.group === 'specialized');
 export const partnershipClasses = classes.filter((c) => c.group === 'partnership');
+
+/**
+ * The Specialized Classes card's clips, by class name as the Members schedule
+ * names it (without a level number: "Flips" covers Flips 1 and Flips 2). Which
+ * classes are on the card, and their headline, description, days, times and ages,
+ * all come from the Members schedule (src/lib/specialized-classes.js); a clip is
+ * the one thing kept here, because each is re-encoded by hand before it ships.
+ * A class with no file yet shows the placeholder, and heals once the file lands.
+ */
+export const specializedClips: Readonly<Record<string, string>> = Object.freeze({
+  Flips: 'assets/flips.mp4',
+  Backflip: 'assets/backflip.mp4',
+  Calisthenics: 'assets/calisthenics.mp4',
+  Tricking: 'assets/tricking.mp4',
+  Gymnastics: 'assets/gymnastics.mp4',
+  Strength: 'assets/strength.mp4',
+  Flexibility: 'assets/flexibility.mp4',
+  'Acro Dance': 'assets/acrodance.mp4',
+  Handstand: 'assets/handstand.mp4',
+  'Speed League': 'assets/speedleague.mp4',
+});

@@ -7,7 +7,9 @@ import { moveSlotMarkers } from '../src/lib/sq-slot-marker.js';
 import { expiryStamp, isExpired, promoIsShown, promoButton } from '../src/lib/site-promo.js';
 import { gymNow } from '../src/lib/gym-clock.js';
 import { jsonForScript } from '../src/lib/json-for-script.js';
-import { specializedView, scheduleDays, NO_FIXED_TIME } from '../src/lib/specialized-classes.js';
+import { specializedView, splitLevel, clock } from '../src/lib/specialized-classes.js';
+import { applySpecializedClasses } from '../src/lib/apply-specialized-classes.js';
+import { JSDOM } from 'jsdom';
 import {
   weekSchedule, hasOpenDays, hoursSummary, hoursHeading, hoursStat, openingHoursSpec, openStatus, formatClock,
 } from '../src/lib/opening-hours.js';
@@ -264,42 +266,74 @@ test('a Square slot marker moves into data-sq on its anchor, and any stray marke
 
 // ---- specialized-classes ----------------------------------------------------
 
-const SPEC = 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Tue · Thu — 7 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275';
-const cls = (over = {}) => ({
-  group: 'specialized', category: 'X', tag: 'X', title: 'Tricking', image: 'assets/x.mp4', description: 'd',
-  bookingTag: 'Drop-in', pills: '', actionLabel: 'View schedule', link: { screen: 'schedule' },
-  backEyebrow: '', backHeadline: 'Martial arts meets acrobatics', backBody: 'Kicks and flips.', specs: SPEC, ...over,
+const D = (id, name, over = {}) => ({ id, name, order: 0, accessCategories: ['classes'], description: `${name} body`, headline: `${name} line`, ...over });
+const S = (disciplineId, day, time, ageRange, over = {}) => ({ disciplineId, day, time, ageRange, isCancelled: false, showOnWebsite: true, ...over });
+const SCHEDULE = {
+  disciplines: [
+    D('pk', 'Parkour'), D('f1', 'Flips 1', { order: 2 }), D('f2', 'Flips 2', { order: 3, description: 'Level two body' }),
+    D('tr', 'Tricking', { order: 1, headline: '' }), D('ath', 'Athletic', { accessCategories: ['athletic'] }),
+    D('ex', 'Explosive', { order: 4 }), D('sl', 'Speed League', { order: 5 }), D('hs', 'Handstand', { order: 6 }),
+  ],
+  classes: [
+    S('pk', 1, '17:00', '7-12'),
+    S('f2', 5, '20:00', '18+'), S('f1', 0, '12:00', '7-12'), S('f1', 4, '18:00', '7-12'), S('f1', 3, '19:00', '18+'), S('f2', 3, '20:00', '18+'),
+    S('tr', 2, '19:00', '13+'), S('tr', 4, '19:00', '13+'),
+    S('ath', 2, '18:00', '9-14'),
+    S('sl', 3, '18:00', '9-14', { isCancelled: true }),
+    S('hs', 4, '20:00', '13+', { showOnWebsite: false }),
+  ],
+};
+
+test('the card lists the classes with sessions, levels as one entry, in the schedule order', () => {
+  const rows = specializedView(SCHEDULE, { Flips: 'assets/flips.mp4' });
+  // Parkour is a core program, Athletic is not a drop-in class, Explosive has no
+  // sessions, Speed League only a cancelled one, Handstand only one kept off the website.
+  assert.deepEqual(rows.map((r) => r.id), ['tricking', 'flips']);
+  const [tricking, flips] = rows;
+  assert.deepEqual(tricking, {
+    id: 'tricking', name: 'Tricking', days: 'Tue · Thu', who: 'Ages 13+', when: ['Tue · Thu — 7 PM'],
+    headline: '', body: 'Tricking body', image: '',
+  });
+  assert.equal(flips.name, 'Flips');
+  assert.equal(flips.days, 'Wed · Thu · Fri · Sun');
+  assert.equal(flips.who, 'Ages 7–12 · 18+ · Levels 1–2');
+  assert.deepEqual(flips.when, ['Level 1, ages 7–12: Thu 6 PM · Sun 12 PM', 'Level 1, ages 18+: Wed — 7 PM', 'Level 2, ages 18+: Wed · Fri — 8 PM']);
+  assert.equal(flips.headline, 'Flips 1 line');
+  assert.equal(flips.body, 'Flips 1 body');
+  assert.equal(flips.image, 'assets/flips.mp4');
 });
 
-test('the shared offer is read once and each class keeps only what differs', () => {
-  const { offer, rows } = specializedView([
-    cls(),
-    cls({ title: 'Flip Class', specs: SPEC.replace('Level: All levels', 'Level: Levels 1–2').replace('Teens & Adults (13+)', '7+').replace(' || Schedule: Tue · Thu — 7 PM', '') }),
-  ]);
-  assert.deepEqual(offer, { booking: 'Drop-in', bookingNote: 'no reservation needed', price: '$30 single · 10-pack $275', link: { screen: 'schedule' }, actionLabel: 'View schedule' });
-  assert.deepEqual(rows.map((r) => [r.id, r.who, r.when]), [
-    ['tricking', 'Teens & Adults (13+)', 'Tue · Thu — 7 PM'],
-    ['flip-class', 'Ages 7+ · Levels 1–2', NO_FIXED_TIME],
-  ]);
-  assert.equal(rows[0].headline, 'Martial arts meets acrobatics');
-  assert.equal(rows[0].body, 'Kicks and flips.');
+test('an unreadable schedule lists nothing', () => {
+  assert.deepEqual(specializedView(null), []);
+  assert.deepEqual(specializedView({}), []);
 });
 
-test('a class priced, booked or actioned differently is a build error naming it', () => {
-  assert.throws(() => specializedView([cls(), cls({ title: 'Odd', specs: SPEC.replace('$30', '$35') })]), /"Odd"/);
-  assert.throws(() => specializedView([cls(), cls({ title: 'Odd', bookingTag: 'Register' })]), /"Odd"/);
-  assert.throws(() => specializedView([cls(), cls({ title: 'Odd', link: { screen: 'private-lessons' } })]), /"Odd"/);
-  assert.throws(() => specializedView([]), /no classes/);
+test('a level number is split off the class name, and times read as a clock', () => {
+  assert.deepEqual(splitLevel('Acro Dance 2'), { group: 'Acro Dance', level: 2 });
+  assert.deepEqual(splitLevel('Tricking'), { group: 'Tricking', level: 0 });
+  assert.equal(clock('19:00'), '7 PM');
+  assert.equal(clock('19:30'), '7:30 PM');
+  assert.equal(clock('12:00'), '12 PM');
+  assert.equal(clock('09:15'), '9:15 AM');
 });
 
-test('every specialized class in the catalog shares one offer', async () => {
-  const { specializedClasses } = await import('../src/data/classes.ts');
-  assert.equal(specializedView(specializedClasses).rows.length, specializedClasses.length);
-});
-
-test('a list row names only the days a class runs, in week order', () => {
-  assert.equal(scheduleDays('Thu — 6 PM · Fri — 9 PM'), 'Thu · Fri');
-  assert.equal(scheduleDays('Fri · Mon — 5 PM'), 'Mon · Fri');
-  assert.equal(scheduleDays('Weekday evenings · exact times on the schedule'), 'Weekdays');
-  assert.equal(scheduleDays(''), '');
+test('the browser brings a built card up to date in place, as text', () => {
+  const { document } = new JSDOM(`<div data-class-tabs>
+    ${['tricking', 'flips'].map((id) => `<button data-class-tab="${id}"><span data-class-days>old</span></button>`).join('')}
+    ${['tricking', 'flips'].map((id) => `<div data-class-panel="${id}"><p data-class-headline>old</p><p data-class-body>old</p>
+      <div data-class-who-row><span data-class-who>old</span></div><span data-class-when><span>old</span></span></div>`).join('')}
+  </div>`).window;
+  const root = document.querySelector('[data-class-tabs]');
+  const rows = specializedView({ ...SCHEDULE, disciplines: SCHEDULE.disciplines.map((d) => (d.id === 'tr' ? { ...d, description: '<img src=x onerror=alert(1)>' } : d)) })
+    .filter((r) => r.id === 'tricking');
+  assert.deepEqual(applySpecializedClasses(root, rows), ['tricking']);
+  const tab = (id) => root.querySelector(`[data-class-tab="${id}"]`);
+  const panel = root.querySelector('[data-class-panel="tricking"]');
+  assert.equal(tab('flips').hidden, true);
+  assert.equal(tab('tricking').hidden, false);
+  assert.equal(tab('tricking').querySelector('[data-class-days]').textContent, 'Tue · Thu');
+  assert.equal(panel.querySelector('[data-class-headline]').hidden, true);
+  assert.equal(panel.querySelector('[data-class-body]').textContent, '<img src=x onerror=alert(1)>');
+  assert.equal(panel.querySelector('img'), null);
+  assert.deepEqual([...panel.querySelectorAll('[data-class-when] .ct-when-line')].map((l) => l.textContent), ['Tue · Thu — 7 PM']);
 });

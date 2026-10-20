@@ -8,7 +8,8 @@ import BookingCard from '../BookingCard.astro';
 import ClassCard from '../ClassCard.astro';
 import ClassTabs from '../ClassTabs.astro';
 import NextStep from '../NextStep.astro';
-import { coreClasses, specializedClasses, partnershipClasses } from '../../data/classes';
+import { coreClasses, partnershipClasses } from '../../data/classes';
+import { specializedRows, specializedOffer } from '../../data/class-schedule';
 import type { ClassItem } from '../../data/classes';
 import { cat, links, url } from '../../data/site';
 
@@ -32,9 +33,13 @@ const classHref = (c: ClassItem): string =>
     {coreClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}
   </div>
 
-  <h3 class="m-h3">Specialized classes</h3>
-  <p class="m-sub" style="margin-bottom:14px">Ten disciplines — tap one to open it.</p>
-  <div style="margin-bottom:30px"><ClassTabs classes={specializedClasses} /></div>
+  {specializedRows.length > 0 && (
+    <>
+      <h3 class="m-h3">Specialized classes</h3>
+      <p class="m-sub" style="margin-bottom:14px">Focused disciplines. Tap one to open it.</p>
+      <div style="margin-bottom:30px"><ClassTabs rows={specializedRows} offer={specializedOffer} /></div>
+    </>
+  )}
 
   {/* Desktop's Class Membership block — a $180 unlimited offer that covers
       every class on this screen. Was missing from mobile entirely, so the
