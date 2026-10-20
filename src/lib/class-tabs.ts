@@ -2,7 +2,7 @@
  * Specialized-classes list/detail card — one discipline visible at a time.
  *
  * Every panel is SERVER-RENDERED; this only swaps which one is shown, so the
- * first discipline reads with JS off and all eleven are in the HTML for search.
+ * first discipline reads with JS off and every class is in the HTML for search.
  * Scoped to each root so the desktop composition and the phone composition can
  * both be on the page without fighting.
  *

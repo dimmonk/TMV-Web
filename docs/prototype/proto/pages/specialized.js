@@ -25,7 +25,7 @@ const sectionHeader = `
   <div class="trainsec-head" data-astro-cid-umxd3svy><div class="sh2" style="--brand:#2196f3" data-astro-cid-pb4nux2a>
     <div class="sh2-eyebrow" data-astro-cid-pb4nux2a><span class="num" data-astro-cid-pb4nux2a>02</span><span class="rule" data-astro-cid-pb4nux2a></span>Go Deeper</div>
     <h2 class="sh2-title" data-astro-cid-pb4nux2a>Specialized Classes</h2>
-    <p class="sh2-desc" data-astro-cid-pb4nux2a>Eleven disciplines — scan the list, open the one you want to chase hard.</p>
+    <p class="sh2-desc" data-astro-cid-pb4nux2a>Ten disciplines — scan the list, open the one you want to chase hard.</p>
   </div></div>`;
 
 const row = (c, on) => `

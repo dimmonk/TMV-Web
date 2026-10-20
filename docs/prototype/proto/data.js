@@ -109,16 +109,6 @@ export const CLASSES = Object.freeze([
     "who": "Ages 9+ · split 9–14 and 15+",
     "when": "Wed — 6 PM (9–14) · 7 PM (15+)",
     "poster": ""
-  },
-  {
-    "id": "explosive",
-    "name": "Explosive",
-    "days": "Mon · Fri",
-    "headline": "Power, speed, athletic pop",
-    "body": "Plyometric and power-based training to build explosive strength, speed and athletic performance. Open as a drop-in class and part of the Athletic Program.",
-    "who": "Teens & Adults (13+)",
-    "when": "Mon · Fri — 5 PM",
-    "poster": ""
   }
 ]);
 

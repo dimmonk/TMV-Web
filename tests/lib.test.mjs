@@ -7,6 +7,7 @@ import { moveSlotMarkers } from '../src/lib/sq-slot-marker.js';
 import { expiryStamp, isExpired, promoIsShown, promoButton } from '../src/lib/site-promo.js';
 import { gymNow } from '../src/lib/gym-clock.js';
 import { jsonForScript } from '../src/lib/json-for-script.js';
+import { specializedView, scheduleDays, NO_FIXED_TIME } from '../src/lib/specialized-classes.js';
 import {
   weekSchedule, hasOpenDays, hoursSummary, hoursHeading, hoursStat, openingHoursSpec, openStatus, formatClock,
 } from '../src/lib/opening-hours.js';
@@ -259,4 +260,46 @@ test('a Square slot marker moves into data-sq on its anchor, and any stray marke
     moveSlotMarkers(html),
     '<a href="https://sq.example/x" data-sq="book.introduction" target="_blank">Go</a><i data-x="https://sq.example/y"></i>',
   );
+});
+
+// ---- specialized-classes ----------------------------------------------------
+
+const SPEC = 'Level: All levels || Ages: Teens & Adults (13+) || Schedule: Tue · Thu — 7 PM || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275';
+const cls = (over = {}) => ({
+  group: 'specialized', category: 'X', tag: 'X', title: 'Tricking', image: 'assets/x.mp4', description: 'd',
+  bookingTag: 'Drop-in', pills: '', actionLabel: 'View schedule', link: { screen: 'schedule' },
+  backEyebrow: '', backHeadline: 'Martial arts meets acrobatics', backBody: 'Kicks and flips.', specs: SPEC, ...over,
+});
+
+test('the shared offer is read once and each class keeps only what differs', () => {
+  const { offer, rows } = specializedView([
+    cls(),
+    cls({ title: 'Flip Class', specs: SPEC.replace('Level: All levels', 'Level: Levels 1–2').replace('Teens & Adults (13+)', '7+').replace(' || Schedule: Tue · Thu — 7 PM', '') }),
+  ]);
+  assert.deepEqual(offer, { booking: 'Drop-in', bookingNote: 'no reservation needed', price: '$30 single · 10-pack $275', link: { screen: 'schedule' }, actionLabel: 'View schedule' });
+  assert.deepEqual(rows.map((r) => [r.id, r.who, r.when]), [
+    ['tricking', 'Teens & Adults (13+)', 'Tue · Thu — 7 PM'],
+    ['flip-class', 'Ages 7+ · Levels 1–2', NO_FIXED_TIME],
+  ]);
+  assert.equal(rows[0].headline, 'Martial arts meets acrobatics');
+  assert.equal(rows[0].body, 'Kicks and flips.');
+});
+
+test('a class priced, booked or actioned differently is a build error naming it', () => {
+  assert.throws(() => specializedView([cls(), cls({ title: 'Odd', specs: SPEC.replace('$30', '$35') })]), /"Odd"/);
+  assert.throws(() => specializedView([cls(), cls({ title: 'Odd', bookingTag: 'Register' })]), /"Odd"/);
+  assert.throws(() => specializedView([cls(), cls({ title: 'Odd', link: { screen: 'private-lessons' } })]), /"Odd"/);
+  assert.throws(() => specializedView([]), /no classes/);
+});
+
+test('every specialized class in the catalog shares one offer', async () => {
+  const { specializedClasses } = await import('../src/data/classes.ts');
+  assert.equal(specializedView(specializedClasses).rows.length, specializedClasses.length);
+});
+
+test('a list row names only the days a class runs, in week order', () => {
+  assert.equal(scheduleDays('Thu — 6 PM · Fri — 9 PM'), 'Thu · Fri');
+  assert.equal(scheduleDays('Fri · Mon — 5 PM'), 'Mon · Fri');
+  assert.equal(scheduleDays('Weekday evenings · exact times on the schedule'), 'Weekdays');
+  assert.equal(scheduleDays(''), '');
 });

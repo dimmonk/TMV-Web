@@ -1,168 +1,94 @@
 ---
 /**
- * The Specialized Classes card — a vertical discipline LIST on the left, the
- * selected discipline's detail in the middle, its clip on the right.
+ * The Specialized Classes card: the class LIST, one BLOCK for what every class
+ * shares, and one PANEL that changes with the selected class.
  *
- * Eleven specialized classes used to render as eleven full flip cards, which
- * was the biggest source of visual overload on the Train page. The fix is not
- * to hide them — it's to stop rendering eleven *cards*. The list stays whole
- * and scannable in one column (every title on one left-aligned axis, with a
- * poster so "Backflip Only" and "Explosive" mean something to a newcomer), and
- * only the detail changes.
+ * Booking, price and the action are identical for every class, so they are said
+ * once in the shared block and never repeated per class; the panel carries only
+ * what differs (headline, body, who it is for, when it runs, the clip). A list
+ * row names only the days a class runs, on one line; exact times are in the
+ * panel, and comparing classes side by side is the schedule page's job, which
+ * the shared block links to.
  *
- * Nothing is lost in the collapse: the old flip card's front (clip, booking
- * tag, pills, action) and its back (headline, body, spec table) merge into the
- * one detail pane, so there is no second side to discover.
+ * Sizing: the list sets the card's height. The panel's clip fills its column
+ * (object-fit: cover) so the panel never leaves a hole beside it, and the
+ * shared block sits under the panel.
  *
- * THREE SIZING RULES, each learned by measuring rather than guessing:
- *
- * 1. The poster sits INSIDE the row, it does not set the row height. A 36px
- *    poster in a 32px row. Sizing rows around a bigger poster pushed the card
- *    to 454px while the copy only fills ~290px — that gap was the dead space.
- * 2. The facts follow the body. `margin-top: auto` on them opened every pixel
- *    of leftover in the MIDDLE of the column; the leftover belongs at the
- *    bottom, beside a full-height image, where it reads as margin.
- * 3. The media is the only elastic element, so it is sized FROM the card
- *    height at its true ratio (`height: 100%` + `aspect-ratio`, in an `auto`
- *    track). It is never stretched, and never cropped more than ClassCard's
- *    own 16/11 already crops.
- *
- * Content only — no chrome, no fixed width. Both chromes render this one
- * component; `variant="compact"` is a density knob, not a second
- * implementation. Below `lg` (and in compact) the three columns stack.
- * Logic is src/lib/class-tabs.ts.
+ * Content only: no chrome, no fixed width. Below `lg` everything stacks: list,
+ * then the panel with its clip on top, then the shared block. Shaping (and the
+ * check that the shared facts really are shared) is src/lib/specialized-classes.js;
+ * switching is src/lib/class-tabs.ts.
  */
 import { url, cat } from '../data/site';
 import { isVideoAsset, classMediaExists } from '../lib/class-media';
+import { specializedView } from '../lib/specialized-classes.js';
 import type { ClassItem } from '../data/classes';
 
 interface Props {
   classes: ClassItem[];
-  variant?: 'full' | 'compact';
 }
-const { classes, variant = 'full' } = Astro.props;
+const { classes } = Astro.props;
 
-const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const { offer, rows } = specializedView(classes);
+const items = rows.map((r) => ({
+  ...r,
+  src: r.image.startsWith('assets/') ? url(r.image) : r.image,
+  isVideo: isVideoAsset(r.image),
+  hasMedia: classMediaExists(r.image),
+}));
 
-const bookingIconMap: Record<string, string> = {
-  'Drop-in': 'bi-door-open', 'By appointment': 'bi-calendar-check', 'Membership': 'bi-arrow-repeat',
-  'Register': 'bi-calendar-event', 'Direct with coach': 'bi-chat-dots',
-};
-
-/** Every specialized class carries the shared `classes` accent, the same
- *  mapping ClassCard uses — so the list reads as one family, not eleven. */
-const accent = cat.classes;
-
-/** `specs` is "Level: … || Ages: … || Schedule: … || Booking: … || Price: …".
- *  Each fact is shown in exactly ONE place below, so parse it into a map and
- *  let each zone take what it owns. */
-const parseSpecs = (specs: string): Record<string, string> =>
-  Object.fromEntries(
-    specs.split('||').map((s) => s.trim()).filter(Boolean).map((row) => {
-      const i = row.indexOf(':');
-      return i >= 0 ? [row.slice(0, i).trim().toLowerCase(), row.slice(i + 1).trim()] : ['', row];
-    }),
-  );
-
-const items = classes.map((c) => {
-  const s = parseSpecs(c.specs);
-  // "$30 single · 10-pack $275" -> headline price + the qualifier under it.
-  const [price, ...priceRest] = (s.price ?? '').split('·').map((p) => p.trim());
-  return {
-    id: slug(c.title),
-    title: c.title,
-    headline: c.backHeadline,
-    body: c.backBody || c.description,
-    /** tag row: how you book it, and when it runs */
-    bookingTag: c.bookingTag,
-    bookingIcon: bookingIconMap[c.bookingTag] || 'bi-info-circle',
-    when: s.schedule ?? '',
-    /** spec rows: only what the tag row and the foot don't already say */
-    facts: [
-      s.level ? { label: 'Level', value: s.level } : null,
-      s.ages ? { label: 'Ages', value: s.ages } : null,
-    ].filter((f): f is { label: string; value: string } => f !== null),
-    /** foot: price left, action right */
-    price,
-    priceNote: priceRest.join(' · '),
-    actionLabel: c.actionLabel,
-    href: 'external' in c.link ? c.link.external : url(c.link.screen),
-    external: 'external' in c.link,
-    src: c.image.startsWith('assets/') ? url(c.image) : c.image,
-    isVideo: isVideoAsset(c.image),
-    mediaExists: classMediaExists(c.image),
-  };
-});
-
-/* No computed height: the list is naturally the tallest column, so it sets the
- * card's height on its own. Hand-computing it was off by 8px (borders) and the
- * list overflowed. */
+const actionHref = 'external' in offer.link ? offer.link.external : url(offer.link.screen);
+const external = 'external' in offer.link;
+const bookingNote = offer.bookingNote && offer.bookingNote[0].toUpperCase() + offer.bookingNote.slice(1);
 ---
-<div
-  class:list={['ct', variant]}
-  style={`--cat:${accent}`}
-  data-class-tabs
->
+<div class="ct" style={`--cat:${cat.classes}`} data-class-tabs>
   <div class="ct-list" role="tablist" aria-orientation="vertical" aria-label="Specialized classes">
     {items.map((it, i) => (
       <button
         type="button" class:list={['ct-row', { on: i === 0 }]} data-class-tab={it.id}
         role="tab" aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}
       >
-        <span class="ct-thumb">
-          {!it.mediaExists
-            ? <span class="ct-thumb-ph" aria-hidden="true"><i class="bi bi-person-arms-up"></i></span>
-            : it.isVideo
-            /* No poster stills exist yet, so the clip paints its own first
-               frame: #t=0.1 + preload="metadata" fetches only the header and
-               one frame, and it never plays. Swap to a real poster image the
-               day stills are shot — this is the only line that changes. */
-            ? <video src={`${it.src}#t=0.1`} muted playsinline webkit-playsinline preload="metadata" tabindex="-1" aria-hidden="true"></video>
-            : <img src={it.src} alt="" loading="lazy" />}
-        </span>
-        <span class="ct-row-t">{it.title}</span>
+        <span class="ct-row-t">{it.name}</span>
+        {it.days && <span class="ct-row-days">{it.days}</span>}
         <i class="bi bi-chevron-right ct-row-chev" aria-hidden="true"></i>
       </button>
     ))}
   </div>
 
-  <div class="ct-detail" data-class-detail>
-    {items.map((it, i) => (
-      <div class="ct-panel" data-class-panel={it.id} role="tabpanel" aria-label={it.title} hidden={i !== 0}>
-        <div class="ct-copy">
-          <div class="ct-tags">
-            {it.bookingTag && <span class="ct-booking"><i class={`bi ${it.bookingIcon}`} aria-hidden="true"></i>{it.bookingTag}</span>}
-            {it.when && <span class="ct-when">{it.when}</span>}
-          </div>
-          <h3 class="ct-title">{it.title}</h3>
-          {it.headline && <p class="ct-headline">{it.headline}</p>}
-          <p class="ct-desc">{it.body}</p>
-
-          <div class="ct-facts">
-            {it.facts.map((f) => (
-              <div class="ct-spec"><span class="ct-spec-l">{f.label}</span><span class="ct-spec-v">{f.value}</span></div>
-            ))}
-            <div class="ct-foot">
-              <div>
-                {it.price && <div class="ct-price">{it.price}</div>}
-                {it.priceNote && <div class="ct-pricenote">{it.priceNote}</div>}
-              </div>
-              <a href={it.href} class="ct-act" {...(it.external ? { target: '_blank', rel: 'noopener' } : {})}>
-                {it.actionLabel} <i class={`bi ${it.external ? 'bi-arrow-up-right' : 'bi-arrow-right'}`} aria-hidden="true"></i>
-              </a>
+  <div class="ct-side">
+    <div class="ct-detail" data-class-detail>
+      {items.map((it, i) => (
+        <div class="ct-panel" data-class-panel={it.id} role="tabpanel" aria-label={it.name} hidden={i !== 0}>
+          <div class="ct-copy">
+            <h3 class="ct-title">{it.name}</h3>
+            {it.headline && <p class="ct-headline">{it.headline}</p>}
+            {it.body && <p class="ct-desc">{it.body}</p>}
+            <div class="ct-facts">
+              {it.who && <div class="ct-spec"><span class="ct-spec-l">Who it's for</span><span class="ct-spec-v">{it.who}</span></div>}
+              <div class="ct-spec"><span class="ct-spec-l">When</span><span class="ct-spec-v">{it.when}</span></div>
             </div>
           </div>
-        </div>
 
-        <div class="ct-media">
-          {!it.mediaExists
-            ? <div class="ct-media-ph" aria-hidden="true"><i class="bi bi-person-arms-up"></i></div>
-            : it.isVideo
-            ? <video class="ct-img" src={it.src} muted loop playsinline webkit-playsinline preload="none"></video>
-            : <img class="ct-img" src={it.src} alt={it.title} loading="lazy" />}
+          <div class="ct-media">
+            {!it.hasMedia
+              ? <div class="ct-media-ph" aria-hidden="true"><i class="bi bi-person-arms-up"></i></div>
+              : it.isVideo
+              ? <video class="ct-img" src={it.src} muted loop playsinline webkit-playsinline preload="none"></video>
+              : <img class="ct-img" src={it.src} alt={it.name} loading="lazy" />}
+          </div>
         </div>
-      </div>
-    ))}
+      ))}
+    </div>
+
+    <div class="ct-offer">
+      <p class="ct-offer-t">
+        <strong>All {offer.booking.toLowerCase()}: {offer.price}.</strong>
+        {bookingNote && ` ${bookingNote}.`}
+      </p>
+      <a href={actionHref} class="btn btn-dark ct-act" {...(external ? { target: '_blank', rel: 'noopener' } : {})}>
+        {offer.actionLabel} <i class={`bi ${external ? 'bi-arrow-up-right' : 'bi-arrow-right'}`} aria-hidden="true"></i>
+      </a>
+    </div>
   </div>
 </div>
 
@@ -170,85 +96,63 @@ const items = classes.map((c) => {
   .ct {
     background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm); overflow: hidden;
-    display: grid; grid-template-columns: 232px minmax(0, 1fr);
+    display: grid; grid-template-columns: 260px minmax(0, 1fr);
   }
 
-  /* THE LIST — all eleven readable in one glance, titles on one axis. */
+  /* THE LIST: every class, readable in one glance. */
   .ct-list { display: flex; flex-direction: column; background: #faf9f6; border-right: 1px solid var(--line); padding: 8px; gap: 2px; }
   .ct-row {
     cursor: pointer; text-align: left; width: 100%; display: flex; align-items: center; gap: 10px;
-    min-height: 32px; padding: 3px 9px; border-radius: 7px; border: 1px solid transparent;
+    min-height: 34px; padding: 4px 10px; border-radius: 7px; border: 1px solid transparent;
     background: transparent; transition: background .15s ease, border-color .15s ease;
   }
   .ct-row:hover { background: #fff; border-color: var(--line); }
-  /* Selected: a tint plus a full border — never a single-side stripe. */
+  /* Selected: a tint plus a full border, never a single-side stripe. */
   .ct-row.on { background: color-mix(in srgb, var(--cat) 11%, #fff); border-color: color-mix(in srgb, var(--cat) 34%, #fff); }
-
-  /* The poster sits INSIDE the row — it must never drive the row height. */
-  .ct-thumb { flex: none; width: 36px; aspect-ratio: 16/11; border-radius: 4px; overflow: hidden; background: var(--ink); display: block; }
-  .ct-thumb img, .ct-thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .ct-thumb-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(150deg, color-mix(in srgb, var(--cat) 28%, var(--ink)), var(--ink)); }
-  .ct-thumb-ph i { font-size: 13px; color: color-mix(in srgb, var(--cat) 60%, #fff); }
-
   .ct-row-t { flex: 1; min-width: 0; font: 800 13.5px/1.2 var(--font-display); letter-spacing: -.008em; color: var(--ink); }
+  .ct-row-days { flex: none; font: 600 11.5px/1 var(--font-body); color: var(--muted); white-space: nowrap; }
   .ct-row.on .ct-row-t { color: color-mix(in srgb, var(--cat) 66%, #000); }
   .ct-row-chev { flex: none; font-size: 11px; color: var(--faint); opacity: 0; transition: opacity .15s ease; }
   .ct-row:hover .ct-row-chev { opacity: 1; }
   .ct-row.on .ct-row-chev { opacity: 1; color: var(--cat); }
 
-  /* THE DETAIL — copy, then the clip sized from the card height. */
-  .ct-detail { min-width: 0; }
-  /* Copy leads; the clip is a PLATE beside it, not a full-height column — a
-     full-height media track collapsed the copy to ~110px at 1024. */
-  .ct-panel { display: grid; grid-template-columns: minmax(0, 1fr) clamp(260px, 40%, 400px); gap: 26px; align-items: start; padding: 22px 26px 20px; height: 100%; }
+  /* THE SIDE: the changing panel, then the block every class shares. */
+  .ct-side { min-width: 0; display: flex; flex-direction: column; }
+  .ct-detail { flex: 1; display: flex; min-height: 0; }
+  .ct-panel { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) clamp(260px, 42%, 420px); }
   .ct-panel[hidden] { display: none; }
 
-  .ct-copy { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-  .ct-tags { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
-  .ct-booking { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; background: var(--cat); color: #fff; font: 800 10.5px/1 var(--font-display); letter-spacing: .07em; text-transform: uppercase; }
-  .ct-booking i { font-size: 12px; }
-  .ct-when { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 999px; background: color-mix(in srgb, var(--cat) 13%, #fff); color: color-mix(in srgb, var(--cat) 62%, #000); font: 700 10px/1 var(--font-display); letter-spacing: .09em; text-transform: uppercase; }
+  .ct-copy { padding: 24px 28px 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
   .ct-title { font: 800 23px/1.06 var(--font-display); letter-spacing: -.018em; color: var(--ink); margin: 0; }
   .ct-headline { font: 700 14.5px/1.35 var(--font-display); color: color-mix(in srgb, var(--cat) 62%, #000); margin: 0; }
   .ct-desc { font: 400 13.5px/1.62 var(--font-body); color: var(--text-3); margin: 0; }
-
-  /* Facts FOLLOW the body — no margin-top:auto, or the leftover opens here. */
-  .ct-facts { margin-top: 12px; }
-  .ct-spec { display: grid; grid-template-columns: max-content 1fr; gap: 12px; padding: 8px 0; border-top: 1px solid #efeee8; }
-  .ct-spec-l { font: 700 10px/1.4 var(--font-display); letter-spacing: .07em; text-transform: uppercase; color: color-mix(in srgb, var(--cat) 62%, #000); white-space: nowrap; }
+  .ct-facts { margin-top: 8px; }
+  .ct-spec { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 8px 0; border-top: 1px solid #efeee8; }
+  .ct-spec-l { font: 700 10px/1.4 var(--font-display); letter-spacing: .07em; text-transform: uppercase; color: color-mix(in srgb, var(--cat) 62%, #000); }
   .ct-spec-v { font: 600 13px/1.3 var(--font-body); color: var(--text-2); }
-  .ct-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; padding-top: 14px; margin-top: 8px; border-top: 1px solid #efeee8; }
-  .ct-price { font: 800 20px/1 var(--font-display); color: var(--ink); }
-  .ct-pricenote { font: 600 12.5px/1.3 var(--font-body); color: var(--muted-3); margin-top: 5px; }
-  .ct-act { flex: none; display: inline-flex; align-items: center; gap: 7px; min-height: 44px; font: 800 13.5px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); text-decoration: none; transition: gap .15s; }
-  .ct-act:hover { gap: 11px; }
-  .ct-act i { color: var(--cat); }
 
-  /* The clip at ClassCard's own 16/11 — a plate, never stretched. */
-  .ct-media { position: relative; aspect-ratio: 16/11; border-radius: 12px; background: var(--ink); overflow: hidden; }
+  /* The clip FILLS its column, so the panel never leaves a hole beside it. */
+  .ct-media { position: relative; background: var(--ink); overflow: hidden; min-height: 240px; }
   .ct-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .ct-media-ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(150deg, color-mix(in srgb, var(--cat) 28%, var(--ink)), var(--ink)); }
   .ct-media-ph i { font-size: 44px; color: color-mix(in srgb, var(--cat) 60%, #fff); opacity: .85; }
 
-  /* Stacked — list on top, then copy, then the clip at its own ratio. */
-  .ct.compact { grid-template-columns: 1fr; border-radius: var(--radius); }
-  .ct.compact .ct-list { border-right: 0; border-bottom: 1px solid var(--line); }
-  .ct.compact .ct-row-chev { opacity: 1; }
-  /* 32px rows are pointer targets; a thumb needs 44. */
-  .ct.compact .ct-row { min-height: 44px; }
-  .ct.compact .ct-panel { grid-template-columns: 1fr; gap: 14px; padding: 18px; height: auto; }
-  .ct.compact .ct-media { order: -1; }
-  .ct.compact .ct-title { font-size: 21px; }
-  .ct.compact .ct-desc { font-size: 13px; }
+  /* THE SHARED BLOCK: said once, never per class. */
+  .ct-offer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 28px; background: #faf9f6; border-top: 1px solid var(--line); }
+  .ct-offer-t { margin: 0; font: 400 14px/1.5 var(--font-body); color: var(--text-3); }
+  .ct-offer-t strong { font-weight: 700; color: var(--ink); }
+  .ct-act { flex: none; min-height: 44px; }
 
+  /* Stacked: list, then the panel with its clip on top, then the shared block. */
   @media (max-width: 1023px) {
     .ct { grid-template-columns: 1fr; }
     .ct-list { border-right: 0; border-bottom: 1px solid var(--line); }
     .ct-row-chev { opacity: 1; }
     .ct-row { min-height: 44px; }
-    .ct-panel { grid-template-columns: 1fr; gap: 16px; padding: 22px; height: auto; }
-    /* Stacked, the plate would run the full tablet width (~550px tall). Cap it. */
-    .ct-media { order: -1; max-width: 520px; }
+    .ct-panel { grid-template-columns: 1fr; }
+    .ct-media { order: -1; min-height: 0; aspect-ratio: 16/11; max-height: 380px; }
+    .ct-copy { padding: 20px; }
+    .ct-offer { flex-wrap: wrap; padding: 16px 20px; }
   }
 </style>
 
