@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{APP_NAME}} prototype, phone</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  /* Review frame only: the prototype itself runs in the iframe, so its real media queries see a real phone width. */
+  body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 16px; background: #d8dadf; font: 14px system-ui, sans-serif; }
+  .sizes { display: flex; gap: 8px; }
+  .sizes button { border: 1px solid #888; background: #fff; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+  .sizes button[aria-pressed="true"] { background: #222; color: #fff; }
+  iframe { width: 390px; height: 780px; border: 1px solid #888; border-radius: 22px; background: #fff; }
+</style>
+</head>
+<body>
+<div class="sizes" role="group" aria-label="Width">
+  <button type="button" data-w="390" aria-pressed="true">Phone 390</button>
+  <button type="button" data-w="768" aria-pressed="false">Tablet 768</button>
+</div>
+<iframe id="device" src="index.html" title="Prototype"></iframe>
+<script>
+  var frame = document.getElementById('device');
+  if (location.hash) frame.src = 'index.html' + location.hash;
+  document.querySelectorAll('[data-w]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      frame.style.width = button.dataset.w + 'px';
+      document.querySelectorAll('[data-w]').forEach(function (other) { other.setAttribute('aria-pressed', String(other === button)); });
+    });
+  });
+</script>
+</body>
+</html>

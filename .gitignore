@@ -19,3 +19,11 @@ dist/
 # stray saved webpages
 *.0.html
 *_files/
+
+# >>> claude-config standard ignores (managed by standard/sync.mjs; edit them in claude-config)
+*-debug.log
+firebase-export-*/
+*.zip
+.DS_Store
+.claude/settings.local.json
+# <<< claude-config standard ignores

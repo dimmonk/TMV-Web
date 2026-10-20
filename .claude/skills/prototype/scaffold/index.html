@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{APP_NAME}} prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- The app's own stylesheets, in the order public/index.html loads them, through the symlinks in this folder. -->
+{{STYLESHEETS}}
+<!-- Prototype-only rules (the frame below, the review chrome). A rule for anything the app already has does NOT belong here. -->
+<link rel="stylesheet" href="proto/proto.css">
+<script>
+  // Boot order of the real app: theme and viewport mode before first paint. The Artifact viewer may set data-theme itself.
+  (function () {
+    var root = document.documentElement;
+    if (!root.hasAttribute('data-theme')) {
+      try {
+        var saved = localStorage.getItem('proto-theme');
+        if (saved) root.setAttribute('data-theme', saved);
+        else if (matchMedia('(prefers-color-scheme: dark)').matches) root.setAttribute('data-theme', 'dark');
+      } catch (e) { /* storage blocked: system theme only */ }
+    }
+    var phone = matchMedia('(max-width: 600px)');
+    function setMode() { root.setAttribute('data-mode', phone.matches ? 'mobile' : 'desktop'); }
+    setMode();
+    phone.addEventListener('change', setMode);
+  })();
+</script>
+</head>
+<body>
+<!--
+  PLACEHOLDER FRAME. When the app has a real shell (title bar, sidebar, bottom nav), replace everything between the markers with
+  that shell's markup from public/index.html, class names unchanged, so the prototype runs inside the real app shell. Keep:
+    - <main id="proto-main">  where the current page renders
+    - data-nav="<page id>"    on every control that opens a page (the router marks the active one with .active)
+    - data-proto="reset|theme|phone" on the three review controls
+-->
+<!-- shell:start -->
+<div class="proto-frame">
+  <header class="proto-bar">
+    <span class="proto-bar-name">{{APP_NAME}}</span>
+    <span class="proto-chip" title="A design prototype. Nothing here changes the real app.">Prototype</span>
+    <span class="proto-bar-spacer"></span>
+    <button type="button" class="proto-btn" data-proto="phone" title="Open at phone width">Phone</button>
+    <button type="button" class="proto-btn" data-proto="theme" title="Light or dark">Theme</button>
+    <button type="button" class="proto-btn" data-proto="reset" title="Put the sample data back as it started">Reset sample data</button>
+  </header>
+  <nav class="proto-nav" id="proto-nav" aria-label="Pages"></nav>
+  <main class="proto-main" id="proto-main"></main>
+</div>
+<!-- shell:end -->
+<script type="module" src="proto/app.js"></script>
+</body>
+</html>
