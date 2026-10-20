@@ -11,12 +11,14 @@
     "check": "astro check",
     "test": "npm run test:standard && npm run test:unit",
     "test:unit": "node --test --test-concurrency=1 tests/*.test.mjs",
-    "test:standard": "node .claude/standard/verify.mjs"
+    "test:standard": "node .claude/standard/verify.mjs",
+    "proto": "node docs/prototype/serve.mjs"
   },
   "dependencies": {
     "astro": "^7.3.8"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
     "jsdom": "^29.1.1"
   }
 }

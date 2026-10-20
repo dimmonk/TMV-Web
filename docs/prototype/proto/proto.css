@@ -1,0 +1,78 @@
+/* PROTOTYPE-ONLY rules: the review chrome, and the proposed Specialized Classes card until it is built (then its rules move into
+   src/components/ClassTabs.astro and leave this file). Anything the app already styles is NOT redrawn here: the app's stylesheets,
+   loaded first, style its own markup and class names. */
+.proto-bar { display: flex; align-items: center; gap: 8px; padding: 6px 16px; background: #fffbe6; border-bottom: 1px solid #f0e6b8; font: 600 13px/1.2 var(--font-body); }
+.proto-bar-name { font-weight: 700; }
+.proto-bar-spacer { flex: 1; }
+.proto-chip { padding: 2px 8px; border-radius: 999px; background: #f5c542; color: #3a2a00; font-size: 12px; }
+.proto-nav { display: flex; gap: 4px; overflow-x: auto; }
+.proto-nav-item, .proto-btn { font: inherit; padding: 4px 10px; border-radius: 6px; border: 1px solid #e3dcc0; background: #fff; cursor: pointer; }
+.proto-nav-item.active { font-weight: 700; }
+.proto-main { max-width: var(--container); margin-inline: auto; padding: 32px var(--gutter) 120px; box-sizing: border-box; }
+.proto-empty { opacity: 0.7; }
+.proto-notes { margin-top: 28px; padding: 10px 14px; border: 1px dashed #c9c4b8; border-radius: 10px; background: #fff; font: 400 14px/1.55 var(--font-body); }
+.proto-notes summary { cursor: pointer; font-weight: 700; }
+@media (max-width: 600px) { .proto-main { padding-top: 20px; } .proto-bar { flex-wrap: wrap; } }
+
+/* ---- PROPOSED: the Specialized Classes card (list, shared block, one changing panel) ---- */
+.ct {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm); overflow: hidden;
+  display: grid; grid-template-columns: 260px minmax(0, 1fr);
+}
+
+/* THE LIST: every class, readable in one glance. */
+.ct-list { display: flex; flex-direction: column; background: #faf9f6; border-right: 1px solid var(--line); padding: 8px; gap: 2px; }
+.ct-row {
+  cursor: pointer; text-align: left; width: 100%; display: flex; align-items: center; gap: 10px;
+  min-height: 34px; padding: 4px 10px; border-radius: 7px; border: 1px solid transparent;
+  background: transparent; transition: background .15s ease, border-color .15s ease;
+}
+.ct-row:hover { background: #fff; border-color: var(--line); }
+/* Selected: a tint plus a full border, never a single-side stripe. */
+.ct-row.on { background: color-mix(in srgb, var(--cat) 11%, #fff); border-color: color-mix(in srgb, var(--cat) 34%, #fff); }
+.ct-row-t { flex: 1; min-width: 0; font: 800 13.5px/1.2 var(--font-display); letter-spacing: -.008em; color: var(--ink); }
+.ct-row-days { flex: none; font: 600 11.5px/1 var(--font-body); color: var(--muted); white-space: nowrap; }
+.ct-row.on .ct-row-t { color: color-mix(in srgb, var(--cat) 66%, #000); }
+.ct-row-chev { flex: none; font-size: 11px; color: var(--faint); opacity: 0; transition: opacity .15s ease; }
+.ct-row:hover .ct-row-chev { opacity: 1; }
+.ct-row.on .ct-row-chev { opacity: 1; color: var(--cat); }
+
+/* THE SIDE: the changing panel, then the block every class shares. */
+.ct-side { min-width: 0; display: flex; flex-direction: column; }
+.ct-detail { flex: 1; display: flex; min-height: 0; }
+.ct-panel { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) clamp(260px, 42%, 420px); }
+.ct-panel[hidden] { display: none; }
+
+.ct-copy { padding: 24px 28px 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ct-title { font: 800 23px/1.06 var(--font-display); letter-spacing: -.018em; color: var(--ink); margin: 0; }
+.ct-headline { font: 700 14.5px/1.35 var(--font-display); color: color-mix(in srgb, var(--cat) 62%, #000); margin: 0; }
+.ct-desc { font: 400 13.5px/1.62 var(--font-body); color: var(--text-3); margin: 0; }
+.ct-facts { margin-top: 8px; }
+.ct-spec { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 8px 0; border-top: 1px solid #efeee8; }
+.ct-spec-l { font: 700 10px/1.4 var(--font-display); letter-spacing: .07em; text-transform: uppercase; color: color-mix(in srgb, var(--cat) 62%, #000); }
+.ct-spec-v { font: 600 13px/1.3 var(--font-body); color: var(--text-2); }
+
+/* The clip FILLS its column, so the panel never leaves a hole beside it. */
+.ct-media { position: relative; background: var(--ink); overflow: hidden; min-height: 240px; }
+.ct-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.ct-media-ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(150deg, color-mix(in srgb, var(--cat) 28%, var(--ink)), var(--ink)); }
+.ct-media-ph i { font-size: 44px; color: color-mix(in srgb, var(--cat) 60%, #fff); opacity: .85; }
+
+/* THE SHARED BLOCK: said once, never per class. */
+.ct-offer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 28px; background: #faf9f6; border-top: 1px solid var(--line); }
+.ct-offer-t { margin: 0; font: 400 14px/1.5 var(--font-body); color: var(--text-3); }
+.ct-offer-t strong { font-weight: 700; color: var(--ink); }
+.ct-act { flex: none; min-height: 44px; }
+
+/* Stacked: list, then the panel with its clip on top, then the shared block. */
+@media (max-width: 1023px) {
+  .ct { grid-template-columns: 1fr; }
+  .ct-list { border-right: 0; border-bottom: 1px solid var(--line); }
+  .ct-row-chev { opacity: 1; }
+  .ct-row { min-height: 44px; }
+  .ct-panel { grid-template-columns: 1fr; }
+  .ct-media { order: -1; min-height: 0; aspect-ratio: 16/11; max-height: 380px; }
+  .ct-copy { padding: 20px; }
+  .ct-offer { flex-wrap: wrap; padding: 16px 20px; }
+}
