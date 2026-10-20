@@ -33,3 +33,20 @@ tool's `url`); the first publish writes the returned link here.
 3. **Mobile first.** Design the phone layout (390px, `phone.html`) first, then tablet, then desktop.
 4. **A UI change to a built screen updates its page here in the same commit.** An approved but unbuilt design stays, flagged in its
    page's header comment.
+
+## Whole-site redesign (`site/`)
+
+Published: https://claude.ai/artifact/2uh473Y8bCuM8C2t4YZ4rH. Brief: the signed `site-v2/brief.md` (2026-10-20).
+
+The page-by-page redesign is not a hand-drawn copy: `site/build.mjs` builds the REAL site twice, `now` (this branch's `src/`) and
+`proposed` (the same build with `site/proposed/src/` swapped over `src/`, a sparse mirror: a file there replaces its twin, a file only
+there is added, such as `pages/open-gym.astro`). `site/compare.html` shows the two side by side, page by page, with what changed.
+
+```bash
+node docs/prototype/site/build.mjs   # -> docs/prototype/dist/site/ (gitignored); publish its index.html with the files beside it
+```
+
+The pages run offline: `offline.js` answers the published site config, schedule and price list from a copy read at build time and
+refuses any other off-site request. Sample-only data in the proposal: `proposed/src/data/camp-dates.ts` (in the real build staff
+enter camp dates in Members beside the camp links and they publish through the site config). When this is approved, each file under
+`site/proposed/src/` moves over its twin in `src/` and the override is deleted.

@@ -1,0 +1,114 @@
+---
+import { site, links, url } from '../data/site';
+import { hours, social } from '../data/site-config';
+import { hoursSummary } from '../lib/opening-hours.js';
+import { hasSocial } from '../lib/published-config.js';
+import { exploreTiles } from '../data/explore';
+import { forSurface } from '../data/surface';
+const year = new Date().getFullYear();
+const hoursLine = hoursSummary(hours);
+
+const columns = [
+  {
+    // Desktop's answer to the mobile More sheet: the primary nav stays capped at
+    // six, and the long tail lives here — rendered from the SAME array the sheet
+    // uses, so adding a revenue stream surfaces on both at once. 'Classes' and
+    // 'Schedule' lead because they are primary destinations, not tiles.
+    // forSurface(..., 'desktop') resolves desktop's own label/copy overrides —
+    // this is desktop chrome, so it must never pick up a mobile-only override.
+    title: 'Explore',
+    items: [
+      { text: 'Classes', href: url('train') },
+      { text: 'Schedule', href: url('schedule') },
+      ...forSurface(exploreTiles, 'desktop').map((t) => ({ text: t.label, href: url(t.path) })),
+    ],
+  },
+  {
+    title: 'Visit',
+    items: [
+      { text: site.address.street, static: true },
+      { text: `${site.address.locality}, ${site.address.region}`, static: true },
+      { text: hoursLine, static: true, hours: true },
+      { text: 'New here? Get started', href: url('get-started'), accent: true },
+    ],
+  },
+  {
+    title: 'Book',
+    items: [
+      { text: 'Book a session', href: url('book') },
+      { text: 'Passes & Pricing', href: url('pricing') },
+      { text: 'Online store', href: url('store') },
+      { text: 'Gift cards', href: links.giftCard, ext: true },
+    ],
+  },
+];
+
+// All three are always in the markup (hidden when blank) so the browser can show one
+// that is added after the build; the wrapper is hidden when none is set.
+const socials = [
+  { key: 'instagram', icon: 'bi-instagram', label: 'Instagram', href: social.instagram },
+  { key: 'facebook', icon: 'bi-facebook', label: 'Facebook', href: social.facebook },
+  { key: 'youtube', icon: 'bi-youtube', label: 'YouTube', href: social.youtube },
+];
+const anySocial = hasSocial(social);
+---
+<footer class="sf" data-chrome="site">
+  <div class="sf-grid container">
+    <div>
+      <div class="sf-brand">
+        <img src={url('assets/tmvlogo.png')} alt="" width="38" height="38" />
+        <span>The Monkey Vault</span>
+      </div>
+      <p class="sf-blurb">Toronto's home for parkour, flips and movement. Train, play and level up — every age, every level.</p>
+      <div class="sf-socials" data-socials-wrap hidden={!anySocial}>
+        {socials.map((s) => (
+          <a href={s.href || undefined} hidden={!s.href} data-social={s.key} aria-label={s.label} class="sf-soc" target="_blank" rel="noopener"><i class={`bi ${s.icon}`} aria-hidden="true"></i></a>
+        ))}
+      </div>
+    </div>
+
+    {columns.map((col) => (
+      <div>
+        <div class="sf-coltitle">{col.title}</div>
+        <div class="sf-collist">
+          {col.items.map((l) => (
+            l.static
+              ? (l.hours
+                ? <span class="sf-text" data-hours-summary hidden={!l.text}>{l.text}</span>
+                : <span class="sf-text">{l.text}</span>)
+              : <a href={l.href} class:list={['sf-link', { accent: l.accent }]} {...(l.ext ? { target: '_blank', rel: 'noopener' } : {})}>{l.text}</a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="sf-legal container">
+    <span>© {year} {site.legalName} All rights reserved.</span>
+    <span>Parkour &amp; Movement Training Centre · Toronto</span>
+  </div>
+</footer>
+
+<style>
+  .sf { background: var(--ink-2); color: rgba(255,255,255,.6); }
+  .sf-grid { padding-block: 54px 32px; display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; }
+  .sf-brand { display: flex; align-items: center; gap: 11px; margin-bottom: 16px; }
+  .sf-brand img { width: 38px; height: 38px; object-fit: contain; }
+  .sf-brand span { font: 900 16px/1 var(--font-display); color: var(--brand); text-transform: uppercase; }
+  .sf-blurb { font: 400 13px/1.5 var(--font-body); color: rgba(255,255,255,.55); max-width: 300px; }
+  .sf-socials { display: flex; gap: 10px; margin-top: 18px; }
+  .sf-soc { width: 36px; height: 36px; border-radius: 9px; background: rgba(255,255,255,.08); display: inline-flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; transition: all .15s; }
+  .sf-soc:hover { background: var(--brand); color: var(--ink); }
+
+  .sf-coltitle { font: 700 11px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 15px; }
+  .sf-collist { display: flex; flex-direction: column; gap: 10px; }
+  .sf-text { font: 500 13px/1.5 var(--font-body); color: rgba(255,255,255,.6); }
+  .sf-link { font: 500 13px/1.3 var(--font-body); color: rgba(255,255,255,.6); text-decoration: none; transition: color .15s; }
+  .sf-link:hover { color: var(--brand); }
+  .sf-link.accent { color: var(--brand); font-weight: 700; }
+
+  .sf-legal { padding-block: 20px; border-top: 1px solid rgba(255,255,255,.08); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font: 500 12.5px/1.5 var(--font-body); color: rgba(255,255,255,.35); }
+
+  @media (max-width: 720px) { .sf-grid { grid-template-columns: 1fr 1fr; gap: 34px 24px; } }
+  @media (max-width: 440px) { .sf-grid { grid-template-columns: 1fr; } }
+</style>

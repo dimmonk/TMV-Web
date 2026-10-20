@@ -1,0 +1,36 @@
+---
+/**
+ * PROPOSED (whole-site prototype, not built): Open Gym gets its own page. It used to be a section of Train, the
+ * first thing on a page about classes, and the answer to the most common first question ("can we just come?").
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MobileHero from '../components/MobileHero.astro';
+import OpenGymVisit from '../components/OpenGymVisit.astro';
+import NextStep from '../components/NextStep.astro';
+import { seo, cat } from '../data/site';
+---
+<BaseLayout title={seo.openGym.title} description={seo.openGym.description} active="" mobileTab="more" appHeader="back" appTitle="Open Gym">
+  <div class="mapp" data-chrome="app">
+    <MobileHero eyebrow="Open Gym" title="Just come and play" desc="The whole floor, foam pit and obstacles. No class, no booking, no time limit. Every age." stats={[{ v: '$25', l: 'all day' }, { v: 'No', l: 'booking' }, { v: 'All', l: 'ages' }]} />
+    <div class="m-pad"><OpenGymVisit /><div style="margin-top:26px"><NextStep step="group-private" /></div></div>
+  </div>
+
+  <div data-chrome="site">
+    <section class="pagehero" style={`--ph:${cat.openGym}`}>
+      <div class="pagehero-glow"></div>
+      <div class="container pagehero-inner">
+        <div class="pagehero-kicker"><span class="rule"></span>Open Gym · drop in, all ages</div>
+        <h1 class="pagehero-title">Come whenever. Stay as long as you want.</h1>
+        <p class="pagehero-lead">The full gymnastics floor, foam pit, mats, strength section and obstacles. Dancers, athletes, families, first-timers: everyone's welcome, all ages mixed.</p>
+      </div>
+    </section>
+    <section class="section container og-page">
+      <OpenGymVisit />
+      <div class="og-next"><NextStep step="group-private" /></div>
+    </section>
+  </div>
+</BaseLayout>
+<style>
+  .og-page { padding-block: 44px 72px; }
+  .og-next { margin-top: 30px; }
+</style>

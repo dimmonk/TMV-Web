@@ -1,0 +1,80 @@
+---
+/**
+ * PROPOSED (whole-site prototype, not built): what an open gym visit is, on one card, plus the gym's hours.
+ * The hours are the ones staff publish (site config), behind the same hooks as the Visit Us hours card
+ * (`data-hours-card|heading|list`), so a staff edit reaches this page with no release.
+ * Content only, width-agnostic (THE RULE): one column on a phone, two side by side from 768px.
+ */
+import { links, url, cat } from '../data/site';
+import { sq } from '../data/square-links';
+import { hours } from '../data/site-config';
+import { hoursHeading } from '../lib/opening-hours.js';
+
+const facts = [
+  { label: 'Cost', value: '$25 per person for the day, tax included' },
+  { label: 'Booking', value: 'None. Come any time we are open' },
+  { label: 'Time limit', value: 'None. Stay until close' },
+  { label: 'Under 7?', value: 'An adult stays with them and moves for free' },
+  { label: 'Before you come', value: 'Sign the waiver online (a parent signs for under-18s)' },
+];
+---
+<div class="ogv" style={`--c:${cat.openGym}`}>
+  <div class="ogv-card">
+    <img class="ogv-img" src={url('assets/gym-01.jpg')} alt="The open gym floor, landing mats and parkour obstacles" loading="lazy" />
+    <div class="ogv-body">
+      <span class="ogv-tag">No booking needed</span>
+      <h2 class="ogv-title">Your day at the gym</h2>
+      <dl class="ogv-facts">
+        {facts.map((f) => <div class="ogv-fact"><dt>{f.label}</dt><dd>{f.value}</dd></div>)}
+      </dl>
+      <div class="ogv-actions">
+        <a class="btn btn-primary" href={sq.store.dayPasses} target="_blank" rel="noopener">Get a day pass <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+        <a class="btn btn-ghost" href={links.waiver} target="_blank" rel="noopener">Sign the waiver</a>
+      </div>
+    </div>
+  </div>
+  <div class="ogv-side">
+    <div class="ogv-hours" data-hours-card hidden={hours.length === 0}>
+      <div class="ogv-label">Open gym hours</div>
+      <div class="ogv-htitle" data-hours-heading>{hoursHeading(hours)}</div>
+      <div class="ogv-hlist" data-hours-list>
+        <template data-hours-row><div class="ogv-hrow"><span data-day></span><span class="ogv-htime" data-time></span></div></template>
+        {hours.map((h) => <div class="ogv-hrow" data-hours-line><span data-day>{h.day}</span><span class="ogv-htime" data-time>{h.time}</span></div>)}
+      </div>
+    </div>
+    <div class="ogv-links">
+      <a href={`${url('pricing')}#price-opengym`}>Coming back a lot? <span>Visit packs &amp; open gym memberships →</span></a>
+      <a href={url('train')}>Want a coach? <span>Group classes, drop-in →</span></a>
+      <a href={url('get-started')}>First time here? <span>What to bring &amp; what to expect →</span></a>
+    </div>
+  </div>
+</div>
+<style>
+  .ogv { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+  .ogv-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); }
+  .ogv-img { display: block; width: 100%; height: 220px; object-fit: cover; }
+  .ogv-body { padding: 24px; }
+  .ogv-tag { display: inline-block; padding: 6px 10px; border-radius: 999px; background: color-mix(in srgb, var(--c) 14%, #fff); color: var(--ink); font: 800 11px/1 var(--font-display); text-transform: uppercase; letter-spacing: .06em; }
+  .ogv-title { font: 800 26px/1.1 var(--font-display); margin: 14px 0 10px; }
+  .ogv-facts { margin: 0; }
+  .ogv-fact { display: grid; grid-template-columns: 9.5em 1fr; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line-soft); }
+  .ogv-fact dt { font: 700 11px/1.5 var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .ogv-fact dd { margin: 0; font: 600 14px/1.45 var(--font-body); color: var(--text-2); }
+  .ogv-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .ogv-side { display: grid; gap: 18px; }
+  .ogv-hours { background: var(--ink); color: #fff; border-radius: var(--radius-lg); padding: 24px; }
+  .ogv-label { font: 700 11px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--brand); }
+  .ogv-htitle { font: 800 20px/1.2 var(--font-display); margin: 10px 0 12px; }
+  .ogv-hrow { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-top: 1px solid rgba(255,255,255,.1); font: 500 13.5px/1.4 var(--font-body); color: rgba(255,255,255,.8); }
+  .ogv-htime { font-weight: 700; color: #fff; text-align: right; }
+  .ogv-links { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 4px 22px; }
+  .ogv-links a { display: block; padding: 16px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); font: 800 15px/1.4 var(--font-display); }
+  .ogv-links a:last-child { border-bottom: 0; }
+  .ogv-links span { display: block; font: 400 13px/1.5 var(--font-body); color: var(--muted); margin-top: 4px; }
+  @media (max-width: 768px) {
+    .ogv { grid-template-columns: minmax(0, 1fr); }
+    .ogv-img { height: 160px; }
+    .ogv-body, .ogv-hours { padding: 18px; }
+    .ogv-fact { grid-template-columns: 7.5em 1fr; }
+  }
+</style>

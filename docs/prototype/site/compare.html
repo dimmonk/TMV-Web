@@ -1,0 +1,74 @@
+<meta name="robots" content="noindex,nofollow">
+<title>TMV Website Redesign</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  :root { --bg:#f5f4f1; --ink:#211f1b; --muted:#6b6862; --line:#e5e3de; --card:#fff; --brand:#ffd400; --bar:#211f1b; --barink:#fff; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#16150f; --ink:#f1efe9; --muted:#a9a59c; --line:#34322c; --card:#1f1e19; color-scheme: dark; } }
+  :root[data-theme="dark"] { --bg:#16150f; --ink:#f1efe9; --muted:#a9a59c; --line:#34322c; --card:#1f1e19; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  header, .controls, .stage { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .notes { margin-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 system-ui, sans-serif; }
+  header { background: var(--bar); color: var(--barink); padding-block: 14px; border-bottom: 4px solid var(--brand); display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; }
+  header h1 { font-size: 18px; margin: 0; } header h1 b { color: var(--brand); } header p { margin: 0; color: #c7c5c0; font-size: 13px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; padding-block: 12px; background: var(--card); border-bottom: 1px solid var(--line); }
+  .controls label { display: grid; gap: 4px; font-size: 12px; font-weight: 700; }
+  select, button { font: 600 13px/1.3 system-ui, sans-serif; padding: 9px 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--card); color: var(--ink); min-height: 40px; }
+  button { cursor: pointer; } button[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #211f1b; }
+  .seg { display: flex; gap: 6px; } .seg[hidden] { display: none; }
+  .notes { margin-top: 12px; padding: 12px 14px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; }
+  .notes h2 { font-size: 13px; margin: 0 0 6px; } .notes ul { margin: 0; padding-left: 18px; } .notes li { margin: 2px 0; }
+  .stage { display: grid; grid-template-columns: repeat(2, 390px); justify-content: center; gap: 20px; padding-block: 16px; }
+  .preview h2 { font-size: 13px; margin: 0 0 8px; display: flex; justify-content: space-between; gap: 8px; } .preview h2 span { font-weight: 400; color: var(--muted); }
+  iframe { display: block; width: 100%; height: calc(100vh - 230px); min-height: 560px; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+  .stage.full { grid-template-columns: minmax(0, 1440px); } .full .preview:not(.on) { display: none; }
+  @media (max-width: 860px) { .stage { grid-template-columns: minmax(0, 1fr); } .stage .preview:not(.on) { display: none; } .phone-only { display: none; } }
+</style>
+<header><h1><b>The Monkey Vault</b> &middot; whole-site prototype</h1><p>Now = the site as built today. Proposed = the signed brief. Nothing here is live.</p></header>
+<div class="controls">
+  <label>Page<select id="page"></select></label>
+  <label class="phone-only">View<select id="view"><option value="phones">Phones side by side</option><option value="full">Full width</option></select></label>
+  <div class="seg" id="seg" role="group" aria-label="Version"><button type="button" data-v="now" aria-pressed="false">Now</button><button type="button" data-v="proposed" aria-pressed="true">Proposed</button></div>
+</div>
+<section class="notes" id="notes" aria-live="polite"></section>
+<main class="stage" id="stage">
+  <section class="preview" data-v="now"><h2>Now <span>today's site</span></h2><iframe title="The site today"></iframe></section>
+  <section class="preview on" data-v="proposed"><h2>Proposed <span>from the brief</span></h2><iframe title="The proposed site"></iframe></section>
+</main>
+<script>
+  // One row per page: where it lives in each build, and what changed (shown above the previews).
+  var PAGES = [
+    { label: 'Home', now: '', proposed: '', notes: ['Goal picker first: basics go to the intro, a specific skill goes straight to a private lesson, regular training goes to the Athletic Program.', 'Hero button finds your starting point instead of booking the intro for everyone.', 'Camps before reviews; no repeated intro banner.'] },
+    { label: 'Classes', now: 'train/', proposed: 'train/', notes: ['"Train" is now "Classes" in the nav and on the phone tab (the address stays /train/).', 'Open Gym has moved to its own page; this page is classes, private coaching and the Athletic Program.'] },
+    { label: 'Open Gym', now: 'train/#opengym', proposed: 'open-gym/', notes: ['New page: what a visit is, cost, supervision under 7, waiver.', 'Hours come from the hours staff publish in Members, never typed here.'] },
+    { label: 'Schedule', now: 'schedule/', proposed: 'schedule/', notes: ['Unchanged. Now in the desktop nav. The weekly class calendar brief decides this page.'] },
+    { label: 'Pricing', now: 'pricing/', proposed: 'pricing/', notes: ['"Which option fits" guidance above the live price list, category shortcuts and a buy or book button per category.', 'Store folds into these buttons, so it leaves the nav. Prices appear only in the live list.'] },
+    { label: 'Camps', now: 'camps/', proposed: 'camps/', notes: ['Dates shown on the page; booking still goes to Square until the new camp registration flow lands.', 'Ages 5 to 16. Drop-off, packing, food, waiver and cancellation answered on the page.'] },
+    { label: 'Birthday parties', now: 'events/', proposed: 'events/', notes: ['"Events" is now "Birthday Parties".', 'Parent questions come before the come-back-again promotions; the full set on the phone too.'] },
+    { label: 'Book', now: 'book/', proposed: 'book/', notes: ['The $45 intro is bookable from the phone Book tab, alongside every other category.', 'Drop-in activities (open gym, group classes) are explained separately: nothing to book.'] },
+    { label: 'First visit', now: 'get-started/', proposed: 'get-started/', notes: ['Intro (a set basics lesson) and private (built around your goal) are both valid first visits, with the difference stated.', 'Group rates and the 15% same-day offer stay; waiver and arrival follow.'] },
+    { label: 'Visit us', now: 'about/', proposed: 'about/', notes: ['"About" is now "Visit Us".', 'Hours and directions first, then the facility tour.'] },
+    { label: 'Athletic Program', now: 'athletic-program/', proposed: 'athletic-program/', notes: ['The prerequisite is checked in the first class, or from feedback by any coach who has coached them.', 'States plainly that a child can be moved out of the program if it is not the right fit. Explosive is gone (cancelled).'] }
+  ];
+  var page = document.getElementById('page'), view = document.getElementById('view'), stage = document.getElementById('stage'), seg = document.getElementById('seg'), notes = document.getElementById('notes');
+  var frames = { now: document.querySelector('[data-v="now"] iframe'), proposed: document.querySelector('[data-v="proposed"] iframe') };
+  var src = function (v, path) { var parts = path.split('#'); return v + '/' + parts[0] + 'index.html' + (parts[1] ? '#' + parts[1] : ''); };
+  PAGES.forEach(function (p, i) { var o = document.createElement('option'); o.value = String(i); o.textContent = p.label; page.appendChild(o); });
+  function show() {
+    var p = PAGES[Number(page.value)];
+    frames.now.src = src('now', p.now); frames.proposed.src = src('proposed', p.proposed);
+    notes.textContent = '';
+    var h = document.createElement('h2'); h.textContent = 'What changed on ' + p.label; notes.appendChild(h);
+    var ul = document.createElement('ul'); p.notes.forEach(function (n) { var li = document.createElement('li'); li.textContent = n; ul.appendChild(li); }); notes.appendChild(ul);
+    try { localStorage.setItem('proto-site-page', page.value); } catch (e) { /* storage blocked: start on Home next time */ }
+  }
+  function pick(v) {
+    seg.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
+    document.querySelectorAll('.preview').forEach(function (s) { s.classList.toggle('on', s.dataset.v === v); });
+  }
+  page.addEventListener('change', show);
+  view.addEventListener('change', function () { stage.classList.toggle('full', view.value === 'full'); });
+  seg.querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { pick(b.dataset.v); }); });
+  try { var saved = localStorage.getItem('proto-site-page'); if (saved && PAGES[Number(saved)]) page.value = saved; } catch (e) { /* storage blocked */ }
+  show();
+</script>

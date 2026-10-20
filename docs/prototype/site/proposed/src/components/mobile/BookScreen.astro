@@ -1,0 +1,69 @@
+---
+/**
+ * Book — the phone composition, verbatim from the /m/ app's `book` screen.
+ * See HomeScreen for how the mobile/desktop compositions are switched.
+ */
+import MobileHero from '../MobileHero.astro';
+import BookingCard from '../BookingCard.astro';
+import { cat, url } from '../../data/site';
+import { sq } from '../../data/square-links';
+import { privateWays } from '../../data/private-lessons';
+import { campByKey } from '../../data/camps';
+import { partyHubCards } from '../../data/parties';
+import { groupHubCards } from '../../data/events';
+
+const dropIns = [
+  { title: 'Open Gym', color: cat.openGym, href: url('open-gym'), desc: "Any day we're open, stay as long as you like. Day pass from $25.", sub: 'Just sign the waiver and jump in.' },
+  { title: 'Group Classes', color: cat.classes, href: url('schedule'), desc: 'Recreational, Flips, Calisthenics, Tricking, Gymnastics & more.', sub: 'Show up at class time — see the Schedule tab for times.' },
+];
+const intro = privateWays.find((w) => w.key === 'intro')!;
+const priv = privateWays.find((w) => w.key === 'private')!;
+const camp = (key: 'weekly' | 'paday') => campByKey(key);
+// PROPOSED: every bookable thing on the phone, the $45 intro first. Camps open their dates on the Camps page
+// (same tab); everything else opens its exact Square page (new tab).
+const bookOptions = [
+  { color: intro.color, bookingTag: intro.hub.bookingTag, title: 'Intro Lesson', description: 'The parkour basics, one-on-one, on our set beginner lesson plan. The best first visit for learning the basics.', pills: intro.hub.pills, price: intro.hub.price, priceNote: intro.hub.priceNote, actionLabel: 'Book', href: sq.getStarted.introduction, target: '_blank' as const },
+  { color: priv.color, bookingTag: priv.hub.bookingTag, title: priv.title, description: priv.hub.desc, pills: priv.hub.pills, price: priv.hub.price, priceNote: priv.hub.priceNote, actionLabel: 'Book', href: sq.book.privateLesson, target: '_blank' as const },
+  ...(['weekly', 'paday'] as const).flatMap((key) => {
+    const c = camp(key);
+    return c ? [{ color: cat.camps, bookingTag: c.hub.bookingTag, title: c.title, description: c.mobile?.desc ?? c.desc, pills: c.pills, price: c.price, priceNote: c.priceNote, actionLabel: 'See dates', href: `${url('camps')}#m-dates`, target: '_self' as const }] : [];
+  }),
+  ...partyHubCards.map((p) => ({ color: p.color, bookingTag: p.bookingTag, title: p.title, description: p.desc, pills: p.pills, price: p.price, priceNote: p.priceNote, actionLabel: 'Book', href: p.href, target: '_blank' as const })),
+  // Groups & Early Gym Access: appointment-only, with no other booking entry point on the phone.
+  ...groupHubCards.map((g) => ({
+    color: g.color, bookingTag: g.bookingTag, title: g.title, description: g.desc,
+    pills: g.pills, price: g.price, priceNote: g.priceNote, actionLabel: 'Enquire', href: g.href, target: '_blank' as const,
+  })),
+];
+---
+<MobileHero eyebrow="Book" title="Reserve your spot" desc="Group classes and open gym need no booking. Reserve an intro, a private lesson, a camp or a party." />
+<div class="m-pad">
+  <div class="m-label">No booking — just show up</div>
+  <div class="m-stack" style="margin-bottom:28px">
+    {dropIns.map((d) => (
+      <a class="m-dropin" href={d.href} style="text-decoration:none;color:inherit">
+        <span class="m-dropin-strip" style={`background:${d.color}`}></span>
+        <div class="m-dropin-body">
+          <div class="m-dropin-head">
+            <span class="m-dropin-tag" style={`background:${d.color}`}><i class="bi bi-door-open-fill" aria-hidden="true"></i>Drop-in</span>
+            <h3 class="m-dropin-title">{d.title}</h3>
+          </div>
+          <p class="m-dropin-desc">{d.desc}</p>
+          <div class="m-dropin-cta" style={`background:color-mix(in srgb,${d.color} 10%,#fff); border-color:color-mix(in srgb,${d.color} 22%,#fff)`}>
+            <i class="bi bi-check2-circle" style={`color:${d.color}`} aria-hidden="true"></i>
+            <div>
+              <div class="m-dropin-ctat" style={`color:color-mix(in srgb,${d.color} 58%,#000)`}>No booking required</div>
+              <div class="m-dropin-ctas">{d.sub}</div>
+            </div>
+          </div>
+        </div>
+      </a>
+    ))}
+  </div>
+
+  <div class="m-label">Reserve ahead</div>
+  <p class="m-sub" style="margin-bottom:14px">Each opens its exact page on Square.</p>
+  <div class="m-stack">
+    {bookOptions.map((b) => <BookingCard {...b} />)}
+  </div>
+</div>
