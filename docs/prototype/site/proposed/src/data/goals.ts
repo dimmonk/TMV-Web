@@ -56,7 +56,7 @@ export const goals: Goal[] = [
     sideLabel: 'Where it usually leads',
     leads: [
       { title: 'Camps', sub: 'School breaks & P.A. Days · ages 5 to 16', color: cat.camps, href: url('camps') },
-      { title: 'Athletic Program', sub: 'For the one who gets hooked · ages 9+', color: cat.athletic, href: url('athletic-program') },
+      { title: 'Open Gym', sub: 'Play together any day, no booking', color: cat.openGym, href: openGym },
     ],
   },
   {
