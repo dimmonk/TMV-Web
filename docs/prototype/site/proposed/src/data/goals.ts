@@ -89,7 +89,7 @@ export const goals: Goal[] = [
     altLead: 'One skill in mind instead?', altLink: 'Book a private lesson built around it.', altHref: sq.privateLessons.privateLesson,
     sideLabel: 'Where it usually leads',
     leads: [
-      { title: 'Athletic Program', sub: '2 × 90 min a week + open gym · ages 9+', color: cat.athletic, href: url('athletic-program') },
+      { title: 'Specialized group classes', sub: 'Flips, handstands, strength & more', color: cat.classes, href: `${url('train')}#specialized` },
       { title: 'Private lessons', sub: 'Extra 1-on-1 on what you are working on', color: cat.private, href: url('private-lessons') },
     ],
   },

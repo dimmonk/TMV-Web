@@ -29,7 +29,7 @@ export const privateFirst = {
 /** The same-day bonus — was step three's closer, now part of the intro pitch. */
 export const introBonus = {
   strong: '15% off',
-  text: 'any pass or class you buy the same day as your intro.',
+  text: 'any pass or class you buy the same day as your intro. First-time visitors only.',
 };
 
 export interface OtherWayIn { label: string; color: string; href: string; }

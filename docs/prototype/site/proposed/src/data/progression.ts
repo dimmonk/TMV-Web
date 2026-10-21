@@ -117,9 +117,10 @@ export interface PurchaseFit {
   title: string;
   rec: string;
   body: string;
-  /** headline price + qualifier, and a second (optional) figure */
+  /** headline price + qualifier, a second (optional) figure beside it, and an optional fine-print line under them */
   price: { value: string; note: string };
   price2?: { value: string; note: string };
+  fine?: string;
   cta: string;
   href: string;
   /** anchors on the same page scroll; routes navigate */
@@ -136,19 +137,19 @@ export const purchaseFit: PurchaseFit[] = [
   {
     color: cat.classes, who: 'One goal, one program', title: 'Get a pack', rec: '10-class pack or a private 5-pack',
     body: 'Several sessions at the same thing — a skill, a class, a coach. Cheaper per visit, and each session builds on the last.',
-    price: { value: '$275', note: '10 classes' }, price2: { value: '', note: 'valid 10+ months' },
+    price: { value: '$275', note: '10 classes' }, fine: 'Valid 10+ months',
     cta: 'See packs', href: '#price-classes', onPage: true,
   },
   {
     color: '#211f1b', who: 'Every week', title: 'Membership', rec: 'Class membership · open gym included',
     body: 'Training is part of your routine and you want more than one class. Every recreational and specialized class, unlimited.',
-    price: { value: '$180', note: '30 days' }, price2: { value: '', note: '90 / 180 / 360-day terms save more' },
+    price: { value: '$180', note: '30 days' }, fine: '90, 180 and 360-day terms save more',
     cta: 'See memberships', href: '#price-classes', onPage: true,
   },
   {
     color: cat.athletic, who: 'Serious about progressing', title: 'Train with a plan', rec: 'Athletic Program or private pack',
     body: 'Faster, more structured progression: two coached 90-min sessions a week with monthly check-ins — or a private pack with your own coach.',
-    price: { value: '$150', note: '/ month' }, price2: { value: '', note: 'ages 9+ · open gym included' },
+    price: { value: '$150', note: '/ month' }, fine: 'Ages 9+ · open gym included',
     cta: 'See the program', href: url('athletic-program'),
   },
 ];
@@ -172,12 +173,12 @@ export interface PartyReturnCard {
 
 export const partyReturn: PartyReturnCard[] = [
   {
-    color: cat.openGym, bookingTag: 'Drop-in', status: 'No reservation', statusTone: 'go', title: 'All-day Open Gym',
+    color: cat.openGym, bookingTag: 'Drop-in', status: 'No reservation', statusTone: 'neutral', title: 'All-day Open Gym',
     desc: "Come play any time we're open, no time limit. Under 7s move with a parent, and the parent's free.",
     pills: 'All ages | No booking', price: '$25', priceNote: 'day pass', cta: 'Plan a visit', href: url('open-gym'),
   },
   {
-    color: cat.classes, bookingTag: 'Drop-in', status: 'No reservation', statusTone: 'go', title: 'Kids Parkour classes',
+    color: cat.classes, bookingTag: 'Drop-in', status: 'No reservation', statusTone: 'neutral', title: 'Kids Parkour classes',
     desc: 'Learn this stuff with a coach. Recreational parkour and Flip Class, drop-in — try one first, no pack required.',
     pills: 'Parent & Child 3+ | Flips 7+', price: '$30', priceNote: 'single class', cta: 'See schedule', href: url('schedule'),
   },
@@ -190,8 +191,8 @@ export const partyReturn: PartyReturnCard[] = [
 
 /** The intro nudge under the party-return cards. */
 export const partyReturnIntro = {
-  lead: "One of them wouldn't stop?",
-  body: 'An intro lesson teaches the parkour basics one-on-one, and the coach tells you which class fits next.',
+  lead: 'Want them to keep going?',
+  body: 'Book an intro lesson: an hour of parkour basics with a coach, who then tells you which class suits your child.',
   cta: `Book an intro · ${INTRO_PRICE}`,
   href: sq.getStarted.introduction,
 };

@@ -131,6 +131,7 @@ export const cat = {
 /** Primary nav — label + route key. Routes resolve through `url()`. */
 export const nav = [
   { key: 'train', label: 'Classes', path: 'train' },
+  { key: 'opengym', label: 'Open Gym', path: 'open-gym' },
   { key: 'camps', label: 'Camps', path: 'camps' },
   { key: 'events', label: 'Birthday Parties', path: 'events' },
   { key: 'schedule', label: 'Schedule', path: 'schedule' },
