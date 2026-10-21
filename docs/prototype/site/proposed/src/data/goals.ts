@@ -3,7 +3,8 @@
  * ASK → RECOMMEND → REASON → INVITE entry point on Home. One goal → ONE
  * recommendation with a reason, one CTA, and where it usually leads next.
  *
- * Match the lesson to the goal (owner's rule, 2026-10-20): parkour basics → the
+ * Match the lesson to the goal (owner's rule, 2026-10-20): a kid trying it out →
+ * a drop-in Recreational class (no booking, no commitment); parkour basics → the
  * Intro Lesson, a set beginner lesson plan that is the same every time (why it
  * costs less); a specific skill → a Private Lesson built around it, first visit
  * included; regular structured training → the Athletic Program, whose
@@ -47,14 +48,15 @@ const dayPass = `${url('store')}#opengym`;
 
 export const goals: Goal[] = [
   {
-    id: 'kid', label: 'Find an activity my kid loves', ...INTRO,
-    eyebrow: "We'd start them with", title: 'An intro lesson with a coach',
-    reason: 'A first taste of parkour on our set beginner lesson plan. Your child learns the basics one-on-one, you see how we coach, and the coach tells you which class fits next.',
-    altLead: 'Not sure they want a lesson yet?', altLink: 'Try an open gym day pass first.', altHref: openGym,
+    id: 'kid', label: 'Find an activity my kid loves',
+    color: cat.classes, cta: 'See the class times', href: url('schedule'), price: '$30 · drop-in · ages 3+',
+    eyebrow: "We'd start them with", title: 'A drop-in Recreational class',
+    reason: 'The easiest way to find out if they love it: no booking, no commitment. Parkour and acrobatics at their own pace with a coach and other kids. Come to any class time, and the coach tells you what fits next.',
+    altLead: 'Rather they start one-on-one?', altLink: 'Book an intro lesson with a coach.', altHref: sq.getStarted.introduction,
     sideLabel: 'Where it usually leads',
     leads: [
-      { title: 'Kids Parkour · Recreational', sub: 'Drop-in group class, no booking', color: cat.classes, href: url('schedule') },
       { title: 'Camps', sub: 'School breaks & P.A. Days · ages 5 to 16', color: cat.camps, href: url('camps') },
+      { title: 'Athletic Program', sub: 'For the one who gets hooked · ages 9+', color: cat.athletic, href: url('athletic-program') },
     ],
   },
   {
