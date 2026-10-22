@@ -176,13 +176,26 @@ export function timeKey(t) {
 const hm = (m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 
 /**
+ * Friday late Open Gym is adults only. A house rule that rarely changes, so it stays in this code (Steven's Members
+ * scope, 2026-10-22); the hours themselves are Members'.
+ */
+export const ADULTS_ONLY_LATE = Object.freeze({ day: 5, from: 22 * 60 });
+
+/**
  * Open Gym is the gym's open hours, not a class in the schedule feed: one block on each day the published opening
- * hours (Members, Settings -> Banner, hours & social) read as open. Both chromes list it from here; no hours, no
- * blocks.
+ * hours (Members, Settings -> Banner, hours & social) read as open, with Friday's adults-only late block split off
+ * when those hours run past it. Both chromes list it from here; no hours, no blocks.
  * @param {ReadonlyArray<{day: string, time: string}>} hoursRows
  */
 export function openGymSessions(hoursRows) {
-  return weekSchedule([...hoursRows]).flatMap((span, d) => (span
-    ? [{ id: `open-gym-${d}`, day: d, time: hm(span.open), endTime: hm(span.close), disciplineName: 'Open Gym', ageGroupName: 'All Ages', color: '#2e9e4f' }]
-    : []));
+  const block = (/** @type {number} */ d, /** @type {number} */ open, /** @type {number} */ close, /** @type {boolean} */ adults) => ({
+    id: `open-gym-${d}${adults ? '-late' : ''}`, day: d, time: hm(open), endTime: hm(close), disciplineName: 'Open Gym',
+    ageGroupName: adults ? 'Adults Only' : 'All Ages', color: adults ? '#2e7d32' : '#2e9e4f',
+  });
+  return weekSchedule([...hoursRows]).flatMap((span, d) => {
+    if (!span) return [];
+    const late = ADULTS_ONLY_LATE;
+    if (d !== late.day || span.close <= late.from || span.open >= late.from) return [block(d, span.open, span.close, false)];
+    return [block(d, span.open, late.from, false), block(d, late.from, span.close, true)];
+  });
 }

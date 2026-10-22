@@ -186,7 +186,8 @@ Monday to Sunday, gym time. A week is never stored; `src/lib/schedule-weeks.js` 
 projection plus two kinds of exception staff set in Members: a one-date class cancellation (`cancellations` in
 `schedule.json`) and a day the whole gym is closed (`closedDays` in the site config, read by `published-config.js`,
 fetched in the browser through `live-site-config.ts` `publishedSiteConfig`). A closed day wins over a cancel. Open Gym
-is the published opening hours, one block per open day (`openGymSessions`); nothing about it is typed here. The
+is the published opening hours, one block per open day (`openGymSessions`), with Friday from 10pm split off as
+adults only (`ADULTS_ONLY_LATE`, a house rule that stays in code by Steven's Members scope, like the late-arrival minutes). The
 "Schedule changes" card lists every exception through the last visible week; none means no card.
 
 Desktop is `schedule-page.js` + `schedule-week-view.js` (an hour grid in the price list's card parts, colour rule per
