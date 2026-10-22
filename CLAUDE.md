@@ -193,6 +193,9 @@ is the published opening hours, one block per open day (`openGymSessions`), with
 adults only (`ADULTS_ONLY_LATE`, a house rule that stays in code by Steven's Members scope, like the late-arrival minutes). The
 "Schedule changes" card lists every exception through the last visible week; none means no card.
 
+The reader (`public-projections.js`, a verbatim Members copy) takes `schedule.json` v1 and v2; a v2 class's
+`isEnding`/`isEndingSetAt` is read back into `isCancelled`/`isCancelledSetAt`, the names every reader still uses.
+
 Desktop is `schedule-page.js` + `schedule-week-view.js` (an hour grid in the price list's card parts, colour rule per
 class, hover lights a class's repeats, a site-card popup); the phone is `mobile-schedule.ts` with the same week bar
 and changes card. Styles: `src/styles/schedule-web.css`. The printed sheet modules (`print-schedule-sheet.js`,
