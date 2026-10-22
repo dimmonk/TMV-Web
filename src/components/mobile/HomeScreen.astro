@@ -16,6 +16,7 @@ import ActivityLinks from '../ActivityLinks.astro';
 import VisitSummary from '../VisitSummary.astro';
 import BookingCard from '../BookingCard.astro';
 import GoalPicker from '../GoalPicker.astro';
+import ScheduleChanges from '../ScheduleChanges.astro';
 import { cat, reviews, url } from '../../data/site';
 import { heroStats } from '../../data/hero-stats';
 import { nextSeason } from '../../data/camps';
@@ -39,6 +40,9 @@ const reviewItems = reviews.items.map((r) => ({ name: r.name, role: r.context, t
 </div>
 
 <div class="m-pad">
+  {/* Staff's cancelled dates and closed days, only while there are any (the same card as the desktop home). */}
+  <div style="--sched-changes-pad:0 0 26px"><ScheduleChanges /></div>
+
   {/* ASK -> RECOMMEND: same GoalPicker the desktop home renders, compact. */}
   <h3 class="m-h3" id="m-start" style="scroll-margin-top:80px">What are you here for?</h3>
   <p class="m-sub">Pick a goal and we'll point you to one first step.</p>

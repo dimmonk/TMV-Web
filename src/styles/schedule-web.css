@@ -34,25 +34,6 @@
   background: none; border: 0; border-bottom: 2px solid var(--brand); padding: 4px 0; cursor: pointer;
 }
 
-/* ── Schedule changes: a price list card with the red (private) category rule ── */
-.wk-changes {
-  max-width: 760px; margin: 0 auto 16px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
-  box-shadow: var(--shadow-sm); padding: 16px 18px 12px; color: var(--ink);
-}
-.wk-changes-h {
-  display: flex; align-items: center; gap: 8px; margin: 0 0 6px; padding-bottom: 10px; border-bottom: 2px solid var(--c-private);
-  font: 800 17px/1.1 var(--font-display); letter-spacing: -.01em; color: var(--ink);
-}
-.wk-changes-h i { color: var(--c-private); }
-.wk-changes ul { list-style: none; margin: 0; padding: 0; }
-.wk-changes li { display: flex; gap: 14px; align-items: baseline; padding: 6px 0; font: 500 14px/1.4 var(--font-body); }
-.wk-changes li + li { border-top: 1px dashed var(--line); }
-.wk-change-date {
-  flex: none; min-width: 92px; text-align: left; background: none; border: 0; padding: 0; cursor: pointer;
-  font: 800 14px/1.4 var(--font-display); color: var(--ink);
-}
-.wk-change-date:hover { text-decoration: underline; text-decoration-color: var(--brand); text-decoration-thickness: 2px; }
-
 /* ── The week: one price-list card holding the sheet's grid (hours down, days across) ── */
 .ws-week { --c: var(--c-classes); }
 .ws-week[data-section="athletic"] { --c: var(--c-athletic); }
@@ -148,9 +129,5 @@ button.ws-item:hover:not(.is-off) { background: var(--line-soft); }
 .mapp .wk-range { font: 800 17px/1.15 'Archivo', sans-serif; }
 .mapp .wk-eyebrow { font: 800 10.5px/1.2 'Archivo', sans-serif; letter-spacing: .06em; color: #9b8e6a; }
 .mapp .wk-today { display: none; }
-.mapp .wk-changes { margin: 0; border-radius: 14px; padding: 12px 14px 8px; }
-.mapp .wk-changes-h { font-size: 15px; padding-bottom: 8px; }
-.mapp .wk-changes li { flex-direction: column; gap: 0; padding: 6px 0; font-size: 13px; }
-.mapp .wk-change-date { font: 800 12.5px/1.4 'Archivo', sans-serif; }
 .mapp .wk-daylabel-closed { color: #8b1f1f; margin-left: 6px; }
 .mapp .wk-sess-reason { font: 500 12px/1.3 inherit; color: #8b1f1f; margin-top: 3px; }

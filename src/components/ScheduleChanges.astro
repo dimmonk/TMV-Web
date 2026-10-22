@@ -1,0 +1,22 @@
+---
+/**
+ * Staff's schedule changes (cancelled class dates, closed days), drawn in the browser by `mountScheduleChanges`
+ * (src/lib/schedule-changes.js). Hidden until there is something to list, so a normal week shows nothing. Content
+ * only: the page sets the space around it through `--sched-changes-pad` (applied only while it shows).
+ */
+import { url } from '../data/site';
+import '../styles/schedule-changes.css';
+---
+<div class="sched-changes" data-schedule-changes data-schedule-href={url('schedule')} hidden></div>
+
+<style>
+  .sched-changes { padding: var(--sched-changes-pad, 0); }
+</style>
+
+<script>
+  import { mountScheduleChanges } from '../lib/schedule-changes.js';
+  import { publishedSiteConfig } from '../lib/live-site-config';
+  document.addEventListener('astro:page-load', () => {
+    void mountScheduleChanges([...document.querySelectorAll<HTMLElement>('[data-schedule-changes]')], { siteConfig: publishedSiteConfig });
+  });
+</script>

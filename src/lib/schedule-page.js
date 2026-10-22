@@ -50,12 +50,14 @@ export async function mountSchedulePage(root, { siteConfig }) {
   const classes = /** @type {any[]} */ (schedule.classes);
   const open = mountClassPopup(root);
 
-  // A link (?filter=) wins, then staff's saved default (Members, schedule display), then All.
-  const urlFilter = new URLSearchParams(window.location.search).get('filter') || '';
+  // A link (?filter=) wins, then staff's saved default (Members, schedule display), then All. A link's ?date=
+  // (a Schedule changes date on another page) opens that date's week.
+  const params = new URLSearchParams(window.location.search);
+  const urlFilter = params.get('filter') || '';
   const saved = schedule.scheduleDisplay?.filter || '';
   /** @type {Readonly<{week: number, filter: string}>} */
   let state = Object.freeze({
-    week: 0,
+    week: Math.max(0, weekIndexOf(weeks, params.get('date') || '')),
     filter: FILTERS.includes(urlFilter) ? urlFilter : FILTERS.includes(saved) ? saved : 'all',
   });
   /** @param {Partial<typeof state>} patch */

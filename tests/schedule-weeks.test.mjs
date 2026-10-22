@@ -193,3 +193,35 @@ test('a v2 schedule (isEnding, partner, cancellations) draws like v1: Ending tag
     globalThis.fetch = realFetch;
   }
 });
+
+test('the home page card shows only when there is a change, and a date opens that week on /schedule', async () => {
+  const { mountScheduleChanges } = await import('../src/lib/schedule-changes.js');
+  const { weekIndexOf: indexOf } = await import('../src/lib/schedule-weeks.js');
+  const today = gymToday();
+  const [, nextMonday] = visibleWeeks(today);
+  const body = { schemaVersion: 1, classes: [{ ...CLASSES[0], isNew: false, isCancelled: false }], cancellations: [{ classId: 'pk', date: nextMonday, reason: 'Coach away' }] };
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async () => ({ ok: true, status: 200, json: async () => body });
+  const host = () => Object.assign(document.createElement('div'), { hidden: true });
+  try {
+    const shown = host();
+    shown.dataset.scheduleHref = '/schedule/';
+    await mountScheduleChanges([shown], { siteConfig: async () => ({ closedDays: [] }) });
+    assert.equal(shown.hidden, false);
+    assert.match(shown.textContent, /Parkour \(Kids\) 5pm–6pm cancelled/);
+    assert.equal(indexOf(visibleWeeks(today), nextMonday), 1, 'the linked date is in the second visible week');
+
+    body.cancellations = [];
+    const quiet = host();
+    await mountScheduleChanges([quiet], { siteConfig: async () => { throw new Error('offline'); } });
+    assert.equal(quiet.hidden, true);
+    assert.equal(quiet.childElementCount, 0);
+
+    globalThis.fetch = async () => ({ ok: false, status: 500, json: async () => ({}) });
+    const failed = host();
+    await mountScheduleChanges([failed], { siteConfig: async () => ({ closedDays: [] }) });
+    assert.equal(failed.hidden, true);
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+});
