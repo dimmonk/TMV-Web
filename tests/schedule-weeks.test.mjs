@@ -169,3 +169,27 @@ test('Open Gym is the published opening hours, with Friday late split off as adu
   assert.deepEqual([...root.querySelectorAll('.ws-when')].map((w) => w.textContent), ['11am–10pm', '11am–10pm', '10pm–12am']);
   assert.deepEqual(openGymSessions([{ day: 'Friday', time: '11:00 AM – 10:00 PM' }]).map((b) => b.ageGroupName), ['All Ages'], 'no late hours, no adults-only block');
 });
+
+test('a v2 schedule (isEnding, partner, cancellations) draws like v1: Ending tag, cancelled date, reason', async () => {
+  const { fetchPublicSchedule } = await import('../src/lib/public-projections.js');
+  const v2 = {
+    schemaVersion: 2,
+    classes: [{ ...CLASSES[1], isNew: false, isNewSetAt: null, isEnding: true, isEndingSetAt: new Date().toISOString(), partner: null }],
+    cancellations: [{ classId: 'fl', date: '2026-10-29', reason: null }],
+  };
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async () => ({ ok: true, status: 200, json: async () => v2 });
+  try {
+    const schedule = await fetchPublicSchedule();
+    const exceptions = scheduleExceptions({ cancellations: schedule.cancellations, closedDays: [] });
+    assert.deepEqual(exceptions, [{ type: 'cancel', classId: 'fl', date: '2026-10-29', reason: '' }]);
+    const root = document.createElement('div');
+    renderWeekGrid(root, { sessions: sessionsForWeek(schedule.classes, '2026-10-19', exceptions), monday: '2026-10-19', today: TODAY, closed: new Map(), section: 'classes' });
+    assert.equal(root.querySelector('.ws-tag').textContent, 'Ending');
+    assert.equal(sessionsForWeek(schedule.classes, '2026-10-26', exceptions)[0].status, 'cancelled');
+    globalThis.fetch = async () => ({ ok: true, status: 200, json: async () => ({ ...v2, schemaVersion: 3 }) });
+    await assert.rejects(fetchPublicSchedule(), /schemaVersion 3, expected 1 or 2/);
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+});
