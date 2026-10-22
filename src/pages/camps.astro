@@ -4,13 +4,17 @@ import CampsScreen from '../components/mobile/CampsScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import Pill from '../components/Pill.astro';
+import CampDates from '../components/CampDates.astro';
+import Faq from '../components/Faq.astro';
+import { campFaqs } from '../data/camp-faqs';
+import { hasCampDates } from '../data/camp-dates';
 import { seo, links, cat, url } from '../data/site';
 import { camps, campDaySchedule } from '../data/camps';
 import { forSurface } from '../data/surface';
 const schedule = campDaySchedule;
 const facts = [
   { icon: 'bi-clock', title: 'Hours', body: 'Arrival from 8:45 AM, camp runs 9 AM–2 PM. Late pickup to 4 PM — $20 for one day or $75 for five days.' },
-  { icon: 'bi-person-badge', title: 'Ages', body: '5 years old and up, all levels.' },
+  { icon: 'bi-person-badge', title: 'Ages', body: '5 to 16, all levels.' },
   { icon: 'bi-bag', title: 'What to bring', body: 'Clean indoor shoes, a labelled water bottle, lunch and snacks, and comfortable clothes.' },
   { icon: 'bi-shield-check', title: 'Waiver', body: 'Every new participant needs a completed waiver before their first day. Do it online to save time.' },
   { icon: 'bi-exclamation-triangle', title: 'Allergies', body: 'A nut-free environment — please pack nut-free, and let us know about any allergies.' },
@@ -25,16 +29,16 @@ const facts = [
     <div class="pagehero-glow"></div>
     <div class="container hero2">
       <div>
-        <div class="pagehero-kicker"><span class="rule"></span>School breaks &amp; days off · Ages 5+</div>
+        <div class="pagehero-kicker"><span class="rule"></span>School breaks &amp; days off · Ages 5 to 16</div>
         <h1 class="hero2-title">Parkour camps,<br>packed with fun.</h1>
         <p class="hero2-lead">A full day of skill-building, flips, games and friends. All levels — and always a big focus on having fun in the process.</p>
         <div class="hero2-actions">
-          <a href="#camps" class="btn btn-primary">See the camps <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
-          <a href="#know" class="btn btn-ghost-light">Before you book</a>
+          {hasCampDates && <a href="#dates" class="btn btn-primary">See the dates <i class="bi bi-arrow-down" aria-hidden="true"></i></a>}
+          <a href="#camps" class={hasCampDates ? 'btn btn-ghost-light' : 'btn btn-primary'}>Compare the camps</a>
         </div>
         <div class="hero2-stats">
           <div class="hero2-stat"><div class="n">9 AM–2 PM</div><div class="l">camp hours daily</div></div>
-          <div class="hero2-stat"><div class="n">Ages 5+</div><div class="l">all levels</div></div>
+          <div class="hero2-stat"><div class="n">Ages 5–16</div><div class="l">all levels</div></div>
           <div class="hero2-stat last"><div class="n">til 4 PM</div><div class="l">late pickup option</div></div>
         </div>
       </div>
@@ -47,7 +51,7 @@ const facts = [
     </div>
   </section>
 
-  <JumpNav items={[{ label: 'The Camps', id: 'camps' }, { label: 'A Day at Camp', id: 'know' }]} actions={[{ label: 'Price List', href: url('pricing'), icon: 'bi bi-tag' }]} top={66} />
+  <JumpNav items={[{ label: 'The Camps', id: 'camps' }, ...(hasCampDates ? [{ label: 'Dates', id: 'dates' }] : []), { label: 'A Day at Camp', id: 'know' }, { label: 'Questions', id: 'camp-faq' }]} actions={[{ label: 'Price List', href: url('pricing'), icon: 'bi bi-tag' }]} top={66} />
 
   <section id="camps" class="section container" style="scroll-margin-top:120px">
     <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Pick your camp" title="Three ways to camp with us" description="Book a full week of camp, gather your own crew for a private day, or grab a single P.A. Day spot." color={cat.camps} /></div>
@@ -61,7 +65,7 @@ const facts = [
                 <h3 class="camptitle">{c.title}</h3>
                 <p class="campdesc">{c.desc}</p>
                 <div class="camphint"><i class="bi bi-arrow-repeat" aria-hidden="true"></i> Tap for full details</div>
-                <div class="campfoot"><span class="campprice">{c.price}</span><a href={c.href} target="_blank" rel="noopener" class="campresv">{c.cta} <i class="bi bi-arrow-right" aria-hidden="true"></i></a></div>
+                <div class="campfoot"><span class="campprice">{c.price}</span><a href={c.href} target={c.href.startsWith('#') ? undefined : '_blank'} rel={c.href.startsWith('#') ? undefined : 'noopener'} class="campresv">{c.cta} <i class="bi bi-arrow-right" aria-hidden="true"></i></a></div>
               </div>
             </div>
             <div class="campface campback">
@@ -69,7 +73,7 @@ const facts = [
               <h3 class="campbacktitle">{c.back}</h3>
               <div class="campfacts">{c.facts.map((f) => <div class="campfact"><i class={`bi ${f.icon}`} aria-hidden="true"></i>{f.text}</div>)}</div>
               <p class="campincl">{c.included}</p>
-              <a href={c.href} target="_blank" rel="noopener" class="campresv" style="margin-top:auto;align-self:flex-start">{c.cta} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+              <a href={c.href} target={c.href.startsWith('#') ? undefined : '_blank'} rel={c.href.startsWith('#') ? undefined : 'noopener'} class="campresv" style="margin-top:auto;align-self:flex-start">{c.cta} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
             </div>
           </div>
         </article>
@@ -77,10 +81,15 @@ const facts = [
     </div>
   </section>
 
+  <section id="dates" class="section container" style="scroll-margin-top:120px" data-camp-dates hidden={!hasCampDates}>
+    <div style="margin-bottom:28px"><SectionHeader num="02" eyebrow="Dates" title="Every date, then book" description="Pick a week or a single day. Booking and payment happen on our Square booking page." color={cat.camps} /></div>
+    <CampDates />
+  </section>
+
   <section id="know" class="section container" style="scroll-margin-top:120px">
     <div class="know">
       <div class="know-left">
-        <div class="know-eyebrow">02 — A day at camp</div>
+        <div class="know-eyebrow">03 — A day at camp</div>
         <h2 class="know-title">From drop-off to pick-up</h2>
         <p class="know-lead">Doors open at 8:45 for arrival. Here's how a typical day flows — a mix of coached skills, games and free time.</p>
         <div class="know-sched">{schedule.map((d) => <div class="know-row"><span class="know-time">{d.time}</span><span>{d.label}</span></div>)}</div>
@@ -100,7 +109,10 @@ const facts = [
         </div>
       </div>
     </div>
-    <p class="know-fine">Cancellation policy: two weeks' written notice for weekly camps (15% deposit retained for late notice; $20 transaction fee otherwise). No-nut policy in effect — please tell us about any allergies.</p>
+  </section>
+
+  <section id="camp-faq" class="section container" style="scroll-margin-top:120px">
+    <Faq eyebrow="Before you book" heading="Parent questions" subhead="Ages, drop-off, packing and cancelling." faqs={campFaqs} />
   </section>
   </div>
 </BaseLayout>

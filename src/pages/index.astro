@@ -1,16 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import OfferingCard from '../components/OfferingCard.astro';
+import ActivityLinks from '../components/ActivityLinks.astro';
+import VisitSummary from '../components/VisitSummary.astro';
 import HomeScreen from '../components/mobile/HomeScreen.astro';
 import GoalPicker from '../components/GoalPicker.astro';
 import Reviews from '../components/Reviews.astro';
-import CtaBand from '../components/CtaBand.astro';
-import { seo, links, cat, url } from '../data/site';
+import { seo, cat, url } from '../data/site';
 import { heroStats } from '../data/hero-stats';
-import { sq } from '../data/square-links';
-import { offerings } from '../data/offerings';
-import { bookableSeasons } from '../data/camps';
+import { bookableSeasons, campByKey } from '../data/camps';
+
+const paDay = campByKey('paday')!;
 
 const heroPhotos = [
   'gym-01.jpg', 'gym-02.jpg', 'gym-03.jpg', 'gym-04.jpg',
@@ -23,16 +23,16 @@ const heroPhotos = [
 const camps = [
   ...bookableSeasons().map((s) => ({
     title: s.label, badge: s.badge, color: cat.camps, status: 'Booking now', statusColor: cat.openGym,
-    price: s.price, href: s.href,
+    price: s.price, cta: 'See dates', href: `${url('camps')}#dates`, external: false,
     rows: [
       { icon: 'bi-calendar-week', text: s.when },
       { icon: 'bi-clock', text: '9 AM – 2 PM · late pickup to 4 PM' },
-      { icon: 'bi-people', text: 'Ages 5+ · all levels' },
+      { icon: 'bi-people', text: 'Ages 5 to 16 · all levels' },
     ],
   })),
   {
     title: 'P.A. Day Camps', badge: 'School year', color: cat.camps, status: 'Single days', statusColor: cat.classes,
-    price: '$90 / day', href: sq.camps.paDayCamp,
+    price: paDay.price, cta: paDay.cta, href: paDay.href.startsWith('#') ? `${url('camps')}${paDay.href}` : paDay.href, external: !paDay.href.startsWith('#'),
     rows: [
       { icon: 'bi-sun', text: 'Single days off school' },
       { icon: 'bi-clock', text: '9 AM – 2 PM · late pickup to 4 PM' },
@@ -55,17 +55,17 @@ const camps = [
       <div>
         <div class="hero-kicker"><span class="hero-kicker-rule"></span>Parkour &amp; Movement Training Centre · Toronto</div>
         <h1 class="hero-title">Move better.<br>Have more fun.</h1>
-        <p class="hero-lead">Toronto's home for parkour, flips and movement. Drop in to play, book a class, train like an athlete, or throw a party — every age, every level, under one big roof.</p>
+        <p class="hero-lead">Toronto's home for parkour, flips and movement. Coached classes, open gym, camps and birthday parties — every age, every level, under one big roof.</p>
         <div class="hero-actions">
-          <a href={sq.getStarted.introduction} target="_blank" rel="noopener" class="btn btn-primary">Book an intro lesson <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
-          <a href="#start" class="btn btn-ghost-light">Explore the gym</a>
+          <a href="#start" class="btn btn-primary">Find your starting point <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
+          <a href="#offerings" class="btn btn-ghost-light">Browse activities</a>
         </div>
         <div class="hero-stats">
           {heroStats.map((st, i) => (
             <div class:list={['hero-stat', { last: i === heroStats.length - 1 }]} data-hours-stat={st.hours ? '' : undefined} data-stat-variant={st.hours ? 'desktop' : undefined} hidden={st.hidden}><div class="hero-statnum" data-stat-value={st.hours ? '' : undefined}>{st.value}</div><div class="hero-statlabel" data-stat-label={st.hours ? '' : undefined}>{st.label}</div></div>
           ))}
         </div>
-        <p class="hero-new">Just here to play? <a href={`${url('store')}#opengym`}>Open gym day passes from $25 →</a></p>
+        <p class="hero-new">Just here to play? <a href={url('open-gym')}>Open gym, no booking →</a></p>
       </div>
       <div class="hero-media">
         <div class="hero-frame" id="hero-carousel">
@@ -80,19 +80,10 @@ const camps = [
     </div>
   </section>
 
-  <!-- BOOK ONLINE STRIP -->
-  <div class="bookstrip">
-    <div class="container bookstrip-inner">
-      <i class="bi bi-calendar-check" aria-hidden="true"></i>
-      <span>Real-time availability for private lessons, parties and more — book online in a few clicks.</span>
-      <a href={links.booking} target="_blank" rel="noopener">Book online <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
-    </div>
-  </div>
-
   <!-- GOAL PICKER — ASK → RECOMMEND → REASON → INVITE (see data/goals.ts) -->
   <section id="start" class="section container goalsec">
     <div class="goalsec-head">
-      <SectionHeader num="01" eyebrow="Where to start" title="What are you here for?" description="Tell us the goal and we'll point you to one next step — not six programs." />
+      <SectionHeader num="01" eyebrow="Where to start" title="What are you here for?" description="Pick a goal and we'll point you to one first step — and why." />
     </div>
     <GoalPicker />
   </section>
@@ -100,11 +91,9 @@ const camps = [
   <!-- OFFERINGS -->
   <section id="offerings" class="section container offerings">
     <div class="offerings-head">
-      <SectionHeader num="02" eyebrow="Or browse" title="Three ways to get moving" description="Drop in to play, book a class, send the kids to camp, or throw a party. Tap a card for what's inside." />
+      <SectionHeader num="02" eyebrow="Or browse" title="Four ways to get moving" description="Classes, open gym, camps and birthday parties — ages, prices and how to join, right on the card." />
     </div>
-    <div class="grid-cards">
-      {offerings.map((o) => <OfferingCard {...o} href={url(o.key)} />)}
-    </div>
+    <ActivityLinks />
   </section>
 
   <!-- CAMPS BAND -->
@@ -112,9 +101,9 @@ const camps = [
     <div class="container">
       <div class="camps-head">
         <div>
-          <div class="camps-eyebrow">03 — Dated &amp; filling up</div>
+          <div class="camps-eyebrow">03 — School breaks &amp; days off</div>
           <h2 class="camps-title">Camps booking now</h2>
-          <p class="camps-lead">Dated sessions open for registration — Summer weeks and the next P.A. Day. 9 AM–2 PM with a late-pickup option. $350 a week or $90 a single day.</p>
+          <p class="camps-lead">A school-break week or a single P.A. Day, ages 5 to 16. See every date on the camps page, then book.</p>
         </div>
         <a href={url('camps')} class="camps-all">All camps <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
       </div>
@@ -135,7 +124,7 @@ const camps = [
               </div>
               <div class="camp-foot">
                 <span class="camp-price" style={`color:${c.color}`}>{c.price}</span>
-                <a href={c.href} target="_blank" rel="noopener" class="camp-resv">Reserve <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                <a href={c.href} target={c.external ? '_blank' : undefined} rel={c.external ? 'noopener' : undefined} class="camp-resv">{c.cta} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
               </div>
             </div>
           </div>
@@ -147,10 +136,7 @@ const camps = [
   <Reviews eyebrow="04 — What people say" />
 
   <section class="section container final-cta">
-    <CtaBand cards={[
-      { theme: 'dark', eyebrow: 'Passes & memberships', title: 'See the Price List', icon: 'bi-tag-fill', href: url('pricing') },
-      { theme: 'light', eyebrow: 'All classes, one view', title: 'Group Class Schedule', icon: 'bi-calendar3', href: url('schedule') },
-    ]} />
+    <VisitSummary />
   </section>
   </div>
 </BaseLayout>

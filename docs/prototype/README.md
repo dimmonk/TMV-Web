@@ -46,7 +46,6 @@ there is added, such as `pages/open-gym.astro`). `site/compare.html` shows the t
 node docs/prototype/site/build.mjs   # -> docs/prototype/dist/site/ (gitignored); publish its index.html with the files beside it
 ```
 
-The pages run offline: `offline.js` answers the published site config, schedule and price list from a copy read at build time and
-refuses any other off-site request. Sample-only data in the proposal: `proposed/src/data/camp-dates.ts` (in the real build staff
-enter camp dates in Members beside the camp links and they publish through the site config). When this is approved, each file under
-`site/proposed/src/` moves over its twin in `src/` and the override is deleted.
+The pages run offline: `offline.js` answers the published site config, schedule, price list and camp catalogue from a copy read
+at build time and refuses any other off-site request. The 2026-10 redesign was approved on 2026-10-22 and is now `src/`, so
+`site/proposed/src/` is empty and both builds match; the next iteration starts by adding its changed files there again.

@@ -4,14 +4,13 @@
  * See HomeScreen for how the mobile/desktop compositions are switched.
  */
 import MobileHero from '../MobileHero.astro';
-import BookingCard from '../BookingCard.astro';
 import ClassCard from '../ClassCard.astro';
 import ClassTabs from '../ClassTabs.astro';
 import NextStep from '../NextStep.astro';
 import { coreClasses, partnershipClasses } from '../../data/classes';
 import { specializedRows, specializedOffer } from '../../data/class-schedule';
 import type { ClassItem } from '../../data/classes';
-import { cat, links, url } from '../../data/site';
+import { cat, url } from '../../data/site';
 
 // Action href for a class on the phone: every `link.screen` value is now a
 // real route (private-lessons and athletic-program got their own phone
@@ -20,15 +19,13 @@ import { cat, links, url } from '../../data/site';
 const classHref = (c: ClassItem): string =>
   'external' in c.link ? c.link.external : url(c.link.screen);
 ---
-<MobileHero eyebrow="Train" title="Every way to move" desc="Open gym, coached classes and the Athletic Program — every age, every level, one big roof." stats={[{ v: '4', l: 'ways to train' }, { v: 'Ages 3+', l: 'all levels' }, { v: '7 days', l: 'a week' }]} />
+<MobileHero eyebrow="Classes" title="Classes for every age" desc="Coached group classes, private lessons built around your goal, and the Athletic Program." stats={[{ v: '3', l: 'ways to learn' }, { v: 'Ages 3+', l: 'all levels' }, { v: 'Drop-in', l: 'group classes' }]} />
 <div class="m-pad">
-  <BookingCard color={cat.openGym} bookingTag="Drop-in" duration="No limit" title="Open Gym" description="Drop in any day and stay as long as you like. Sign the waiver, grab a pass, the floor is yours." pills="All ages | 11 AM – 10 PM | No booking" price="From $25" priceNote="day pass" actionLabel="Get a pass" href={links.store} target="_blank" />
-
-  <div class="m-rowhead" style="margin:26px 0 6px">
+  <div class="m-rowhead" style="margin:0 0 6px">
     <h3 class="m-h3" style="margin:0">Core programs</h3>
     <a class="m-alllink" href={url('schedule')}>Times <i class="bi bi-calendar3" style={`color:${cat.classes}`} aria-hidden="true"></i></a>
   </div>
-  <p class="m-sub" style="margin-bottom:14px">Tap a card to flip it for level, ages, schedule &amp; price.</p>
+  <p class="m-sub" style="margin-bottom:14px">Level, ages, schedule and price on every card.</p>
   <div class="m-stack" style="margin-bottom:30px">
     {coreClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}
   </div>
@@ -65,4 +62,10 @@ const classHref = (c: ClassItem): string =>
   <div class="m-stack">
     {partnershipClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}
   </div>
+
+  <a class="rowpress m-newhere" href={url('open-gym')} style="margin-top:30px">
+    <span class="m-newhere-ic"><i class="bi bi-door-open-fill" aria-hidden="true"></i></span>
+    <div class="m-newhere-txt"><div class="m-newhere-t">Just want to play?</div><div class="m-newhere-s">Open Gym: no class, no booking.</div></div>
+    <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
+  </a>
 </div>

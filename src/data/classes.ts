@@ -26,10 +26,6 @@ export interface ClassItem {
   pills: string;
   mediaBadge?: string;
   actionLabel: string;
-  backActionLabel?: string;
-  backEyebrow: string;
-  backHeadline: string;
-  backBody: string;
   specs: string;
   link: ClassLink;
 }
@@ -38,32 +34,26 @@ export const classes: ClassItem[] = [
   // ---- Core programs ----
   {
     group: 'core', category: 'Parkour', tag: 'Parkour', title: 'Recreational', image: 'assets/recreational.gif',
-    description: 'Parkour & acrobatics at your own pace. All fun, zero pressure.', bookingTag: 'Drop-in',
+    description: 'Parkour & acrobatics at your own pace. Drop in at any class time: the coach meets you where you are, no commitment.', bookingTag: 'Drop-in',
     pills: 'All ages | All levels', actionLabel: 'View schedule', link: { screen: 'schedule' },
-    backEyebrow: 'Recreational · Parkour', backHeadline: 'At your own pace, zero pressure',
-    backBody: 'Relaxed, drop-in parkour and acrobatics. Coaches meet you exactly where you are — no commitment, no pressure.',
     specs: 'Level: All levels || Ages: All ages — Parent & Child (3+) to Adults || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275',
   },
   {
     group: 'core', category: 'Private', tag: 'Private', title: 'Private Lessons', image: 'assets/private.mp4',
-    description: 'Three ways in: a discounted intro, ongoing 1-on-1 at standard rates, or your own specific coach to follow your whole progress.', bookingTag: 'By appointment',
+    description: 'Have a specific skill or goal, like a backflip or a handstand? The coach plans the whole hour around it, from your very first visit.', bookingTag: 'By appointment',
     pills: '1-on-1 | All ages', actionLabel: 'See private options', link: { screen: 'private-lessons' },
-    backEyebrow: 'Private · 1-on-1', backHeadline: 'Three ways to train privately',
-    backBody: "Start with a one-time Introduction, continue one-on-one at standard rates with whoever's on, or pick a specific coach who follows your whole progress — on your schedule.",
     specs: 'Level: All levels · built around you || Ages: Kids ≤17 & Adults 18+ || Booking: By appointment · reserve online || Price: Intro $45 · Kids from $65 · Adults from $85',
   },
   {
     group: 'core', category: 'Athletic', tag: 'Athletic', title: 'Athletic Program', image: 'assets/athletic.mp4',
-    description: 'Train like an athlete with structured coaching and progress tracking.', bookingTag: 'Membership',
+    description: 'Train like an athlete several times a week: structured coaching for strength, speed and skill, with monthly progress check-ins.', bookingTag: 'Membership',
     pills: 'Ages 9+ | 90 min', mediaBadge: 'Serious students only', actionLabel: 'View program', link: { screen: 'athletic-program' },
-    backEyebrow: 'Athletic · Program', backHeadline: 'Build a well-rounded athlete',
-    backBody: 'Train several times a week to build strength, speed and all-round athleticism. Monthly check-ins track your progress.',
     specs: 'Level: Prerequisite required || Ages: 9+ || Schedule: 2 × 90 min / week || Booking: Membership · join any time || Price: $150 / month · $5 class add-on',
   },
 
   // ---- Partnership classes (booked directly with the partner coach) ----
-  { group: 'partnership', category: 'Partner', tag: 'Partner', title: 'Stick Fighting Toronto', image: 'assets/stickfighting.mp4', description: 'Filipino stick fighting with our partner, coach Peter.', bookingTag: 'Direct with coach', pills: 'Adults (18+) | Saturdays', actionLabel: 'Contact coach', backActionLabel: 'Contact coach Peter', link: { external: 'mailto:coachpeter@stickfightingtoronto.com' }, backEyebrow: 'Partner · Adults', backHeadline: 'Filipino stick fighting', backBody: 'Footwork, timing and weapon flow with coach Peter. Welcoming adult class — booked directly with the coach.', specs: 'Level: All levels || Ages: Adults (18+) || Schedule: Sat — 10 AM to 12 PM || Booking: Direct with coach Peter || Price: $30 drop-in · $100 / month' },
-  { group: 'partnership', category: 'Partner', tag: 'Partner', title: 'Martial Arts', image: 'assets/martialarts.mp4', description: 'Jiu Jitsu, Wrestling, Boxing & Muay Thai.', bookingTag: 'Direct with coach', pills: 'Ages 16+ | Grappling | Striking', actionLabel: 'Get in touch', link: { external: 'mailto:info@themonkeyvault.com?subject=Martial%20Arts%20classes%20(for%20Ryan)' }, backEyebrow: 'Partner · Teens 16+ & Adults', backHeadline: 'Grappling & striking', backBody: 'Jiu Jitsu, Wrestling, Boxing and Muay Thai under partner coaches. Beginner to competitor — booked directly via WhatsApp.', specs: 'Level: All levels · beginner to competitor || Ages: 16+ || Booking: Direct via WhatsApp · ask for Ryan || Disciplines: BJJ · Wrestling · Boxing · Muay Thai' },
+  { group: 'partnership', category: 'Partner', tag: 'Partner', title: 'Stick Fighting Toronto', image: 'assets/stickfighting.mp4', description: 'Filipino stick fighting with our partner, coach Peter.', bookingTag: 'Direct with coach', pills: 'Adults (18+) | Saturdays', actionLabel: 'Contact coach', link: { external: 'mailto:coachpeter@stickfightingtoronto.com' }, specs: 'Level: All levels || Ages: Adults (18+) || Schedule: Sat — 10 AM to 12 PM || Booking: Direct with coach Peter || Price: $30 drop-in · $100 / month' },
+  { group: 'partnership', category: 'Partner', tag: 'Partner', title: 'Martial Arts', image: 'assets/martialarts.mp4', description: 'Jiu Jitsu, Wrestling, Boxing & Muay Thai.', bookingTag: 'Direct with coach', pills: 'Ages 16+ | Grappling | Striking', actionLabel: 'Get in touch', link: { external: 'mailto:info@themonkeyvault.com?subject=Martial%20Arts%20classes%20(for%20Ryan)' }, specs: 'Level: All levels · beginner to competitor || Ages: 16+ || Booking: Direct via WhatsApp · ask for Ryan || Disciplines: BJJ · Wrestling · Boxing · Muay Thai' },
 ];
 
 export const coreClasses = classes.filter((c) => c.group === 'core');

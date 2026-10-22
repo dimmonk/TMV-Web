@@ -30,22 +30,16 @@ export interface ExploreTile extends Surfaced {
 }
 
 export const exploreTiles: ExploreTile[] = [
-  { key: 'pricing',    label: 'Pricing',     sub: 'Passes, packs & memberships', path: 'pricing',       icon: 'bi-tag-fill',     fg: cat.openGym },
-  { key: 'store',      label: 'Store',       sub: 'Buy passes & memberships',    path: 'store',         icon: 'bi-bag-fill',     fg: '#211f1b' },
-  { key: 'camps',      label: 'Camps',       sub: 'School-break day camps',      path: 'camps',         icon: 'bi-sun-fill',     fg: cat.camps },
-  // only:'mobile' — on desktop the Athletic Program is already reachable from
-  // the top nav's Train page, the store and the class cards, so adding it here
-  // would put a redundant extra link in the footer's Explore column. On phone
-  // the overflow sheet is the only menu there is, and it was reachable ONLY by
-  // finding a class card on the Train screen.
-  { key: 'athletic',   label: 'Athletic Program', sub: 'Train like an athlete', path: 'athletic-program', icon: 'bi-lightning-fill', fg: cat.athletic, only: 'mobile' },
-  // Base/desktop label stays 'Events' (matches the top nav and the page itself).
-  // Mobile gets 'Birthday Parties' because Groups now has its own tile right
-  // below this one, and without the split "Events" reads ambiguously in a
-  // grid of single-word cards — a mobile-only scanability fix, not a rename.
-  { key: 'events',     label: 'Events', mobile: { label: 'Birthday Parties' }, sub: 'Kids & teen parties at the gym', path: 'events', icon: 'bi-balloon-fill', fg: cat.parties },
-  { key: 'groups',     label: 'Groups',      sub: 'Schools, teams & corporate',  path: 'groups',        icon: 'bi-people-fill',  fg: cat.groups },
-  { key: 'about',      label: 'About',       sub: 'The space, hours & contact',  path: 'about',         icon: 'bi-geo-alt-fill', fg: cat.classes },
-  { key: 'reviews',    label: 'Reviews',     sub: 'What members say',            path: 'reviews',       icon: 'bi-star-fill',    fg: '#e9a300' },
-  { key: 'getstarted', label: 'Get Started', sub: 'First-visit guide',           path: 'get-started',   icon: 'bi-flag-fill',    fg: cat.openGym },
+  // Parent-first order: the questions families ask most come first. Every entry shows on both surfaces.
+  { key: 'camps',      label: 'Camps',            sub: 'Dates, ages & what to pack',      path: 'camps',            icon: 'bi-sun-fill',        fg: cat.camps },
+  { key: 'events',     label: 'Birthday Parties', sub: 'Packages & parent questions',     path: 'events',           icon: 'bi-balloon-fill',    fg: cat.parties },
+  { key: 'pricing',    label: 'Pricing',          sub: 'Drop-ins, packs & memberships',   path: 'pricing',          icon: 'bi-tag-fill',        fg: cat.openGym },
+  { key: 'getstarted', label: 'First Visit',      sub: 'Waiver, what to bring & arrival', path: 'get-started',      icon: 'bi-flag-fill',       fg: cat.openGym },
+  { key: 'opengym',    label: 'Open Gym',         sub: 'Play & train, no booking needed', path: 'open-gym',         icon: 'bi-door-open-fill',  fg: cat.openGym },
+  { key: 'about',      label: 'Visit Us',         sub: 'Hours, directions & contact',     path: 'about',            icon: 'bi-geo-alt-fill',    fg: cat.classes },
+  { key: 'private',    label: 'Private Lessons',  sub: 'Intro & one-on-one coaching',     path: 'private-lessons',  icon: 'bi-person-arms-up',  fg: cat.private },
+  { key: 'athletic',   label: 'Athletic Program', sub: 'Structured training · ages 9+',   path: 'athletic-program', icon: 'bi-lightning-fill',  fg: cat.athletic },
+  { key: 'groups',     label: 'Groups',           sub: 'Schools, teams & corporate',      path: 'groups',           icon: 'bi-people-fill',     fg: cat.groups },
+  { key: 'store',      label: 'Buy Passes',       sub: 'Passes, packs & memberships',     path: 'store',            icon: 'bi-bag-fill',        fg: '#211f1b' },
+  { key: 'reviews',    label: 'Reviews',          sub: 'What families & members say',     path: 'reviews',          icon: 'bi-star-fill',       fg: '#e9a300' },
 ];

@@ -8,7 +8,7 @@
 //
 // Neither build is the shipped site and nothing here is deployed: the release ships origin/main's src/, never this folder.
 // The pages run offline: `offline.js` (first script on every page) answers the members app's published objects (site
-// config, schedule, price list) from a copy read once at build time, and refuses any other off-site request, so the
+// config, schedule, price list, camp catalogue) from a copy read once at build time, and refuses any other off-site request, so the
 // published prototype never reaches production. Root-absolute links are rewritten relative, so the result works from
 // any host, including the Artifact viewer.
 import { build } from 'astro';
@@ -22,7 +22,7 @@ const SRC = join(APP, 'src');
 const PROPOSED = join(HERE, 'proposed', 'src');
 const OUT = join(APP, 'docs', 'prototype', 'dist', 'site');
 const LIVE = 'https://storage.googleapis.com/tmv-management.firebasestorage.app/public/';
-const PUBLISHED = ['site-config.json', 'schedule.json', 'price-list.json'];
+const PUBLISHED = ['site-config.json', 'schedule.json', 'price-list.json', 'camp-catalog.json'];
 
 const exists = (p) => existsSync(p) && statSync(p).isFile();
 const clean = (id) => id.split('?')[0];

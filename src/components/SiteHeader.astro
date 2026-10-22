@@ -42,7 +42,7 @@ const { active = '' } = Astro.props;
   .sh-word { font: 900 18px/1 var(--font-display); letter-spacing: .02em; color: var(--brand); text-transform: uppercase; }
 
   .sh-nav { display: flex; align-items: center; gap: 22px; margin-left: auto; }
-  .sh-link { position: relative; font: 600 13.5px/1 var(--font-body); color: rgba(255,255,255,.65); text-decoration: none; padding-bottom: 3px; transition: color .15s; }
+  .sh-link { position: relative; white-space: nowrap; font: 600 13.5px/1 var(--font-body); color: rgba(255,255,255,.65); text-decoration: none; padding-bottom: 3px; transition: color .15s; }
   .sh-link:hover { color: #fff; }
   .sh-link.on { color: #fff; font-weight: 700; }
   .sh-link.on::after { content: ''; position: absolute; left: 0; right: 0; bottom: -23px; height: 3px; background: var(--brand); }
@@ -62,10 +62,12 @@ const { active = '' } = Astro.props;
   .sh-mlink.on { color: #fff; font-weight: 800; }
   .sh-mlink.accent { color: var(--brand); border-bottom: 0; }
 
-  /* The full nav (brand + 6 links + New here? + Book Now) genuinely doesn't
-     fit until ~925px (measured) — 820px left a real gap where it overflowed
-     the header horizontally. 960px gives a safe margin above that. */
-  @media (max-width: 960px) {
+  /* The full nav (brand + 7 links + New here? + Book Now) needs ~1180px. Below
+     the 1280 step "New here?" steps out (First Visit stays on the home page and in
+     the footer) and the links close up; below 1024 the menu
+     button takes over. */
+  @media (max-width: 1279px) { .sh-new { display: none; } .sh-nav { gap: 18px; } }
+  @media (max-width: 1024px) {
     .sh-nav, .sh-new { display: none; }
     .sh-burger { display: inline-flex; }
     .sh-menu.open { display: flex; }

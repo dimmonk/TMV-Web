@@ -6,13 +6,27 @@ import PurchaseFit from '../components/PurchaseFit.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { seo, links, url } from '../data/site';
 import { sq } from '../data/square-links';
-import '../styles/price-list-sheet.css';
+import '../styles/price-list-web.css';
+
+// Category shortcuts into the live list, and the one action each category ends with, by the price list's own
+// section ids (the renderer gives each card the id `price-<section id>`).
+const categories = [
+  { id: 'classes', label: 'Classes', action: { href: sq.store.classPasses, label: 'Buy class passes', ext: true } },
+  { id: 'open_gym', label: 'Open Gym', action: { href: sq.store.dayPasses, label: 'Buy open gym passes', ext: true } },
+  { id: 'introduction_class', label: 'Intro Lesson', action: { href: sq.getStarted.introduction, label: 'Book an intro lesson', ext: true } },
+  { id: 'private_classes', label: 'Private Lessons', action: { href: sq.privateLessons.privateLesson, label: 'Book a private lesson', ext: true } },
+  { id: 'athletic_program', label: 'Athletic', action: { href: url('athletic-program'), label: 'See the program' } },
+  { id: 'birthday_party', label: 'Birthday Parties', action: { href: url('events'), label: 'Compare party packages' } },
+  { id: 'camps', label: 'Camps', action: { href: url('camps'), label: 'See camp dates' } },
+];
+const actions = Object.fromEntries(categories.map((c) => [c.id, c.action]));
 ---
 <BaseLayout title={seo.pricing.title} description={seo.pricing.description} active="pricing" mobileTab="more" appHeader="back" appTitle="Pricing">
   <div class="mapp" data-chrome="app">
     <MobileHero eyebrow="Pricing" title="One price list" desc="Live from our booking system — buy before you arrive and skip the front-desk line." />
     {/* Value before price: four buyer profiles, then the numbers. */}
     <div class="m-pad">
+      <a class="m-brandbtn pl-jump" href="#prices">Jump to prices <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
       <h3 class="m-h3">Which one is you?</h3>
       <p class="m-sub">Find yourself here first — the prices make more sense after.</p>
       <PurchaseFit />
@@ -26,10 +40,10 @@ import '../styles/price-list-sheet.css';
       <h1 class="pagehero-title">One price list. Buy before you arrive.</h1>
       <p class="pagehero-lead">Every option below is live from our booking system and checks out securely in our online store. Set up your pass before you get to the gym and skip the front-desk line.</p>
       <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap">
-        <a href={url('store')} class="btn btn-primary">Buy passes &amp; memberships <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-        <a href={url('book')} class="btn btn-ghost-light">Book a session instead</a>
+        <a href="#prices" class="btn btn-primary">Jump to prices <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
+        <a href={url('store')} class="btn btn-ghost-light">Buy passes &amp; memberships</a>
       </div>
-      <p class="pagehero-fine">All prices in CAD, HST included. Pre-paid packs are valid 10–20 months depending on size.</p>
+      <p class="pagehero-fine">All prices in CAD, HST included. 10-packs are valid 10 months, 20-packs 20 months.</p>
     </div>
   </section>
 
@@ -39,19 +53,20 @@ import '../styles/price-list-sheet.css';
       <SectionHeader num="01" eyebrow="Before the price list" title="Which one is you?" description="Four kinds of people buy passes here. Find yours — the price makes a lot more sense once you know what you're getting." />
     </div>
     <PurchaseFit />
-    <p class="pl-fit-foot">New and not sure? <a href={sq.getStarted.introduction} target="_blank" rel="noopener">Book an intro lesson ($45)</a> — the coach will tell you which of these actually fits.</p>
+    <p class="pl-fit-foot">New and want the basics? <a href={sq.getStarted.introduction} target="_blank" rel="noopener">Book an intro lesson</a>. Working on one skill? <a href={sq.privateLessons.privateLesson} target="_blank" rel="noopener">Book a private lesson</a>.</p>
   </section>
 
   <!-- LIVE PRICE LIST — production renderer running natively (no iframe).
-       Same price-list-renderer.js + price-list-sheet.css the members app
-       uses; data from the public price-list projection (SSOT, read through
+       Same price-list-renderer.js the members app prints from, in its 'web' look
+       (styles/price-list-web.css); data from the public price-list projection (SSOT, read through
        fetchPublicPriceList in src/lib/public-projections.js). -->
   <main class="pl-main">
-    <div class="pl-embed-shell">
-      <div class="pl-embed-desktop">
-        <div id="pl-embed-root"></div>
-      </div>
-    </div>
+    <section id="prices" class="pl-cats" aria-labelledby="pl-cats-title">
+      <h2 id="pl-cats-title" class="pl-cats-title">Prices by activity</h2>
+      <nav class="pl-cats-nav" aria-label="Price categories">{categories.map((c) => <a href={`#price-${c.id}`}>{c.label}</a>)}</nav>
+      <p class="pl-cats-note">Group classes and open gym are drop-in, no booking. Intro and private lessons are booked ahead. Each one ends with where to buy or book it.</p>
+    </section>
+    <div id="pl-embed-root" class="pl-list" data-actions={JSON.stringify(actions)}></div>
 
     <p class="pl-foot">
       <i class="bi bi-arrow-repeat" aria-hidden="true"></i>&nbsp; Prices update automatically from our booking system — this is the same list our front desk prints.
@@ -89,6 +104,13 @@ import '../styles/price-list-sheet.css';
   .pl-fit-foot a { font-weight: 700; color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--brand); }
 
   .pl-main { max-width: 1440px; margin: 0 auto; padding: 28px 20px 24px; }
+  .pl-jump { margin-bottom: 26px; }
+  .pl-list { max-width: 1168px; margin: 0 auto; }
+  .pl-cats { max-width: 1168px; margin: 0 auto 18px; scroll-margin-top: 90px; }
+  .pl-cats-title { font: 800 26px/1.15 var(--font-display); letter-spacing: -.01em; }
+  .pl-cats-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 12px; }
+  .pl-cats-nav a { padding: 10px 14px; border-radius: 999px; background: var(--ink); color: #fff; text-decoration: none; font: 700 12px/1.2 var(--font-display); }
+  .pl-cats-note { font: 500 13px/1.6 var(--font-body); color: var(--muted); max-width: 760px; }
   .pl-foot { font: 500 12.5px/1.5 var(--font-body); color: #9b9890; text-align: center; margin: 16px 0 44px; }
   .pl-foot i { color: var(--brand); }
   .pl-cta { max-width: 1120px; margin: 0 auto 44px; }
@@ -113,18 +135,10 @@ import '../styles/price-list-sheet.css';
   document.addEventListener('astro:page-load', () => {
     const root = document.getElementById('pl-embed-root');
     if (!root) return;
-    renderPriceListSheet(root)
+    renderPriceListSheet(root, { variant: 'web', actions: JSON.parse(root.dataset.actions || '{}') })
       .then(() => {
-        // The sheet renders as a standalone document, so it titles itself with an
-        // <h1> — correct for the printed PDF, a second <h1> on this page. Demote
-        // them here rather than forking price-list-renderer.js, which is
-        // byte-identical with TMV-Members' copy.
-        root.querySelectorAll('h1').forEach((h) => {
-          const h2 = document.createElement('h2');
-          h2.className = h.className;
-          h2.append(...h.childNodes);
-          h.replaceWith(h2);
-        });
+        const target = decodeURIComponent(location.hash.slice(1));
+        if (target) document.getElementById(target)?.scrollIntoView({ block: 'start' });
       })
       .catch((err) => console.error('[pricing] render failed', err));
   });

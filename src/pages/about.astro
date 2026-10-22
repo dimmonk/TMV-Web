@@ -33,7 +33,7 @@ const socials = [
 ];
 const anySocial = hasSocial(social);
 ---
-<BaseLayout title={seo.about.title} description={seo.about.description} active="about" mobileTab="more" appHeader="back" appTitle="About">
+<BaseLayout title={seo.about.title} description={seo.about.description} active="about" mobileTab="more" appHeader="back" appTitle="Visit Us">
   <div class="mapp" data-chrome="app"><AboutScreen /></div>
 
   <div data-chrome="site">
@@ -41,8 +41,8 @@ const anySocial = hasSocial(social);
     <div class="pagehero-glow"></div>
     <div class="container hero2">
       <div>
-        <div class="pagehero-kicker"><span class="rule"></span>About · Downsview Park, Toronto</div>
-        <h1 class="hero2-title">A home for<br>the movement.</h1>
+        <div class="pagehero-kicker"><span class="rule"></span>Visit us · Downsview Park, Toronto</div>
+        <h1 class="hero2-title">Come see<br>the space.</h1>
         <p class="hero2-lead">The Monkey Vault is Toronto's parkour and movement training centre. Our community is built around open gym — a place for dancers, athletes, fitness enthusiasts and anyone who just wants to jump around and have fun.</p>
         <div class="hero2-actions">
           <a href={site.mapUrl} target="_blank" rel="noopener" class="btn btn-primary">Get directions <i class="bi bi-geo-alt" aria-hidden="true"></i></a>
@@ -56,32 +56,10 @@ const anySocial = hasSocial(social);
     </div>
   </section>
 
-  <JumpNav items={[{ label: 'Our Facility', id: 'facility' }, { label: 'Gallery', id: 'gallery' }, { label: 'Visit Us', id: 'visit' }]} actions={[{ label: 'New here? Get started', href: url('get-started'), icon: 'bi bi-flag' }]} top={66} />
+  <JumpNav items={[{ label: 'Hours & Directions', id: 'visit' }, { label: 'Our Facility', id: 'facility' }, { label: 'Gallery', id: 'gallery' }]} actions={[{ label: 'New here? Get started', href: url('get-started'), icon: 'bi bi-flag' }]} top={66} />
 
-  <section id="facility" class="section container" style="scroll-margin-top:120px; padding-top:36px">
-    <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Our facility" title="Built for every kind of mover" description="A full movement playground under one roof. Sign the waiver, grab a pass, and it's all yours." /></div>
-    <div class="ab-facility">
-      {facilityCards.map((f) => (
-        <div class="ab-fcard">
-          <span class="ab-fic"><i class={`bi ${f.icon}`} aria-hidden="true"></i></span>
-          <div class="ab-ftitle">{f.title}</div>
-          <p class="ab-fbody">{f.body}</p>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <section id="gallery" class="section container" style="scroll-margin-top:120px">
-    <div style="margin-bottom:34px"><SectionHeader num="02" eyebrow="Inside the gym" title="Take a look around" description="10,000+ square feet of parkour rigs, foam pits, a sprung gymnastics floor and a full strength section — all under one roof." /></div>
-    <div class="ab-gallery">
-      {photos.map((g) => (
-        <div class="ab-gitem"><img src={g.src} alt={g.alt} loading="lazy" /></div>
-      ))}
-    </div>
-  </section>
-
-  <section id="visit" class="section container" style="scroll-margin-top:120px">
-    <div style="margin-bottom:34px"><SectionHeader num="03" eyebrow="Visit us" title="Find us in Downsview Park" /></div>
+  <section id="visit" class="section container" style="scroll-margin-top:120px; padding-top:36px">
+    <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Hours & directions" title="Find us in Downsview Park" /></div>
     <div class="ab-visit">
       <div class="ab-contact">
         <div class="ab-crow"><span class="ab-cic"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></span><div><div class="ab-clabel">Location</div><div class="ab-cval">{site.legalName}<br>{site.address.street}<br>{site.address.locality}, Ontario {site.address.postalCode}</div></div></div>
@@ -100,6 +78,29 @@ const anySocial = hasSocial(social);
       </div>
     </div>
   </section>
+
+  <section id="facility" class="section container" style="scroll-margin-top:120px">
+    <div style="margin-bottom:34px"><SectionHeader num="02" eyebrow="Our facility" title="Built for every kind of mover" description="A full movement playground under one roof. Sign the waiver, grab a pass, and it's all yours." /></div>
+    <div class="ab-facility">
+      {facilityCards.map((f) => (
+        <div class="ab-fcard">
+          <span class="ab-fic"><i class={`bi ${f.icon}`} aria-hidden="true"></i></span>
+          <div class="ab-ftitle">{f.title}</div>
+          <p class="ab-fbody">{f.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section id="gallery" class="section container" style="scroll-margin-top:120px">
+    <div style="margin-bottom:34px"><SectionHeader num="03" eyebrow="Inside the gym" title="Take a look around" description="10,000+ square feet of parkour rigs, foam pits, a sprung gymnastics floor and a full strength section — all under one roof." /></div>
+    <div class="ab-gallery">
+      {photos.map((g) => (
+        <div class="ab-gitem"><img src={g.src} alt={g.alt} loading="lazy" /></div>
+      ))}
+    </div>
+  </section>
+
 
   <section class="container" style="padding-bottom:80px" data-socials-wrap hidden={!anySocial}>
     <div class="ab-social">

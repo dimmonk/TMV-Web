@@ -36,6 +36,8 @@ const classTypes = [
 ];
 const joinPoints = [
   'Enroll at any time — the program runs all year.',
+  'There is a prerequisite: your first class is the check, or a coach who has already coached you can vouch.',
+  'It is a training program, so an athlete who is not the right fit may be moved to group classes instead.',
   'We recommend at least three months to truly see progress.',
   'Unlimited open gym and monthly evaluations included.',
   'Half-price class add-on — just $5 (normally $10) to drop into any other group class.',
@@ -128,7 +130,7 @@ const payOptions = [
             <div class="ap-memways">Two ways to pay</div>
             <div class="ap-payopts">{payOptions.map((o) => <div class="ap-pay"><i class={`bi ${o.icon}`} aria-hidden="true"></i><div><div class="ap-paytitle">{o.title}</div><div class="ap-paybody">{o.body}</div></div></div>)}</div>
             <a href={sq.athletic.membership} target="_blank" rel="noopener" class="btn btn-dark" style="justify-content:center">Sign up &amp; start training <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
-            <p class="ap-memfine">New here? You'll sign the waiver at sign-up. A coach confirms you're ready before your first session.</p>
+            <p class="ap-memfine">New here? You'll sign the waiver at sign-up. The coach checks the prerequisite in your first class.</p>
           </div>
         </div>
         <div class="ap-fallback">

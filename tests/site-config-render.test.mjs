@@ -47,6 +47,15 @@ const SCHEDULE = {
   ],
 };
 const PRICE_LIST = { schemaVersion: 1, priceList: { groupClass1x: 31, groupClass10x: 276 } };
+/** The members app's public camp catalogue: one P.A. Day and a four-day winter camp, both ahead of any test run. */
+const CAMP_CATALOG = {
+  schemaVersion: 1,
+  camps: [
+    { id: 'pa', name: 'PA Day', type: 'pa-day', dates: ['2099-01-15'] },
+    { id: 'wi', name: 'Winter Camp', type: 'winter', dates: ['2099-12-21', '2099-12-22', '2099-12-23', '2099-12-24'] },
+    { id: 'old', name: 'Past camp', type: 'summer', dates: ['2020-07-06'] },
+  ],
+};
 
 /** What the fixture server answers for the site config; each test sets it before it builds. */
 let payload = {};
@@ -58,7 +67,8 @@ const workdirs = [];
 before(async () => {
   server = http.createServer((req, res) => {
     const path = new URL(req.url, 'http://fixture').pathname;
-    const body = path === '/schedule.json' ? SCHEDULE : path === '/price-list.json' ? PRICE_LIST : payload;
+    const body = path === '/schedule.json' ? SCHEDULE : path === '/price-list.json' ? PRICE_LIST
+      : path === '/camp-catalog.json' ? CAMP_CATALOG : payload;
     res.writeHead(path === '/site-config.json' ? status : 200, { 'content-type': 'application/json' });
     res.end(JSON.stringify(body));
   });
@@ -177,10 +187,11 @@ test('the Specialized Classes card is the Members schedule, and its price the pr
 
 test('a published link reaches its anchors, and a blank one falls back to the default', async () => {
   serve({ links: { getStarted: { introduction: 'https://example.com/intro' } }, hours: WEEK });
-  const doc = (await build()).dom('');
+  const site = await build();
+  const doc = site.dom('');
   const intro = doc.querySelector('a[data-sq="getStarted.introduction"]');
   assert.equal(intro.getAttribute('href'), 'https://example.com/intro');
-  const blank = doc.querySelector('a[data-sq="camps.paDayCamp"]');
+  const blank = site.dom('camps').querySelector('a[data-sq="camps.paDayCamp"]');
   assert.match(blank.getAttribute('href'), /^https:\/\/the-monkey-vault-inc\.square\.site\/product\/pa-day-camps\//);
   // No slot marker is left in any href.
   assert.equal([...doc.querySelectorAll('a')].filter((a) => (a.getAttribute('href') ?? '').includes('tmv-sq')).length, 0);
@@ -254,13 +265,29 @@ test('a published link that is not http(s) never reaches an href', async () => {
   const home = site.dom('');
   const fallback = home.querySelector('a[data-sq="book.fullBirthday"]').getAttribute('href');
   assert.equal(home.querySelector('a[data-sq="getStarted.introduction"]').getAttribute('href'), fallback, 'a bad link falls back to the default');
-  assert.equal(home.querySelector('a[data-sq="camps.paDayCamp"]').getAttribute('href'), 'https://example.com/ok');
+  assert.equal(site.dom('camps').querySelector('a[data-sq="camps.paDayCamp"]').getAttribute('href'), 'https://example.com/ok');
   const store = site.dom('store');
   assert.equal(
     store.querySelector('a[data-sq="store.dayPasses"]').getAttribute('href'),
     store.querySelector('a[data-sq="store.openGymMembership"]').getAttribute('href'),
     'a bad store link falls back to the generic store page',
   );
+});
+
+test('the camp dates are the members catalogue: upcoming runs per camp, past and empty camps hidden', async () => {
+  serve({ hours: WEEK });
+  const site = await build();
+  const camps = site.dom('camps');
+  const chips = (doc, key) => [...doc.querySelectorAll(`[data-camp-group="${key}"] .cd-date`)].map((li) => li.textContent);
+  assert.ok(shown(camps, '#dates[data-camp-dates]'), 'the Dates section shows');
+  assert.deepEqual(chips(camps, 'winter'), ['Dec 21 – 244 days', 'Dec 21 – 244 days'], 'both chromes');
+  assert.deepEqual(chips(camps, 'paday'), ['Thu, Jan 15', 'Thu, Jan 15']);
+  assert.ok(!shown(camps, '[data-camp-group="summer"]'), 'a camp whose dates have passed is hidden');
+  assert.ok(!shown(camps, '[data-camp-group="march"]'), 'a camp with no dates is hidden');
+  // The phone screen renders the same groups under its own anchor.
+  assert.ok(camps.querySelector('[data-chrome="app"] #m-dates'));
+  // The P.A. Day card leads to its dates.
+  assert.ok([...camps.querySelectorAll('a.campresv')].some((a) => a.getAttribute('href') === '#dates'));
 });
 
 test('the shipped client scripts need no syntax lowering for the browser floor (Safari 13.1 / iOS 13.4)', async () => {

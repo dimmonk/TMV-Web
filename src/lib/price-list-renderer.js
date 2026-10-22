@@ -10,6 +10,7 @@
  * Used by:
  *   - public/print-price-list.html (Puppeteer-renderable PDF source)
  *   - public/price-list-embed.html (embeddable iframe)
+ *   - the website's Pricing page (the `web` variant: same sections and data, the website's own look)
  *
  * Visual design will be refined when the final design lands; the
  * shape of this module stays the same — only the DOM/CSS changes.
@@ -397,14 +398,101 @@ function buildIndexPage({ priceList, bwMode, titleSize, effective, aboutOverride
   return page;
 }
 
+// ─────────────────────── Web variant ───────────────────────
+// The printed sheet's layout in the website's look: the same columns, cards, groups and tight rows, with the
+// "about" lines behind ⓘ as on the sheet. It carries no colors: the page styles it through `data-section`,
+// so the website's category colors and fonts apply. Each card ends with its one action (opts.actions).
+
+function webPrice(value, suffix, cls) {
+  const cluster = el('span', { className: 'pw-price' });
+  if (suffix) cluster.appendChild(el('span', { className: 'pw-suffix', text: suffix }));
+  cluster.appendChild(el('span', { className: cls, text: formatPrice(value) }));
+  return cluster;
+}
+
+function buildWebItems(items, priceList) {
+  const ul = el('ul', { className: 'pw-items' });
+  for (const it of items) {
+    const li = el('li', { className: it.separated ? 'pw-item pw-item-separated' : 'pw-item' });
+    const row = el('div', { className: 'pw-row' }, [el('span', { className: 'pw-label', text: it.label })]);
+    if (it.priceKey !== undefined) row.appendChild(webPrice(priceList[it.priceKey], it.suffix, 'pw-amount'));
+    li.appendChild(row);
+    const bullets = (it.bullets || []).map((b) => resolveBullet(b, priceList)).filter(Boolean);
+    if (bullets.length > 0) {
+      li.appendChild(el('ul', { className: 'pw-bullets' }, bullets.map((b) => (b.kind === 'text'
+        ? el('li', { text: b.text })
+        : el('li', { className: 'pw-brow' }, [el('span', { text: b.label }), el('span', { className: 'pw-bamount', text: b.price })])))));
+    }
+    ul.appendChild(li);
+  }
+  return ul;
+}
+
+function buildWebCard(section, priceList, about, action) {
+  const card = el('article', { className: 'pw-card', attrs: { id: `price-${section.id}`, 'data-section': section.id } });
+  const head = el('div', { className: 'pw-head' }, [el('h3', { className: 'pw-title', text: section.title })]);
+  card.appendChild(head);
+  if (about.length > 0) {
+    const toggle = el('button', {
+      className: 'pw-info',
+      attrs: { type: 'button', 'aria-label': `About ${section.title}`, 'aria-expanded': 'false' },
+    }, [el('i', { className: 'bi bi-info-circle', attrs: { 'aria-hidden': 'true' } })]);
+    head.appendChild(toggle);
+    const collapse = el('div', { className: 'pw-about-collapse' }, [
+      el('ul', { className: 'pw-about' }, about.map((line) => el('li', { text: line }))),
+    ]);
+    card.appendChild(collapse);
+    toggle.addEventListener('click', () => {
+      const open = collapse.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+  const groups = section.groups || (section.items ? [{ label: '', items: section.items }] : []);
+  for (const g of groups) {
+    card.appendChild(el('div', { className: 'pw-group' }, [
+      g.label ? el('div', { className: 'pw-glabel', text: g.label }) : null,
+      buildWebItems(g.items, priceList),
+    ]));
+  }
+  if (action) {
+    card.appendChild(el('a', {
+      className: 'pw-action',
+      attrs: { href: action.href, ...(action.ext ? { target: '_blank', rel: 'noopener' } : {}) },
+    }, [action.label, el('i', { className: `bi ${action.ext ? 'bi-arrow-up-right' : 'bi-arrow-right'}`, attrs: { 'aria-hidden': 'true' } })]));
+  }
+  return card;
+}
+
+function buildWebPage({ priceList, effective, aboutOverrides, openingHours, actions }) {
+  const page = el('div', { className: 'pl-page pl-web' });
+  page.appendChild(el('div', { className: 'pw-meta' }, [
+    effective ? el('span', { text: `Last edited ${effective}` }) : el('span'),
+    el('span', {}, ['Tap ', el('i', { className: 'bi bi-info-circle', attrs: { 'aria-hidden': 'true' } }), ' for details']),
+  ]));
+  const grid = el('div', { className: 'pw-grid' });
+  for (const colIds of PRICE_LIST_COLUMNS) {
+    grid.appendChild(el('div', { className: 'pw-col' }, colIds
+      .map((id) => PRICE_LIST_SECTIONS.find((s) => s.id === id))
+      .filter(Boolean)
+      .map((section) => buildWebCard(section, priceList, resolveAbout(section, aboutOverrides, openingHours), actions?.[section.id]))));
+  }
+  page.appendChild(grid);
+  page.appendChild(el('footer', { className: 'pw-foot' }, PRICE_LIST_FOOTNOTES.map((f) => el('span', { text: f }))));
+  return page;
+}
+
 // ─────────────────────── Public API ───────────────────────
 
 /**
  * @param {HTMLElement} root - Container to render into.
  * @param {Object} [opts]
- * @param {'editorial'|'index'} [opts.variant]
+ * @param {'editorial'|'index'|'web'} [opts.variant]
  *   When omitted, falls back to the persisted `priceListDisplay.variant`
  *   from the fetched data; if that's also missing, defaults to 'editorial'.
+ *   'web' (the website's look) is only ever asked for by the page: the
+ *   persisted print choice never selects it.
+ * @param {Object<string,{label:string,href:string,ext?:boolean}>} [opts.actions]
+ *   'web' only: the one action that ends each section, by section id.
  * @param {boolean} [opts.bwMode]
  *   When omitted, falls back to `priceListDisplay.bwMode`, then `false`.
  * @param {'small'|'hidden'} [opts.titleSize]
@@ -464,7 +552,9 @@ export async function renderPriceListSheet(root, opts = {}) {
   // date that drifts during a render session — leave it blank instead.
   const effective = formatEffective(data?.lastModifiedAt) || '';
 
-  const page = variant === 'index'
+  const page = opts.variant === 'web'
+    ? buildWebPage({ priceList, effective, aboutOverrides, openingHours, actions: opts.actions })
+    : variant === 'index'
     ? buildIndexPage({ priceList, bwMode, titleSize, effective, aboutOverrides, openingHours })
     : buildEditorialPage({ priceList, bwMode, titleSize, effective, aboutOverrides, openingHours });
 

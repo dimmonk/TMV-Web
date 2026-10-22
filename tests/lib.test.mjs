@@ -13,6 +13,7 @@ import { JSDOM } from 'jsdom';
 import {
   weekSchedule, hasOpenDays, hoursSummary, hoursHeading, hoursStat, openingHoursSpec, openStatus, formatClock,
 } from '../src/lib/opening-hours.js';
+import { readCampCatalog, campDates, applyCampDates } from '../src/lib/camp-dates.js';
 
 const ALL_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
   .map((day) => ({ day, time: '11:00 AM – 10:00 PM' }));
@@ -336,4 +337,59 @@ test('the browser brings a built card up to date in place, as text', () => {
   assert.equal(panel.querySelector('[data-class-body]').textContent, '<img src=x onerror=alert(1)>');
   assert.equal(panel.querySelector('img'), null);
   assert.deepEqual([...panel.querySelectorAll('[data-class-when] .ct-when-line')].map((l) => l.textContent), ['Tue · Thu — 7 PM']);
+});
+
+// ---- camp dates ---------------------------------------------------------------
+
+const byKey = (groups) => Object.fromEntries(groups.map((g) => [g.key, g]));
+
+test('the camp catalogue keeps known types and real dates; anything else reads as no camps', () => {
+  assert.deepEqual(readCampCatalog(null), []);
+  assert.deepEqual(readCampCatalog({ camps: 'x' }), []);
+  assert.deepEqual(readCampCatalog({ camps: [
+    { type: 'winter', dates: ['2099-12-21', '21/12/2099', 7] },
+    { type: 'private', dates: ['2099-01-01'] },
+    { type: 'summer' },
+  ] }), [{ type: 'winter', dates: ['2099-12-21'] }]);
+});
+
+test('camp dates fall into runs of consecutive days, from today on, with a summary per camp', () => {
+  const g = byKey(campDates([
+    { type: 'summer', dates: ['2099-07-06', '2099-07-07', '2099-07-08', '2099-07-09', '2099-07-10', '2099-06-29', '2099-06-30', '2099-07-01', '2099-07-02', '2099-07-03', '2099-07-13'] },
+    { type: 'winter', dates: ['2099-12-21', '2099-12-22', '2099-12-28'] },
+    { type: 'pa-day', dates: ['2099-02-13', '2020-01-01', '2099-01-15'] },
+  ], '2026-10-22'));
+  assert.deepEqual(g.summer.runs.map((r) => r.label), ['Jun 29 – Jul 3', 'Jul 6 – 10', 'Mon, Jul 13'], 'a weekend starts a new run');
+  assert.equal(g.summer.runs[0].sub, '5 days');
+  assert.equal(g.summer.summary, '3 weeks from Jun 29');
+  assert.deepEqual(g.winter.runs, [{ label: 'Dec 21 – 22', sub: '2 days' }, { label: 'Mon, Dec 28', sub: '' }]);
+  assert.equal(g.winter.summary, 'Dec 21 – 22 & Mon, Dec 28');
+  assert.deepEqual(g.paday.runs.map((r) => r.label), ['Thu, Jan 15', 'Fri, Feb 13'], 'the past date is gone, the rest in order');
+  assert.equal(g.paday.summary, 'Next: Thu, Jan 15');
+  assert.deepEqual(g.march, { key: 'march', runs: [], summary: '' });
+});
+
+test('three or more runs summarise as a count of weeks', () => {
+  const weeks = ['2099-07-06', '2099-07-13', '2099-07-20'];
+  assert.equal(byKey(campDates([{ type: 'summer', dates: weeks }], '2099-01-01')).summer.summary, '3 weeks from Mon, Jul 6');
+});
+
+test('the browser refresh fills the date lists as text and hides empty camps and an empty block', () => {
+  const { document } = new JSDOM(`<section data-camp-dates>
+    <div data-camp-group="winter"><ul data-camp-runs><li>old</li></ul></div>
+    <div data-camp-group="paday" hidden><ul data-camp-runs></ul></div>
+  </section>`).window;
+  applyCampDates(document, [
+    { key: 'winter', runs: [], summary: '' },
+    { key: 'paday', runs: [{ label: '<b>Thu, Jan 15</b>', sub: '' }], summary: '' },
+  ]);
+  const block = document.querySelector('[data-camp-dates]');
+  assert.equal(block.hidden, false);
+  assert.equal(document.querySelector('[data-camp-group="winter"]').hidden, true);
+  const paday = document.querySelector('[data-camp-group="paday"]');
+  assert.equal(paday.hidden, false);
+  assert.equal(paday.querySelector('.cd-date-l').textContent, '<b>Thu, Jan 15</b>');
+  assert.equal(paday.querySelector('b'), null, 'text, never markup');
+  applyCampDates(document, [{ key: 'winter', runs: [], summary: '' }, { key: 'paday', runs: [], summary: '' }]);
+  assert.equal(block.hidden, true);
 });

@@ -37,7 +37,7 @@ export const site = {
   tagline: 'Parkour & Movement Training Centre',
   city: 'Toronto',
   description:
-    "Toronto's home for parkour, flips and movement. Drop in to open gym, book a class, send the kids to camp or throw a party — every age, every level.",
+    "Toronto's home for parkour, flips and movement. Drop in to open gym, join a group class, send the kids to camp or throw a party — every age, every level.",
   address: {
     street: '75 Carl Hall Rd, Unit 15',
     locality: 'Toronto',
@@ -130,12 +130,13 @@ export const cat = {
 
 /** Primary nav — label + route key. Routes resolve through `url()`. */
 export const nav = [
-  { key: 'train', label: 'Train', path: 'train' },
+  { key: 'train', label: 'Classes', path: 'train' },
+  { key: 'opengym', label: 'Open Gym', path: 'open-gym' },
   { key: 'camps', label: 'Camps', path: 'camps' },
-  { key: 'events', label: 'Events', path: 'events' },
+  { key: 'events', label: 'Birthday Parties', path: 'events' },
+  { key: 'schedule', label: 'Schedule', path: 'schedule' },
   { key: 'pricing', label: 'Pricing', path: 'pricing' },
-  { key: 'store', label: 'Store', path: 'store' },
-  { key: 'about', label: 'About', path: 'about' },
+  { key: 'about', label: 'Visit Us', path: 'about' },
 ] as const;
 
 /** Per-page SEO copy, ported verbatim from site-config.json's `seo`. */
@@ -144,7 +145,7 @@ export const seo = {
     title:
       'The Monkey Vault | Parkour & Movement Training Centre in Toronto',
     description:
-      "Toronto's home for parkour, flips and movement. Drop in to open gym, book a class, send the kids to camp or throw a party — every age, every level, in Downsview Park.",
+      "Toronto's home for parkour, flips and movement. Drop in to open gym, join a group class, send the kids to camp or throw a party — every age, every level, in Downsview Park.",
   },
   getStarted: {
     title: 'Get Started | The Monkey Vault — Your First Parkour Visit',
@@ -152,14 +153,19 @@ export const seo = {
       'New to parkour? Get started at The Monkey Vault in three steps: sign your waiver, book your first session, and learn what to bring. No experience needed.',
   },
   train: {
-    title: 'Train | Open Gym, Classes & Athletic Program — The Monkey Vault',
+    title: 'Classes | Group Classes, Private Coaching & Athletic Program — The Monkey Vault',
     description:
-      'Train parkour your way in Toronto: drop-in open gym, coached classes in flips, calisthenics and tricking, or the structured Athletic Program.',
+      'Parkour classes in Toronto for kids, teens and adults: drop-in group classes in parkour, flips, calisthenics and tricking, private coaching, or the structured Athletic Program.',
+  },
+  openGym: {
+    title: 'Open Gym | Drop In and Play — The Monkey Vault',
+    description:
+      'Open gym at The Monkey Vault in Toronto: no booking, all ages, stay as long as you like. What a visit costs, supervision for under-7s and how to sign the waiver.',
   },
   camps: {
     title: 'Parkour Camps in Toronto | The Monkey Vault',
     description:
-      'Summer, Winter, March Break and P.A. Day parkour camps for kids ages 5+. Expert coaching, skill-building and games, 9 AM–2 PM with late pickup.',
+      'Summer, Winter, March Break and P.A. Day parkour camps for kids ages 5 to 16. Expert coaching, skill-building and games, 9 AM–2 PM with late pickup.',
   },
   events: {
     title: 'Birthday Parties & Group Events | The Monkey Vault Toronto',
@@ -192,7 +198,7 @@ export const seo = {
       'Buy open gym passes, visit packs, class packs, memberships and gift cards online — ready at the front desk when you arrive at The Monkey Vault, Toronto.',
   },
   about: {
-    title: "About | The Monkey Vault — Toronto's Parkour Community",
+    title: "Visit Us | Hours, Directions & the Space — The Monkey Vault",
     description:
       "Meet The Monkey Vault: Toronto's parkour and movement training centre in Downsview Park, built for every age and every level.",
   },

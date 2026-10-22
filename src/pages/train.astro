@@ -8,7 +8,7 @@ import ClassTabs from '../components/ClassTabs.astro';
 import Pill from '../components/Pill.astro';
 import CtaBand from '../components/CtaBand.astro';
 import NextStep from '../components/NextStep.astro';
-import { seo, links, url, cat } from '../data/site';
+import { seo, url, cat } from '../data/site';
 import { coreClasses, partnershipClasses } from '../data/classes';
 import { specializedRows, specializedOffer } from '../data/class-schedule';
 import type { ClassItem } from '../data/classes';
@@ -17,8 +17,7 @@ import type { ClassItem } from '../data/classes';
 const classHref = (c: ClassItem) => ('external' in c.link ? c.link.external : url(c.link.screen));
 
 const jumpItems = [
-  { label: 'Open Gym', id: 'opengym' }, { label: 'Core Programs', id: 'core' },
-  { label: 'Specialized', id: 'specialized' }, { label: 'Partnerships', id: 'partnership' },
+  { label: 'Core Programs', id: 'core' }, { label: 'Specialized', id: 'specialized' }, { label: 'Partnerships', id: 'partnership' },
 ];
 ---
 <BaseLayout title={seo.train.title} description={seo.train.description} active="train" mobileTab="train">
@@ -29,14 +28,14 @@ const jumpItems = [
     <div class="pagehero-glow"></div>
     <div class="container hero2">
       <div>
-        <div class="pagehero-kicker"><span class="rule"></span>Open Gym · Core Programs · Specialized · Partnerships</div>
-        <h1 class="hero2-title">Train your<br>way.</h1>
-        <p class="hero2-lead">Drop in for <strong>Open Gym</strong>, join a <strong>Group Class</strong>, step up to the <strong>Athletic Program</strong>, or go one-on-one with a <strong>Private</strong>. Open Gym and group classes are where most people start — every age, every level, your own pace.</p>
+        <div class="pagehero-kicker"><span class="rule"></span>Group classes · Private coaching · Athletic Program</div>
+        <h1 class="hero2-title">Classes for<br>every age.</h1>
+        <p class="hero2-lead">Coached <strong>group classes</strong> for kids, teens and adults — drop in, no booking. A <strong>private lesson</strong> built around one goal. The <strong>Athletic Program</strong> for regular, structured training.</p>
         <div class="hero2-actions">
-          <a href={links.booking} target="_blank" rel="noopener" class="btn btn-primary">Book a class <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-          <a href={url('schedule')} class="btn btn-ghost-light">See full schedule</a>
+          <a href={url('schedule')} class="btn btn-primary">See class times <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+          <a href="#core" class="btn btn-ghost-light">Compare programs</a>
         </div>
-        <p class="hero2-new">New here? <a href={url('get-started')}>Start with our first-visit guide →</a></p>
+        <p class="hero2-new">Just want to play? <a href={url('open-gym')}>Open Gym has its own page →</a></p>
       </div>
       <div class="hero2-media">
         <div class="hero2-frame">
@@ -54,30 +53,6 @@ const jumpItems = [
   <JumpNav items={jumpItems} actions={[{ label: 'Price List', href: url('pricing'), icon: 'bi bi-tag' }, { label: 'Full Schedule', href: url('schedule'), icon: 'bi bi-calendar3' }]} top={66} />
 
   <div class="trainwrap">
-    <section id="opengym" class="trainsec">
-      <div class="trainsec-head"><SectionHeader num="00" eyebrow="No commitment" title="Open Gym" description="The simplest way in. Open to the public every day — no class, no booking, no time limit. Just come move." color={cat.openGym} /></div>
-      <div class="og">
-        <div class="og-body">
-          <div class="og-eyebrow"><span class="rule"></span>Open Gym · Drop-in, all ages</div>
-          <h3 class="og-title">Come whenever. Stay as long as you want.</h3>
-          <p class="og-lead">Full run of the gymnastics floor, foam pit, mats, weight-training section and obstacles. Dancers, athletes, families, first-timers — everyone's welcome, all ages mixed.</p>
-          <div class="og-pills"><Pill variant="dark" gap={9} items="From $25 / day | No time limit | 11 AM – 10 PM daily | All ages · no prerequisites" /></div>
-          <div class="og-actions">
-            <a href={`${url('store')}#opengym`} class="btn btn-primary">Get a day pass <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-            <a href={links.waiver} target="_blank" rel="noopener" class="btn btn-ghost-light">Sign the waiver</a>
-          </div>
-          <p class="og-fine">Kids under 7 must be actively supervised — supervising parents move for free. Day passes, pre-paid visit packs and unlimited memberships all on the <a href={url('pricing')}>Pricing page</a>.</p>
-        </div>
-        <div class="og-media">
-          <div class="og-ph">
-            <i class="bi bi-camera" aria-hidden="true"></i>
-            <span class="hero2-ph-tag">New media needed</span>
-            <span class="og-ph-desc">Open gym in action — a wide shot of the floor, foam pit and people training.</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section id="core" class="trainsec">
       <div class="trainsec-head"><SectionHeader num="01" eyebrow="The Foundation" title="Core Programs" description="Where everyone starts. Pick your pace — relaxed and recreational, fully personal, or athlete-level training." /></div>
       <div class="cc-grid wide">{coreClasses.map((c) => <ClassCard {...c} href={classHref(c)} />)}</div>
@@ -90,8 +65,8 @@ const jumpItems = [
       <div class="membership">
         <div class="membership-body">
           <div class="membership-eyebrow"><span class="rule"></span>One membership · all access</div>
-          <h3 class="membership-title">Every blue class, unlimited — open gym included.</h3>
-          <p class="membership-lead">One Class Membership unlocks <strong>every recreational and specialized class on this page</strong> — plus unlimited open gym. No per-class fees, no reservations, just show up.</p>
+          <h3 class="membership-title">Every recreational and specialized class, unlimited. Open gym included.</h3>
+          <p class="membership-lead">One Class Membership covers every class on this page. No per-class fees, no reservations: just show up.</p>
           <div class="membership-actions">
             <a href={`${url('store')}#classes`} class="btn btn-primary">Get the membership <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
             <a href={url('pricing')} class="btn btn-ghost-light">See the price list</a>
@@ -115,7 +90,7 @@ const jumpItems = [
 
   <section class="section container train-final-cta">
     <CtaBand cards={[
-      { theme: 'dark', eyebrow: 'Passes & Drop-ins', title: 'See the Price List', icon: 'bi-tag-fill', href: url('pricing') },
+      { theme: 'dark', eyebrow: 'No class, no booking', title: 'Open Gym', icon: 'bi-door-open-fill', href: url('open-gym') },
       { theme: 'light', eyebrow: 'All classes, one view', title: 'Group Class Schedule', icon: 'bi-calendar3', href: url('schedule') },
     ]} />
   </section>

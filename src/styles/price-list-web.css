@@ -1,6 +1,6 @@
 /* The website's look for the live price list: price-list-renderer.js, variant 'web'. The printed sheet's layout
    (same columns, cards, groups and rows, details behind ⓘ), in the site's own fonts, tokens and category colors.
-   The sheet itself keeps price-list-sheet.css. */
+   The printed sheet keeps its own stylesheet in TMV-Members. */
 .pl-web .pw-card[data-section="classes"] { --c: var(--c-classes); }
 .pl-web .pw-card[data-section="open_gym"] { --c: var(--c-opengym); }
 .pl-web .pw-card[data-section="introduction_class"] { --c: var(--c-intro); }

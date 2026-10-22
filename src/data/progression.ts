@@ -2,10 +2,10 @@
  * The client path — SINGLE SOURCE OF TRUTH for the site's guidance layer.
  *
  * Lifted from the staff "Client Progression & Program Recommendation
- * Procedure": customers move Experience → Learn → Progress, the Intro Lesson
- * is THE first step for anyone who wants to learn (get them in the gym with a
- * coach), every page ends with a next step, and the purchase is matched to
- * the goal. The goal picker itself lives in ./goals (same layer, its own list).
+ * Procedure": customers move Experience → Learn → Progress. Match the lesson to
+ * the goal: the Intro Lesson is a set basic-parkour lesson plan, a specific
+ * skill goes straight to a private lesson. Every page ends with a next step,
+ * and the purchase is matched to the goal. The goal picker lives in ./goals.
  *
  * Everything here is rendered by width-agnostic components (PathStrip,
  * NextStep, PurchaseFit, PartyReturn) that both chromes share, so a copy or
@@ -104,8 +104,8 @@ export const nextSteps: Record<NextStepKey, NextStep> = {
   },
   'athletic-intro': {
     icon: 'bi-flag',
-    text: "Not sure you meet the prerequisite? An intro lesson is how a coach checks.",
-    cta: `Book an intro · ${INTRO_PRICE}`, href: sq.getStarted.introduction, external: true,
+    text: 'Not sure you meet the prerequisite? Come to your first class: the coach checks it there.',
+    cta: 'See the class times', href: url('schedule'),
   },
 };
 
@@ -117,9 +117,10 @@ export interface PurchaseFit {
   title: string;
   rec: string;
   body: string;
-  /** headline price + qualifier, and a second (optional) figure */
+  /** headline price + qualifier, a second (optional) figure beside it, and an optional fine-print line under them */
   price: { value: string; note: string };
   price2?: { value: string; note: string };
+  fine?: string;
   cta: string;
   href: string;
   /** anchors on the same page scroll; routes navigate */
@@ -131,24 +132,24 @@ export const purchaseFit: PurchaseFit[] = [
     color: cat.openGym, who: 'Once in a while', title: 'Drop in', rec: 'Day pass or single class',
     body: 'Flexibility, or trying something for the first time. Come when you like, pay per visit, no commitment.',
     price: { value: '$25', note: 'open gym' }, price2: { value: '$30', note: 'class' },
-    cta: 'See day passes', href: '#pl-embed-root', onPage: true,
+    cta: 'See day passes', href: '#price-open_gym', onPage: true,
   },
   {
     color: cat.classes, who: 'One goal, one program', title: 'Get a pack', rec: '10-class pack or a private 5-pack',
     body: 'Several sessions at the same thing — a skill, a class, a coach. Cheaper per visit, and each session builds on the last.',
-    price: { value: '$275', note: '10 classes' }, price2: { value: '', note: 'valid 10+ months' },
-    cta: 'See packs', href: '#pl-embed-root', onPage: true,
+    price: { value: '$275', note: '10 classes' }, fine: 'Valid 10 months · 20-pack: 20 months',
+    cta: 'See packs', href: '#price-classes', onPage: true,
   },
   {
     color: '#211f1b', who: 'Every week', title: 'Membership', rec: 'Class membership · open gym included',
     body: 'Training is part of your routine and you want more than one class. Every recreational and specialized class, unlimited.',
-    price: { value: '$180', note: '30 days' }, price2: { value: '', note: '90 / 180 / 360-day terms save more' },
-    cta: 'See memberships', href: '#pl-embed-root', onPage: true,
+    price: { value: '$180', note: '30 days' }, fine: '90, 180 and 360-day terms save more',
+    cta: 'See memberships', href: '#price-classes', onPage: true,
   },
   {
     color: cat.athletic, who: 'Serious about progressing', title: 'Train with a plan', rec: 'Athletic Program or private pack',
     body: 'Faster, more structured progression: two coached 90-min sessions a week with monthly check-ins — or a private pack with your own coach.',
-    price: { value: '$150', note: '/ month' }, price2: { value: '', note: 'ages 9+ · open gym included' },
+    price: { value: '$150', note: '/ month' }, fine: 'Ages 9+ · open gym included',
     cta: 'See the program', href: url('athletic-program'),
   },
 ];
@@ -172,26 +173,26 @@ export interface PartyReturnCard {
 
 export const partyReturn: PartyReturnCard[] = [
   {
-    color: cat.openGym, bookingTag: 'Drop-in', status: 'No reservation', statusTone: 'go', title: 'All-day Open Gym',
-    desc: "Come play anytime — every day, 11 AM to 10 PM, no time limit. Under 7s move with a parent, and the parent's free.",
-    pills: 'All ages | 7 days', price: '$25', priceNote: 'day pass', cta: 'Get a pass', href: `${url('store')}#opengym`,
+    color: cat.openGym, bookingTag: 'Drop-in', status: 'No reservation', statusTone: 'neutral', title: 'All-day Open Gym',
+    desc: "Come play any time we're open, no time limit. Under 7s move with a parent, and the parent's free.",
+    pills: 'All ages | No booking', price: '$25', priceNote: 'day pass', cta: 'Plan a visit', href: url('open-gym'),
   },
   {
-    color: cat.classes, bookingTag: 'Drop-in', status: 'No reservation', statusTone: 'go', title: 'Kids Parkour classes',
+    color: cat.classes, bookingTag: 'Drop-in', status: 'No reservation', statusTone: 'neutral', title: 'Kids Parkour classes',
     desc: 'Learn this stuff with a coach. Recreational parkour and Flip Class, drop-in — try one first, no pack required.',
     pills: 'Parent & Child 3+ | Flips 7+', price: '$30', priceNote: 'single class', cta: 'See schedule', href: url('schedule'),
   },
   {
     color: cat.camps, bookingTag: 'Register', status: 'Dated', statusTone: 'neutral', title: 'Camps',
     desc: 'Full days of skills, flips, games and friends over P.A. days and school breaks. 9 AM–2 PM, late pickup to 4.',
-    pills: 'Ages 5+ | All levels', price: '$90', priceNote: 'P.A. Day · $350 / summer week', cta: 'See camps', href: url('camps'),
+    pills: 'Ages 5–16 | All levels', price: '$90', priceNote: 'P.A. Day · $350 / summer week', cta: 'See camp dates', href: url('camps'),
   },
 ];
 
 /** The intro nudge under the party-return cards. */
 export const partyReturnIntro = {
-  lead: "One of them wouldn't stop?",
-  body: "An intro lesson is one hour with a coach who'll tell you what they're ready for.",
+  lead: 'Want them to keep going?',
+  body: 'Book an intro lesson: an hour of parkour basics with a coach, who then tells you which class suits your child.',
   cta: `Book an intro · ${INTRO_PRICE}`,
   href: sq.getStarted.introduction,
 };

@@ -1,5 +1,5 @@
 /**
- * PROPOSED (whole-site prototype): the parent questions about a birthday party, ONE list for both chromes.
+ * The parent questions about a birthday party, ONE list for both chromes.
  * The phone used to carry its own four-question copy; now it renders this same list.
  */
 export interface PartyFaqGroup { title: string; items: { q: string; a: string }[]; }
