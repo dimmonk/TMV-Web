@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 /**
- * The fast checks every project runs before code ships: the same list for a deploy (the core runs them in the shipped
- * worktree before the preflight hook) and for the rationed GitHub check on a pull request (.github/workflows/checks.yml).
- * One definition, so what the deploy refuses and what GitHub marks red can never drift apart.
+ * The fast checks every project runs before code ships: the deploy core runs them in the shipped worktree before the
+ * preflight hook. There is no GitHub CI (no Actions, no workflows): every check runs locally on the Mac.
  *
  * The list is the package.json scripts a project has among CHECK_SCRIPTS, in that order. A project that has none of them
  * runs nothing. The slow suites (rules, e2e) are deliberately not here: they are scoped to the change and run by hand.
