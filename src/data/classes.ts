@@ -64,7 +64,7 @@ export const partnershipClasses = classes.filter((c) => c.group === 'partnership
 /**
  * The Specialized Classes card's clips, by class name as the Members schedule
  * names it (without a level number: "Flips" covers Flips 1 and Flips 2). Which
- * classes are on the card, and their headline, description, days, times and ages,
+ * classes are on the card, and their description, days, times and ages,
  * all come from the Members schedule (src/lib/specialized-classes.js); a clip is
  * the one thing kept here, because each is re-encoded by hand before it ships.
  * A class with no file yet shows the placeholder, and heals once the file lands.

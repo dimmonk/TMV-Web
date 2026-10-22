@@ -7,8 +7,8 @@
  * card only while it has sessions on that schedule: add one in Members and it
  * appears from the next release, take its last session off and it goes at once
  * (the browser hides it). Levels of one class ("Flips 1", "Flips 2") are ONE
- * entry, with every level's times in its panel. The name,
- * headline and description are the class type's in Members (Settings -> Class
+ * entry, with every level's times in its panel. The name
+ * and description are the class type's in Members (Settings -> Class
  * types), the same description the schedule's class popup shows. This repo keeps
  * only the clips (`specializedClips`, src/data/classes.ts), keyed by class name,
  * because they are re-encoded by hand before they ship.
@@ -18,10 +18,10 @@
  */
 
 /**
- * @typedef {{ id: string, name: string, headline?: string|null, description?: string|null, order?: number, accessCategories?: string[] }} Discipline
+ * @typedef {{ id: string, name: string, description?: string|null, order?: number, accessCategories?: string[] }} Discipline
  * @typedef {{ day: number, time: string, disciplineId: string, ageRange?: string|null, isCancelled?: boolean, showOnWebsite?: boolean }} Session
  * @typedef {{ disciplines?: Discipline[], classes?: Session[] }} Schedule
- * @typedef {{ id: string, name: string, days: string, who: string, when: string[], headline: string, body: string, image: string }} ClassRow
+ * @typedef {{ id: string, name: string, days: string, who: string, when: string[], body: string, image: string }} ClassRow
  */
 
 /** Group classes the Core Programs cards on the Train page already present (Recreational). */
@@ -130,17 +130,15 @@ export function specializedView(schedule, clips = {}) {
     const sessions = entries.map((e) => e.session);
     const days = WEEK_ORDER.filter((day) => sessions.some((s) => s.day === day)).map((day) => DAY_SHORT[day]);
     const levels = [...new Set(entries.map((e) => e.level).filter(Boolean))].sort((a, b) => a - b);
-    // Text comes from the lowest level that has it ("Flips 1" before "Flips 2").
-    const textOf = (/** @type {(d: Discipline) => string|null|undefined} */ pick) =>
-      entries.map((e) => (pick(e.discipline) ?? '').trim()).find(Boolean) ?? '';
+    // The description is the lowest level's that has one ("Flips 1" before "Flips 2").
+    const body = entries.map((e) => (e.discipline.description ?? '').trim()).find(Boolean) ?? '';
     return {
       id: slug(g.name),
       name: g.name,
       days: days.join(' · '),
       who: whoFor(levels, sessions.map((s) => s.ageRange ?? '')),
       when: whenLines(entries),
-      headline: textOf((d) => d.headline),
-      body: textOf((d) => d.description),
+      body,
       image: clips[g.name] ?? '',
     };
   });

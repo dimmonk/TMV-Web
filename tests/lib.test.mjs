@@ -297,12 +297,12 @@ test('a Square slot marker moves into data-sq on its anchor, and any stray marke
 
 // ---- specialized-classes ----------------------------------------------------
 
-const D = (id, name, over = {}) => ({ id, name, order: 0, accessCategories: ['classes'], description: `${name} body`, headline: `${name} line`, ...over });
+const D = (id, name, over = {}) => ({ id, name, order: 0, accessCategories: ['classes'], description: `${name} body`, ...over });
 const S = (disciplineId, day, time, ageRange, over = {}) => ({ disciplineId, day, time, ageRange, isCancelled: false, showOnWebsite: true, ...over });
 const SCHEDULE = {
   disciplines: [
     D('pk', 'Parkour'), D('f1', 'Flips 1', { order: 2 }), D('f2', 'Flips 2', { order: 3, description: 'Level two body' }),
-    D('tr', 'Tricking', { order: 1, headline: '' }), D('ath', 'Athletic', { accessCategories: ['athletic'] }),
+    D('tr', 'Tricking', { order: 1 }), D('ath', 'Athletic', { accessCategories: ['athletic'] }),
     D('ex', 'Explosive', { order: 4 }), D('sl', 'Speed League', { order: 5 }), D('hs', 'Handstand', { order: 6 }),
   ],
   classes: [
@@ -323,13 +323,12 @@ test('the card lists the classes with sessions, levels as one entry, in the sche
   const [tricking, flips] = rows;
   assert.deepEqual(tricking, {
     id: 'tricking', name: 'Tricking', days: 'Tue · Thu', who: 'Ages 13+', when: ['Tue · Thu — 7 PM'],
-    headline: '', body: 'Tricking body', image: '',
+    body: 'Tricking body', image: '',
   });
   assert.equal(flips.name, 'Flips');
   assert.equal(flips.days, 'Wed · Thu · Fri · Sun');
   assert.equal(flips.who, 'Ages 7–12 · 18+ · Levels 1–2');
   assert.deepEqual(flips.when, ['Level 1, ages 7–12: Thu 6 PM · Sun 12 PM', 'Level 1, ages 18+: Wed — 7 PM', 'Level 2, ages 18+: Wed · Fri — 8 PM']);
-  assert.equal(flips.headline, 'Flips 1 line');
   assert.equal(flips.body, 'Flips 1 body');
   assert.equal(flips.image, 'assets/flips.mp4');
 });
@@ -351,7 +350,7 @@ test('a level number is split off the class name, and times read as a clock', ()
 test('the browser brings a built card up to date in place, as text', () => {
   const { document } = new JSDOM(`<div data-class-tabs>
     ${['tricking', 'flips'].map((id) => `<button data-class-tab="${id}"><span data-class-days>old</span></button>`).join('')}
-    ${['tricking', 'flips'].map((id) => `<div data-class-panel="${id}"><p data-class-headline>old</p><p data-class-body>old</p>
+    ${['tricking', 'flips'].map((id) => `<div data-class-panel="${id}"><p data-class-body>old</p>
       <div data-class-who-row><span data-class-who>old</span></div><span data-class-when><span>old</span></span></div>`).join('')}
   </div>`).window;
   const root = document.querySelector('[data-class-tabs]');
@@ -363,7 +362,6 @@ test('the browser brings a built card up to date in place, as text', () => {
   assert.equal(tab('flips').hidden, true);
   assert.equal(tab('tricking').hidden, false);
   assert.equal(tab('tricking').querySelector('[data-class-days]').textContent, 'Tue · Thu');
-  assert.equal(panel.querySelector('[data-class-headline]').hidden, true);
   assert.equal(panel.querySelector('[data-class-body]').textContent, '<img src=x onerror=alert(1)>');
   assert.equal(panel.querySelector('img'), null);
   assert.deepEqual([...panel.querySelectorAll('[data-class-when] .ct-when-line')].map((l) => l.textContent), ['Tue · Thu — 7 PM']);
