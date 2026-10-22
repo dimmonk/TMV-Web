@@ -1,4 +1,5 @@
 ---
+import Priced from '../components/Priced.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TrainScreen from '../components/mobile/TrainScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
@@ -74,7 +75,7 @@ const jumpItems = [
           <p class="membership-fine">Private lessons, the Athletic Program and partner classes are billed separately.</p>
         </div>
         <div class="membership-price">
-          <span class="membership-num">$180</span>
+          <span class="membership-num"><Priced text="{classMembership30}" /></span>
           <span class="membership-term">30 days · unlimited</span>
           <span class="membership-note">90 / 180 / 360-day terms save more</span>
         </div>

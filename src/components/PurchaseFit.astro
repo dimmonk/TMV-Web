@@ -1,4 +1,5 @@
 ---
+import Priced from './Priced.astro';
 /**
  * "Which one is you?" — match the purchase to the goal, from
  * `purchaseFit` in src/data/progression.ts.
@@ -17,8 +18,8 @@ import { purchaseFit } from '../data/progression';
       <div class="fit-rec">{f.rec}</div>
       <p class="fit-b">{f.body}</p>
       <div class="fit-price">
-        <span>{f.price.value} <small>{f.price.note}</small></span>
-        {f.price2 && <span>{f.price2.value} <small>{f.price2.note}</small></span>}
+        <span><Priced text={f.price.value} /> <small>{f.price.note}</small></span>
+        {f.price2 && <span><Priced text={f.price2.value} /> <small>{f.price2.note}</small></span>}
       </div>
       {f.fine && <p class="fit-fine">{f.fine}</p>}
       <a class="fit-go" href={f.href}>{f.cta} <i class={`bi ${f.onPage ? 'bi-arrow-down' : 'bi-arrow-right'}`} aria-hidden="true"></i></a>

@@ -1,4 +1,5 @@
 ---
+import Priced from './Priced.astro';
 import { url, cat } from '../data/site';
 import { isVideoAsset, classMediaExists } from '../lib/class-media';
 interface Props {
@@ -71,7 +72,7 @@ const mediaExists = classMediaExists(image);
       <p class="cc-desc">{description}</p>
       {specList.length > 0 && (
         <div class="cc-specs cc-specs-front">
-          {specList.map((s) => <div class="cc-spec"><span class="cc-spec-l">{s.label}</span><span class="cc-spec-v">{s.value}</span></div>)}
+          {specList.map((s) => <div class="cc-spec"><span class="cc-spec-l">{s.label}</span><span class="cc-spec-v"><Priced text={s.value} /></span></div>)}
         </div>
       )}
       <div class="cc-bottom">

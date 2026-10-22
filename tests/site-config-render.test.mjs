@@ -19,6 +19,7 @@ import { transformSync } from 'rolldown/utils';
 import { readPublishedConfig } from '../src/lib/published-config.js';
 import { applyPublishedConfig } from '../src/lib/apply-site-config.js';
 import { gymNow } from '../src/lib/gym-clock.js';
+import { applyPrices } from '../src/lib/apply-prices.js';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const BLANK_PROMO = { active: false, headline: '', body: '', ctaLabel: '', ctaUrl: '', expiresAt: '' };
@@ -365,6 +366,28 @@ test('no published contact renders no contact line, link or structured contact',
   assert.doesNotMatch(site.page(''), /"telephone"|"email"|PostalAddress|"hasMap"/);
 });
 
+test('card prices are the Members price list: filled at build, a missing price hides its line, none is typed', async () => {
+  serve({ hours: WEEK });
+  const site = await build();
+  const store = site.dom('store');
+  const lines = (doc, tpl) => [...doc.querySelectorAll(`[data-price-text="${tpl}"]`)];
+  const classPasses = lines(store, 'From {groupClass1x}');
+  assert.ok(classPasses.length > 0 && classPasses.every((el) => el.textContent === 'From $31' && !el.hidden), 'filled from the fixture list');
+  const dayPasses = lines(store, 'From {openGym1x}');
+  assert.ok(dayPasses.length > 0 && dayPasses.every((el) => el.hidden && el.textContent === ''), 'a price the list lacks shows nothing');
+  // No price is typed in a built page: every amount is a price-list line, or one of the
+  // facts the locked scope keeps in code (group event tiers and early access until Members
+  // publishes them, the camp transaction fee, a partner's own price).
+  const kept = /^\$(300|27\.50|25\.00|22\.50|50|20|100)\b/;
+  for (const path of ['', 'store', 'train', 'camps', 'events', 'groups', 'book', 'private-lessons', 'athletic-program', 'open-gym', 'pricing', 'get-started']) {
+    const doc = site.dom(path);
+    doc.querySelectorAll('script, style, [data-price-text]').forEach((el) => el.remove());
+    const typed = (doc.body.textContent.match(/\$\d+(\.\d+)?/g) ?? []).filter((m) => !kept.test(m));
+    assert.deepEqual(typed, [], `${path || 'home'} types no price`);
+    assert.doesNotMatch(doc.body.textContent, /\{[A-Za-z][A-Za-z0-9]*\}/, `${path || 'home'} shows no raw price key`);
+  }
+});
+
 // ---- the browser's refresh over a built page --------------------------------
 
 test('the refresh updates a changed hours row, adds a row and keeps the build\'s styling hooks', async () => {
@@ -451,4 +474,16 @@ test('the refresh shows a changed phone, email and address, and hides one that w
   assert.ok(shown(about, '[data-contact="street"]'));
   refresh(about, { hours: WEEK });
   assert.ok(!shown(about, '[data-contact-wrap="address"]') && !shown(about, '[data-contact-href="directions"]'));
+});
+
+test('the refresh fills card prices from the live price list, and hides a line whose price went missing', async () => {
+  serve({ hours: WEEK });
+  const store = (await build()).dom('store');
+  applyPrices(store, { groupClass1x: 32, openGym1x: 26 });
+  const first = (tpl) => store.querySelector(`[data-price-text="${tpl}"]`);
+  assert.equal(first('From {groupClass1x}').textContent, 'From $32');
+  assert.equal(first('From {openGym1x}').textContent, 'From $26');
+  assert.equal(first('From {openGym1x}').hidden, false);
+  applyPrices(store, { openGym1x: 26 });
+  assert.equal(first('From {groupClass1x}').hidden, true);
 });

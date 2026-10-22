@@ -84,7 +84,7 @@ export interface NextStep {
   external?: boolean;
 }
 
-const INTRO_PRICE = '$45';
+const INTRO_PRICE = '{introClass1x}';
 
 export const nextSteps: Record<NextStepKey, NextStep> = {
   'group-private': {
@@ -131,25 +131,25 @@ export const purchaseFit: PurchaseFit[] = [
   {
     color: cat.openGym, who: 'Once in a while', title: 'Drop in', rec: 'Day pass or single class',
     body: 'Flexibility, or trying something for the first time. Come when you like, pay per visit, no commitment.',
-    price: { value: '$25', note: 'open gym' }, price2: { value: '$30', note: 'class' },
+    price: { value: '{openGym1x}', note: 'open gym' }, price2: { value: '{groupClass1x}', note: 'class' },
     cta: 'See day passes', href: '#price-open_gym', onPage: true,
   },
   {
     color: cat.classes, who: 'One goal, one program', title: 'Get a pack', rec: '10-class pack or a private 5-pack',
     body: 'Several sessions at the same thing — a skill, a class, a coach. Cheaper per visit, and each session builds on the last.',
-    price: { value: '$275', note: '10 classes' }, fine: 'Valid 10 months · 20-pack: 20 months',
+    price: { value: '{groupClass10x}', note: '10 classes' }, fine: 'Valid 10 months · 20-pack: 20 months',
     cta: 'See packs', href: '#price-classes', onPage: true,
   },
   {
     color: '#211f1b', who: 'Every week', title: 'Membership', rec: 'Class membership · open gym included',
     body: 'Training is part of your routine and you want more than one class. Every recreational and specialized class, unlimited.',
-    price: { value: '$180', note: '30 days' }, fine: '90, 180 and 360-day terms save more',
+    price: { value: '{classMembership30}', note: '30 days' }, fine: '90, 180 and 360-day terms save more',
     cta: 'See memberships', href: '#price-classes', onPage: true,
   },
   {
     color: cat.athletic, who: 'Serious about progressing', title: 'Train with a plan', rec: 'Athletic Program or private pack',
     body: 'Faster, more structured progression: two coached 90-min sessions a week with monthly check-ins — or a private pack with your own coach.',
-    price: { value: '$150', note: '/ month' }, fine: 'Ages 9+ · open gym included',
+    price: { value: '{athleticMembership30}', note: '/ month' }, fine: 'Ages 9+ · open gym included',
     cta: 'See the program', href: url('athletic-program'),
   },
 ];
@@ -175,17 +175,17 @@ export const partyReturn: PartyReturnCard[] = [
   {
     color: cat.openGym, bookingTag: 'Drop-in', status: 'No reservation', statusTone: 'neutral', title: 'All-day Open Gym',
     desc: "Come play any time we're open, no time limit. Under 7s move with a parent, and the parent's free.",
-    pills: 'All ages | No booking', price: '$25', priceNote: 'day pass', cta: 'Plan a visit', href: url('open-gym'),
+    pills: 'All ages | No booking', price: '{openGym1x}', priceNote: 'day pass', cta: 'Plan a visit', href: url('open-gym'),
   },
   {
     color: cat.classes, bookingTag: 'Drop-in', status: 'No reservation', statusTone: 'neutral', title: 'Kids Parkour classes',
     desc: 'Learn this stuff with a coach. Recreational parkour and Flip Class, drop-in — try one first, no pack required.',
-    pills: 'Parent & Child 3+ | Flips 7+', price: '$30', priceNote: 'single class', cta: 'See schedule', href: url('schedule'),
+    pills: 'Parent & Child 3+ | Flips 7+', price: '{groupClass1x}', priceNote: 'single class', cta: 'See schedule', href: url('schedule'),
   },
   {
     color: cat.camps, bookingTag: 'Register', status: 'Dated', statusTone: 'neutral', title: 'Camps',
     desc: 'Full days of skills, flips, games and friends over P.A. days and school breaks. 9 AM–2 PM, late pickup to 4.',
-    pills: 'Ages 5–16 | All levels', price: '$90', priceNote: 'P.A. Day · $350 / summer week', cta: 'See camp dates', href: url('camps'),
+    pills: 'Ages 5–16 | All levels', price: '{campPADay}', priceNote: 'P.A. Day · {campWeekly} / summer week', cta: 'See camp dates', href: url('camps'),
   },
 ];
 
@@ -193,6 +193,8 @@ export const partyReturn: PartyReturnCard[] = [
 export const partyReturnIntro = {
   lead: 'Want them to keep going?',
   body: 'Book an intro lesson: an hour of parkour basics with a coach, who then tells you which class suits your child.',
-  cta: `Book an intro · ${INTRO_PRICE}`,
+  cta: 'Book an intro',
+  /** The price after the label, filled from the price list (`<Priced>`). */
+  ctaPrice: ` · ${INTRO_PRICE}`,
   href: sq.getStarted.introduction,
 };

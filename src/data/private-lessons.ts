@@ -49,17 +49,17 @@ export interface PrivateWay {
 const allPrivateWays: PrivateWay[] = [
   {
     key: 'intro', color: cat.intro, title: 'Introduction',
-    price: '$45', per: 'first session', sub: '$35 each for 2 · $30 each for 3+',
+    price: '{introClass1x}', per: 'first session', sub: '{introClass2x} each for 2 · {introClass3xPlus} each for 3+',
     desc: 'A one-time lesson on a set beginner lesson plan: the parkour basics, one-on-one. For a specific skill or goal, book a private lesson instead.',
     cta: 'Book intro',
-    hub: { dur: '1 hr', price: '$45', priceNote: 'First session · groups from $30 each', bookingTag: 'By appointment', desc: 'A one-time private lesson and the best first taste of parkour — what it is, what you can do with it, and how we coach it.', pills: 'All ages | 1-on-1' },
+    hub: { dur: '1 hr', price: '{introClass1x}', priceNote: 'First session · groups from {introClass3xPlus} each', bookingTag: 'By appointment', desc: 'A one-time private lesson and the best first taste of parkour — what it is, what you can do with it, and how we coach it.', pills: 'All ages | 1-on-1' },
   },
   {
     key: 'private', color: cat.private, title: 'Private Lesson',
-    price: 'From $65', per: 'per session', sub: 'Kids $65 · Adults $85 · 5-packs available',
+    price: 'From {privateKid1x}', per: 'per session', sub: 'Kids {privateKid1x} · Adults {privateAdult1x} · 5-packs available',
     desc: 'Ongoing one-on-one (or your own small group) with whichever coach is on shift. All ages, all levels, flexible scheduling.',
     cta: 'Book a private',
-    hub: { dur: '1 hr', price: 'From $65', priceNote: 'Any coach on shift · 5-packs available', bookingTag: 'By appointment', desc: 'Ongoing one-on-one or small-group coaching, built around your goals with flexible scheduling. Pick your age group when you book — we’ll match a coach.', pills: '1-on-1 | All ages' },
+    hub: { dur: '1 hr', price: 'From {privateKid1x}', priceNote: 'Any coach on shift · 5-packs available', bookingTag: 'By appointment', desc: 'Ongoing one-on-one or small-group coaching, built around your goals with flexible scheduling. Pick your age group when you book — we’ll match a coach.', pills: '1-on-1 | All ages' },
   },
   {
     key: 'coach', color: cat.private, title: 'Train with a specific coach',

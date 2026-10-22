@@ -1,4 +1,5 @@
 ---
+import Priced from './Priced.astro';
 import { contact } from '../data/site-config';
 interface QA { q: string; a: string; }
 interface Props {
@@ -27,7 +28,7 @@ const {
       {faqs.map((f) => (
         <details class="faq-item">
           <summary class="faq-q"><span>{f.q}</span><i class="bi bi-plus-lg faq-chev" aria-hidden="true"></i></summary>
-          <p class="faq-a">{f.a}</p>
+          <p class="faq-a"><Priced text={f.a} /></p>
         </details>
       ))}
     </div>

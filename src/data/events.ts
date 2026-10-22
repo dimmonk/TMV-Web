@@ -21,8 +21,8 @@ export const groupTiers: GroupTier[] = [
 
 /** Headline prices used across the party/group cards on both surfaces. */
 export const eventPricing = {
-  fullBirthdayBase: '$350',
-  miniBirthdayPerKid: '$30',
+  fullBirthdayBase: '{partyBase}',
+  miniBirthdayPerKid: '{partyMiniPerPerson}',
   earlyAccessFrom: 'From $50/hr',
 } as const;
 
@@ -42,5 +42,5 @@ export interface GroupHubCard {
 
 export const groupHubCards: GroupHubCard[] = [
   { key: 'groupEvents', color: catColor.groups, title: 'Group Events', dur: '2 hrs', price: 'From $300', priceNote: '10 min · tiered per head', bookingTag: 'By appointment', desc: 'Schools, corporate teams, youth orgs and sports teams — an hour of guided activities then an hour of open gym. Teamwork, confidence and skills, expert-led.', pills: 'Min 10 people | All levels', href: sqLinks.book.groupEvents },
-  { key: 'earlyAccess', color: catColor.openGym, title: 'Early Gym Access', dur: '1 hr', price: 'From $50 / hr', priceNote: '+ $25 / person open gym', bookingTag: 'By appointment', desc: 'Reserve The Monkey Vault before we open at 11 AM for exclusive access — perfect for small groups or focused training with no crowds.', pills: 'Your own group | Before 11 AM', href: sqLinks.book.earlyGymAccess },
+  { key: 'earlyAccess', color: catColor.openGym, title: 'Early Gym Access', dur: '1 hr', price: 'From $50 / hr', priceNote: '+ {openGym1x} / person open gym', bookingTag: 'By appointment', desc: 'Reserve The Monkey Vault before we open at 11 AM for exclusive access — perfect for small groups or focused training with no crowds.', pills: 'Your own group | Before 11 AM', href: sqLinks.book.earlyGymAccess },
 ];

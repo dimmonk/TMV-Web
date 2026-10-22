@@ -1,4 +1,5 @@
 ---
+import Priced from './Priced.astro';
 /**
  * The Specialized Classes card: the class LIST, one BLOCK for what every class
  * shares, and one PANEL that changes with the selected class.
@@ -83,7 +84,7 @@ const items = rows.map((r) => ({
 
     <div class="ct-offer">
       <p class="ct-offer-t">
-        <strong>All drop-in{offer.price && `: ${offer.price}`}.</strong> No reservation needed.
+        <strong>All drop-in<Priced text={`: ${offer.price}`} />.</strong> No reservation needed.
       </p>
       <a href={url('schedule')} class="btn btn-dark ct-act">
         View schedule <i class="bi bi-arrow-right" aria-hidden="true"></i>

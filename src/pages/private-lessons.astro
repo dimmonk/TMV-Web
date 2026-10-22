@@ -1,4 +1,5 @@
 ---
+import Priced from '../components/Priced.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PrivateLessonsScreen from '../components/mobile/PrivateLessonsScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
@@ -48,8 +49,8 @@ const notes = [
           <div class:list={['pl-way', { featured: st.featured }]}>
             <div class="pl-wayhead"><span class={`pl-waynum ${st.num}`}>{i + 1}</span>{st.tag && <span class={`pl-waytag ${st.tag}`}>{st.tagLabel}</span>}</div>
             <h3 class="pl-waytitle">{w.title}</h3>
-            <div class="pl-price"><span class="pl-big">{w.price}</span>{w.per && <span class="pl-per">{w.per}</span>}</div>
-            <div class="pl-sub">{w.sub}</div>
+            <div class="pl-price"><span class="pl-big"><Priced text={w.price} /></span>{w.per && <span class="pl-per">{w.per}</span>}</div>
+            <div class="pl-sub"><Priced text={w.sub} /></div>
             <p class="pl-desc">{w.desc}</p>
             <a href={plHref(w.key)} {...(internal ? {} : { target: '_blank', rel: 'noopener' })} class:list={['pl-book', { solid: st.featured }]}>{w.cta} <i class={`bi ${internal ? 'bi-arrow-down' : 'bi-arrow-right'}`} aria-hidden="true"></i></a>
           </div>

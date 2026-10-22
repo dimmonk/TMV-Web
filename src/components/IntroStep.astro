@@ -1,4 +1,5 @@
 ---
+import Priced from './Priced.astro';
 /**
  * Get Started · step two — "Pick the first visit that fits your goal".
  *
@@ -36,10 +37,10 @@ const intro = privateWays.find((w) => w.key === 'intro')!;
           <span class="is-pill">All ages</span>
           <span class="is-pill">1-on-1</span>
           <span class="is-pill">No experience needed</span>
-          <span class="is-pill">{intro.sub}</span>
+          <span class="is-pill"><Priced text={intro.sub} /></span>
         </div>
         <div class="is-foot">
-          <div><div class="is-price">{intro.price}</div><div class="is-note">{intro.per} · tax included</div></div>
+          <div><div class="is-price"><Priced text={intro.price} /></div><div class="is-note">{intro.per} · tax included</div></div>
           <a href={sq.getStarted.introduction} target="_blank" rel="noopener" class="btn btn-primary">Book an intro <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
         </div>
       </div>

@@ -1,4 +1,5 @@
 ---
+import Priced from './Priced.astro';
 /**
  * "Three ways to come back" — the coach's end-of-party wrap-up, on the page.
  *
@@ -23,7 +24,7 @@ import { partyReturn, partyReturnIntro } from '../data/progression';
   <div class="pr-intro">
     <span class="pr-intro-ic"><i class="bi bi-flag" aria-hidden="true"></i></span>
     <div class="pr-intro-txt"><strong>{partyReturnIntro.lead}</strong> {partyReturnIntro.body}</div>
-    <a href={partyReturnIntro.href} target="_blank" rel="noopener" class="btn btn-dark pr-intro-cta">{partyReturnIntro.cta} <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+    <a href={partyReturnIntro.href} target="_blank" rel="noopener" class="btn btn-dark pr-intro-cta">{partyReturnIntro.cta}<Priced text={partyReturnIntro.ctaPrice} /> <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
   </div>
 </div>
 
