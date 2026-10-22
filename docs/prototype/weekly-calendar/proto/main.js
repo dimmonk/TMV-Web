@@ -113,6 +113,7 @@ function setupPopup() {
       wrap.style.display = c.description ? '' : 'none';
       modal.querySelector('.popup-desc').textContent = c.description || '';
       modal.querySelector('.popup-stripe').style.background = c.color || '#14110f';
+      modal.style.setProperty('--pc', c.color || 'var(--ink)');
       overlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
     },

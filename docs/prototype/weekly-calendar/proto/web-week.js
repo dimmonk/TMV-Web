@@ -1,7 +1,7 @@
 // PROPOSED, not built: the schedule in the WEBSITE's look, the way the price list got its own (the 'web' variant of
 // price-list-renderer.js, src/styles/price-list-web.css). Built only from parts the site already has: the price list's
 // card (.pw-card look: white card, 2px category rule under the title, Archivo title, body-font rows), the eyebrow
-// kicker and the coloured dot of the "Which one is you?" cards. Laid out as the printed sheet: hours down the left,
+// kicker and the price list's coloured rules (each class carries its colour as a rule down its left edge). Laid out as the printed sheet: hours down the left,
 // days across, each class in its hour row (Steven 2026-10-22: one card per day lost the at-a-glance read).
 // In the real build this is the 'web' variant of print-schedule-sheet.js; the printed sheet and PDF keep the poster.
 import { fmtClassTime, fmtClassTimeRange } from '../../../../src/lib/print-schedule-sheet.js';
@@ -38,16 +38,15 @@ function classItem(s, onClick) {
   const btn = el('button', {
     type: 'button',
     class: `ws-item${off ? ' is-off' : ''}`,
+    style: { '--k': s.color || 'var(--c)' },
+    'data-key': s.color || '',
     'aria-label': `${s.disciplineName}, ${s.ageGroupName}, ${fmtRange(s.time, s.endTime)}${off ? ', cancelled' : ''}`,
   }, [
-    el('span', { class: 'ws-name' }, [
-      el('span', { class: 'ws-dot', style: { background: s.color || 'var(--c)' }, 'aria-hidden': 'true' }),
-      s.disciplineName || '',
-    ]),
+    el('span', { class: 'ws-name', text: s.disciplineName || '' }),
     el('span', { class: 'ws-age' }, [s.ageGroupName || '']),
     el('span', { class: 'ws-when' }, [fmtRange(s.time, s.endTime), tagFor(s)]),
   ]);
-  if (onClick && !off) btn.addEventListener('click', () => onClick(s));
+  if (onClick) btn.addEventListener('click', () => onClick(s));
   return btn;
 }
 
@@ -87,6 +86,16 @@ export function renderWebWeek(root, { sessions, monday, today, closed, section, 
       }, here.map((s) => classItem(s, onClassClick))));
     });
   });
+
+  // Point at a class and every other session of it stays lit while the rest fades: the colour finds its repeats.
+  const light = (key) => {
+    grid.classList.toggle('has-focus', Boolean(key));
+    grid.querySelectorAll('.ws-item').forEach((n) => n.classList.toggle('is-match', Boolean(key) && n.dataset.key === key));
+  };
+  grid.addEventListener('mouseover', (e) => light(e.target.closest('.ws-item')?.dataset.key || ''));
+  grid.addEventListener('mouseleave', () => light(''));
+  grid.addEventListener('focusin', (e) => light(e.target.closest('.ws-item')?.dataset.key || ''));
+  grid.addEventListener('focusout', () => light(''));
 
   root.innerHTML = '';
   root.appendChild(el('div', { class: 'ws-week', 'data-section': section }, [
