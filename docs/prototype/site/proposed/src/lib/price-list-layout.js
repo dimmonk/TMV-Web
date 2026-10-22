@@ -63,8 +63,8 @@ export const PRICE_LIST_SECTIONS = [
         label: 'Passes',
         items: [
           { priceKey: 'groupClass1x',  label: '1x Class' },
-          { priceKey: 'groupClass10x', label: '10x Classes' },
-          { priceKey: 'groupClass20x', label: '20x Classes' },
+          { priceKey: 'groupClass10x', label: '10x Classes', bullets: [{ text: 'Valid 10 months' }] },
+          { priceKey: 'groupClass20x', label: '20x Classes', bullets: [{ text: 'Valid 20 months' }] },
         ],
       },
       {
@@ -209,8 +209,8 @@ export const PRICE_LIST_SECTIONS = [
         label: 'Passes',
         items: [
           { priceKey: 'openGym1x',  label: '1x Day Pass' },
-          { priceKey: 'openGym10x', label: '10x Day Passes' },
-          { priceKey: 'openGym20x', label: '20x Day Passes' },
+          { priceKey: 'openGym10x', label: '10x Day Passes', bullets: [{ text: 'Valid 10 months' }] },
+          { priceKey: 'openGym20x', label: '20x Day Passes', bullets: [{ text: 'Valid 20 months' }] },
         ],
       },
       {
@@ -269,6 +269,7 @@ export const PRICE_LIST_SECTIONS = [
             priceKey: 'athleticClass10x', label: '10x Classes',
             bullets: [
               { text: 'Fallback option for athletes attending once a week' },
+              { text: 'Valid 10 months' },
             ],
           },
           { priceKey: 'athleticClassAddon', label: 'Class add-on', separated: true },

@@ -137,7 +137,7 @@ export const purchaseFit: PurchaseFit[] = [
   {
     color: cat.classes, who: 'One goal, one program', title: 'Get a pack', rec: '10-class pack or a private 5-pack',
     body: 'Several sessions at the same thing — a skill, a class, a coach. Cheaper per visit, and each session builds on the last.',
-    price: { value: '$275', note: '10 classes' }, fine: 'Valid 10+ months',
+    price: { value: '$275', note: '10 classes' }, fine: 'Valid 10 months · 20-pack: 20 months',
     cta: 'See packs', href: '#price-classes', onPage: true,
   },
   {
