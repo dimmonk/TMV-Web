@@ -93,6 +93,15 @@ test('a published Square link that is not http(s) reads as unset, so the card ke
   assert.equal(readPublishedConfig({}).links, null);
 });
 
+test('closed days keep a readable date, sorted, at most the limit; a reason past its limit reads as none', () => {
+  const rows = Array.from({ length: LIMITS.closedDays + 2 }, (_, i) => ({ date: `2026-12-${String(31 - i).padStart(2, '0')}`, reason: 'Holiday' }));
+  const { closedDays } = readPublishedConfig({ closedDays: [...rows, { date: 'Dec 25', reason: 'x' }, { reason: 'no date' }] });
+  assert.equal(closedDays.length, LIMITS.closedDays);
+  assert.equal(closedDays[0].date, '2026-12-18');
+  assert.deepEqual(readPublishedConfig({ closedDays: [{ date: '2026-12-25', reason: 'x'.repeat(LIMITS.closedReason + 1) }] }).closedDays, [{ date: '2026-12-25', reason: '' }]);
+  assert.deepEqual(readPublishedConfig({}).closedDays, []);
+});
+
 test('hours keep their order and their text; rows with neither day nor time are dropped', () => {
   const c = readPublishedConfig({ hours: [{ day: 'Sunday', time: '10 AM' }, { day: '', time: '' }, { day: 'Holidays', time: 'By appointment' }] });
   assert.deepEqual(c.hours, [{ day: 'Sunday', time: '10 AM' }, { day: 'Holidays', time: 'By appointment' }]);

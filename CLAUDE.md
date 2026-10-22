@@ -77,7 +77,7 @@ copy that staff edits no longer reach.
   `src/lib/published-config.js`, so only http(s) reaches an `href` and a bad link reads as unset (the card keeps
   its default); the structured data is written with `jsonForScript` (`src/lib/json-for-script.js`), because a valid
   URL can still carry `</script>`. Every value is bounded (`LIMITS` in `published-config.js`: URLs 500, headline 120,
-  message 280, button text 40, 14 hours rows of day 40 / hours 80, mirroring TMV-Members `SITE_CONFIG_LIMITS` by hand):
+  message 280, button text 40, 14 hours rows of day 40 / hours 80, 12 closed days of reason 80, mirroring TMV-Members `SITE_CONFIG_LIMITS` by hand):
   a value past its limit reads as unset. A switched-off banner carries no text, and a banner whose expiry is not
   `YYYY-MM-DDTHH:MM:SS` reads as off.
 - **No inline script, anywhere.** The hosting sends a Content-Security-Policy (TMV-Members `firebase.json`,
@@ -178,6 +178,22 @@ show from the gym's today on, as runs of consecutive days per camp type. A camp 
 no dates at all hides the Dates section (`data-camp-dates`) and the links to it. A weekly season is offered only
 when it has dates AND its Square link is set. Booking stays on each camp's Square link. A failed read warns
 (`[camp-dates]`) and shows no dates. The test server serves a fixture catalogue.
+
+## The class schedule: dated weeks
+
+`/schedule` shows the Members recurring schedule laid on real dates: this week plus the next three (prev/next arrows),
+Monday to Sunday, gym time. A week is never stored; `src/lib/schedule-weeks.js` (pure) builds it from the schedule
+projection plus two kinds of exception staff set in Members: a one-date class cancellation (`cancellations` in
+`schedule.json`) and a day the whole gym is closed (`closedDays` in the site config, read by `published-config.js`,
+fetched in the browser through `live-site-config.ts` `publishedClosedDays`). A closed day wins over a cancel. The
+"Schedule changes" card lists every exception through the last visible week; none means no card.
+
+Desktop is `schedule-page.js` + `schedule-week-view.js` (an hour grid in the price list's card parts, colour rule per
+class, hover lights a class's repeats, a site-card popup); the phone is `mobile-schedule.ts` with the same week bar
+and changes card. Styles: `src/styles/schedule-web.css`. The printed sheet modules (`print-schedule-sheet.js`,
+`schedule-embed-sheet.js`) are verbatim Members copies (`tmv-web-lib-mirror.test.js` in TMV-Members): never edit them
+here alone; the website only borrows their time formatting, filters and description renderer. Tests:
+`tests/schedule-weeks.test.mjs`.
 
 ## The price list: one renderer, a web skin
 
