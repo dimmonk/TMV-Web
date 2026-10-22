@@ -299,6 +299,15 @@ export const PRICE_LIST_COLUMNS = [
   ['birthday_party', 'camps'],
 ];
 
+/**
+ * Section order on the website (the `web` variant): one column on a phone, so
+ * the order is the order people read. Drop-in first, then lessons, then the
+ * program, then events. The printed sheet keeps PRICE_LIST_COLUMNS.
+ */
+export const PRICE_LIST_WEB_ORDER = [
+  'classes', 'open_gym', 'introduction_class', 'private_classes', 'athletic_program', 'birthday_party', 'camps',
+];
+
 export const PRICE_LIST_FOOTNOTES = [
   'All classes include open gym for that day.',
   'All prices include taxes.',

@@ -1,0 +1,45 @@
+/* The website's look for the live price list: price-list-renderer.js, variant 'web'. Same sections and data as
+   the printed sheet (price-list-sheet.css); this file only decides how they look on the site, in the site's own
+   tokens and category colors. */
+.pl-web .pw-card[data-section="classes"] { --c: var(--c-classes); }
+.pl-web .pw-card[data-section="open_gym"] { --c: var(--c-opengym); }
+.pl-web .pw-card[data-section="introduction_class"] { --c: var(--c-intro); }
+.pl-web .pw-card[data-section="private_classes"] { --c: var(--c-private); }
+.pl-web .pw-card[data-section="athletic_program"] { --c: var(--c-athletic); }
+.pl-web .pw-card[data-section="birthday_party"] { --c: var(--c-parties); }
+.pl-web .pw-card[data-section="camps"] { --c: var(--c-camps); }
+
+.pw-grid { columns: 3 300px; column-gap: 20px; }
+.pw-card {
+  --c: var(--ink); --c-text: color-mix(in srgb, var(--c) 72%, #000);
+  break-inside: avoid; margin: 0 0 20px; scroll-margin-top: 90px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm);
+  padding: 22px 22px 20px;
+}
+.pw-title { display: flex; align-items: center; gap: 10px; margin: 0; font: 800 22px/1.1 var(--font-display); letter-spacing: -.01em; color: var(--ink); }
+.pw-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; background: var(--c); }
+.pw-about { list-style: none; margin: 12px 0 18px; padding: 0; display: grid; gap: 5px; }
+.pw-about li { position: relative; padding-left: 14px; font: 400 13px/1.5 var(--font-body); color: var(--text-3); }
+.pw-about li::before { content: ''; position: absolute; left: 0; top: .6em; width: 5px; height: 5px; border-radius: 50%; background: color-mix(in srgb, var(--c) 55%, #fff); }
+.pw-group + .pw-group { margin-top: 16px; }
+.pw-glabel { padding-bottom: 6px; font: 700 11px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--c-text); }
+.pw-items, .pw-bullets { list-style: none; margin: 0; padding: 0; }
+.pw-item { padding: 9px 0; border-top: 1px solid var(--line-soft); }
+.pw-item-separated { border-top-style: dashed; border-top-color: var(--line); }
+.pw-row, .pw-brow { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.pw-label { font: 600 14.5px/1.35 var(--font-body); color: var(--ink); }
+.pw-price { display: inline-flex; align-items: baseline; gap: 6px; flex: none; }
+.pw-suffix { font: 600 11.5px/1 var(--font-body); color: var(--muted-3); }
+.pw-amount { font: 800 16px/1 var(--font-display); color: var(--ink); font-variant-numeric: tabular-nums; }
+.pw-bullets { margin-top: 5px; display: grid; gap: 3px; }
+.pw-bullets li { font: 400 12.5px/1.45 var(--font-body); color: var(--muted); }
+.pw-bamount { font: 700 13px/1 var(--font-display); color: var(--text-2); font-variant-numeric: tabular-nums; }
+.pw-action {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; min-height: 46px;
+  padding: 0 16px; border-radius: 12px; background: color-mix(in srgb, var(--c) 10%, #fff); color: var(--ink);
+  font: 800 12.5px/1.2 var(--font-display); letter-spacing: .03em; text-transform: uppercase; text-decoration: none;
+  transition: background .15s ease;
+}
+.pw-action:hover { background: color-mix(in srgb, var(--c) 18%, #fff); }
+.pw-action i { color: var(--c-text); }
+.pw-foot { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; margin-top: 6px; font: 500 12.5px/1.5 var(--font-body); color: var(--muted-3); }

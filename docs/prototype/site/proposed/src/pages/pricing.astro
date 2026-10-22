@@ -6,19 +6,20 @@ import PurchaseFit from '../components/PurchaseFit.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { seo, links, url } from '../data/site';
 import { sq } from '../data/square-links';
-import '../styles/price-list-sheet.css';
+import '../styles/price-list-web.css';
 
-// Category shortcuts into the live list, and the one action each category leads to. The keys are the price
-// list's own section titles (the renderer prints them), so a renamed section simply loses its shortcut.
+// Category shortcuts into the live list, and the one action each category ends with, by the price list's own
+// section ids (the renderer gives each card the id `price-<section id>`).
 const categories = [
-  { key: 'classes', label: 'Classes', title: 'Classes', action: { href: sq.store.classPasses, label: 'Buy class passes', ext: true } },
-  { key: 'opengym', label: 'Open Gym', title: 'Open Gym', action: { href: sq.store.dayPasses, label: 'Buy open gym passes', ext: true } },
-  { key: 'intro', label: 'Intro Lesson', title: 'Introduction Class', action: { href: sq.getStarted.introduction, label: 'Book an intro lesson', ext: true } },
-  { key: 'private', label: 'Private Lessons', title: 'Private Classes', action: { href: sq.privateLessons.privateLesson, label: 'Book a private lesson', ext: true } },
-  { key: 'athletic', label: 'Athletic', title: 'Athletic Program', action: { href: url('athletic-program'), label: 'See the program' } },
-  { key: 'parties', label: 'Birthday Parties', title: 'Birthday Party', action: { href: url('events'), label: 'Compare party packages' } },
-  { key: 'camps', label: 'Camps', title: 'Camps', action: { href: url('camps'), label: 'See camp dates' } },
+  { id: 'classes', label: 'Classes', action: { href: sq.store.classPasses, label: 'Buy class passes', ext: true } },
+  { id: 'open_gym', label: 'Open Gym', action: { href: sq.store.dayPasses, label: 'Buy open gym passes', ext: true } },
+  { id: 'introduction_class', label: 'Intro Lesson', action: { href: sq.getStarted.introduction, label: 'Book an intro lesson', ext: true } },
+  { id: 'private_classes', label: 'Private Lessons', action: { href: sq.privateLessons.privateLesson, label: 'Book a private lesson', ext: true } },
+  { id: 'athletic_program', label: 'Athletic', action: { href: url('athletic-program'), label: 'See the program' } },
+  { id: 'birthday_party', label: 'Birthday Parties', action: { href: url('events'), label: 'Compare party packages' } },
+  { id: 'camps', label: 'Camps', action: { href: url('camps'), label: 'See camp dates' } },
 ];
+const actions = Object.fromEntries(categories.map((c) => [c.id, c.action]));
 ---
 <BaseLayout title={seo.pricing.title} description={seo.pricing.description} active="pricing" mobileTab="more" appHeader="back" appTitle="Pricing">
   <div class="mapp" data-chrome="app">
@@ -56,20 +57,16 @@ const categories = [
   </section>
 
   <!-- LIVE PRICE LIST — production renderer running natively (no iframe).
-       Same price-list-renderer.js + price-list-sheet.css the members app
-       uses; data from the public price-list projection (SSOT, read through
+       Same price-list-renderer.js the members app prints from, in its 'web' look
+       (styles/price-list-web.css); data from the public price-list projection (SSOT, read through
        fetchPublicPriceList in src/lib/public-projections.js). -->
   <main class="pl-main">
     <section id="prices" class="pl-cats" aria-labelledby="pl-cats-title">
       <h2 id="pl-cats-title" class="pl-cats-title">Prices by activity</h2>
-      <nav class="pl-cats-nav" aria-label="Price categories">{categories.map((c) => <a href={`#price-${c.key}`}>{c.label}</a>)}</nav>
-      <p class="pl-cats-note">Group classes and open gym are drop-in, no booking. Intro and private lessons are booked ahead. Each section ends with where to buy or book it.</p>
+      <nav class="pl-cats-nav" aria-label="Price categories">{categories.map((c) => <a href={`#price-${c.id}`}>{c.label}</a>)}</nav>
+      <p class="pl-cats-note">Group classes and open gym are drop-in, no booking. Intro and private lessons are booked ahead. Each one ends with where to buy or book it.</p>
     </section>
-    <div class="pl-embed-shell">
-      <div class="pl-embed-desktop">
-        <div id="pl-embed-root" data-categories={JSON.stringify(categories)}></div>
-      </div>
-    </div>
+    <div id="pl-embed-root" class="pl-list" data-actions={JSON.stringify(actions)}></div>
 
     <p class="pl-foot">
       <i class="bi bi-arrow-repeat" aria-hidden="true"></i>&nbsp; Prices update automatically from our booking system — this is the same list our front desk prints.
@@ -108,6 +105,7 @@ const categories = [
 
   .pl-main { max-width: 1440px; margin: 0 auto; padding: 28px 20px 24px; }
   .pl-jump { margin-bottom: 26px; }
+  .pl-list { max-width: 1168px; margin: 0 auto; }
   .pl-cats { max-width: 1168px; margin: 0 auto 18px; scroll-margin-top: 90px; }
   .pl-cats-title { font: 800 26px/1.15 var(--font-display); letter-spacing: -.01em; }
   .pl-cats-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 12px; }
@@ -131,42 +129,14 @@ const categories = [
   .pl-gift-title { font: 800 24px/1.05 var(--font-display); letter-spacing: -.012em; }
   .pl-gift-btn { flex: none; }
 </style>
-<style is:global>
-  #pl-embed-root .ed-card { scroll-margin-top: 90px; }
-  .pl-cat-action { display: block; clear: both; text-decoration: none; font: 800 12px/1.4 var(--font-display); margin-top: 16px; border-top: 1px solid currentColor; padding: 14px 0 4px; color: var(--ink); }
-</style>
 
 <script>
   import { renderPriceListSheet } from '../lib/price-list-renderer.js';
   document.addEventListener('astro:page-load', () => {
     const root = document.getElementById('pl-embed-root');
     if (!root) return;
-    renderPriceListSheet(root)
+    renderPriceListSheet(root, { variant: 'web', actions: JSON.parse(root.dataset.actions || '{}') })
       .then(() => {
-        // The sheet renders as a standalone document, so it titles itself with an
-        // <h1> — correct for the printed PDF, a second <h1> on this page. Demote
-        // them here rather than forking price-list-renderer.js, which is
-        // byte-identical with TMV-Members' copy.
-        root.querySelectorAll('h1').forEach((h) => {
-          const h2 = document.createElement('h2');
-          h2.className = h.className;
-          h2.append(...h.childNodes);
-          h.replaceWith(h2);
-        });
-        // Each category gets an anchor for the shortcuts above and ends with its one action.
-        const categories = JSON.parse(root.dataset.categories || '[]');
-        root.querySelectorAll<HTMLElement>('.ed-card').forEach((card) => {
-          const title = card.querySelector('.ed-title')?.textContent?.trim();
-          const cat = categories.find((c: { title: string }) => c.title === title);
-          if (!cat) return;
-          card.id = `price-${cat.key}`;
-          const a = document.createElement('a');
-          a.className = 'pl-cat-action';
-          a.href = cat.action.href;
-          a.textContent = `${cat.action.label} →`;
-          if (cat.action.ext) { a.target = '_blank'; a.rel = 'noopener'; }
-          card.append(a);
-        });
         const target = decodeURIComponent(location.hash.slice(1));
         if (target) document.getElementById(target)?.scrollIntoView({ block: 'start' });
       })

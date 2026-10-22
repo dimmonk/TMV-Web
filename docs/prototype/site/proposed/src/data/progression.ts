@@ -132,7 +132,7 @@ export const purchaseFit: PurchaseFit[] = [
     color: cat.openGym, who: 'Once in a while', title: 'Drop in', rec: 'Day pass or single class',
     body: 'Flexibility, or trying something for the first time. Come when you like, pay per visit, no commitment.',
     price: { value: '$25', note: 'open gym' }, price2: { value: '$30', note: 'class' },
-    cta: 'See day passes', href: '#price-opengym', onPage: true,
+    cta: 'See day passes', href: '#price-open_gym', onPage: true,
   },
   {
     color: cat.classes, who: 'One goal, one program', title: 'Get a pack', rec: '10-class pack or a private 5-pack',
