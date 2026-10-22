@@ -17,7 +17,7 @@
  * result is shared across client-side navigations and re-fetched when it is
  * older than `REFRESH_AFTER_MS`.
  */
-import { fetchPublishedConfig, PUBLISHED_CONFIG_URL, type PublishedConfig } from './published-config.js';
+import { fetchPublishedConfig, readPublishedConfig, PUBLISHED_CONFIG_URL, type PublishedConfig } from './published-config.js';
 import { applyPublishedConfig } from './apply-site-config.js';
 import { gymNow } from './gym-clock.js';
 import { DEFAULTS, mergeLive } from '../data/square-link-defaults';
@@ -49,12 +49,13 @@ async function refresh() {
 }
 
 /**
- * The days the whole gym is closed, as the browser last read them, for the schedule (which draws its week from them
- * rather than patching the built page). Shares this module's one fetch; none when it could not be read.
+ * The published config as the browser last read it, for the schedule (which draws its week from the opening hours
+ * and closed days rather than patching the built page). Shares this module's one fetch; empty when it could not be
+ * read.
  */
-export async function publishedClosedDays(): Promise<PublishedConfig['closedDays']> {
+export async function publishedSiteConfig(): Promise<PublishedConfig> {
   await refresh();
-  return latest?.closedDays ?? [];
+  return latest ?? readPublishedConfig(null);
 }
 
 document.addEventListener('astro:page-load', () => { void refresh(); });

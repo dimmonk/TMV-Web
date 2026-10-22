@@ -22,10 +22,10 @@ const sectionOf = (filter) => (filter === 'athletic' ? 'athletic' : filter === '
 /**
  * @param {HTMLElement} root - holds `[data-sched-filters]` (buttons with `data-filter`), `[data-sched-top]` and
  *   `[data-sched-week]`
- * @param {{ closedDays: () => Promise<{date: string, reason: string}[]> }} sources - the closed days, from the
- *   published site config
+ * @param {{ siteConfig: () => Promise<{hours: {day: string, time: string}[], closedDays: {date: string, reason: string}[]}> }} sources
+ *   the published site config: its opening hours (Open Gym) and closed days
  */
-export async function mountSchedulePage(root, { closedDays }) {
+export async function mountSchedulePage(root, { siteConfig }) {
   const filters = /** @type {HTMLElement|null} */ (root.querySelector('[data-sched-filters]'));
   const top = /** @type {HTMLElement|null} */ (root.querySelector('[data-sched-top]'));
   const weekRoot = /** @type {HTMLElement|null} */ (root.querySelector('[data-sched-week]'));
@@ -34,10 +34,10 @@ export async function mountSchedulePage(root, { closedDays }) {
   weekRoot.replaceChildren(Object.assign(document.createElement('p'), { className: 'ws-note', textContent: 'Loading the schedule…' }));
   /** @type {Record<string, any>} */
   let schedule;
-  /** @type {{date: string, reason: string}[]} */
-  let closed;
+  /** @type {{hours: {day: string, time: string}[], closedDays: {date: string, reason: string}[]}} */
+  let config;
   try {
-    [schedule, closed] = await Promise.all([fetchPublicSchedule(), closedDays().catch(() => [])]);
+    [schedule, config] = await Promise.all([fetchPublicSchedule(), siteConfig().catch(() => ({ hours: [], closedDays: [] }))]);
   } catch (err) {
     console.error('[schedule] load failed', err);
     weekRoot.replaceChildren(Object.assign(document.createElement('p'), { className: 'ws-note is-error', textContent: 'Unable to load the schedule. Please refresh.' }));
@@ -46,7 +46,7 @@ export async function mountSchedulePage(root, { closedDays }) {
 
   const today = gymToday();
   const weeks = visibleWeeks(today);
-  const exceptions = scheduleExceptions({ cancellations: schedule.cancellations, closedDays: closed });
+  const exceptions = scheduleExceptions({ cancellations: schedule.cancellations, closedDays: config.closedDays });
   const classes = /** @type {any[]} */ (schedule.classes);
   const open = mountClassPopup(root);
 
@@ -73,7 +73,7 @@ export async function mountSchedulePage(root, { closedDays }) {
       changesCard({ changes: upcomingChanges(classes, today, exceptions), onGoto: (date) => update({ week: Math.max(0, weekIndexOf(weeks, date)) }) }),
     ].filter((n) => n !== null));
     const openGym = state.filter === 'open-gym';
-    const base = openGym ? openGymSessions() : classes.filter((c) => matchesFilter(c, state.filter));
+    const base = openGym ? openGymSessions(config.hours) : classes.filter((c) => matchesFilter(c, state.filter));
     renderWeekGrid(/** @type {HTMLElement} */ (weekRoot), {
       sessions: sessionsForWeek(base, monday, exceptions),
       monday,

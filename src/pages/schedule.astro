@@ -54,9 +54,9 @@ import '../styles/schedule-web.css';
 
 <script>
   import { mountSchedulePage } from '../lib/schedule-page.js';
-  import { publishedClosedDays } from '../lib/live-site-config';
+  import { publishedSiteConfig } from '../lib/live-site-config';
   document.addEventListener('astro:page-load', () => {
     const root = document.querySelector<HTMLElement>('[data-sched-page]');
-    if (root) void mountSchedulePage(root, { closedDays: publishedClosedDays });
+    if (root) void mountSchedulePage(root, { siteConfig: publishedSiteConfig });
   });
 </script>

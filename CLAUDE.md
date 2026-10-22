@@ -185,7 +185,8 @@ when it has dates AND its Square link is set. Booking stays on each camp's Squar
 Monday to Sunday, gym time. A week is never stored; `src/lib/schedule-weeks.js` (pure) builds it from the schedule
 projection plus two kinds of exception staff set in Members: a one-date class cancellation (`cancellations` in
 `schedule.json`) and a day the whole gym is closed (`closedDays` in the site config, read by `published-config.js`,
-fetched in the browser through `live-site-config.ts` `publishedClosedDays`). A closed day wins over a cancel. The
+fetched in the browser through `live-site-config.ts` `publishedSiteConfig`). A closed day wins over a cancel. Open Gym
+is the published opening hours, one block per open day (`openGymSessions`); nothing about it is typed here. The
 "Schedule changes" card lists every exception through the last visible week; none means no card.
 
 Desktop is `schedule-page.js` + `schedule-week-view.js` (an hour grid in the price list's card parts, colour rule per
