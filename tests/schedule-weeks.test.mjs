@@ -155,16 +155,17 @@ test('the popup names the date, says when that date is off, and escapes the desc
   assert.equal(host.querySelector('.ws-pop-desc').hidden, true);
 });
 
-test('Open Gym is the published opening hours: one block per open day, nothing typed here', () => {
+test('Open Gym is the published opening hours, with Friday late split off as adults only', () => {
   const blocks = openGymSessions([
     { day: 'Monday', time: '11:00 AM – 10:00 PM' },
     { day: 'Friday', time: '11:00 AM – 12:00 AM' },
     { day: 'Sunday', time: 'Closed' },
     { day: 'Holidays', time: 'By appointment' },
   ]);
-  assert.deepEqual(blocks.map((b) => [b.day, b.time, b.endTime]), [[1, '11:00', '22:00'], [5, '11:00', '24:00']]);
+  assert.deepEqual(blocks.map((b) => [b.day, b.time, b.endTime, b.ageGroupName]), [[1, '11:00', '22:00', 'All Ages'], [5, '11:00', '22:00', 'All Ages'], [5, '22:00', '24:00', 'Adults Only']]);
   assert.deepEqual(openGymSessions([]), []);
   const root = document.createElement('div');
   renderWeekGrid(root, { sessions: sessionsForWeek(blocks, '2026-10-19', []), monday: '2026-10-19', today: TODAY, closed: new Map(), section: 'open_gym' });
-  assert.deepEqual([...root.querySelectorAll('.ws-when')].map((w) => w.textContent), ['11am–10pm', '11am–12am']);
+  assert.deepEqual([...root.querySelectorAll('.ws-when')].map((w) => w.textContent), ['11am–10pm', '11am–10pm', '10pm–12am']);
+  assert.deepEqual(openGymSessions([{ day: 'Friday', time: '11:00 AM – 10:00 PM' }]).map((b) => b.ageGroupName), ['All Ages'], 'no late hours, no adults-only block');
 });
