@@ -4,10 +4,10 @@
  *
  * TMV-Members republishes `settings/siteConfig` to a static CDN object on every
  * staff save (`functions/site-config-publish.js`). That object carries the
- * per-card Square `links`, the announcement `promo`, the opening `hours` and the
- * `social` links. This is the one reader of its shape: `src/data/site-config.ts`
- * fetches it once per build and hands it here, and every consumer takes its
- * part from the result.
+ * per-card Square `links`, the announcement `promo`, the opening `hours`, the
+ * `social` links and the `closedDays` (dates the whole gym is closed). This is
+ * the one reader of its shape: `src/data/site-config.ts` fetches it once per
+ * build and hands it here, and every consumer takes its part from the result.
  *
  * Build and browser share this one reader: `fetchPublishedConfig` fetches and
  * validates, and the visibility rules downstream (`site-promo.js`,
@@ -39,7 +39,12 @@ export const LIMITS = Object.freeze({
   hoursRows: 14,
   hoursDay: 40,
   hoursTime: 80,
+  closedDays: 12,
+  closedReason: 80,
 });
+
+/** A closed day: a gym calendar day, what the members app writes. */
+const DATE_FORMAT = /^\d{4}-\d{2}-\d{2}$/;
 
 /** A stored banner expiry: gym-time `YYYY-MM-DDTHH:MM:SS`, what the members app writes. */
 const EXPIRY_FORMAT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/;
@@ -61,6 +66,7 @@ const NO_PROMO = Object.freeze({ active: false, headline: '', body: '', ctaLabel
  * @property {Promo} promo
  * @property {{day: string, time: string}[]} hours
  * @property {Record<string, string>} social - every key of `SOCIAL_KEYS`, '' where unset.
+ * @property {{date: string, reason: string}[]} closedDays - soonest first; past days are the reader's to drop.
  */
 
 /** @param {unknown} v @returns {string} */
@@ -133,7 +139,22 @@ export function readPublishedConfig(data) {
       .filter((h) => h.day || h.time)
       .slice(0, LIMITS.hoursRows),
     social,
+    closedDays: readClosedDays(d.closedDays),
   };
+}
+
+/**
+ * The days the whole gym is closed. A row with no readable date is dropped; a reason past its limit reads as none
+ * (the day is still closed). Sorted by date, at most `LIMITS.closedDays`.
+ * @param {unknown} v
+ * @returns {{date: string, reason: string}[]}
+ */
+function readClosedDays(v) {
+  return (Array.isArray(v) ? v : [])
+    .map((r) => ({ date: text(obj(r).date), reason: bounded(obj(r).reason, LIMITS.closedReason) }))
+    .filter((r) => DATE_FORMAT.test(r.date))
+    .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
+    .slice(0, LIMITS.closedDays);
 }
 
 /**

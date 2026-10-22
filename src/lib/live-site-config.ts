@@ -48,4 +48,13 @@ async function refresh() {
   if (latest && latest !== before) apply(latest);
 }
 
+/**
+ * The days the whole gym is closed, as the browser last read them, for the schedule (which draws its week from them
+ * rather than patching the built page). Shares this module's one fetch; none when it could not be read.
+ */
+export async function publishedClosedDays(): Promise<PublishedConfig['closedDays']> {
+  await refresh();
+  return latest?.closedDays ?? [];
+}
+
 document.addEventListener('astro:page-load', () => { void refresh(); });

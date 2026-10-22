@@ -177,7 +177,7 @@ function buildMobileCard(c, variant, onClick) {
 //   - item / * item   → <ul><li> (consecutive lines group into one list)
 //   blank line        → paragraph break
 //   single newline    → <br>
-function renderMarkdown(text) {
+export function renderMarkdown(text) {
   if (!text) return '';
   const escaped = String(text)
     .replace(/&/g, '&amp;')

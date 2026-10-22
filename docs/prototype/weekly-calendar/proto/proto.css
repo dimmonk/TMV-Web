@@ -1,0 +1,212 @@
+/* PROPOSED, not built: the dated week laid on the live schedule (wk-*), and the review frame (proto-*). Everything
+   else on the page is the built site's own CSS. */
+
+/* ── Week bar (both chromes) ─────────────────────────────────── */
+.wk-bar { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0 0 14px; flex-wrap: wrap; }
+.wk-arrow {
+  width: 40px; height: 40px; border-radius: 999px; border: 1.5px solid #211f1b; background: #fff; color: #211f1b;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px;
+}
+.wk-arrow:hover:not(:disabled) { background: rgba(33, 31, 27, .06); }
+.wk-arrow:disabled { opacity: .3; cursor: default; }
+.wk-label { display: flex; flex-direction: column; align-items: center; min-width: 170px; }
+.wk-eyebrow { font: 500 11px/1.2 'Roboto Mono', monospace; letter-spacing: .18em; text-transform: uppercase; color: #3a3530; }
+.wk-range { font: 600 22px/1.15 'Oswald', sans-serif; letter-spacing: .04em; text-transform: uppercase; color: #14110f; }
+.wk-today {
+  font: 500 12px/1 'Oswald', sans-serif; letter-spacing: .08em; text-transform: uppercase; background: none; border: 0;
+  color: #2196f3; text-decoration: underline; cursor: pointer; padding: 6px;
+}
+
+/* ── Schedule changes notice ─────────────────────────────────── */
+.wk-changes { max-width: 760px; margin: 0 auto 16px; background: #fbeaea; border: 1px solid #ecc6c6; border-radius: 8px; padding: 12px 16px; color: #14110f; }
+.wk-changes-h { display: flex; align-items: center; gap: 8px; font: 600 13px/1.2 'Oswald', sans-serif; letter-spacing: .1em; text-transform: uppercase; color: #8b1f1f; margin-bottom: 6px; }
+.wk-changes ul { list-style: none; margin: 0; padding: 0; }
+.wk-changes li { display: flex; gap: 10px; align-items: baseline; font: 400 14px/1.45 'Roboto', sans-serif; padding: 2px 0; }
+.wk-change-date {
+  flex: none; min-width: 84px; text-align: left; background: none; border: 0; padding: 0; cursor: pointer;
+  font: 500 13px/1.45 'Roboto Mono', monospace; color: #8b1f1f; text-decoration: underline;
+}
+
+/* ── Desktop sheet: dates, today, past, closed ───────────────── */
+.sheet .wk-day-h { display: flex; flex-direction: column; gap: .2cqh; }
+.sheet .wk-day-date { font: 500 1.15cqh/1 'Roboto Mono', monospace; letter-spacing: .08em; color: var(--ink-2); text-transform: none; }
+.sheet .wk-is-today { background: #14110f; color: #fff; }
+.sheet .wk-is-today .wk-day-date { color: #ffd400; }
+.sheet .wk-day-h.wk-is-past { color: #9b9890; }
+.sheet .cell.wk-is-past { opacity: .4; }
+.sheet .wk-day-closed { font: 600 1.1cqh/1 'Oswald', sans-serif; letter-spacing: .1em; color: var(--end); }
+.sheet .cell.wk-is-closed {
+  background: repeating-linear-gradient(135deg, rgba(139, 31, 31, .07) 0 6px, transparent 6px 12px);
+}
+.sheet .class.wk-off { filter: grayscale(.6); }
+
+/* ── Class popup: the one-date notice ────────────────────────── */
+.wk-popup-off {
+  display: flex; flex-direction: column; gap: 2px; margin: -4px 0 12px; padding: 10px 12px; border-radius: 4px;
+  background: #fbeaea; border: 1px solid #ecc6c6; color: #8b1f1f; font: 400 14px/1.4 'Roboto', sans-serif;
+}
+.wk-popup-off strong { font: 600 14px/1.3 'Oswald', sans-serif; letter-spacing: .06em; text-transform: uppercase; }
+.wk-popup-next { color: #3a3530; font-size: 13px; }
+
+/* ── Phone ───────────────────────────────────────────────────── */
+.mapp .wk-phone-top { margin-bottom: 18px; }
+.mapp .wk-phone-top .wk-bar { justify-content: space-between; flex-wrap: nowrap; margin-bottom: 12px; }
+.mapp .wk-phone-top .wk-arrow { width: 38px; height: 38px; border: 1px solid #e6e4dd; }
+.mapp .wk-phone-top .wk-range { font: 800 17px/1.15 'Archivo', sans-serif; text-transform: none; letter-spacing: 0; }
+.mapp .wk-phone-top .wk-eyebrow { font: 800 10.5px/1.2 'Archivo', sans-serif; letter-spacing: .06em; color: #9b8e6a; }
+.mapp .wk-phone-top .wk-today { order: 4; flex-basis: 100%; display: none; }
+.mapp .wk-phone-top .wk-changes { margin: 0; border-radius: 14px; padding: 12px 14px; }
+.mapp .wk-phone-top .wk-changes li { font-size: 13px; flex-direction: column; gap: 0; padding: 4px 0; }
+.mapp .wk-phone-top .wk-changes-h { font: 800 11px/1.2 'Archivo', sans-serif; letter-spacing: .06em; }
+.mapp .wk-phone-top .wk-change-date { font: 700 12.5px/1.4 'Archivo', sans-serif; }
+.mapp .wk-daylabel-closed { color: #8b1f1f; margin-left: 6px; }
+.mapp .wk-sess-reason { font: 500 12px/1.3 inherit; color: #8b1f1f; margin-top: 3px; }
+
+/* ── Review frame (not part of the design) ───────────────────── */
+#proto-review {
+  position: fixed; top: 12px; right: 12px; z-index: 10000; width: 300px; max-height: calc(100vh - 24px); overflow: auto;
+  background: #fff; color: #211f1b; border: 1px solid #d8d2ca; border-radius: 12px; padding: 12px 14px;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .22); font: 400 13px/1.4 system-ui, sans-serif;
+}
+#proto-review .proto-title { display: flex; flex-direction: column; margin-bottom: 8px; position: relative; padding-right: 28px; }
+#proto-review .proto-min { position: absolute; top: -2px; right: -4px; width: 26px; height: 26px; border: 1px solid #d8d2ca; border-radius: 6px; background: #fff; cursor: pointer; font: 600 15px/1 system-ui; }
+#proto-review.is-min > :not(.proto-title) { display: none; }
+#proto-review.is-min .proto-title { margin: 0; }
+#proto-review .proto-title span { color: #6b665e; font-size: 12px; }
+#proto-review .proto-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 6px 0; }
+#proto-review .proto-seg { display: inline-flex; border: 1px solid #d8d2ca; border-radius: 8px; overflow: hidden; }
+#proto-review .proto-seg button { border: 0; background: #fff; padding: 5px 9px; font: 500 12px system-ui, sans-serif; cursor: pointer; color: #211f1b; }
+#proto-review .proto-seg button.on { background: #211f1b; color: #fff; }
+#proto-review .proto-ex { display: flex; flex-direction: column; gap: 4px; margin: 10px 0; padding: 8px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+#proto-review .proto-ex > span { color: #6b665e; font-size: 12px; }
+#proto-review .proto-ex label { display: flex; gap: 6px; align-items: flex-start; cursor: pointer; }
+#proto-review .proto-link { background: none; border: 0; padding: 0; color: #2196f3; text-decoration: underline; cursor: pointer; font: inherit; }
+#proto-review .proto-notes p { margin: 8px 0 0; color: #3a3833; }
+.proto-phone-shade { position: fixed; inset: 0; z-index: 9990; background: rgba(20, 17, 15, .6); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.proto-phone { width: 390px; height: min(844px, calc(100vh - 40px)); border: 10px solid #111; border-radius: 36px; background: #fff; cursor: auto; }
+@media (max-width: 767px) {
+  #proto-review { top: auto; bottom: 84px; left: 8px; right: 8px; width: auto; max-height: 45vh; }
+  #proto-review .proto-row:nth-child(3) { display: none; } /* already a phone */
+}
+
+/* ── PROPOSED: the schedule in the website's look (ws-*) ─────────
+   Desktop only (the phone list already has the site look); the printed sheet and PDF keep the poster.
+   Every rule mirrors a part the site already ships: the price list card (src/styles/price-list-web.css .pw-*),
+   the .eyebrow kicker (global.css), the fit-card dot (PurchaseFit) and the ink pills of .pl-cats-nav. */
+body.ws-look .embed-desktop { aspect-ratio: auto; }
+
+/* Filters: the price list's ink pills (.pl-cats-nav a); unselected ones sit on a white card. */
+body.ws-look .embed-filters { gap: 8px; margin-bottom: 22px; }
+body.ws-look .embed-filter,
+body.ws-look .embed-filter[data-filter] {
+  padding: 10px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  font: 700 12px/1.2 var(--font-display); letter-spacing: 0; text-transform: none;
+}
+body.ws-look .embed-filter:hover { background: var(--line-soft); }
+body.ws-look .embed-filter.active,
+body.ws-look .embed-filter[data-filter].active { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+/* Week bar: eyebrow + Archivo title, as every section head on the site. */
+body.ws-look .wk-bar { gap: 14px; margin-bottom: 18px; }
+body.ws-look .wk-arrow { width: 40px; height: 40px; border: 1px solid var(--line); background: var(--card); color: var(--ink); box-shadow: var(--shadow-sm); }
+body.ws-look .wk-arrow:hover:not(:disabled) { background: var(--line-soft); }
+body.ws-look .wk-eyebrow { font: 700 11px/1.2 var(--font-display); letter-spacing: .14em; color: var(--faint); }
+body.ws-look .wk-range { font: 800 26px/1.15 var(--font-display); letter-spacing: -.01em; text-transform: none; color: var(--ink); }
+body.ws-look .wk-today { font: 800 12.5px/1.2 var(--font-display); letter-spacing: .03em; color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--brand); padding: 4px 0; }
+
+/* Schedule changes: a price list card with the red (private) category rule. */
+body.ws-look .wk-changes {
+  max-width: 760px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow-sm); padding: 16px 18px 12px; color: var(--ink);
+}
+body.ws-look .wk-changes-h {
+  font: 800 17px/1.1 var(--font-display); letter-spacing: -.01em; text-transform: none; color: var(--ink);
+  padding-bottom: 10px; margin-bottom: 6px; border-bottom: 2px solid var(--c-private);
+}
+body.ws-look .wk-changes-h i, body.ws-look .wk-changes-h svg { color: var(--c-private); }
+body.ws-look .wk-changes li { font: 500 14px/1.4 var(--font-body); padding: 6px 0; gap: 14px; }
+body.ws-look .wk-changes li + li { border-top: 1px dashed var(--line); }
+body.ws-look .wk-change-date { min-width: 92px; font: 800 14px/1.4 var(--font-display); color: var(--ink); text-decoration: none; }
+body.ws-look .wk-change-date:hover { text-decoration: underline; text-decoration-color: var(--brand); text-decoration-thickness: 2px; }
+
+/* The week: one price-list card holding the sheet's grid (hours down, days across). */
+.ws-week { --c: var(--c-classes); }
+.ws-week[data-section="athletic"] { --c: var(--c-athletic); }
+.ws-week[data-section="open_gym"] { --c: var(--c-opengym); }
+.ws-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; }
+.ws-scroll { overflow-x: auto; }
+.ws-grid { display: grid; grid-template-columns: 64px repeat(7, minmax(120px, 1fr)); min-width: 940px; }
+.ws-corner { border-bottom: 1px solid var(--line); }
+.ws-head { display: flex; flex-direction: column; gap: 4px; padding: 16px 12px 10px; border-bottom: 2px solid var(--c); border-left: 1px solid var(--line-soft); }
+.ws-head.is-today { border-bottom-color: var(--brand); }
+.ws-head.is-closed { border-bottom-color: var(--c-private); }
+.ws-kicker { display: inline-flex; align-items: center; gap: 7px; font: 700 11px/1.2 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+.ws-kicker .rule { width: 14px; height: 2px; border-radius: 2px; background: var(--brand); }
+.ws-head.is-today .ws-kicker { color: var(--ink); }
+.ws-title { font: 800 18px/1.1 var(--font-display); letter-spacing: -.01em; color: var(--ink); }
+.ws-head.is-past .ws-title { color: var(--muted-3); }
+.ws-closed { font: 800 12px/1.3 var(--font-display); color: var(--c-private); }
+.ws-hour {
+  padding: 12px 10px 0 0; text-align: right; border-top: 1px solid var(--line);
+  font: 800 12.5px/1.2 var(--font-display); color: var(--text-2); font-variant-numeric: tabular-nums;
+}
+.ws-grid > .ws-hour:nth-child(9) { border-top: 0; }
+.ws-cell { display: flex; flex-direction: column; gap: 2px; padding: 6px 6px 8px; border-top: 1px solid var(--line); border-left: 1px solid var(--line-soft); min-width: 0; }
+.ws-cell.is-past { opacity: .5; }
+.ws-item {
+  display: grid; gap: 1px; width: 100%; text-align: left; padding: 5px 6px 5px 12px; border: 0; background: none;
+  color: var(--ink); cursor: pointer; border-radius: 0 8px 8px 0; box-shadow: inset 4px 0 0 var(--k);
+  transition: opacity .15s ease, background .15s ease;
+}
+.ws-item:hover:not(.is-off) { background: var(--line-soft); }
+.ws-grid.has-focus .ws-item:not(.is-match) { opacity: .28; }
+.ws-grid.has-focus .ws-item.is-match { background: color-mix(in srgb, var(--k) 10%, #fff); }
+.ws-name { font: 700 14px/1.3 var(--font-body); }
+.ws-age { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 6px; font: 500 12px/1.4 var(--font-body); color: var(--muted); }
+.ws-when { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 6px; font: 500 12px/1.4 var(--font-body); color: var(--muted-3); white-space: nowrap; }
+.ws-tag {
+  padding: 3px 7px; border-radius: 6px; background: var(--ink); color: #fff;
+  font: 700 10px/1.2 var(--font-display); letter-spacing: .1em; text-transform: uppercase;
+}
+.ws-tag.is-new { background: var(--c-opengym); }
+.ws-tag.is-off { background: var(--c-private); }
+
+.ws-item.is-off .ws-name { color: var(--muted-3); text-decoration: line-through; }
+.ws-item.is-off { box-shadow: inset 4px 0 0 color-mix(in srgb, var(--k) 35%, #fff); }
+.ws-note { margin: 24px 0; text-align: center; font: 500 14px/1.45 var(--font-body); color: var(--muted-3); }
+.ws-foot {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 22px; margin-top: 18px; padding-top: 12px;
+  border-top: 1px solid var(--line); font: 500 12.5px/1.5 var(--font-body); color: var(--muted);
+}
+
+/* Class popup: a site card. Archivo title over the class's colour rule (the price list's card head), rows in the
+   price list's label/value style, the close button as the card's round ⓘ button. */
+body.ws-look .popup-overlay { background: rgba(28, 25, 23, .5); }
+body.ws-look .popup {
+  border-radius: var(--radius-lg); padding: 22px 24px 20px; border: 1px solid var(--line); box-shadow: var(--shadow-lg);
+  max-width: 460px; font-family: var(--font-body); color: var(--ink);
+}
+body.ws-look .popup-stripe { display: none; }
+body.ws-look .popup-close {
+  top: 16px; right: 16px; width: 32px; height: 32px; padding: 0; border-radius: 50%; font-size: 18px;
+  display: inline-flex; align-items: center; justify-content: center; background: var(--line-soft); color: var(--ink);
+}
+body.ws-look .popup-close:hover { background: var(--ink); color: #fff; }
+body.ws-look .popup-title {
+  margin: 0 44px 12px 0; padding-bottom: 12px; border-bottom: 2px solid var(--pc, var(--ink));
+  font: 800 24px/1.1 var(--font-display); letter-spacing: -.01em; text-transform: none; color: var(--ink);
+}
+body.ws-look .popup-row { justify-content: space-between; gap: 12px; margin: 0; padding: 7px 0; }
+body.ws-look .popup-row + .popup-row { border-top: 1px dashed var(--line); }
+body.ws-look .popup-row-label { min-width: 0; font: 500 14px/1.35 var(--font-body); letter-spacing: 0; text-transform: none; color: var(--muted); }
+body.ws-look .popup-row-value,
+body.ws-look .popup-time,
+body.ws-look .popup-age { font: 800 14.5px/1.35 var(--font-display); letter-spacing: 0; text-transform: none; color: var(--ink); text-align: right; }
+body.ws-look .popup-desc-wrap { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+body.ws-look .popup-desc { font: 400 14px/1.55 var(--font-body); color: var(--text-3); }
+body.ws-look .wk-popup-off {
+  margin: 0 0 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); border-left: 3px solid var(--c-private);
+  background: var(--card); color: var(--ink); font: 500 13.5px/1.45 var(--font-body);
+}
+body.ws-look .wk-popup-off strong { font: 800 14px/1.3 var(--font-display); letter-spacing: 0; text-transform: none; color: var(--c-private); }
+body.ws-look .wk-popup-next { color: var(--muted); }
