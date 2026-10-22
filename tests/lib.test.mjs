@@ -72,6 +72,14 @@ test('a missing or malformed object reads as empty, not as a throw', () => {
   }
 });
 
+test('the contact is read bounded; a phone nobody can dial or an email that is not one address reads as unset', () => {
+  const ok = { address: { street: '1 Main St', city: 'Toronto', region: 'ON', postalCode: 'M1M 1M1' }, phone: ' (416) 555-0100 ', email: 'a@b.ca' };
+  assert.deepEqual(readPublishedConfig(ok).contact, { ...ok, phone: '(416) 555-0100' });
+  const bad = readPublishedConfig({ address: { street: 'x'.repeat(LIMITS.street + 1), city: 7 }, phone: '12', email: 'a b@c.ca' }).contact;
+  assert.deepEqual(bad, { address: { street: '', city: '', region: '', postalCode: '' }, phone: '', email: '' });
+  assert.deepEqual(readPublishedConfig(null).contact, bad);
+});
+
 test('only http(s) URLs survive into social and the promo button', () => {
   const c = readPublishedConfig({
     social: { instagram: 'javascript:alert(1)', facebook: 'https://facebook.com/x', youtube: 'not a url' },

@@ -4,6 +4,7 @@ import PrivateLessonsScreen from '../components/mobile/PrivateLessonsScreen.astr
 import JumpNav from '../components/JumpNav.astro';
 import NextStep from '../components/NextStep.astro';
 import { seo, cat, site, url } from '../data/site';
+import { contact } from '../data/site-config';
 import { sq } from '../data/square-links';
 import { privateWays } from '../data/private-lessons';
 
@@ -78,8 +79,8 @@ const notes = [
     <div class="pl-next"><NextStep step="private-pack" /></div>
 
     <section class="pl-help">
-      <div class="pl-help-left"><span class="pl-help-ic"><i class="bi bi-chat-dots-fill" aria-hidden="true"></i></span><div><div class="pl-help-t">Not sure who to train with?</div><div class="pl-help-b">Tell us your goals and we'll point you to the right coach. Call {site.phoneDisplay} or email us.</div></div></div>
-      <a href={`mailto:${site.email}`} class="btn btn-primary">Get in touch <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+      <div class="pl-help-left"><span class="pl-help-ic"><i class="bi bi-chat-dots-fill" aria-hidden="true"></i></span><div><div class="pl-help-t">Not sure who to train with?</div><div class="pl-help-b">Tell us your goals and we'll point you to the right coach.<span data-contact-wrap="phone" hidden={!contact.phone}> Call <span data-contact="phone">{contact.phone}</span> or email us.</span></div></div></div>
+      <a href={contact.href.email || undefined} data-contact-href="email" hidden={!contact.href.email} class="btn btn-primary">Get in touch <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
     </section>
   </div>
   </div>

@@ -1,5 +1,5 @@
 ---
-import { site } from '../data/site';
+import { contact } from '../data/site-config';
 interface QA { q: string; a: string; }
 interface Props {
   eyebrow?: string;
@@ -31,8 +31,8 @@ const {
         </details>
       ))}
     </div>
-    <div class="faq-foot">
-      Still have a question? <a href={`mailto:${site.email}`}>Email us</a> or call <a href={`tel:${site.phone}`}>{site.phoneDisplay}</a>.
+    <div class="faq-foot" data-contact-wrap="phone" hidden={!contact.phone}>
+      Still have a question? <span data-contact-wrap="email" hidden={!contact.email}><a href={contact.href.email || undefined} data-contact-href="email">Email us</a> or </span>call <a href={contact.href.phone || undefined} data-contact="phone">{contact.phone}</a>.
     </div>
   </div>
 </section>

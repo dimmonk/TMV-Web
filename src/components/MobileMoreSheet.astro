@@ -14,8 +14,8 @@
  * z-index below the tab bar's and the tab bar simply wins, every time, with
  * no math at all.
  */
-import { url, site } from '../data/site';
-import { hours } from '../data/site-config';
+import { url } from '../data/site';
+import { hours, contact } from '../data/site-config';
 import { hoursSummary } from '../lib/opening-hours.js';
 import { exploreTiles } from '../data/explore';
 import { forSurface } from '../data/surface';
@@ -56,11 +56,11 @@ const hoursLine = hoursSummary(hours);
         <div class="m-visit">
           <div class="m-visit-eyebrow"><span class="mh-rule"></span>Visit us</div>
           <div class="m-visit-rows">
-            <div class="m-visit-row"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i><div><div class="m-visit-t">{site.address.street}</div><div class="m-visit-s">{site.address.neighbourhood}, {site.address.locality}</div></div></div>
+            <div class="m-visit-row" data-contact-wrap="address" hidden={!contact.line}><i class="bi bi-geo-alt-fill" aria-hidden="true"></i><div><div class="m-visit-t" data-contact="street" hidden={!contact.street}>{contact.street}</div><div class="m-visit-s" data-contact="locality" hidden={!contact.locality}>{contact.locality}</div></div></div>
             <div class="m-visit-row" data-hours-wrap hidden={!hoursLine}><i class="bi bi-clock-fill" aria-hidden="true"></i><div><div class="m-visit-t" data-hours-summary>{hoursLine}</div></div></div>
             <div class="m-visit-btns">
-              <a href={site.mapUrl} target="_blank" rel="noopener" class="m-visit-btn"><i class="bi bi-geo-alt"></i> Directions</a>
-              <a href={`tel:${site.phone}`} class="m-visit-btn"><i class="bi bi-telephone-fill"></i> Call us</a>
+              <a href={contact.href.directions || undefined} data-contact-href="directions" hidden={!contact.href.directions} target="_blank" rel="noopener" class="m-visit-btn"><i class="bi bi-geo-alt"></i> Directions</a>
+              <a href={contact.href.phone || undefined} data-contact-href="phone" hidden={!contact.href.phone} class="m-visit-btn"><i class="bi bi-telephone-fill"></i> Call us</a>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import HomeScreen from '../components/mobile/HomeScreen.astro';
 import GoalPicker from '../components/GoalPicker.astro';
 import Reviews from '../components/Reviews.astro';
 import { seo, cat, url } from '../data/site';
+import { contact } from '../data/site-config';
 import { heroStats } from '../data/hero-stats';
 import { bookableSeasons, campByKey } from '../data/camps';
 
@@ -75,7 +76,7 @@ const camps = [
               : <div class="hero-slide" data-bg={src} style="opacity:0"></div>
           ))}
         </div>
-        <div class="hero-badge">75 Carl Hall Rd<br>Downsview Park</div>
+        <div class="hero-badge" data-contact-wrap="address" hidden={!contact.street}><span data-contact="street">{contact.street}</span><br>Downsview Park</div>
       </div>
     </div>
   </section>

@@ -9,6 +9,7 @@ import Faq from '../components/Faq.astro';
 import { campFaqs } from '../data/camp-faqs';
 import { hasCampDates } from '../data/camp-dates';
 import { seo, links, cat, url } from '../data/site';
+import { contact } from '../data/site-config';
 import { camps, campDaySchedule } from '../data/camps';
 import { forSurface } from '../data/surface';
 const schedule = campDaySchedule;
@@ -18,7 +19,8 @@ const facts = [
   { icon: 'bi-bag', title: 'What to bring', body: 'Clean indoor shoes, a labelled water bottle, lunch and snacks, and comfortable clothes.' },
   { icon: 'bi-shield-check', title: 'Waiver', body: 'Every new participant needs a completed waiver before their first day. Do it online to save time.' },
   { icon: 'bi-exclamation-triangle', title: 'Allergies', body: 'A nut-free environment — please pack nut-free, and let us know about any allergies.' },
-  { icon: 'bi-geo-alt', title: 'Location', body: 'The Monkey Vault, 75 Carl Hall Rd, Unit 15 — in Downsview Park.' },
+  // The street is the published one (`contact`), shown before `body`.
+  { icon: 'bi-geo-alt', title: 'Location', street: true, body: ' — in Downsview Park.' },
 ];
 ---
 <BaseLayout title={seo.camps.title} description={seo.camps.description} active="camps" mobileTab="more" appHeader="back" appTitle="Camps">
@@ -98,9 +100,9 @@ const facts = [
       </div>
       <div class="know-right">
         <div class="know-facts">{facts.map((f) => (
-          <div>
+          <div {...(f.street ? { 'data-contact-wrap': 'address', hidden: !contact.street } : {})}>
             <div class="know-facthead"><span class="know-factic"><i class={`bi ${f.icon}`} aria-hidden="true"></i></span><div class="know-facttitle">{f.title}</div></div>
-            <p class="know-factbody">{f.body}</p>
+            <p class="know-factbody">{f.street && <span data-contact="street">{contact.street}</span>}{f.body}</p>
           </div>
         ))}</div>
         <div class="know-actions">

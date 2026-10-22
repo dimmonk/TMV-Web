@@ -26,6 +26,7 @@ const WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
   .map((day) => ({ day, time: day === 'Saturday' || day === 'Sunday' ? '10:00 AM – 6:00 PM' : '11:00 AM – 10:00 PM' }));
 const SOCIAL = { instagram: 'https://www.instagram.com/fixture-ig', youtube: 'https://www.youtube.com/@fixture', facebook: 'https://www.facebook.com/fixture-fb' };
 const NO_SOCIAL = { instagram: '', youtube: '', facebook: '' };
+const CONTACT = { address: { street: '1 Fixture Way, Unit 2', city: 'Fixtureville', region: 'ON', postalCode: 'A1A 1A1' }, phone: '(416) 555-0100', email: 'hello@fixture.test' };
 const LIVE_PROMO = { active: true, headline: 'Spring camp is open', body: 'Spots fill fast', ctaLabel: 'Register', ctaUrl: 'https://example.com/camp', expiresAt: '2099-12-31T23:59:59' };
 
 /** The members app's public schedule and price list, as every build reads them (tests/fixtures/projection-redirect.mjs). */
@@ -332,6 +333,38 @@ test('no built page carries an inline script or an inline event handler (the hos
   assert.deepEqual(offenders, []);
 });
 
+test('the published address, phone and email reach every page, and none is typed in the site', async () => {
+  serve({ hours: WEEK, ...CONTACT });
+  const site = await build();
+  const home = site.dom('');
+  const about = site.dom('about');
+  const text = (doc, sel) => [...doc.querySelectorAll(sel)].filter((el) => !el.closest('[hidden]')).map((el) => el.textContent);
+  assert.ok(text(home, '[data-contact="street"]').includes('1 Fixture Way, Unit 2'), 'footer and hero badge');
+  assert.ok(text(home, '[data-contact="locality"]').includes('Fixtureville, ON A1A 1A1'));
+  assert.ok(text(about, '[data-contact="phone"]').includes('(416) 555-0100'));
+  assert.equal(about.querySelector('a[data-contact="phone"]').getAttribute('href'), 'tel:+14165550100');
+  assert.equal(about.querySelector('a[data-contact="email"]').getAttribute('href'), 'mailto:hello@fixture.test');
+  assert.equal(about.querySelector('a[data-contact-href="directions"]').getAttribute('href'), 'https://maps.google.com/?q=1+Fixture+Way%2C+Unit+2%2C+Fixtureville%2C+ON+A1A+1A1');
+  const ld = JSON.parse(home.querySelector('script[type="application/ld+json"]').textContent);
+  assert.equal(ld.telephone, '(416) 555-0100');
+  assert.equal(ld.email, 'hello@fixture.test');
+  assert.deepEqual(ld.address, { '@type': 'PostalAddress', streetAddress: '1 Fixture Way, Unit 2', addressLocality: 'Fixtureville', addressRegion: 'ON', postalCode: 'A1A 1A1', addressCountry: 'CA' });
+  // The gym's real contact is not typed anywhere in the built site.
+  for (const path of ['', 'about', 'camps', 'events', 'book', 'private-lessons', 'train', 'make-invitation']) {
+    assert.doesNotMatch(site.page(path), /Carl Hall|350-1111|info@themonkeyvault/, `${path || 'home'} types no contact`);
+  }
+});
+
+test('no published contact renders no contact line, link or structured contact', async () => {
+  serve({ hours: WEEK });
+  const site = await build();
+  for (const path of ['', 'about', 'events', 'book']) {
+    const doc = site.dom(path);
+    for (const sel of ['[data-contact]', '[data-contact-href]', '[data-contact-wrap]']) assert.ok(!shown(doc, sel), `${path || 'home'}: ${sel} hidden`);
+  }
+  assert.doesNotMatch(site.page(''), /"telephone"|"email"|PostalAddress|"hasMap"/);
+});
+
 // ---- the browser's refresh over a built page --------------------------------
 
 test('the refresh updates a changed hours row, adds a row and keeps the build\'s styling hooks', async () => {
@@ -404,4 +437,18 @@ test('the refresh with everything emptied shows nothing', async () => {
   ]) {
     assert.ok(!shown(doc, selector), `${selector} is hidden once nothing is published`);
   }
+});
+
+test('the refresh shows a changed phone, email and address, and hides one that was removed', async () => {
+  serve({ hours: WEEK, ...CONTACT });
+  const about = (await build()).dom('about');
+  refresh(about, { hours: WEEK, ...CONTACT, phone: '647 555 0199', email: 'new@fixture.test' });
+  assert.equal(about.querySelector('a[data-contact="phone"]').textContent, '647 555 0199');
+  assert.equal(about.querySelector('a[data-contact="phone"]').getAttribute('href'), 'tel:+16475550199');
+  assert.equal(about.querySelector('a[data-contact="email"]').getAttribute('href'), 'mailto:new@fixture.test');
+  refresh(about, { hours: WEEK, ...CONTACT, phone: '', email: 'not an email' });
+  assert.ok(!shown(about, '[data-contact="phone"]') && !shown(about, '[data-contact="email"]'));
+  assert.ok(shown(about, '[data-contact="street"]'));
+  refresh(about, { hours: WEEK });
+  assert.ok(!shown(about, '[data-contact-wrap="address"]') && !shown(about, '[data-contact-href="directions"]'));
 });

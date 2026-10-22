@@ -5,9 +5,10 @@
  * TMV-Members republishes `settings/siteConfig` to a static CDN object on every
  * staff save (`functions/site-config-publish.js`). That object carries the
  * per-card Square `links`, the announcement `promo`, the opening `hours`, the
- * `social` links and the `closedDays` (dates the whole gym is closed). This is
- * the one reader of its shape: `src/data/site-config.ts` fetches it once per
- * build and hands it here, and every consumer takes its part from the result.
+ * `social` links, the `closedDays` (dates the whole gym is closed) and the
+ * gym's `address`, `phone` and `email`. This is the one reader of its shape:
+ * `src/data/site-config.ts` fetches it once per build and hands it here, and
+ * every consumer takes its part from the result.
  *
  * Build and browser share this one reader: `fetchPublishedConfig` fetches and
  * validates, and the visibility rules downstream (`site-promo.js`,
@@ -17,6 +18,8 @@
  * value reaches an href on the public page, so it validates again and never
  * trusts the shape (a partial or older object reads as empty, not as a throw).
  */
+
+import { gymContactOf, gymPhoneHref, gymEmailHref, GYM_ADDRESS_KEYS } from './gym-contact.js';
 
 /** The published object. Server side: `SITE_CONFIG_OBJECT_PATH` (`functions/site-config-publish.js`). */
 export const PUBLISHED_CONFIG_URL = 'https://storage.googleapis.com/tmv-management.firebasestorage.app/public/site-config.json';
@@ -41,6 +44,12 @@ export const LIMITS = Object.freeze({
   hoursTime: 80,
   closedDays: 12,
   closedReason: 80,
+  street: 80,
+  city: 60,
+  region: 40,
+  postalCode: 12,
+  phone: 30,
+  email: 100,
 });
 
 /** A closed day: a gym calendar day, what the members app writes. */
@@ -67,6 +76,12 @@ const NO_PROMO = Object.freeze({ active: false, headline: '', body: '', ctaLabel
  * @property {{day: string, time: string}[]} hours
  * @property {Record<string, string>} social - every key of `SOCIAL_KEYS`, '' where unset.
  * @property {{date: string, reason: string}[]} closedDays - soonest first; past days are the reader's to drop.
+ * @property {Contact} contact
+ *
+ * @typedef {Object} Contact
+ * @property {{street: string, city: string, region: string, postalCode: string}} address - '' where unset.
+ * @property {string} phone - as staff typed it, shown verbatim; '' when unset.
+ * @property {string} email - '' when unset or not one address.
  */
 
 /** @param {unknown} v @returns {string} */
@@ -140,6 +155,7 @@ export function readPublishedConfig(data) {
       .slice(0, LIMITS.hoursRows),
     social,
     closedDays: readClosedDays(d.closedDays),
+    contact: readContact(d),
   };
 }
 
@@ -155,6 +171,25 @@ function readClosedDays(v) {
     .filter((r) => DATE_FORMAT.test(r.date))
     .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
     .slice(0, LIMITS.closedDays);
+}
+
+/**
+ * The gym's address, phone and email, read the way TMV-Members publishes them
+ * (`gymContactOf`): every part bounded, and a phone nobody can dial or an email
+ * that is not one address reads as unset.
+ * @param {Record<string, any>} d
+ * @returns {Contact}
+ */
+function readContact(d) {
+  const c = gymContactOf(d);
+  const address = { street: '', city: '', region: '', postalCode: '' };
+  GYM_ADDRESS_KEYS.forEach((k) => {
+    const key = /** @type {keyof Contact['address']} */ (k);
+    address[key] = bounded(c.address[key], LIMITS[key]);
+  });
+  const phone = bounded(c.phone, LIMITS.phone);
+  const email = bounded(c.email, LIMITS.email);
+  return { address, phone: gymPhoneHref(phone) ? phone : '', email: gymEmailHref(email) ? email : '' };
 }
 
 /**

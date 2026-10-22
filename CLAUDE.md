@@ -34,14 +34,16 @@ repository, so `public/version.json` carries only those three values.
 
 ## The published site config: banner, hours, social, links
 
-Staff own the announcement banner, the opening hours, the social links and the
-per-card Square links (TMV-Members, Settings -> Banner, hours & social and
+Staff own the announcement banner, the opening hours, the social links, the
+gym's address, phone and email, and the per-card Square links (TMV-Members, Settings -> Banner, hours & social and
 Booking & buy links). TMV-Members republishes them on every save to a static
 object, and **`src/data/site-config.ts` reads it once per build**: the ONLY
 fetch. `square-links.ts` takes `links` from it; `PromoBanner.astro` takes the
 banner, the About page/footer/mobile sheets take the hours and socials, the
-header pill and the LocalBusiness JSON-LD take the hours. **Do not type a banner,
-an hours table or a social URL anywhere in this repo.** That would be a second
+header pill and the LocalBusiness JSON-LD take the hours, and every address, phone
+and email line takes `contact` (`src/lib/contact-view.js` over `gym-contact.js`, a
+copy of TMV-Members `foundation/gym-contact.js`). **Do not type a banner, an hours
+table, a social URL, an address, a phone number or an email anywhere in this repo.** That would be a second
 copy that staff edits no longer reach.
 
 - **Empty renders nothing**: no banner strip, no Hours card, no pill, no social
@@ -67,7 +69,8 @@ copy that staff edits no longer reach.
   and a seasonal card that is offered or not (`isLinkSet`) stay build-time.
 - **Hooks, not copies**: every live-updatable element carries a `data-*` hook
   (`data-promo`, `data-hours-card|list|summary|stat`, `data-status`,
-  `data-social`, `data-socials-wrap`) and is always in the markup, `hidden`
+  `data-social`, `data-socials-wrap`, `data-contact`, `data-contact-href`,
+  `data-contact-wrap`) and is always in the markup, `hidden`
   when there is nothing to show (global `[hidden]` wins over any display). A
   Square link slot travels in the href as `#tmv-sq=page.field`, which the build
   (`astro.config.mjs` + `src/lib/sq-slot-marker.js`) moves into `data-sq`. Add a

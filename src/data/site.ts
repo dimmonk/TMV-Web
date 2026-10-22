@@ -38,19 +38,9 @@ export const site = {
   city: 'Toronto',
   description:
     "Toronto's home for parkour, flips and movement. Drop in to open gym, join a group class, send the kids to camp or throw a party — every age, every level.",
-  address: {
-    street: '75 Carl Hall Rd, Unit 15',
-    locality: 'Toronto',
-    region: 'ON',
-    postalCode: 'M3K 2B9',
-    country: 'CA',
-    neighbourhood: 'Downsview Park',
-  },
-  phone: '+1-647-350-1111',
-  phoneDisplay: '(647) 350-1111',
-  email: 'info@themonkeyvault.com',
-  geo: { lat: 43.7276, lng: -79.4788 },
-  mapUrl: 'https://maps.google.com/?q=75+Carl+Hall+Rd+Unit+15+Toronto',
+  /** ISO country for the structured data. The address, phone and email are the
+   *  ones staff publish (`contact` in site-config.ts); none of them is typed here. */
+  country: 'CA',
 } as const;
 
 /** Square / external booking + store URLs. */

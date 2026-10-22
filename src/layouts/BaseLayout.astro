@@ -9,7 +9,7 @@ import MobileAppHeader from '../components/MobileAppHeader.astro';
 import MobileMoreSheet from '../components/MobileMoreSheet.astro';
 import PromoBanner from '../components/PromoBanner.astro';
 import { site, links, url } from '../data/site';
-import { hours, social } from '../data/site-config';
+import { hours, social, contact } from '../data/site-config';
 import { openingHoursSpec } from '../lib/opening-hours.js';
 import { jsonForScript } from '../lib/json-for-script.js';
 
@@ -43,9 +43,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const image = new URL(ogImage ?? url('assets/tmvlogo.png'), Astro.site).href;
 
 // LocalBusiness structured data — powers Google's business panel (hours, map,
-// rating, socials). Built from the single-source-of-truth `site` data.
+// socials). The contact, hours and socials are the ones staff publish
+// (site-config); a part left unset is left out, never written empty.
 const hoursSpec = openingHoursSpec(hours);
 const sameAs = Object.values(social).filter(Boolean);
+const postalAddress = Object.fromEntries(Object.entries({
+  '@type': 'PostalAddress',
+  streetAddress: contact.address.street,
+  addressLocality: contact.address.city,
+  addressRegion: contact.address.region,
+  postalCode: contact.address.postalCode,
+  addressCountry: site.country,
+}).filter(([, v]) => v));
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SportsActivityLocation',
@@ -53,23 +62,15 @@ const jsonLd = {
   legalName: site.legalName,
   description: site.description,
   url: new URL(Astro.site!).href,
-  telephone: site.phone,
-  email: site.email,
+  ...(contact.phone ? { telephone: contact.phone } : {}),
+  ...(contact.email ? { email: contact.email } : {}),
   image,
   logo: image,
   priceRange: '$$',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: site.address.street,
-    addressLocality: site.address.locality,
-    addressRegion: site.address.region,
-    postalCode: site.address.postalCode,
-    addressCountry: site.address.country,
-  },
-  geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng },
+  ...(contact.line ? { address: postalAddress } : {}),
   ...(hoursSpec.length > 0 ? { openingHoursSpecification: hoursSpec } : {}),
   ...(sameAs.length > 0 ? { sameAs } : {}),
-  hasMap: site.mapUrl,
+  ...(contact.href.directions ? { hasMap: contact.href.directions } : {}),
   potentialAction: {
     '@type': 'ReserveAction',
     target: links.booking,

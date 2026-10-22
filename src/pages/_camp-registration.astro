@@ -24,6 +24,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import MobileHero from '../components/MobileHero.astro';
 import { seo, cat } from '../data/site';
+import { contact } from '../data/site-config';
 import '../styles/camp-reg-form.css';
 ---
 <BaseLayout
@@ -47,7 +48,7 @@ import '../styles/camp-reg-form.css';
     </div>
   </section>
 
-  <div id="reg-root" class="reg-root" style="background:#f5f4f1;"></div>
+  <div id="reg-root" class="reg-root" style="background:#f5f4f1;" data-address={contact.line}></div>
 
   <script>
     import { mountCampRegForm } from '../lib/camp-reg-form';
@@ -59,7 +60,7 @@ import '../styles/camp-reg-form.css';
       mountCampRegForm(root, {
         waiverUrl: links.waiver,
         bookingUrl: links.booking,
-        address: `${site.name} · ${site.address.street}, ${site.address.locality} (Downsview Park)`,
+        address: [site.name, root.dataset.address].filter(Boolean).join(' · '),
         showHero: false,
       });
     });

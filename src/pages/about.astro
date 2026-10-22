@@ -4,7 +4,7 @@ import AboutScreen from '../components/mobile/AboutScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { seo, site, links, url } from '../data/site';
-import { hours, social } from '../data/site-config';
+import { hours, social, contact } from '../data/site-config';
 import { hoursHeading } from '../lib/opening-hours.js';
 import { hasSocial } from '../lib/published-config.js';
 import { facility } from '../data/facility';
@@ -45,13 +45,13 @@ const anySocial = hasSocial(social);
         <h1 class="hero2-title">Come see<br>the space.</h1>
         <p class="hero2-lead">The Monkey Vault is Toronto's parkour and movement training centre. Our community is built around open gym — a place for dancers, athletes, fitness enthusiasts and anyone who just wants to jump around and have fun.</p>
         <div class="hero2-actions">
-          <a href={site.mapUrl} target="_blank" rel="noopener" class="btn btn-primary">Get directions <i class="bi bi-geo-alt" aria-hidden="true"></i></a>
+          <a href={contact.href.directions || undefined} data-contact-href="directions" hidden={!contact.href.directions} target="_blank" rel="noopener" class="btn btn-primary">Get directions <i class="bi bi-geo-alt" aria-hidden="true"></i></a>
           <a href="#visit" class="btn btn-ghost-light">Hours &amp; contact</a>
         </div>
       </div>
       <div class="hero2-media">
         <div class="about-hero-photo" style={`background-image:url('${photos[0].src}')`} role="img" aria-label={photos[0].alt}></div>
-        <div class="hero2-badge">75 Carl Hall Rd<br>Downsview Park</div>
+        <div class="hero2-badge" data-contact-wrap="address" hidden={!contact.street}><span data-contact="street">{contact.street}</span><br>Downsview Park</div>
       </div>
     </div>
   </section>
@@ -62,10 +62,10 @@ const anySocial = hasSocial(social);
     <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Hours & directions" title="Find us in Downsview Park" /></div>
     <div class="ab-visit">
       <div class="ab-contact">
-        <div class="ab-crow"><span class="ab-cic"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></span><div><div class="ab-clabel">Location</div><div class="ab-cval">{site.legalName}<br>{site.address.street}<br>{site.address.locality}, Ontario {site.address.postalCode}</div></div></div>
-        <div class="ab-crow"><span class="ab-cic"><i class="bi bi-telephone-fill" aria-hidden="true"></i></span><div><div class="ab-clabel">Get in touch</div><div class="ab-cval"><a href={`tel:${site.phone}`}>{site.phoneDisplay}</a><br><a href={`mailto:${site.email}`}>{site.email}</a></div></div></div>
+        <div class="ab-crow" data-contact-wrap="address" hidden={!contact.line}><span class="ab-cic"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></span><div><div class="ab-clabel">Location</div><div class="ab-cval">{site.legalName}<br><span data-contact="street" hidden={!contact.street}>{contact.street}</span><br><span data-contact="locality" hidden={!contact.locality}>{contact.locality}</span></div></div></div>
+        <div class="ab-crow"><span class="ab-cic"><i class="bi bi-telephone-fill" aria-hidden="true"></i></span><div><div class="ab-clabel">Get in touch</div><div class="ab-cval"><a href={contact.href.phone || undefined} data-contact="phone" hidden={!contact.phone}>{contact.phone}</a><br><a href={contact.href.email || undefined} data-contact="email" hidden={!contact.email}>{contact.email}</a></div></div></div>
         <div class="ab-crow"><span class="ab-cic"><i class="bi bi-shield-check" aria-hidden="true"></i></span><div><div class="ab-clabel">Before your first visit</div><div class="ab-cval">Everyone needs a signed waiver. <a href={links.waiver} target="_blank" rel="noopener" class="ab-waiver">Sign it online →</a></div></div></div>
-        <a href={site.mapUrl} target="_blank" rel="noopener" class="btn btn-primary" style="align-self:flex-start">Get directions <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+        <a href={contact.href.directions || undefined} data-contact-href="directions" hidden={!contact.href.directions} target="_blank" rel="noopener" class="btn btn-primary" style="align-self:flex-start">Get directions <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
       </div>
       <div class="ab-hours" data-hours-card hidden={hours.length === 0}>
         <div class="ab-hlabel">Hours</div>

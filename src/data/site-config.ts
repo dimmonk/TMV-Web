@@ -15,7 +15,7 @@
  * FALLBACK, one behaviour for all of it: when the fetch fails (or the object is
  * not an object) the build warns and carries on with nothing published. Links
  * fall back to the generic booking/store pages (`square-links.ts`); the banner,
- * the hours and the socials simply do not render. Empty means nothing is shown,
+ * the hours, the socials and the contact simply do not render. Empty means nothing is shown,
  * never an empty section.
  *
  * The build is the first paint (no-JS, SEO, structured data). On page load the
@@ -26,6 +26,7 @@
 import { readPublishedConfig, fetchPublishedConfig, PUBLISHED_CONFIG_URL, type PublishedConfig } from '../lib/published-config.js';
 import { gymNow } from '../lib/gym-clock.js';
 import { promoIsShown } from '../lib/site-promo.js';
+import { contactView } from '../lib/contact-view.js';
 
 /** Tests point the build at a fixture server; production never sets it. */
 const CONFIG_URL = process.env.TMV_SITE_CONFIG_URL || PUBLISHED_CONFIG_URL;
@@ -57,3 +58,10 @@ export const social = published.social;
 
 /** The announcement banner when it should show now, else null (off, no headline, or expired). */
 export const promo = promoIsShown(published.promo, gymNow().wall) ? published.promo : null;
+
+/**
+ * The gym's address, phone and email as the page shows them (text and links);
+ * '' where staff left a part unset, and that part renders nothing. The browser
+ * re-applies it through the `data-contact*` hooks.
+ */
+export const contact = contactView(published.contact);

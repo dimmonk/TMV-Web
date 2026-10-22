@@ -1,6 +1,6 @@
 ---
 import { site, links, url } from '../data/site';
-import { hours, social } from '../data/site-config';
+import { hours, social, contact } from '../data/site-config';
 import { hoursSummary } from '../lib/opening-hours.js';
 import { hasSocial } from '../lib/published-config.js';
 import { exploreTiles } from '../data/explore';
@@ -26,8 +26,8 @@ const columns = [
   {
     title: 'Visit',
     items: [
-      { text: site.address.street, static: true },
-      { text: `${site.address.locality}, ${site.address.region}`, static: true },
+      { text: contact.street, static: true, contact: 'street' },
+      { text: contact.locality, static: true, contact: 'locality' },
       { text: hoursLine, static: true, hours: true },
       { text: 'New here? Get started', href: url('get-started'), accent: true },
     ],
@@ -75,7 +75,7 @@ const anySocial = hasSocial(social);
             l.static
               ? (l.hours
                 ? <span class="sf-text" data-hours-summary hidden={!l.text}>{l.text}</span>
-                : <span class="sf-text">{l.text}</span>)
+                : <span class="sf-text" data-contact={l.contact} hidden={!l.text}>{l.text}</span>)
               : <a href={l.href} class:list={['sf-link', { accent: l.accent }]} {...(l.ext ? { target: '_blank', rel: 'noopener' } : {})}>{l.text}</a>
           ))}
         </div>
