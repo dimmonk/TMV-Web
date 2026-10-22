@@ -20,7 +20,6 @@ import {
   PRICE_LIST_PALETTE,
   PRICE_LIST_SECTIONS,
   PRICE_LIST_COLUMNS,
-  PRICE_LIST_WEB_ORDER,
   PRICE_LIST_FOOTNOTES,
   formatPrice,
   formatEffective,
@@ -400,9 +399,9 @@ function buildIndexPage({ priceList, bwMode, titleSize, effective, aboutOverride
 }
 
 // ─────────────────────── Web variant ───────────────────────
-// The website's look for the same list: one card per section in reading order, the "about" lines always
-// visible (a screen has the room a printed sheet does not), and each card ending in its one action. It
-// carries no colors: the page styles it through `data-section`, so the website's category colors apply.
+// The printed sheet's layout in the website's look: the same columns, cards, groups and tight rows, with the
+// "about" lines behind ⓘ as on the sheet. It carries no colors: the page styles it through `data-section`,
+// so the website's category colors and fonts apply. Each card ends with its one action (opts.actions).
 
 function webPrice(value, suffix, cls) {
   const cluster = el('span', { className: 'pw-price' });
@@ -431,8 +430,23 @@ function buildWebItems(items, priceList) {
 
 function buildWebCard(section, priceList, about, action) {
   const card = el('article', { className: 'pw-card', attrs: { id: `price-${section.id}`, 'data-section': section.id } });
-  card.appendChild(el('h3', { className: 'pw-title' }, [el('span', { className: 'pw-dot', attrs: { 'aria-hidden': 'true' } }), section.title]));
-  if (about.length > 0) card.appendChild(el('ul', { className: 'pw-about' }, about.map((line) => el('li', { text: line }))));
+  const head = el('div', { className: 'pw-head' }, [el('h3', { className: 'pw-title', text: section.title })]);
+  card.appendChild(head);
+  if (about.length > 0) {
+    const toggle = el('button', {
+      className: 'pw-info',
+      attrs: { type: 'button', 'aria-label': `About ${section.title}`, 'aria-expanded': 'false' },
+    }, [el('i', { className: 'bi bi-info-circle', attrs: { 'aria-hidden': 'true' } })]);
+    head.appendChild(toggle);
+    const collapse = el('div', { className: 'pw-about-collapse' }, [
+      el('ul', { className: 'pw-about' }, about.map((line) => el('li', { text: line }))),
+    ]);
+    card.appendChild(collapse);
+    toggle.addEventListener('click', () => {
+      const open = collapse.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
   const groups = section.groups || (section.items ? [{ label: '', items: section.items }] : []);
   for (const g of groups) {
     card.appendChild(el('div', { className: 'pw-group' }, [
@@ -451,16 +465,19 @@ function buildWebCard(section, priceList, about, action) {
 
 function buildWebPage({ priceList, effective, aboutOverrides, openingHours, actions }) {
   const page = el('div', { className: 'pl-page pl-web' });
+  page.appendChild(el('div', { className: 'pw-meta' }, [
+    effective ? el('span', { text: `Last edited ${effective}` }) : el('span'),
+    el('span', {}, ['Tap ', el('i', { className: 'bi bi-info-circle', attrs: { 'aria-hidden': 'true' } }), ' for details']),
+  ]));
   const grid = el('div', { className: 'pw-grid' });
-  for (const id of PRICE_LIST_WEB_ORDER) {
-    const section = PRICE_LIST_SECTIONS.find((s) => s.id === id);
-    if (!section) continue;
-    grid.appendChild(buildWebCard(section, priceList, resolveAbout(section, aboutOverrides, openingHours), actions?.[id]));
+  for (const colIds of PRICE_LIST_COLUMNS) {
+    grid.appendChild(el('div', { className: 'pw-col' }, colIds
+      .map((id) => PRICE_LIST_SECTIONS.find((s) => s.id === id))
+      .filter(Boolean)
+      .map((section) => buildWebCard(section, priceList, resolveAbout(section, aboutOverrides, openingHours), actions?.[section.id]))));
   }
   page.appendChild(grid);
-  const foot = el('footer', { className: 'pw-foot' }, PRICE_LIST_FOOTNOTES.map((f) => el('span', { text: f })));
-  if (effective) foot.appendChild(el('span', { text: `Last edited ${effective}` }));
-  page.appendChild(foot);
+  page.appendChild(el('footer', { className: 'pw-foot' }, PRICE_LIST_FOOTNOTES.map((f) => el('span', { text: f }))));
   return page;
 }
 
