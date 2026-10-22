@@ -191,7 +191,9 @@ projection plus two kinds of exception staff set in Members: a one-date class ca
 fetched in the browser through `live-site-config.ts` `publishedSiteConfig`). A closed day wins over a cancel. Open Gym
 is the published opening hours, one block per open day (`openGymSessions`), with Friday from 10pm split off as
 adults only (`ADULTS_ONLY_LATE`, a house rule that stays in code by Steven's Members scope, like the late-arrival minutes). The
-"Schedule changes" card lists every exception through the last visible week; none means no card.
+"Schedule changes" card lists every exception through the last visible week; none means no card. The home page shows the
+same card (`ScheduleChanges.astro` + `schedule-changes.js`, styles `schedule-changes.css`), hidden while there is
+nothing to list; a date there opens `/schedule?date=` on that week.
 
 The reader (`public-projections.js`, a verbatim Members copy) takes `schedule.json` v1 and v2; a v2 class's
 `isEnding`/`isEndingSetAt` is read back into `isCancelled`/`isCancelledSetAt`, the names every reader still uses.

@@ -35,7 +35,8 @@ export function mountMobileSchedule({ siteConfig }: { siteConfig: () => Promise<
   let hours: SiteConfig['hours'] = [];
   let schedErr = false;
   let schedFilter = 'all';
-  let schedWeek = 0;
+  // A link's ?date= (a Schedule changes date on another page) opens that date's week.
+  let schedWeek = Math.max(0, weekIndexOf(weeks, new URLSearchParams(window.location.search).get('date') || ''));
 
   const escapeHtml = (s: string) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
 

@@ -7,6 +7,7 @@ import VisitSummary from '../components/VisitSummary.astro';
 import HomeScreen from '../components/mobile/HomeScreen.astro';
 import GoalPicker from '../components/GoalPicker.astro';
 import Reviews from '../components/Reviews.astro';
+import ScheduleChanges from '../components/ScheduleChanges.astro';
 import { seo, cat, url } from '../data/site';
 import { contact } from '../data/site-config';
 import { heroStats } from '../data/hero-stats';
@@ -81,6 +82,9 @@ const camps = [
       </div>
     </div>
   </section>
+
+  <!-- SCHEDULE CHANGES: staff's cancelled dates and closed days, shown only while there are any -->
+  <div class="container home-changes"><ScheduleChanges /></div>
 
   <!-- GOAL PICKER — ASK → RECOMMEND → REASON → INVITE (see data/goals.ts) -->
   <section id="start" class="section container goalsec">
@@ -172,6 +176,9 @@ const camps = [
   .bookstrip-inner > i { font-size: 20px; color: var(--brand); }
   .bookstrip-inner span { font: 600 14px/1.6 var(--font-body); color: rgba(255,255,255,.7); }
   .bookstrip-inner a { margin-left: auto; font: 800 13px/1 var(--font-display); text-transform: uppercase; letter-spacing: .04em; color: var(--brand); text-decoration: none; display: inline-flex; align-items: center; gap: 7px; }
+
+  /* SCHEDULE CHANGES (the card lives in ScheduleChanges.astro) */
+  .home-changes { --sched-changes-pad: 36px 0 0; }
 
   /* GOAL PICKER (the picker itself lives in GoalPicker.astro) */
   .goalsec { scroll-margin-top: 80px; padding-block: 52px 40px; }
