@@ -1,4 +1,5 @@
 ---
+import Priced from './Priced.astro';
 /**
  * Shared Events-page party card, rendered from the `partyCards` data.
  *
@@ -76,11 +77,11 @@ const ghostBtn = dark ? 'btn-ghost-light' : 'btn-ghost';
     <div class="pc-foot">
       <div class="pc-price">
         <div>
-          <div class="pc-big">{card.price}</div>
+          <div class="pc-big"><Priced text={card.price} /></div>
           <div class="pc-sub">{card.priceSub}</div>
         </div>
         {card.priceExtra && (
-          <div class="pc-extra">{card.priceExtra.map((l) => <div>{l}</div>)}</div>
+          <div class="pc-extra">{card.priceExtra.map((l) => <div><Priced text={l} /></div>)}</div>
         )}
       </div>
       <div class="pc-actions">

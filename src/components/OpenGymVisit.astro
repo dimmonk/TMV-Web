@@ -1,4 +1,5 @@
 ---
+import Priced from './Priced.astro';
 /**
  * What an open gym visit is, on one card, plus the gym's hours.
  * The hours are the ones staff publish (site config), behind the same hooks as the Visit Us hours card
@@ -11,7 +12,7 @@ import { hours } from '../data/site-config';
 import { hoursHeading } from '../lib/opening-hours.js';
 
 const facts = [
-  { label: 'Cost', value: '$25 per person for the day, tax included' },
+  { label: 'Cost', value: '{openGym1x} per person for the day, tax included' },
   { label: 'Booking', value: 'None. Come any time we are open' },
   { label: 'Time limit', value: 'None. Stay until close' },
   { label: 'Under 7?', value: 'An adult stays with them and moves for free' },
@@ -25,7 +26,7 @@ const facts = [
       <span class="ogv-tag">No booking needed</span>
       <h2 class="ogv-title">Your day at the gym</h2>
       <dl class="ogv-facts">
-        {facts.map((f) => <div class="ogv-fact"><dt>{f.label}</dt><dd>{f.value}</dd></div>)}
+        {facts.map((f) => <div class="ogv-fact"><dt>{f.label}</dt><dd><Priced text={f.value} /></dd></div>)}
       </dl>
       <div class="ogv-actions">
         <a class="btn btn-primary" href={sq.store.dayPasses} target="_blank" rel="noopener">Get a day pass <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>

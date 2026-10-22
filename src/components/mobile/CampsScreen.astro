@@ -11,6 +11,7 @@ import Faq from '../Faq.astro';
 import { campFaqs } from '../../data/camp-faqs';
 import { hasCampDates } from '../../data/camp-dates';
 import { cat, url } from '../../data/site';
+import { contact } from '../../data/site-config';
 import { camps, campDaySchedule } from '../../data/camps';
 import { forSurface } from '../../data/surface';
 
@@ -21,7 +22,8 @@ const facts = [
   { icon: 'bi-bag', title: 'Bring', sub: 'Indoor shoes, water, lunch, snacks' },
   { icon: 'bi-shield-check', title: 'Waiver', sub: 'New campers sign online first' },
   { icon: 'bi-exclamation-triangle', title: 'Allergies', sub: 'Nut-free — tell us about any' },
-  { icon: 'bi-geo-alt', title: 'Location', sub: '75 Carl Hall Rd · Downsview Park' },
+  // The street is the published one (`contact`), shown before `sub`.
+  { icon: 'bi-geo-alt', title: 'Location', street: true, sub: ' · Downsview Park' },
 ];
 ---
 <MobileHero eyebrow="Camps" title="Parkour camps, packed with fun" desc="A full day of skill-building, flips, games and friends — all levels, always a big focus on fun." stats={[{ v: '9–2', l: 'daily' }, { v: 'Ages 5–16', l: 'all levels' }, { v: 'til 4 PM', l: 'late pickup' }]} />
@@ -52,9 +54,9 @@ const facts = [
   <p class="m-sub" style="margin-bottom:14px">The essentials before you book.</p>
   <div class="m-tiles">
     {facts.map((f) => (
-      <div class="tile m-tile" style="cursor:default">
+      <div class="tile m-tile" style="cursor:default" {...(f.street ? { 'data-contact-wrap': 'address', hidden: !contact.street } : {})}>
         <span class="m-tile-ic" style={`background:color-mix(in srgb,${cat.camps} 16%,#fff)`}><i class={`bi ${f.icon}`} style={`color:${cat.camps}`} aria-hidden="true"></i></span>
-        <div><div class="m-tile-t">{f.title}</div><div class="m-tile-s">{f.sub}</div></div>
+        <div><div class="m-tile-t">{f.title}</div><div class="m-tile-s">{f.street && <span data-contact="street">{contact.street}</span>}{f.sub}</div></div>
       </div>
     ))}
   </div>

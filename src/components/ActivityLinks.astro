@@ -1,4 +1,5 @@
 ---
+import Priced from './Priced.astro';
 /**
  * The four things a family comes for, as one row of cards.
  * Replaces the three flip cards on Home: everything a parent needs is on the face, nothing hides behind a flip.
@@ -8,10 +9,10 @@ import { url, cat } from '../data/site';
 import { isVideoAsset } from '../lib/class-media';
 
 const items = [
-  { title: 'Classes', description: 'Coached parkour, flips & movement.', detail: 'Ages 3+ · kids, teens & adults', price: 'From $30 / class', href: url('train'), color: cat.classes, image: 'assets/recreational.gif', action: 'Find your class' },
-  { title: 'Open Gym', description: 'Come play or train at your own pace.', detail: 'All ages · no booking needed', price: '$25 / day', href: url('open-gym'), color: cat.openGym, image: 'assets/gym-01.jpg', action: 'Plan a visit' },
-  { title: 'Camps', description: 'Skills, games & friends on days off.', detail: 'Ages 5 to 16 · 9 AM–2 PM', price: '$90 / day · $350 / week', href: url('camps'), color: cat.camps, image: 'assets/camp-weekly.png', action: 'See dates' },
-  { title: 'Birthday Parties', description: 'Coached fun for the birthday crew.', detail: 'Full party ages 5+ · mini ages 8+', price: 'Full party from $350', href: url('events'), color: cat.parties, image: 'assets/invite-default-photo.png', action: 'Plan a party' },
+  { title: 'Classes', description: 'Coached parkour, flips & movement.', detail: 'Ages 3+ · kids, teens & adults', price: 'From {groupClass1x} / class', href: url('train'), color: cat.classes, image: 'assets/recreational.gif', action: 'Find your class' },
+  { title: 'Open Gym', description: 'Come play or train at your own pace.', detail: 'All ages · no booking needed', price: '{openGym1x} / day', href: url('open-gym'), color: cat.openGym, image: 'assets/gym-01.jpg', action: 'Plan a visit' },
+  { title: 'Camps', description: 'Skills, games & friends on days off.', detail: 'Ages 5 to 16 · 9 AM–2 PM', price: '{campDaily} / day · {campWeekly} / week', href: url('camps'), color: cat.camps, image: 'assets/camp-weekly.png', action: 'See dates' },
+  { title: 'Birthday Parties', description: 'Coached fun for the birthday crew.', detail: 'Full party ages 5+ · mini ages 8+', price: 'Full party from {partyBase}', href: url('events'), color: cat.parties, image: 'assets/invite-default-photo.png', action: 'Plan a party' },
 ];
 ---
 <div class="activities">
@@ -24,7 +25,7 @@ const items = [
         <h3>{item.title}</h3>
         <p>{item.description}</p>
         <span class="activity-detail">{item.detail}</span>
-        <strong>{item.price}</strong>
+        <strong><Priced text={item.price} /></strong>
         <span class="activity-action">{item.action}<i class="bi bi-arrow-right" aria-hidden="true"></i></span>
       </div>
     </a>

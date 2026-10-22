@@ -1,4 +1,5 @@
 ---
+import Priced from '../Priced.astro';
 /**
  * Train — the phone composition, verbatim from the /m/ app's `train` screen.
  * See HomeScreen for how the mobile/desktop compositions are switched.
@@ -38,7 +39,7 @@ const classHref = (c: ClassItem): string =>
     </>
   )}
 
-  {/* Desktop's Class Membership block — a $180 unlimited offer that covers
+  {/* Desktop's Class Membership block — an unlimited offer that covers
       every class on this screen. Was missing from mobile entirely, so the
       phone showed the classes with no way to learn they can be bought as one
       pass. Uses the same m-gcard/m-gfoot2 pattern Groups uses. */}
@@ -49,7 +50,7 @@ const classHref = (c: ClassItem): string =>
     </div>
     <p class="m-gdesc">Unlocks every recreational and specialized class above, plus unlimited open gym. No per-class fees, no reservations. Private lessons, the Athletic Program and partner classes are billed separately.</p>
     <div class="m-gfoot2">
-      <div><div class="m-gbig">$180</div><div class="m-gsub">30 days · unlimited</div></div>
+      <div><div class="m-gbig"><Priced text="{classMembership30}" /></div><div class="m-gsub">30 days · unlimited</div></div>
       <a href={`${url('store')}#classes`} class="m-darkbtn-sm">Get it <i class="bi bi-arrow-right"></i></a>
     </div>
   </div>

@@ -34,14 +34,16 @@ repository, so `public/version.json` carries only those three values.
 
 ## The published site config: banner, hours, social, links
 
-Staff own the announcement banner, the opening hours, the social links and the
-per-card Square links (TMV-Members, Settings -> Banner, hours & social and
+Staff own the announcement banner, the opening hours, the social links, the
+gym's address, phone and email, and the per-card Square links (TMV-Members, Settings -> Banner, hours & social and
 Booking & buy links). TMV-Members republishes them on every save to a static
 object, and **`src/data/site-config.ts` reads it once per build**: the ONLY
 fetch. `square-links.ts` takes `links` from it; `PromoBanner.astro` takes the
 banner, the About page/footer/mobile sheets take the hours and socials, the
-header pill and the LocalBusiness JSON-LD take the hours. **Do not type a banner,
-an hours table or a social URL anywhere in this repo.** That would be a second
+header pill and the LocalBusiness JSON-LD take the hours, and every address, phone
+and email line takes `contact` (`src/lib/contact-view.js` over `gym-contact.js`, a
+copy of TMV-Members `foundation/gym-contact.js`). **Do not type a banner, an hours
+table, a social URL, an address, a phone number or an email anywhere in this repo.** That would be a second
 copy that staff edits no longer reach.
 
 - **Empty renders nothing**: no banner strip, no Hours card, no pill, no social
@@ -67,7 +69,8 @@ copy that staff edits no longer reach.
   and a seasonal card that is offered or not (`isLinkSet`) stay build-time.
 - **Hooks, not copies**: every live-updatable element carries a `data-*` hook
   (`data-promo`, `data-hours-card|list|summary|stat`, `data-status`,
-  `data-social`, `data-socials-wrap`) and is always in the markup, `hidden`
+  `data-social`, `data-socials-wrap`, `data-contact`, `data-contact-href`,
+  `data-contact-wrap`) and is always in the markup, `hidden`
   when there is nothing to show (global `[hidden]` wins over any display). A
   Square link slot travels in the href as `#tmv-sq=page.field`, which the build
   (`astro.config.mjs` + `src/lib/sq-slot-marker.js`) moves into `data-sq`. Add a
@@ -196,6 +199,16 @@ and changes card. Styles: `src/styles/schedule-web.css`. The printed sheet modul
 `schedule-embed-sheet.js`) are verbatim Members copies (`tmv-web-lib-mirror.test.js` in TMV-Members): never edit them
 here alone; the website only borrows their time formatting, filters and description renderer. Tests:
 `tests/schedule-weeks.test.mjs`.
+
+## Card prices: named, never typed
+
+No price is typed in this repo. Card copy names a price by its Members price-list key in braces
+(`'From {openGym1x}'`, `src/lib/price-text.js`); `<Priced text=...>` fills it from the build's price list
+(`src/data/prices.ts`, the one read per build) and tags it `data-price-text`, and on page load
+`src/lib/live-prices.ts` re-reads `price-list.json` and re-fills every line (`apply-prices.js`). A line that
+names a price the list lacks renders nothing. Render any field that may carry a price through `<Priced>`.
+The render test fails on a typed `$` amount in a built page, except the few the locked scope keeps in code
+(group event tiers and early access until Members publishes them, the camp transaction fee, a partner's rates).
 
 ## The price list: one renderer, a web skin
 

@@ -1,4 +1,5 @@
 ---
+import Priced from '../components/Priced.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CampsScreen from '../components/mobile/CampsScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
@@ -9,16 +10,18 @@ import Faq from '../components/Faq.astro';
 import { campFaqs } from '../data/camp-faqs';
 import { hasCampDates } from '../data/camp-dates';
 import { seo, links, cat, url } from '../data/site';
+import { contact } from '../data/site-config';
 import { camps, campDaySchedule } from '../data/camps';
 import { forSurface } from '../data/surface';
 const schedule = campDaySchedule;
 const facts = [
-  { icon: 'bi-clock', title: 'Hours', body: 'Arrival from 8:45 AM, camp runs 9 AM–2 PM. Late pickup to 4 PM — $20 for one day or $75 for five days.' },
+  { icon: 'bi-clock', title: 'Hours', body: 'Arrival from 8:45 AM, camp runs 9 AM–2 PM. Late pickup to 4 PM — {latePickupPerDay} for one day or {latePickupBulk} for five days.' },
   { icon: 'bi-person-badge', title: 'Ages', body: '5 to 16, all levels.' },
   { icon: 'bi-bag', title: 'What to bring', body: 'Clean indoor shoes, a labelled water bottle, lunch and snacks, and comfortable clothes.' },
   { icon: 'bi-shield-check', title: 'Waiver', body: 'Every new participant needs a completed waiver before their first day. Do it online to save time.' },
   { icon: 'bi-exclamation-triangle', title: 'Allergies', body: 'A nut-free environment — please pack nut-free, and let us know about any allergies.' },
-  { icon: 'bi-geo-alt', title: 'Location', body: 'The Monkey Vault, 75 Carl Hall Rd, Unit 15 — in Downsview Park.' },
+  // The street is the published one (`contact`), shown before `body`.
+  { icon: 'bi-geo-alt', title: 'Location', street: true, body: ' — in Downsview Park.' },
 ];
 ---
 <BaseLayout title={seo.camps.title} description={seo.camps.description} active="camps" mobileTab="more" appHeader="back" appTitle="Camps">
@@ -65,7 +68,7 @@ const facts = [
                 <h3 class="camptitle">{c.title}</h3>
                 <p class="campdesc">{c.desc}</p>
                 <div class="camphint"><i class="bi bi-arrow-repeat" aria-hidden="true"></i> Tap for full details</div>
-                <div class="campfoot"><span class="campprice">{c.price}</span><a href={c.href} target={c.href.startsWith('#') ? undefined : '_blank'} rel={c.href.startsWith('#') ? undefined : 'noopener'} class="campresv">{c.cta} <i class="bi bi-arrow-right" aria-hidden="true"></i></a></div>
+                <div class="campfoot"><span class="campprice"><Priced text={c.price} /></span><a href={c.href} target={c.href.startsWith('#') ? undefined : '_blank'} rel={c.href.startsWith('#') ? undefined : 'noopener'} class="campresv">{c.cta} <i class="bi bi-arrow-right" aria-hidden="true"></i></a></div>
               </div>
             </div>
             <div class="campface campback">
@@ -98,9 +101,9 @@ const facts = [
       </div>
       <div class="know-right">
         <div class="know-facts">{facts.map((f) => (
-          <div>
+          <div {...(f.street ? { 'data-contact-wrap': 'address', hidden: !contact.street } : {})}>
             <div class="know-facthead"><span class="know-factic"><i class={`bi ${f.icon}`} aria-hidden="true"></i></span><div class="know-facttitle">{f.title}</div></div>
-            <p class="know-factbody">{f.body}</p>
+            <p class="know-factbody">{f.street && <span data-contact="street">{contact.street}</span>}<Priced text={f.body} /></p>
           </div>
         ))}</div>
         <div class="know-actions">

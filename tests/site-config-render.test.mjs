@@ -19,6 +19,7 @@ import { transformSync } from 'rolldown/utils';
 import { readPublishedConfig } from '../src/lib/published-config.js';
 import { applyPublishedConfig } from '../src/lib/apply-site-config.js';
 import { gymNow } from '../src/lib/gym-clock.js';
+import { applyPrices } from '../src/lib/apply-prices.js';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const BLANK_PROMO = { active: false, headline: '', body: '', ctaLabel: '', ctaUrl: '', expiresAt: '' };
@@ -26,6 +27,7 @@ const WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
   .map((day) => ({ day, time: day === 'Saturday' || day === 'Sunday' ? '10:00 AM – 6:00 PM' : '11:00 AM – 10:00 PM' }));
 const SOCIAL = { instagram: 'https://www.instagram.com/fixture-ig', youtube: 'https://www.youtube.com/@fixture', facebook: 'https://www.facebook.com/fixture-fb' };
 const NO_SOCIAL = { instagram: '', youtube: '', facebook: '' };
+const CONTACT = { address: { street: '1 Fixture Way, Unit 2', city: 'Fixtureville', region: 'ON', postalCode: 'A1A 1A1' }, phone: '(416) 555-0100', email: 'hello@fixture.test' };
 const LIVE_PROMO = { active: true, headline: 'Spring camp is open', body: 'Spots fill fast', ctaLabel: 'Register', ctaUrl: 'https://example.com/camp', expiresAt: '2099-12-31T23:59:59' };
 
 /** The members app's public schedule and price list, as every build reads them (tests/fixtures/projection-redirect.mjs). */
@@ -332,6 +334,62 @@ test('no built page carries an inline script or an inline event handler (the hos
   assert.deepEqual(offenders, []);
 });
 
+test('the published address, phone and email reach every page, and none is typed in the site', async () => {
+  serve({ hours: WEEK, ...CONTACT });
+  const site = await build();
+  const home = site.dom('');
+  const about = site.dom('about');
+  const text = (doc, sel) => [...doc.querySelectorAll(sel)].filter((el) => !el.closest('[hidden]')).map((el) => el.textContent);
+  assert.ok(text(home, '[data-contact="street"]').includes('1 Fixture Way, Unit 2'), 'footer and hero badge');
+  assert.ok(text(home, '[data-contact="locality"]').includes('Fixtureville, ON A1A 1A1'));
+  assert.ok(text(about, '[data-contact="phone"]').includes('(416) 555-0100'));
+  assert.equal(about.querySelector('a[data-contact="phone"]').getAttribute('href'), 'tel:+14165550100');
+  assert.equal(about.querySelector('a[data-contact="email"]').getAttribute('href'), 'mailto:hello@fixture.test');
+  assert.equal(about.querySelector('a[data-contact-href="directions"]').getAttribute('href'), 'https://maps.google.com/?q=1+Fixture+Way%2C+Unit+2%2C+Fixtureville%2C+ON+A1A+1A1');
+  const ld = JSON.parse(home.querySelector('script[type="application/ld+json"]').textContent);
+  assert.equal(ld.telephone, '(416) 555-0100');
+  assert.equal(ld.email, 'hello@fixture.test');
+  assert.deepEqual(ld.address, { '@type': 'PostalAddress', streetAddress: '1 Fixture Way, Unit 2', addressLocality: 'Fixtureville', addressRegion: 'ON', postalCode: 'A1A 1A1', addressCountry: 'CA' });
+  // The gym's real contact is not typed anywhere in the built site.
+  for (const path of ['', 'about', 'camps', 'events', 'book', 'private-lessons', 'train', 'make-invitation']) {
+    assert.doesNotMatch(site.page(path), /Carl Hall|350-1111|info@themonkeyvault/, `${path || 'home'} types no contact`);
+  }
+});
+
+test('no published contact renders no contact line, link or structured contact', async () => {
+  serve({ hours: WEEK });
+  const site = await build();
+  for (const path of ['', 'about', 'events', 'book']) {
+    const doc = site.dom(path);
+    for (const sel of ['[data-contact]', '[data-contact-href]', '[data-contact-wrap]']) assert.ok(!shown(doc, sel), `${path || 'home'}: ${sel} hidden`);
+  }
+  assert.doesNotMatch(site.page(''), /"telephone"|"email"|PostalAddress|"hasMap"/);
+});
+
+test('card prices are the Members price list: filled at build, a missing price hides its line, none is typed', async () => {
+  serve({ hours: WEEK });
+  const site = await build();
+  const store = site.dom('store');
+  const lines = (doc, tpl) => [...doc.querySelectorAll(`[data-price-text="${tpl}"]`)];
+  const classPasses = lines(store, 'From {groupClass1x}');
+  assert.ok(classPasses.length > 0 && classPasses.every((el) => el.textContent === 'From $31' && !el.hidden), 'filled from the fixture list');
+  const dayPasses = lines(store, 'From {openGym1x}');
+  assert.ok(dayPasses.length > 0 && dayPasses.every((el) => el.hidden && el.textContent === ''), 'a price the list lacks shows nothing');
+  // No price is typed in a built page: every amount is a price-list line, or one of the
+  // facts the locked scope keeps in code (group event tiers and early access until Members
+  // publishes them, the camp transaction fee, a partner's own price).
+  const kept = /^\$(300|27\.50|25\.00|22\.50|50|20|100)\b/;
+  for (const path of ['', 'store', 'train', 'camps', 'events', 'groups', 'book', 'private-lessons', 'athletic-program', 'open-gym', 'pricing', 'get-started']) {
+    const doc = site.dom(path);
+    doc.querySelectorAll('script, style, [data-price-text]').forEach((el) => el.remove());
+    // The partner coach's own rates are the partner's, not the gym's price list.
+    const words = doc.body.innerHTML.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ');
+    const typed = (words.replace(/\$30 drop-in · \$100 \/ month/g, '').match(/\$\d+(\.\d+)?/g) ?? []).filter((m) => !kept.test(m));
+    assert.deepEqual(typed, [], `${path || 'home'} types no price`);
+    assert.doesNotMatch(doc.body.textContent, /\{[A-Za-z][A-Za-z0-9]*\}/, `${path || 'home'} shows no raw price key`);
+  }
+});
+
 // ---- the browser's refresh over a built page --------------------------------
 
 test('the refresh updates a changed hours row, adds a row and keeps the build\'s styling hooks', async () => {
@@ -404,4 +462,30 @@ test('the refresh with everything emptied shows nothing', async () => {
   ]) {
     assert.ok(!shown(doc, selector), `${selector} is hidden once nothing is published`);
   }
+});
+
+test('the refresh shows a changed phone, email and address, and hides one that was removed', async () => {
+  serve({ hours: WEEK, ...CONTACT });
+  const about = (await build()).dom('about');
+  refresh(about, { hours: WEEK, ...CONTACT, phone: '647 555 0199', email: 'new@fixture.test' });
+  assert.equal(about.querySelector('a[data-contact="phone"]').textContent, '647 555 0199');
+  assert.equal(about.querySelector('a[data-contact="phone"]').getAttribute('href'), 'tel:+16475550199');
+  assert.equal(about.querySelector('a[data-contact="email"]').getAttribute('href'), 'mailto:new@fixture.test');
+  refresh(about, { hours: WEEK, ...CONTACT, phone: '', email: 'not an email' });
+  assert.ok(!shown(about, '[data-contact="phone"]') && !shown(about, '[data-contact="email"]'));
+  assert.ok(shown(about, '[data-contact="street"]'));
+  refresh(about, { hours: WEEK });
+  assert.ok(!shown(about, '[data-contact-wrap="address"]') && !shown(about, '[data-contact-href="directions"]'));
+});
+
+test('the refresh fills card prices from the live price list, and hides a line whose price went missing', async () => {
+  serve({ hours: WEEK });
+  const store = (await build()).dom('store');
+  applyPrices(store, { groupClass1x: 32, openGym1x: 26 });
+  const first = (tpl) => store.querySelector(`[data-price-text="${tpl}"]`);
+  assert.equal(first('From {groupClass1x}').textContent, 'From $32');
+  assert.equal(first('From {openGym1x}').textContent, 'From $26');
+  assert.equal(first('From {openGym1x}').hidden, false);
+  applyPrices(store, { openGym1x: 26 });
+  assert.equal(first('From {groupClass1x}').hidden, true);
 });

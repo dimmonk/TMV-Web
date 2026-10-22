@@ -8,6 +8,8 @@
  * mobile screen exists. Everything else — copy, media, specs — lives here once.
  */
 
+import { contact } from './site-config';
+
 export type ClassGroup = 'core' | 'partnership';
 
 /** Semantic action target, resolved per surface. */
@@ -36,24 +38,24 @@ export const classes: ClassItem[] = [
     group: 'core', category: 'Parkour', tag: 'Parkour', title: 'Recreational', image: 'assets/recreational.gif',
     description: 'Parkour & acrobatics at your own pace. Drop in at any class time: the coach meets you where you are, no commitment.', bookingTag: 'Drop-in',
     pills: 'All ages | All levels', actionLabel: 'View schedule', link: { screen: 'schedule' },
-    specs: 'Level: All levels || Ages: All ages — Parent & Child (3+) to Adults || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275',
+    specs: 'Level: All levels || Ages: All ages — Parent & Child (3+) to Adults || Booking: Drop-in · no reservation needed || Price: {groupClass1x} single · 10-pack {groupClass10x}',
   },
   {
     group: 'core', category: 'Private', tag: 'Private', title: 'Private Lessons', image: 'assets/private.mp4',
     description: 'Have a specific skill or goal, like a backflip or a handstand? The coach plans the whole hour around it, from your very first visit.', bookingTag: 'By appointment',
     pills: '1-on-1 | All ages', actionLabel: 'See private options', link: { screen: 'private-lessons' },
-    specs: 'Level: All levels · built around you || Ages: Kids ≤17 & Adults 18+ || Booking: By appointment · reserve online || Price: Intro $45 · Kids from $65 · Adults from $85',
+    specs: 'Level: All levels · built around you || Ages: Kids ≤17 & Adults 18+ || Booking: By appointment · reserve online || Price: Intro {introClass1x} · Kids from {privateKid1x} · Adults from {privateAdult1x}',
   },
   {
     group: 'core', category: 'Athletic', tag: 'Athletic', title: 'Athletic Program', image: 'assets/athletic.mp4',
     description: 'Train like an athlete several times a week: structured coaching for strength, speed and skill, with monthly progress check-ins.', bookingTag: 'Membership',
     pills: 'Ages 9+ | 90 min', mediaBadge: 'Serious students only', actionLabel: 'View program', link: { screen: 'athletic-program' },
-    specs: 'Level: Prerequisite required || Ages: 9+ || Schedule: 2 × 90 min / week || Booking: Membership · join any time || Price: $150 / month · $5 class add-on',
+    specs: 'Level: Prerequisite required || Ages: 9+ || Schedule: 2 × 90 min / week || Booking: Membership · join any time || Price: {athleticMembership30} / month · {athleticClassAddon} class add-on',
   },
 
   // ---- Partnership classes (booked directly with the partner coach) ----
   { group: 'partnership', category: 'Partner', tag: 'Partner', title: 'Stick Fighting Toronto', image: 'assets/stickfighting.mp4', description: 'Filipino stick fighting with our partner, coach Peter.', bookingTag: 'Direct with coach', pills: 'Adults (18+) | Saturdays', actionLabel: 'Contact coach', link: { external: 'mailto:coachpeter@stickfightingtoronto.com' }, specs: 'Level: All levels || Ages: Adults (18+) || Schedule: Sat — 10 AM to 12 PM || Booking: Direct with coach Peter || Price: $30 drop-in · $100 / month' },
-  { group: 'partnership', category: 'Partner', tag: 'Partner', title: 'Martial Arts', image: 'assets/martialarts.mp4', description: 'Jiu Jitsu, Wrestling, Boxing & Muay Thai.', bookingTag: 'Direct with coach', pills: 'Ages 16+ | Grappling | Striking', actionLabel: 'Get in touch', link: { external: 'mailto:info@themonkeyvault.com?subject=Martial%20Arts%20classes%20(for%20Ryan)' }, specs: 'Level: All levels · beginner to competitor || Ages: 16+ || Booking: Direct via WhatsApp · ask for Ryan || Disciplines: BJJ · Wrestling · Boxing · Muay Thai' },
+  { group: 'partnership', category: 'Partner', tag: 'Partner', title: 'Martial Arts', image: 'assets/martialarts.mp4', description: 'Jiu Jitsu, Wrestling, Boxing & Muay Thai.', bookingTag: 'Direct with coach', pills: 'Ages 16+ | Grappling | Striking', actionLabel: 'Get in touch', link: { external: contact.href.email && `${contact.href.email}?subject=${encodeURIComponent('Martial Arts classes (for Ryan)')}` }, specs: 'Level: All levels · beginner to competitor || Ages: 16+ || Booking: Direct via WhatsApp · ask for Ryan || Disciplines: BJJ · Wrestling · Boxing · Muay Thai' },
 ];
 
 export const coreClasses = classes.filter((c) => c.group === 'core');

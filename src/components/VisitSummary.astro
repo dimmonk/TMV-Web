@@ -4,8 +4,8 @@
  * The hours line is the one staff publish (site config), behind the same `data-hours-summary` hook the More sheet
  * and footer use, so a staff edit reaches it with no release; with no hours published the row is hidden.
  */
-import { site, url, links } from '../data/site';
-import { hours } from '../data/site-config';
+import { url, links } from '../data/site';
+import { hours, contact } from '../data/site-config';
 import { hoursSummary } from '../lib/opening-hours.js';
 const hoursLine = hoursSummary(hours);
 ---
@@ -13,14 +13,14 @@ const hoursLine = hoursSummary(hours);
   <div>
     <span class="vs-eyebrow">Downsview Park · Toronto</span>
     <h2 class="vs-title">Come find your kind of fun.</h2>
-    <p class="vs-where">{site.address.street}</p>
+    <p class="vs-where" data-contact="street" hidden={!contact.street}>{contact.street}</p>
     <p class="vs-hours" data-hours-wrap hidden={!hoursLine}><span data-hours-summary>{hoursLine}</span></p>
-    <a class="btn btn-primary" href={site.mapUrl} target="_blank" rel="noopener">Get directions <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+    <a class="btn btn-primary" href={contact.href.directions || undefined} data-contact-href="directions" hidden={!contact.href.directions} target="_blank" rel="noopener">Get directions <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
   </div>
   <div class="vs-links">
     <a href={url('get-started')}>Your first visit <span>What to bring &amp; what to expect →</span></a>
     <a href={links.waiver} target="_blank" rel="noopener">Sign the waiver <span>A parent or guardian signs for under-18s ↗</span></a>
-    <a href={`tel:${site.phone}`}>Have a question? <span>{site.phoneDisplay} →</span></a>
+    <a href={contact.href.phone || undefined} data-contact-href="phone" hidden={!contact.href.phone}>Have a question? <span><span data-contact="phone">{contact.phone}</span> →</span></a>
   </div>
 </div>
 <style>

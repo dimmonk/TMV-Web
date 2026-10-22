@@ -15,6 +15,9 @@
  *   [data-hours-stat]                the hero tile (and the About "days" tile)
  *   [data-status]                    the open/closed pill's week
  *   [data-social] / [data-socials-wrap]
+ *   [data-contact="phone|email|street|locality|line"]  the gym's contact, as text
+ *     (an <a> also gets its tel:/mailto: href); [data-contact-href="phone|email|directions"]
+ *     a link to it; [data-contact-wrap="phone|email|address"] the whole line around it
  *
  * The visibility rules are the build's own: it calls the same pure functions
  * (`promoIsShown`, `hoursSummary`, ...) on the same reader's result, so there
@@ -24,6 +27,7 @@
 
 import { promoIsShown, promoButton } from './site-promo.js';
 import { hasSocial } from './published-config.js';
+import { contactView, CONTACT_PARTS } from './contact-view.js';
 import { weekSchedule, hasOpenDays, hoursSummary, hoursHeading, hoursStat } from './opening-hours.js';
 
 /** Fired on the document after the config was applied; the pill repaints on it. */
@@ -46,6 +50,7 @@ export function applyPublishedConfig(doc, config, { linkFor, now }) {
   applyPromo(doc, config.promo, now.wall);
   applyHours(doc, config.hours);
   applySocial(doc, config.social);
+  applyContact(doc, config.contact);
   doc.dispatchEvent(new (doc.defaultView?.Event ?? Event)(SITE_CONFIG_APPLIED));
 }
 
@@ -135,5 +140,30 @@ function applySocial(doc, social) {
   });
   doc.querySelectorAll('[data-socials-wrap]').forEach((wrap) => {
     /** @type {HTMLElement} */ (wrap).hidden = !hasSocial(social);
+  });
+}
+
+/** @param {Document} doc @param {import('./published-config.js').Contact} contact */
+function applyContact(doc, contact) {
+  const view = contactView(contact);
+  doc.querySelectorAll('[data-contact]').forEach((node) => {
+    const el = /** @type {HTMLElement} */ (node);
+    const key = /** @type {'phone'|'email'|'street'|'locality'|'line'} */ (el.dataset.contact);
+    const text = view[key] ?? '';
+    setText(el, text);
+    el.hidden = text === '';
+    const href = key === 'phone' || key === 'email' ? view.href[key] : '';
+    if (el.tagName === 'A' && href) el.setAttribute('href', href);
+  });
+  doc.querySelectorAll('[data-contact-href]').forEach((node) => {
+    const el = /** @type {HTMLElement} */ (node);
+    const href = view.href[/** @type {'phone'|'email'|'directions'} */ (el.dataset.contactHref)] ?? '';
+    el.hidden = href === '';
+    if (href) el.setAttribute('href', href); else el.removeAttribute('href');
+  });
+  doc.querySelectorAll('[data-contact-wrap]').forEach((node) => {
+    const el = /** @type {HTMLElement} */ (node);
+    const part = CONTACT_PARTS[/** @type {keyof typeof CONTACT_PARTS} */ (el.dataset.contactWrap)];
+    el.hidden = !part || part(view) === '';
   });
 }

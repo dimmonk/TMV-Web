@@ -1,4 +1,5 @@
 ---
+import Priced from '../components/Priced.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import ActivityLinks from '../components/ActivityLinks.astro';
@@ -7,6 +8,7 @@ import HomeScreen from '../components/mobile/HomeScreen.astro';
 import GoalPicker from '../components/GoalPicker.astro';
 import Reviews from '../components/Reviews.astro';
 import { seo, cat, url } from '../data/site';
+import { contact } from '../data/site-config';
 import { heroStats } from '../data/hero-stats';
 import { bookableSeasons, campByKey } from '../data/camps';
 
@@ -62,7 +64,7 @@ const camps = [
         </div>
         <div class="hero-stats">
           {heroStats.map((st, i) => (
-            <div class:list={['hero-stat', { last: i === heroStats.length - 1 }]} data-hours-stat={st.hours ? '' : undefined} data-stat-variant={st.hours ? 'desktop' : undefined} hidden={st.hidden}><div class="hero-statnum" data-stat-value={st.hours ? '' : undefined}>{st.value}</div><div class="hero-statlabel" data-stat-label={st.hours ? '' : undefined}>{st.label}</div></div>
+            <div class:list={['hero-stat', { last: i === heroStats.length - 1 }]} data-hours-stat={st.hours ? '' : undefined} data-stat-variant={st.hours ? 'desktop' : undefined} hidden={st.hidden}><div class="hero-statnum" data-stat-value={st.hours ? '' : undefined}><Priced text={st.value} /></div><div class="hero-statlabel" data-stat-label={st.hours ? '' : undefined}>{st.label}</div></div>
           ))}
         </div>
         <p class="hero-new">Just here to play? <a href={url('open-gym')}>Open gym, no booking →</a></p>
@@ -75,7 +77,7 @@ const camps = [
               : <div class="hero-slide" data-bg={src} style="opacity:0"></div>
           ))}
         </div>
-        <div class="hero-badge">75 Carl Hall Rd<br>Downsview Park</div>
+        <div class="hero-badge" data-contact-wrap="address" hidden={!contact.street}><span data-contact="street">{contact.street}</span><br>Downsview Park</div>
       </div>
     </div>
   </section>
@@ -123,7 +125,7 @@ const camps = [
                 ))}
               </div>
               <div class="camp-foot">
-                <span class="camp-price" style={`color:${c.color}`}>{c.price}</span>
+                <span class="camp-price" style={`color:${c.color}`}><Priced text={c.price} /></span>
                 <a href={c.href} target={c.external ? '_blank' : undefined} rel={c.external ? 'noopener' : undefined} class="camp-resv">{c.cta} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
               </div>
             </div>

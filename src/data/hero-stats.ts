@@ -27,7 +27,7 @@ export interface HeroStat {
 const hoursTile = hoursStat(hours);
 
 export const heroStats: readonly HeroStat[] = [
-  { value: '$45', label: 'intro lesson · 1-on-1', mobileLabel: 'intro · 1-on-1' },
+  { value: '{introClass1x}', label: 'intro lesson · 1-on-1', mobileLabel: 'intro · 1-on-1' },
   // Always in the markup (hidden when there is nothing to say) so the browser can show it
   // when hours are published after the build.
   { value: hoursTile?.value ?? '', label: hoursTile?.label ?? '', mobileLabel: hoursTile?.mobileLabel ?? '', hours: true, hidden: !hoursTile },

@@ -1,9 +1,11 @@
 ---
+import Priced from '../components/Priced.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PrivateLessonsScreen from '../components/mobile/PrivateLessonsScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import NextStep from '../components/NextStep.astro';
 import { seo, cat, site, url } from '../data/site';
+import { contact } from '../data/site-config';
 import { sq } from '../data/square-links';
 import { privateWays } from '../data/private-lessons';
 
@@ -47,8 +49,8 @@ const notes = [
           <div class:list={['pl-way', { featured: st.featured }]}>
             <div class="pl-wayhead"><span class={`pl-waynum ${st.num}`}>{i + 1}</span>{st.tag && <span class={`pl-waytag ${st.tag}`}>{st.tagLabel}</span>}</div>
             <h3 class="pl-waytitle">{w.title}</h3>
-            <div class="pl-price"><span class="pl-big">{w.price}</span>{w.per && <span class="pl-per">{w.per}</span>}</div>
-            <div class="pl-sub">{w.sub}</div>
+            <div class="pl-price"><span class="pl-big"><Priced text={w.price} /></span>{w.per && <span class="pl-per">{w.per}</span>}</div>
+            <div class="pl-sub"><Priced text={w.sub} /></div>
             <p class="pl-desc">{w.desc}</p>
             <a href={plHref(w.key)} {...(internal ? {} : { target: '_blank', rel: 'noopener' })} class:list={['pl-book', { solid: st.featured }]}>{w.cta} <i class={`bi ${internal ? 'bi-arrow-down' : 'bi-arrow-right'}`} aria-hidden="true"></i></a>
           </div>
@@ -78,8 +80,8 @@ const notes = [
     <div class="pl-next"><NextStep step="private-pack" /></div>
 
     <section class="pl-help">
-      <div class="pl-help-left"><span class="pl-help-ic"><i class="bi bi-chat-dots-fill" aria-hidden="true"></i></span><div><div class="pl-help-t">Not sure who to train with?</div><div class="pl-help-b">Tell us your goals and we'll point you to the right coach. Call {site.phoneDisplay} or email us.</div></div></div>
-      <a href={`mailto:${site.email}`} class="btn btn-primary">Get in touch <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+      <div class="pl-help-left"><span class="pl-help-ic"><i class="bi bi-chat-dots-fill" aria-hidden="true"></i></span><div><div class="pl-help-t">Not sure who to train with?</div><div class="pl-help-b">Tell us your goals and we'll point you to the right coach.<span data-contact-wrap="phone" hidden={!contact.phone}> Call <span data-contact="phone">{contact.phone}</span> or email us.</span></div></div></div>
+      <a href={contact.href.email || undefined} data-contact-href="email" hidden={!contact.href.email} class="btn btn-primary">Get in touch <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
     </section>
   </div>
   </div>

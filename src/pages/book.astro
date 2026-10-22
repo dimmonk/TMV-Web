@@ -4,6 +4,7 @@ import BookScreen from '../components/mobile/BookScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
 import BookingCard from '../components/BookingCard.astro';
 import { seo, cat, site, url } from '../data/site';
+import { contact } from '../data/site-config';
 import { sq } from '../data/square-links';
 import { privateWays } from '../data/private-lessons';
 import { partyHubCards } from '../data/parties';
@@ -121,10 +122,10 @@ const jumpItems = groups.map((g) => ({ label: g.title, id: g.id }));
         <span class="helpstrip-ic"><i class="bi bi-chat-dots-fill" aria-hidden="true"></i></span>
         <div>
           <div class="helpstrip-title">Not sure which to pick?</div>
-          <div class="helpstrip-sub">Call us at {site.phoneDisplay} or email and we'll help you find the right fit.</div>
+          <div class="helpstrip-sub"><span data-contact-wrap="phone" hidden={!contact.phone}>Call us at <span data-contact="phone">{contact.phone}</span> or email and </span>we'll help you find the right fit.</div>
         </div>
       </div>
-      <a href={`mailto:${site.email}`} class="btn btn-primary">Get in touch <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+      <a href={contact.href.email || undefined} data-contact-href="email" hidden={!contact.href.email} class="btn btn-primary">Get in touch <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
     </section>
   </div>
   </div>

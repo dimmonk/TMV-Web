@@ -31,8 +31,8 @@ export interface PartyHubCard {
 }
 
 export const partyHubCards: PartyHubCard[] = [
-  { key: 'full', color: cat.parties, title: 'Full Birthday Party', dur: '2 hrs', price: '$350 base', priceNote: 'Up to 8 kids · +$25/extra kid', flag: 'Most popular', bookingTag: 'By appointment', desc: 'A coached session, a private party room and free play — coaches with the group the whole time.', pills: 'Ages 5+ | Private room', href: sq.book.fullBirthday },
-  { key: 'mini', color: cat.parties, title: 'Mini Birthday Party', dur: '1 hr', price: '$30 / kid', priceNote: '3 kids min · up to 15', bookingTag: 'By appointment', desc: 'The same one-hour coached session of games and challenges, with a lower minimum. All-day pass for every kid.', pills: 'Ages 8+ | 3–15 people | All-day pass', href: sq.book.miniBirthday },
+  { key: 'full', color: cat.parties, title: 'Full Birthday Party', dur: '2 hrs', price: '{partyBase} base', priceNote: 'Up to 8 kids · +{partyExtraGuest}/extra kid', flag: 'Most popular', bookingTag: 'By appointment', desc: 'A coached session, a private party room and free play — coaches with the group the whole time.', pills: 'Ages 5+ | Private room', href: sq.book.fullBirthday },
+  { key: 'mini', color: cat.parties, title: 'Mini Birthday Party', dur: '1 hr', price: '{partyMiniPerPerson} / kid', priceNote: '3 kids min · up to 15', bookingTag: 'By appointment', desc: 'The same one-hour coached session of games and challenges, with a lower minimum. All-day pass for every kid.', pills: 'Ages 8+ | 3–15 people | All-day pass', href: sq.book.miniBirthday },
 ];
 
 /** One row of the Full party's run-of-show. */
@@ -86,7 +86,7 @@ export const partyCards: PartyCardData[] = [
     pills: 'Ages 5+ | 2 hrs total | Private room',
     price: eventPricing.fullBirthdayBase,
     priceSub: 'base price · up to 8 participants',
-    priceExtra: ['+$25 per additional participant', '+$5 / participant for an extra hour'],
+    priceExtra: ['+{partyExtraGuest} per additional participant', '+{partyExtraHour} / participant for an extra hour'],
     bookHref: sq.book.fullBirthday,
     bookLabel: 'Book your party',
     invite: true,

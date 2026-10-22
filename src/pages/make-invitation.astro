@@ -34,7 +34,7 @@ import { seo } from '../data/site';
       root.dataset.mounted = '1';
       mountInvitationMaker(root, {
         venue: site.name,
-        address: `${site.address.street} · ${site.address.locality}`,
+        address: root.dataset.address ?? '',
         defaultPhoto: url('assets/invite-default-photo.png'),
         waiverUrl: links.waiver,
       });

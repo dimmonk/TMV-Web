@@ -8,6 +8,7 @@
  * mountInvitationMaker(root, opts) on the wrapper this renders.
  */
 import { links, site, url } from '../data/site';
+import { contact } from '../data/site-config';
 
 interface Props {
   /** Show the page-title band above the maker. */
@@ -19,7 +20,8 @@ interface Props {
 }
 const { showIntro = true, contained = true } = Astro.props;
 
-const defaultAddress = `${site.address.street} \u00b7 ${site.address.locality}`;
+/** The venue line printed on the cards: the published address, street then city. */
+const defaultAddress = [contact.street, contact.address.city].filter(Boolean).join(' \u00b7 ');
 const defaultPhoto = url('assets/invite-default-photo.png');
 
 /** 15-minute time options across the facility's operating hours — a closed
@@ -41,7 +43,7 @@ function timeOptions(startHour: number, endHour: number) {
 }
 const timeOpts = timeOptions(11, 22);
 ---
-<div class="inv-root">
+<div class="inv-root" data-address={defaultAddress}>
 {showIntro && (
 <div class="inv-intro" data-chrome="site">
   <div class="container inv-intro-inner">

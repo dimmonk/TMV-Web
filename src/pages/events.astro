@@ -1,4 +1,5 @@
 ---
+import Priced from '../components/Priced.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EventsScreen from '../components/mobile/EventsScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
@@ -6,6 +7,7 @@ import SectionHeader from '../components/SectionHeader.astro';
 import PartyCard from '../components/PartyCard.astro';
 import PartyReturn from '../components/PartyReturn.astro';
 import { seo, links, site, cat, url } from '../data/site';
+import { contact } from '../data/site-config';
 import { partyCards } from '../data/parties';
 import { sq } from '../data/square-links';
 import { partyFaqGroups as faqGroups } from '../data/party-faqs';
@@ -65,8 +67,8 @@ const steps = [
         <h2 class="ev-faq-title">Good to know before you book</h2>
         <p class="ev-faq-lead">Everything parents ask us most — payment, food, timing and the day-of details. Still stuck? We're happy to help.</p>
         <div class="ev-faq-contact">
-          <a href={`mailto:${site.email}`}><i class="bi bi-envelope" aria-hidden="true"></i> {site.email}</a>
-          <a href={`tel:${site.phone}`}><i class="bi bi-telephone" aria-hidden="true"></i> {site.phoneDisplay}</a>
+          <a href={contact.href.email || undefined} data-contact-href="email" hidden={!contact.href.email}><i class="bi bi-envelope" aria-hidden="true"></i> <span data-contact="email">{contact.email}</span></a>
+          <a href={contact.href.phone || undefined} data-contact-href="phone" hidden={!contact.href.phone}><i class="bi bi-telephone" aria-hidden="true"></i> <span data-contact="phone">{contact.phone}</span></a>
         </div>
       </div>
       <div class="ev-faq-right">
@@ -77,7 +79,7 @@ const steps = [
               {g.items.map((qa) => (
                 <details class="ev-faq-item">
                   <summary><span>{qa.q}</span><i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
-                  <div class="ev-faq-a">{qa.a}</div>
+                  <div class="ev-faq-a"><Priced text={qa.a} /></div>
                 </details>
               ))}
             </div>

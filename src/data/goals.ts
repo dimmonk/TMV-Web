@@ -41,15 +41,15 @@ export interface Goal {
   leads: GoalLead[];
 }
 
-const INTRO = { color: cat.intro, cta: 'Book an intro', href: sq.getStarted.introduction, external: true, price: '$45 · 1 hr · 1-on-1' } as const;
-const PRIVATE = { color: cat.private, cta: 'Book a private lesson', href: sq.privateLessons.privateLesson, external: true, price: '1 hr · Kids $65 · Adults $85' } as const;
+const INTRO = { color: cat.intro, cta: 'Book an intro', href: sq.getStarted.introduction, external: true, price: '{introClass1x} · 1 hr · 1-on-1' } as const;
+const PRIVATE = { color: cat.private, cta: 'Book a private lesson', href: sq.privateLessons.privateLesson, external: true, price: '1 hr · Kids {privateKid1x} · Adults {privateAdult1x}' } as const;
 const openGym = url('open-gym');
 const dayPass = `${url('store')}#opengym`;
 
 export const goals: Goal[] = [
   {
     id: 'kid', label: 'Find an activity my kid loves',
-    color: cat.classes, cta: 'See the class times', href: url('schedule'), price: '$30 · drop-in · ages 3+',
+    color: cat.classes, cta: 'See the class times', href: url('schedule'), price: '{groupClass1x} · drop-in · ages 3+',
     eyebrow: "We'd start them with", title: 'A drop-in Recreational class',
     reason: 'The easiest way to find out if they love it: no booking, no commitment. Parkour and acrobatics at their own pace with a coach and other kids. Come to any class time, and the coach tells you what fits next.',
     altLead: 'Rather they start one-on-one?', altLink: 'Book an intro lesson with a coach.', altHref: sq.getStarted.introduction,
@@ -83,7 +83,7 @@ export const goals: Goal[] = [
   },
   {
     id: 'serious', label: 'Train seriously',
-    color: cat.athletic, cta: 'See the Athletic Program', href: url('athletic-program'), price: '$150 / month · ages 9+',
+    color: cat.athletic, cta: 'See the Athletic Program', href: url('athletic-program'), price: '{athleticMembership30} / month · ages 9+',
     eyebrow: "We'd point you to", title: 'The Athletic Program',
     reason: 'Two coached 90-minute sessions a week and monthly check-ins. There is a prerequisite: your first class is the check, or a coach who has already worked with you can vouch.',
     altLead: 'One skill in mind instead?', altLink: 'Book a private lesson built around it.', altHref: sq.privateLessons.privateLesson,
@@ -97,7 +97,7 @@ export const goals: Goal[] = [
     id: 'play', label: 'Just play & burn energy',
     color: cat.openGym, eyebrow: "We'd point you to", title: 'Open Gym — no class, no booking',
     reason: "Full run of the floor, foam pit and obstacles, any time we're open, no time limit. Sign the waiver online, get a day pass, show up. All ages; kids under 7 play with a parent.",
-    cta: 'Plan an open gym visit', href: openGym, price: '$25 · all day',
+    cta: 'Plan an open gym visit', href: openGym, price: '{openGym1x} · all day',
     altLead: 'Want coaching on a specific move?', altLink: 'Book a private lesson built around it.', altHref: sq.privateLessons.privateLesson,
     sideLabel: 'Coming back a lot?',
     leads: [
@@ -109,7 +109,7 @@ export const goals: Goal[] = [
     id: 'party', label: 'Celebrate a birthday',
     color: cat.parties, eyebrow: "We'd point you to", title: 'A Full Birthday Party',
     reason: 'Two hours: a coached session of games and challenges, then a private party room. Coaches stay with the group the whole time. Your card holds the slot; you pay on the day, by final headcount.',
-    cta: 'Book a party', href: sq.book.fullBirthday, external: true, price: '$350 base · up to 8 kids',
+    cta: 'Book a party', href: sq.book.fullBirthday, external: true, price: '{partyBase} base · up to 8 kids',
     altLead: 'Smaller crew or short notice?', altLink: 'See the mini party.', altHref: url('events'),
     sideLabel: 'After the party',
     leads: [

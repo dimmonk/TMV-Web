@@ -1,4 +1,5 @@
 ---
+import Priced from '../components/Priced.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AthleticProgramScreen from '../components/mobile/AthleticProgramScreen.astro';
 import JumpNav from '../components/JumpNav.astro';
@@ -13,7 +14,7 @@ const heroStats = [
   { value: '2 × 90 min', label: 'core sessions each week' },
   { value: '9–14 & 15+', label: 'two age groups' },
   { value: 'Unlimited', label: 'open gym access' },
-  { value: '$150', label: 'per month · year-round' },
+  { value: '{athleticMembership30}', label: 'per month · year-round' },
 ];
 const benefits = [
   { icon: 'bi-arrow-up-circle', title: 'Jumping power', body: 'Jump higher and further — basketball, volleyball, track & field.' },
@@ -40,10 +41,10 @@ const joinPoints = [
   'It is a training program, so an athlete who is not the right fit may be moved to group classes instead.',
   'We recommend at least three months to truly see progress.',
   'Unlimited open gym and monthly evaluations included.',
-  'Half-price class add-on — just $5 (normally $10) to drop into any other group class.',
+  'Half-price class add-on — just {athleticClassAddon} (normally {membershipClassAddon}) to drop into any other group class.',
 ];
 const payOptions = [
-  { icon: 'bi-arrow-repeat', title: 'Automatic monthly', body: 'Set it and forget it — uninterrupted access at $150 / month.' },
+  { icon: 'bi-arrow-repeat', title: 'Automatic monthly', body: 'Set it and forget it — uninterrupted access at {athleticMembership30} / month.' },
   { icon: 'bi-credit-card', title: 'One-time, renew anytime', body: 'Pay for a month, renew whenever you like. Same price, full flexibility.' },
 ];
 ---
@@ -61,7 +62,7 @@ const payOptions = [
         <a href={sq.athletic.membership} target="_blank" rel="noopener" class="btn btn-primary">Join the program <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
         <a href="#program" class="btn btn-ghost-light">How it works</a>
       </div>
-      <div class="ap-stats">{heroStats.map((s) => <div class="ap-stat"><div class="n">{s.value}</div><div class="l">{s.label}</div></div>)}</div>
+      <div class="ap-stats">{heroStats.map((s) => <div class="ap-stat"><div class="n"><Priced text={s.value} /></div><div class="l">{s.label}</div></div>)}</div>
     </div>
   </section>
 
@@ -117,25 +118,25 @@ const payOptions = [
     <div class="ap-join">
       <div>
         <div style="margin-bottom:18px"><SectionHeader num="04" eyebrow="Join now" title="Start any time. Stay as long as you keep growing." description="Sign up for the year-round program and start training right away — you can enroll at any point in the year. For real, visible progress, we recommend committing to at least three months." color={cat.athletic} /></div>
-        <div class="ap-joinpoints">{joinPoints.map((j) => <div class="ap-jp"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>{j}</span></div>)}</div>
+        <div class="ap-joinpoints">{joinPoints.map((j) => <div class="ap-jp"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span><Priced text={j} /></span></div>)}</div>
       </div>
       <div class="ap-joincol">
         <div class="ap-membership">
           <div class="ap-memhead">
             <div class="ap-memlabel">30-day membership</div>
-            <div class="ap-memprice"><span class="ap-membig">$150</span><span class="ap-memper">/ month</span></div>
-            <p class="ap-memnote">Year-round · cancel or renew on your terms · half-price class add-on ($5 instead of $10) to try any other class.</p>
+            <div class="ap-memprice"><span class="ap-membig"><Priced text="{athleticMembership30}" /></span><span class="ap-memper">/ month</span></div>
+            <p class="ap-memnote">Year-round · cancel or renew on your terms · <Priced text="half-price class add-on ({athleticClassAddon} instead of {membershipClassAddon}) to try any other class." /></p>
           </div>
           <div class="ap-membody">
             <div class="ap-memways">Two ways to pay</div>
-            <div class="ap-payopts">{payOptions.map((o) => <div class="ap-pay"><i class={`bi ${o.icon}`} aria-hidden="true"></i><div><div class="ap-paytitle">{o.title}</div><div class="ap-paybody">{o.body}</div></div></div>)}</div>
+            <div class="ap-payopts">{payOptions.map((o) => <div class="ap-pay"><i class={`bi ${o.icon}`} aria-hidden="true"></i><div><div class="ap-paytitle">{o.title}</div><div class="ap-paybody"><Priced text={o.body} /></div></div></div>)}</div>
             <a href={sq.athletic.membership} target="_blank" rel="noopener" class="btn btn-dark" style="justify-content:center">Sign up &amp; start training <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
             <p class="ap-memfine">New here? You'll sign the waiver at sign-up. The coach checks the prerequisite in your first class.</p>
           </div>
         </div>
         <div class="ap-fallback">
           <div class="ap-fbtext"><div class="ap-fblabel">Fallback option</div><div class="ap-fbtitle">10× Class Pass</div><p class="ap-fbbody">For athletes training about once a week — ten classes to use whenever, no membership.</p></div>
-          <div class="ap-fbright"><div class="ap-fbprice">$275</div><a href={links.store} target="_blank" rel="noopener" class="ap-fbget">Get the pass <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a></div>
+          <div class="ap-fbright"><div class="ap-fbprice"><Priced text="{athleticClass10x}" /></div><a href={links.store} target="_blank" rel="noopener" class="ap-fbget">Get the pass <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a></div>
         </div>
       </div>
     </div>

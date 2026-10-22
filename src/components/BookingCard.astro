@@ -1,4 +1,5 @@
 ---
+import Priced from './Priced.astro';
 interface Props {
   color?: string;
   bookingTag?: string;
@@ -62,15 +63,15 @@ const ext = target === '_blank';
       </div>
     )}
     <h3 class="bk-title">{title}</h3>
-    {description && <p class="bk-desc">{description}</p>}
+    {description && <p class="bk-desc"><Priced text={description} /></p>}
     <div class="bk-bottom">
       {pillList.length > 0 && (
         <div class="bk-pills">{pillList.map((p) => <span class="bk-pill">{p}</span>)}</div>
       )}
       <div class="bk-foot">
         <div>
-          {price && <div class="bk-price">{price}</div>}
-          {priceNote && <div class="bk-note">{priceNote}</div>}
+          {price && <div class="bk-price"><Priced text={price} /></div>}
+          {priceNote && <div class="bk-note"><Priced text={priceNote} /></div>}
         </div>
         <span class="bk-act">{actionLabel} <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
       </div>

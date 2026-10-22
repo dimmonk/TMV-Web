@@ -1,4 +1,5 @@
 ---
+import Priced from '../Priced.astro';
 /**
  * Home — the phone composition, kept verbatim from the /m/ app's `home` screen.
  *
@@ -31,7 +32,7 @@ const reviewItems = reviews.items.map((r) => ({ name: r.name, role: r.context, t
     <a class="m-brandbtn" href="#m-start" style="margin-bottom:22px">Find your starting point <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
     <div class="m-home-stats">
       {heroStats.map((st, i) => (
-        <div class:list={['m-home-stat', { mid: i > 0 && i < heroStats.length - 1, end: i === heroStats.length - 1 }]} data-hours-stat={st.hours ? '' : undefined} data-stat-variant={st.hours ? 'mobile' : undefined} hidden={st.hidden}><div class="m-home-statv" data-stat-value={st.hours ? '' : undefined}>{st.value}</div><div class="m-home-statl" data-stat-label={st.hours ? '' : undefined}>{st.mobileLabel ?? st.label}</div></div>
+        <div class:list={['m-home-stat', { mid: i > 0 && i < heroStats.length - 1, end: i === heroStats.length - 1 }]} data-hours-stat={st.hours ? '' : undefined} data-stat-variant={st.hours ? 'mobile' : undefined} hidden={st.hidden}><div class="m-home-statv" data-stat-value={st.hours ? '' : undefined}><Priced text={st.value} /></div><div class="m-home-statl" data-stat-label={st.hours ? '' : undefined}>{st.mobileLabel ?? st.label}</div></div>
       ))}
     </div>
   </div>

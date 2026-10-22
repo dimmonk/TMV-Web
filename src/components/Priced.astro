@@ -1,0 +1,17 @@
+---
+/**
+ * Text that may name a price from the members app's price list (`{groupClass1x}`,
+ * lib/price-text.js). Plain text passes through untouched. Text that names a
+ * price is filled from the build's price list and tagged `data-price-text`, so
+ * the browser fills it again from the live list (lib/apply-prices.js); a price
+ * that is missing hides the whole line, never leaves a hole in it.
+ */
+import { hasPriceToken } from '../lib/price-text.js';
+import { priced } from '../data/prices';
+
+interface Props { text?: string }
+const { text = '' } = Astro.props;
+const tagged = hasPriceToken(text);
+const filled = tagged ? priced(text) : text;
+---
+{tagged ? <span data-price-text={text} hidden={!filled}>{filled}</span> : text}

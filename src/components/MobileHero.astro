@@ -1,4 +1,5 @@
 ---
+import Priced from './Priced.astro';
 /** The dark "page hero" card shown at the top of every non-home mobile screen. */
 interface Stat { v: string; l: string; /** the opening-hours day count: the browser keeps it current */ hoursDays?: boolean; hidden?: boolean; }
 interface Props {
@@ -19,7 +20,7 @@ const { eyebrow, title, desc, stats } = Astro.props;
       <div class="mh-stats">
         {stats.map((st, i) => (
           <div class="mh-stat" data-hours-stat={st.hoursDays ? '' : undefined} data-stat-variant={st.hoursDays ? 'days' : undefined} hidden={st.hidden} style={`text-align:${i === stats.length - 1 ? 'right' : i === 0 ? 'left' : 'center'};${i === stats.length - 1 ? '' : 'border-right:1px solid rgba(255,255,255,.12);'}`}>
-            <div class="mh-stat-v" data-stat-value={st.hoursDays ? '' : undefined}>{st.v}</div>
+            <div class="mh-stat-v" data-stat-value={st.hoursDays ? '' : undefined}><Priced text={st.v} /></div>
             <div class="mh-stat-l">{st.l}</div>
           </div>
         ))}

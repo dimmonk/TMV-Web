@@ -1,4 +1,5 @@
 ---
+import Priced from './Priced.astro';
 /**
  * "What are you here for?" — the site's ASK → RECOMMEND → REASON → INVITE
  * entry point, from the client-progression procedure. One goal in, ONE
@@ -39,7 +40,7 @@ const { variant = 'full' } = Astro.props;
           <a href={g.href} {...(g.external ? { target: '_blank', rel: 'noopener' } : {})} class="btn btn-primary">
             {g.cta} <i class={`bi ${g.external ? 'bi-arrow-up-right' : 'bi-arrow-right'}`} aria-hidden="true"></i>
           </a>
-          <span class="gp-price">{g.price}</span>
+          <span class="gp-price"><Priced text={g.price} /></span>
         </div>
         <p class="gp-alt">{g.altLead} <a href={g.altHref}>{g.altLink}</a></p>
       </div>

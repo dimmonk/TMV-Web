@@ -2,6 +2,7 @@
 // what the pages render. Run: npm test
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { fillPrices, hasPriceToken } from '../src/lib/price-text.js';
 import { readPublishedConfig, fetchPublishedConfig, hasSocial, LIMITS } from '../src/lib/published-config.js';
 import { moveSlotMarkers } from '../src/lib/sq-slot-marker.js';
 import { expiryStamp, isExpired, promoIsShown, promoButton } from '../src/lib/site-promo.js';
@@ -70,6 +71,26 @@ test('a missing or malformed object reads as empty, not as a throw', () => {
     assert.deepEqual(c.hours, []);
     assert.deepEqual(c.social, { instagram: '', facebook: '', youtube: '' });
   }
+});
+
+test('the contact is read bounded; a phone nobody can dial or an email that is not one address reads as unset', () => {
+  const ok = { address: { street: '1 Main St', city: 'Toronto', region: 'ON', postalCode: 'M1M 1M1' }, phone: ' (416) 555-0100 ', email: 'a@b.ca' };
+  assert.deepEqual(readPublishedConfig(ok).contact, { ...ok, phone: '(416) 555-0100' });
+  const bad = readPublishedConfig({ address: { street: 'x'.repeat(LIMITS.street + 1), city: 7 }, phone: '12', email: 'a b@c.ca' }).contact;
+  assert.deepEqual(bad, { address: { street: '', city: '', region: '', postalCode: '' }, phone: '', email: '' });
+  assert.deepEqual(readPublishedConfig(null).contact, bad);
+});
+
+test('a price template fills from the price list, all or nothing', () => {
+  const list = { groupClass1x: 30, groupClass10x: 275, partyExtra: 27.5 };
+  assert.equal(fillPrices('{groupClass1x} single · 10-pack {groupClass10x}', list), '$30 single · 10-pack $275');
+  assert.equal(fillPrices('{partyExtra} each', list), '$27.50 each');
+  assert.equal(fillPrices('From {groupClass1x} · {missing}', list), '', 'one missing price hides the line');
+  assert.equal(fillPrices('{groupClass1x}', { groupClass1x: '30' }), '', 'a price that is not a number is missing');
+  assert.equal(fillPrices('{groupClass1x}', null), '');
+  assert.equal(fillPrices('No price here', null), 'No price here');
+  assert.equal(hasPriceToken('From {openGym1x}'), true);
+  assert.equal(hasPriceToken('Ages 3+ {}'), false);
 });
 
 test('only http(s) URLs survive into social and the promo button', () => {
