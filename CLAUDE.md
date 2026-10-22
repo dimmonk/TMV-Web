@@ -200,6 +200,16 @@ and changes card. Styles: `src/styles/schedule-web.css`. The printed sheet modul
 here alone; the website only borrows their time formatting, filters and description renderer. Tests:
 `tests/schedule-weeks.test.mjs`.
 
+## Card prices: named, never typed
+
+No price is typed in this repo. Card copy names a price by its Members price-list key in braces
+(`'From {openGym1x}'`, `src/lib/price-text.js`); `<Priced text=...>` fills it from the build's price list
+(`src/data/prices.ts`, the one read per build) and tags it `data-price-text`, and on page load
+`src/lib/live-prices.ts` re-reads `price-list.json` and re-fills every line (`apply-prices.js`). A line that
+names a price the list lacks renders nothing. Render any field that may carry a price through `<Priced>`.
+The render test fails on a typed `$` amount in a built page, except the few the locked scope keeps in code
+(group event tiers and early access until Members publishes them, the camp transaction fee, a partner's rates).
+
 ## The price list: one renderer, a web skin
 
 `/pricing` renders the members app's price list with the shared `src/lib/price-list-renderer.js` in its `'web'`

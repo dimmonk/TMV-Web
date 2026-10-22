@@ -382,7 +382,9 @@ test('card prices are the Members price list: filled at build, a missing price h
   for (const path of ['', 'store', 'train', 'camps', 'events', 'groups', 'book', 'private-lessons', 'athletic-program', 'open-gym', 'pricing', 'get-started']) {
     const doc = site.dom(path);
     doc.querySelectorAll('script, style, [data-price-text]').forEach((el) => el.remove());
-    const typed = (doc.body.textContent.match(/\$\d+(\.\d+)?/g) ?? []).filter((m) => !kept.test(m));
+    // The partner coach's own rates are the partner's, not the gym's price list.
+    const words = doc.body.innerHTML.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ');
+    const typed = (words.replace(/\$30 drop-in · \$100 \/ month/g, '').match(/\$\d+(\.\d+)?/g) ?? []).filter((m) => !kept.test(m));
     assert.deepEqual(typed, [], `${path || 'home'} types no price`);
     assert.doesNotMatch(doc.body.textContent, /\{[A-Za-z][A-Za-z0-9]*\}/, `${path || 'home'} shows no raw price key`);
   }
