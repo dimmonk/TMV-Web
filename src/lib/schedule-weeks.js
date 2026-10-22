@@ -14,6 +14,7 @@
  * Both the desktop grid (`schedule-week-view.js`) and the phone list (`mobile-schedule.ts`) read their weeks here.
  */
 import { gymNow } from './gym-clock.js';
+import { weekSchedule } from './opening-hours.js';
 
 export const WEEKS_AHEAD = 4;
 
@@ -171,13 +172,17 @@ export function timeKey(t) {
   return (parseInt(h, 10) || 0) * 60 + (parseInt(m || '0', 10) || 0);
 }
 
+/** Minutes since midnight as a schedule time: 1320 -> '22:00', 1440 -> '24:00' (midnight). @param {number} m */
+const hm = (m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+
 /**
- * Open Gym is the gym's open hours, not a class in the schedule feed: one block a day, plus Friday's late adults-only
- * block. Both chromes list it from here.
+ * Open Gym is the gym's open hours, not a class in the schedule feed: one block on each day the published opening
+ * hours (Members, Settings -> Banner, hours & social) read as open. Both chromes list it from here; no hours, no
+ * blocks.
+ * @param {ReadonlyArray<{day: string, time: string}>} hoursRows
  */
-export function openGymSessions() {
-  return [1, 2, 3, 4, 5, 6, 0].flatMap((d) => [
-    { id: `open-gym-${d}`, day: d, time: '11', endTime: '22', disciplineName: 'Open Gym', ageGroupName: 'All Ages', color: '#2e9e4f' },
-    ...(d === 5 ? [{ id: 'open-gym-late', day: d, time: '22', endTime: '24', disciplineName: 'Open Gym', ageGroupName: 'Adults Only', color: '#2e7d32' }] : []),
-  ]);
+export function openGymSessions(hoursRows) {
+  return weekSchedule([...hoursRows]).flatMap((span, d) => (span
+    ? [{ id: `open-gym-${d}`, day: d, time: hm(span.open), endTime: hm(span.close), disciplineName: 'Open Gym', ageGroupName: 'All Ages', color: '#2e9e4f' }]
+    : []));
 }

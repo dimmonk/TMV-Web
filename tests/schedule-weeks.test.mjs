@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { JSDOM } from 'jsdom';
 import {
   gymToday, mondayOf, weekRangeLabel, visibleWeeks, weekIndexOf, readCancellations, scheduleExceptions, sessionsForWeek,
-  closedDaysOf, upcomingChanges, CANCELLATION_REASON_MAX,
+  closedDaysOf, upcomingChanges, openGymSessions, CANCELLATION_REASON_MAX,
 } from '../src/lib/schedule-weeks.js';
 
 const { window } = new JSDOM('<!doctype html><body></body>');
@@ -153,4 +153,18 @@ test('the popup names the date, says when that date is off, and escapes the desc
   open({ ...flips, status: 'on', offReason: '', description: '' });
   assert.equal(host.querySelector('.ws-pop-off').hidden, true);
   assert.equal(host.querySelector('.ws-pop-desc').hidden, true);
+});
+
+test('Open Gym is the published opening hours: one block per open day, nothing typed here', () => {
+  const blocks = openGymSessions([
+    { day: 'Monday', time: '11:00 AM – 10:00 PM' },
+    { day: 'Friday', time: '11:00 AM – 12:00 AM' },
+    { day: 'Sunday', time: 'Closed' },
+    { day: 'Holidays', time: 'By appointment' },
+  ]);
+  assert.deepEqual(blocks.map((b) => [b.day, b.time, b.endTime]), [[1, '11:00', '22:00'], [5, '11:00', '24:00']]);
+  assert.deepEqual(openGymSessions([]), []);
+  const root = document.createElement('div');
+  renderWeekGrid(root, { sessions: sessionsForWeek(blocks, '2026-10-19', []), monday: '2026-10-19', today: TODAY, closed: new Map(), section: 'open_gym' });
+  assert.deepEqual([...root.querySelectorAll('.ws-when')].map((w) => w.textContent), ['11am–10pm', '11am–12am']);
 });

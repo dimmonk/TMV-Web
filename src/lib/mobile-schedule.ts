@@ -17,9 +17,9 @@ import {
 } from './schedule-weeks.js';
 import { weekBar, changesCard } from './schedule-week-view.js';
 
-type ClosedDay = { date: string, reason: string };
+type SiteConfig = { hours: { day: string, time: string }[], closedDays: { date: string, reason: string }[] };
 
-export function mountMobileSchedule({ closedDays }: { closedDays: () => Promise<ClosedDay[]> }) {
+export function mountMobileSchedule({ siteConfig }: { siteConfig: () => Promise<SiteConfig> }) {
   const chipsEl = document.querySelector<HTMLElement>('[data-sched-chips]');
   const topEl = document.querySelector<HTMLElement>('[data-sched-weekbar]');
   const schedBody = document.querySelector<HTMLElement>('[data-sched-body]');
@@ -32,6 +32,7 @@ export function mountMobileSchedule({ closedDays }: { closedDays: () => Promise<
   const weeks = visibleWeeks(today);
   let schedClasses: any[] | null = null;
   let exceptions: any[] = [];
+  let hours: SiteConfig['hours'] = [];
   let schedErr = false;
   let schedFilter = 'all';
   let schedWeek = 0;
@@ -39,7 +40,7 @@ export function mountMobileSchedule({ closedDays }: { closedDays: () => Promise<
   const escapeHtml = (s: string) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
 
   function buildDays(filter: string) {
-    const base = filter === 'open-gym' ? openGymSessions() : (schedClasses || []).filter((c) => matchesFilter(c, filter));
+    const base = filter === 'open-gym' ? openGymSessions(hours) : (schedClasses || []).filter((c) => matchesFilter(c, filter));
     const monday = weeks[schedWeek];
     const list = sessionsForWeek(base, monday, exceptions);
     const closed = closedDaysOf(monday, exceptions);
@@ -109,9 +110,10 @@ export function mountMobileSchedule({ closedDays }: { closedDays: () => Promise<
   }
   function loadSchedule() {
     schedErr = false; schedClasses = null; renderSchedule();
-    Promise.all([fetchPublicSchedule(), closedDays().catch(() => [])])
-      .then(([schedule, closed]) => {
-        exceptions = scheduleExceptions({ cancellations: schedule.cancellations, closedDays: closed });
+    Promise.all([fetchPublicSchedule(), siteConfig().catch((): SiteConfig => ({ hours: [], closedDays: [] }))])
+      .then(([schedule, config]) => {
+        hours = config.hours;
+        exceptions = scheduleExceptions({ cancellations: schedule.cancellations, closedDays: config.closedDays });
         schedClasses = schedule.classes;
         renderSchedule();
       })

@@ -177,7 +177,7 @@ export function renderWeekGrid(root, { sessions, monday, today, closed, section,
       ? el('div', { class: 'ws-card' }, [el('div', { class: 'ws-scroll' }, [grid])])
       : el('p', { class: 'ws-note', text: 'No classes match this filter.' }),
     el('footer', { class: 'ws-foot' }, [
-      el('span', { text: 'Classes run 60 min unless shown. No entry after 15 min; Open Gym is always available.' }),
+      el('span', { text: 'No entry after 15 min.' }),
       onClassClick ? el('span', { text: 'Click a class for details.' }) : null,
     ]),
   ]));
