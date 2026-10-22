@@ -6,7 +6,7 @@
  * The build rendered one row and one panel per class that had sessions at the
  * last release. This re-applies the SAME view (`specializedView`) in place: a
  * class whose sessions are all gone (or cancelled) is hidden, and every listed
- * class gets its current days, headline, description, ages and times. A class
+ * class gets its current days, description, ages and times. A class
  * added in Members since the release shows from the next release. Text goes in
  * through `textContent` only: a published value is data, never markup.
  */
@@ -43,7 +43,6 @@ export function applySpecializedClasses(root, rows) {
     const panel = [...root.querySelectorAll('[data-class-panel]')]
       .find((p) => /** @type {HTMLElement} */ (p).dataset.classPanel === id);
     if (!panel) return;
-    setText(panel.querySelector('[data-class-headline]'), row.headline);
     setText(panel.querySelector('[data-class-body]'), row.body);
     setText(panel.querySelector('[data-class-who]'), row.who);
     const whoRow = /** @type {HTMLElement | null} */ (panel.querySelector('[data-class-who-row]'));

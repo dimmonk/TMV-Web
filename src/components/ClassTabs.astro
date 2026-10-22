@@ -5,7 +5,7 @@
  *
  * Every class here comes from the Members schedule (`specializedView`,
  * src/lib/specialized-classes.js): a class is listed while it has sessions, and
- * its name, headline, description, days, times and ages are the schedule's. The
+ * its name, description, days, times and ages are the schedule's. The
  * price comes from the Members price list. Only the clips live in this repo.
  *
  * Booking, price and the action are the same for every class, so they are said
@@ -62,7 +62,6 @@ const items = rows.map((r) => ({
         <div class="ct-panel" data-class-panel={it.id} role="tabpanel" aria-label={it.name} hidden={i !== 0}>
           <div class="ct-copy">
             <h3 class="ct-title">{it.name}</h3>
-            <p class="ct-headline" data-class-headline hidden={!it.headline}>{it.headline}</p>
             <p class="ct-desc" data-class-body hidden={!it.body}>{it.body}</p>
             <div class="ct-facts">
               <div class="ct-spec" data-class-who-row hidden={!it.who}><span class="ct-spec-l">Who it's for</span><span class="ct-spec-v" data-class-who>{it.who}</span></div>
@@ -124,7 +123,6 @@ const items = rows.map((r) => ({
 
   .ct-copy { padding: 24px 28px 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
   .ct-title { font: 800 23px/1.06 var(--font-display); letter-spacing: -.018em; color: var(--ink); margin: 0; }
-  .ct-headline { font: 700 14.5px/1.35 var(--font-display); color: color-mix(in srgb, var(--cat) 62%, #000); margin: 0; }
   .ct-desc { font: 400 13.5px/1.62 var(--font-body); color: var(--text-3); margin: 0; }
   .ct-facts { margin-top: 8px; }
   .ct-spec { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 8px 0; border-top: 1px solid #efeee8; }

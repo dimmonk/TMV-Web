@@ -1,8 +1,8 @@
 // TRAIN · SPECIALIZED CLASSES. Approved 2026-10-20 and built (src/components/ClassTabs.astro). Three parts, only one changes:
 //   1. the class list (name, plus the days it runs on one line),
 //   2. ONE shared block for what every class has in common (drop-in, price, the schedule link), said once,
-//   3. ONE panel that changes with the selected class (headline, body, who it is for, when, the clip).
-// Comparing classes side by side is the schedule page's job, which the shared block links to. Every class, its headline,
+//   3. ONE panel that changes with the selected class (description, who it is for, when, the clip).
+// Comparing classes side by side is the schedule page's job, which the shared block links to. Every class, its
 // description, days, times and ages come from the Members schedule; the price from the Members price list.
 // The section header is the live SectionHeader markup; the card's rules are in proto/proto.css until it is built.
 import { CLASSES, OFFER } from '../data.js';
@@ -17,7 +17,7 @@ export const notes = {
     'The list shows each class and the days it runs, on one line. Exact times are in the panel.',
     'The panel is the only part that changes when you pick a class. The clip fills its side, so there is no empty gap.',
     'On a phone: the list, then the panel with its clip on top, then the shared block.',
-    'Classes, headlines, descriptions, days, times and ages come from the Members schedule. Levels (Flips 1 and 2) are one entry.',
+    'Classes, descriptions, days, times and ages come from the Members schedule. Levels (Flips 1 and 2) are one entry.',
     'Headlines are empty until they are filled in on Members, Settings, Class types.',
     'Stills stand in for the clips here; on the site the clip plays. Classes with no clip yet show the placeholder.',
   ],
@@ -42,7 +42,6 @@ const panel = (c) => `
   <div class="ct-panel" role="tabpanel" aria-label="${esc(c.name)}">
     <div class="ct-copy">
       <h3 class="ct-title">${esc(c.name)}</h3>
-      ${c.headline ? `<p class="ct-headline">${esc(c.headline)}</p>` : ''}
       ${c.body ? `<p class="ct-desc">${esc(c.body)}</p>` : ''}
       <div class="ct-facts">
         ${c.who ? `<div class="ct-spec"><span class="ct-spec-l">Who it's for</span><span class="ct-spec-v">${esc(c.who)}</span></div>` : ''}

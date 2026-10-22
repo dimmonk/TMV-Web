@@ -46,7 +46,6 @@
 
 .ct-copy { padding: 24px 28px 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .ct-title { font: 800 23px/1.06 var(--font-display); letter-spacing: -.018em; color: var(--ink); margin: 0; }
-.ct-headline { font: 700 14.5px/1.35 var(--font-display); color: color-mix(in srgb, var(--cat) 62%, #000); margin: 0; }
 .ct-desc { font: 400 13.5px/1.62 var(--font-body); color: var(--text-3); margin: 0; }
 .ct-facts { margin-top: 8px; }
 .ct-spec { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 8px 0; border-top: 1px solid #efeee8; }

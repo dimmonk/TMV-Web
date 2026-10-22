@@ -4,7 +4,7 @@
  *
  * Both are the static projections the members app republishes on every change
  * (ADR-0154), read through the one client door (`public-projections.js`, a
- * verbatim copy of the members app's reader). The card's classes, headlines,
+ * verbatim copy of the members app's reader). The card's classes,
  * descriptions, days, times and ages come from the schedule
  * (`specializedView`); the shared price comes from the price list, so neither is
  * typed in this repo. The browser re-reads the schedule on page load and updates

@@ -33,7 +33,7 @@ const SCHEDULE = {
   schemaVersion: 1,
   disciplines: [
     { id: 'pk', name: 'Parkour', order: 0, accessCategories: ['classes'], description: 'Run, jump' },
-    { id: 'tr', name: 'Tricking', order: 1, accessCategories: ['classes'], headline: 'Kicks and flips', description: 'Fixture tricking body' },
+    { id: 'tr', name: 'Tricking', order: 1, accessCategories: ['classes'], description: 'Fixture tricking body' },
     { id: 'f1', name: 'Flips 1', order: 2, accessCategories: ['classes'], description: 'Fixture flips body' },
     { id: 'f2', name: 'Flips 2', order: 3, accessCategories: ['classes'] },
     { id: 'ex', name: 'Explosive', order: 4, accessCategories: ['classes'], description: 'No sessions' },
@@ -176,9 +176,8 @@ test('the Specialized Classes card is the Members schedule, and its price the pr
   assert.deepEqual(names, ['Tricking', 'Flips']);
   assert.deepEqual([...card.querySelectorAll('[data-class-days]')].map((d) => d.textContent), ['Tue · Thu', 'Wed · Fri']);
   const tricking = card.querySelector('[data-class-panel="tricking"]');
-  assert.equal(tricking.querySelector('[data-class-headline]').textContent, 'Kicks and flips');
   assert.equal(tricking.querySelector('[data-class-body]').textContent, 'Fixture tricking body');
-  assert.equal(card.querySelector('[data-class-panel="flips"] [data-class-headline]').hidden, true);
+  assert.equal(card.querySelector('[data-class-headline]'), null);
   assert.deepEqual([...card.querySelectorAll('[data-class-panel="flips"] .ct-when-line')].map((l) => l.textContent),
     ['Level 1, ages 18+: Wed — 7 PM', 'Level 2, ages 18+: Fri — 8 PM']);
   assert.match(card.querySelector('.ct-offer-t').textContent, /All drop-in: \$31 a class · 10 for \$276\./);
