@@ -11,6 +11,7 @@ import {
   visibleWeeks, sessionsForWeek, closedDays, upcomingChanges, weekRangeLabel, shortDate, dayAndDate, dateInWeek,
 } from './week.js';
 import { NOTES } from './notes.js';
+import { renderWebWeek } from './web-week.js';
 
 const DAY_ORDER = [1, 2, 3, 4, 5, 6, 0];
 const DAY_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -22,6 +23,7 @@ const IN_FRAME = window.self !== window.top;
 // ── State: one immutable object, replaced on every change ────────────────────────────────────────────────
 const INITIAL = Object.freeze({
   mode: 'proposed', // 'proposed' | 'live'
+  look: 'web', // 'web' (the site's own look, proposed) | 'sheet' (the printed sheet, as today)
   week: 0, // index into visibleWeeks
   filter: SAMPLE_DISPLAY.filter || 'all',
   exceptionsOn: Object.freeze(SAMPLE_EXCEPTIONS.map(() => true)),
@@ -125,7 +127,21 @@ async function renderDesktop() {
   document.querySelectorAll('#embed-filters .embed-filter').forEach((b) => b.classList.toggle('active', b.dataset.filter === state.filter));
 
   const proposed = state.mode === 'proposed';
+  const web = proposed && state.look === 'web';
+  document.body.classList.toggle('ws-look', web);
   const monday = weeks[state.week];
+  if (web) {
+    const base = state.filter === 'open-gym'
+      ? buildOpenGymMobileEntries().map((c, i) => ({ ...c, id: `og${i}` }))
+      : SAMPLE_CLASSES.filter((c) => matchesFilter(c, state.filter));
+    const list = sessionsForWeek(base, monday, exceptions());
+    renderWebWeek(root, { sessions: list, monday, today: TODAY, closed: closedDays(monday, exceptions()), section: state.filter === 'athletic' ? 'athletic' : state.filter === 'open-gym' ? 'open_gym' : 'classes', onClassClick: (c) => popup?.open(c) });
+    const desktop = shell.querySelector('.embed-desktop');
+    desktop.before(weekBar());
+    const notice = changesNotice();
+    if (notice) desktop.before(notice);
+    return;
+  }
   const sessions = proposed ? sessionsForWeek(SAMPLE_CLASSES, monday, exceptions()) : SAMPLE_CLASSES;
   const byId = new Map(sessions.map((s) => [s.id, s]));
   await renderPrintSheet(root, {
@@ -254,6 +270,7 @@ function renderReview() {
       el('button', { type: 'button', class: 'proto-min', 'data-act': 'min', 'aria-label': state.reviewMin ? 'Show controls' : 'Hide controls', text: state.reviewMin ? '+' : '–' }),
     ]),
     el('div', { class: 'proto-row' }, [el('span', { text: 'Version' }), seg('mode', [['proposed', 'Proposed'], ['live', 'Live today']], state.mode)]),
+    state.mode === 'proposed' ? el('div', { class: 'proto-row' }, [el('span', { text: 'Desktop look' }), seg('look', [['web', 'Website'], ['sheet', 'Printed sheet']], state.look)]) : null,
     el('div', { class: 'proto-row' }, [el('span', { text: 'Screen' }), seg('screen', [['desktop', 'This screen'], ['phone', 'Phone']], state.phone ? 'phone' : 'desktop')]),
     state.mode === 'proposed' ? el('div', { class: 'proto-ex' }, [
       el('span', { text: 'Sample changes staff made in Members (tick to switch on)' }),
@@ -308,6 +325,7 @@ document.addEventListener('click', (e) => {
     else if (a === 'this-week') update({ week: 0 });
     else if (a === 'goto') update({ week: weeks.findIndex((m) => act.dataset.date >= m && act.dataset.date <= dateInWeek(m, 0)) });
     else if (a === 'mode') update({ mode: act.dataset.v, week: 0 });
+    else if (a === 'look') update({ look: act.dataset.v });
     else if (a === 'screen' && (e.target === act || act.tagName === 'BUTTON')) update({ phone: act.dataset.v === 'phone' });
     else if (a === 'min') update({ reviewMin: !state.reviewMin });
     else if (a === 'notes') update({ notesOpen: !state.notesOpen });
