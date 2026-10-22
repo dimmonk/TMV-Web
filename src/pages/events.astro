@@ -8,6 +8,7 @@ import PartyReturn from '../components/PartyReturn.astro';
 import { seo, links, site, cat, url } from '../data/site';
 import { partyCards } from '../data/parties';
 import { sq } from '../data/square-links';
+import { partyFaqGroups as faqGroups } from '../data/party-faqs';
 
 const steps = [
   { n: '1', title: 'Pick the age range', body: 'Select the average age of the group.' },
@@ -15,24 +16,6 @@ const steps = [
   { n: '3', title: 'Pick date & time', body: 'Weekend slots fill fast — the times you see online are all we have.' },
   { n: '4', title: 'Enter payment info', body: 'Your card is not charged — it only holds the slot per our policy.' },
   { n: '5', title: 'Check your email', body: "A confirmation lands in your inbox. Peek in spam if you don't see it." },
-];
-const faqGroups = [
-  { title: 'Booking', items: [
-    { q: 'When do I pay?', a: "You don't pay anything upfront. The credit card collected during booking is only for our cancellation policy and won't be charged. Payment is made in person on the day of the party, based on the final count of participants — so you only pay for who actually shows up." },
-    { q: 'What is the cancellation policy?', a: "A cancellation fee applies if the booking is canceled within 24 hours of the appointment or if there's a no-show. Full details are provided during the booking process." },
-    { q: 'What if weekend slots are fully booked?', a: "The availability you see online is all we have — we can't create additional slots. If you have a smaller group, consider the Mini Birthday Party: the same one-hour coached parkour session, with a minimum of just 3 participants ($30 each, max 15), ages 8+. Each kid gets an all-day pass, but it doesn't include a private room — common-area tables are shared and not guaranteed." },
-  ] },
-  { title: 'Day of the party', items: [
-    { q: 'When should we arrive?', a: "The host is welcome to arrive 15 minutes before the scheduled party time. Depending on availability — if there's no party before yours — the room may be ready a little earlier." },
-    { q: 'Are there age requirements?', a: "To make sure everyone has a great time, we ask that the group be similar in age. Our coaches tailor the activities and difficulty to the group, so mixing very different ages (e.g. a 4-year-old with 7–8 year olds) doesn't work well." },
-  ] },
-  { title: 'Food & drinks', items: [
-    { q: 'What are the food options?', a: "We don't provide food, drinks or catering — but you're welcome to bring whatever you'd like (cake, pizza, snacks, drinks) with no restrictions or fees. You can also order delivery; Domino's and Pizza Nova are within three blocks and know our location well. We recommend ordering on arrival or ahead of time, and we provide a fridge/freezer to store your items during the party." },
-    { q: 'What supplies do you provide?', a: "We provide the party room, tables, and a fridge/freezer for storage. We don't provide plates, cups, utensils, napkins or serving supplies — the host brings all catering items. You're also welcome to bring your own decorations." },
-  ] },
-  { title: 'During the party', items: [
-    { q: 'Can we extend the open gym time?', a: "Yes — just ask the instructor assigned to your party. It's $5 per participant for an extra hour. Note that extending gym time does not extend your party-room time: the room must be vacated at the 2-hour mark so we can prep it for the next group." },
-  ] },
 ];
 ---
 <BaseLayout title={seo.events.title} description={seo.events.description} active="events" mobileTab="more" appHeader="back" appTitle="Birthday Parties">
@@ -58,7 +41,7 @@ const faqGroups = [
     </div>
   </section>
 
-  <JumpNav items={[{ label: 'Birthdays', id: 'birthdays' }, { label: 'Come Back', id: 'comeback' }, { label: 'Birthday FAQ', id: 'faq' }]} actions={[{ label: 'Book a party', href: links.booking, icon: 'bi bi-calendar-check' }]} top={66} />
+  <JumpNav items={[{ label: 'Birthdays', id: 'birthdays' }, { label: 'Parent Questions', id: 'faq' }, { label: 'Come Back', id: 'comeback' }]} actions={[{ label: 'Book a party', href: links.booking, icon: 'bi bi-calendar-check' }]} top={66} />
 
   <section id="birthdays" class="section container" style={`scroll-margin-top:120px; --party:${cat.parties}`}>
     <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Birthdays" title="Two ways to celebrate" description="Go all-in with the full package, or keep it nimble with a Mini party for smaller groups and last-minute plans." color={cat.parties} /></div>
@@ -67,14 +50,6 @@ const faqGroups = [
     </div>
   </section>
 
-  {/* THE WRAP-UP, ON THE PAGE — every party ends with the group hearing that
-      a party is only one of the ways back in (data/progression.ts). */}
-  <section id="comeback" class="section container" style={`scroll-margin-top:120px; padding-block:8px; --party:${cat.parties}`}>
-    <div style="margin-bottom:28px">
-      <SectionHeader num="02" eyebrow="After the party" title="Three ways to come back" description="The party is one way to use the gym. Every kid who came already knows the floor — here's how they keep moving." color={cat.parties} />
-    </div>
-    <PartyReturn />
-  </section>
 
   <section class="section container" style="padding-block:56px 12px">
     <div class="ev-how">
@@ -110,6 +85,15 @@ const faqGroups = [
         ))}
       </div>
     </div>
+  </section>
+
+  {/* THE WRAP-UP, ON THE PAGE — every party ends with the group hearing that
+      a party is only one of the ways back in (data/progression.ts). */}
+  <section id="comeback" class="section container" style={`scroll-margin-top:120px; padding-block:56px 72px; --party:${cat.parties}`}>
+    <div style="margin-bottom:28px">
+      <SectionHeader num="03" eyebrow="After the party" title="Three ways to come back" description="The party is one way to use the gym. Every kid who came already knows the floor — here's how they keep moving." color={cat.parties} />
+    </div>
+    <PartyReturn />
   </section>
 
   </div>

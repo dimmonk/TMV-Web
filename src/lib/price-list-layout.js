@@ -63,8 +63,8 @@ export const PRICE_LIST_SECTIONS = [
         label: 'Passes',
         items: [
           { priceKey: 'groupClass1x',  label: '1x Class' },
-          { priceKey: 'groupClass10x', label: '10x Classes' },
-          { priceKey: 'groupClass20x', label: '20x Classes' },
+          { priceKey: 'groupClass10x', label: '10x Classes', bullets: [{ text: 'Valid 10 months' }] },
+          { priceKey: 'groupClass20x', label: '20x Classes', bullets: [{ text: 'Valid 20 months' }] },
         ],
       },
       {
@@ -118,7 +118,7 @@ export const PRICE_LIST_SECTIONS = [
       'Birthday party packages centered around parkour and movement activities',
       'Party Duration: 2 hours total — 1 hour of instructed activities + 1 hour for food, celebrations and free time around the gym',
       'Food and Decorations: bring your own food, drinks, and decorations',
-      'Ask about alternative options if all time slots are booked',
+      'Short notice, a small group, or every Full Party slot taken? Book a Mini Party: no party room needed',
       'Reservations required',
     ],
     groups: [
@@ -209,8 +209,8 @@ export const PRICE_LIST_SECTIONS = [
         label: 'Passes',
         items: [
           { priceKey: 'openGym1x',  label: '1x Day Pass' },
-          { priceKey: 'openGym10x', label: '10x Day Passes' },
-          { priceKey: 'openGym20x', label: '20x Day Passes' },
+          { priceKey: 'openGym10x', label: '10x Day Passes', bullets: [{ text: 'Valid 10 months' }] },
+          { priceKey: 'openGym20x', label: '20x Day Passes', bullets: [{ text: 'Valid 20 months' }] },
         ],
       },
       {
@@ -269,6 +269,7 @@ export const PRICE_LIST_SECTIONS = [
             priceKey: 'athleticClass10x', label: '10x Classes',
             bullets: [
               { text: 'Fallback option for athletes attending once a week' },
+              { text: 'Valid 10 months' },
             ],
           },
           { priceKey: 'athleticClassAddon', label: 'Class add-on', separated: true },

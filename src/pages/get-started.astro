@@ -12,8 +12,8 @@ import { forSurface } from '../data/surface';
 const bring = forSurface(firstVisitBring, 'desktop');
 const arrive = forSurface(firstVisitArrive, 'desktop');
 const otherFaqs = [
-  { q: 'Do I need any experience to start?', a: 'None at all. Most people who walk in have never done parkour before. Book an Introduction Class or drop into open gym and a coach will start you with the basics at your own pace.' },
-  { q: 'What ages do you welcome?', a: 'Everyone from age 3 and up. We run youth classes, adult classes, camps for kids 5+, and open gym for all ages. There is a class and a session for every body.' },
+  { q: 'Do I need any experience to start?', a: 'None at all. Most people who walk in have never done parkour before. Book an intro lesson for the basics, a private lesson for a specific goal, or drop into a group class or open gym.' },
+  { q: 'What ages do you welcome?', a: 'Everyone from age 3 and up. We run youth classes, adult classes, camps for kids 5 to 16, and open gym for all ages. There is a class and a session for every body.' },
   { q: 'Do I have to book, or can I just drop in?', a: 'Both work. Open Gym and Group Classes need no reservation — just check the schedule and show up. Introduction and Private Classes are reserved ahead of time so a coach is set aside for you.' },
   { q: 'Is it safe? What about the kids?', a: 'Safety is built into the space — padded floors, a foam pit, and trained coaches who scale every skill to your level. Read the Rules poster at the entrance and your coach will guide the rest.' },
   { q: 'Can I host a birthday or group event?', a: 'Absolutely. We run full and mini birthday parties plus group events for schools, teams and organizations. Weekend slots fill fast, so book early — see the Events page for details.' },
@@ -28,11 +28,11 @@ const otherFaqs = [
     <div class="gs-hero">
       <div class="gs-kicker"><span class="rule"></span>New here? Start here<span class="rule"></span></div>
       <h1 class="gs-title">Your first visit,<br>in three steps.</h1>
-      <p class="gs-lead">Never trained with us before? No experience needed. Sign your waiver, book an intro with a coach, and show up ready to move — we'll take care of the rest.</p>
+      <p class="gs-lead">Never trained with us before? No experience needed. Sign your waiver, book the lesson that fits your goal, and show up ready to move — we'll take care of the rest.</p>
     </div>
   </section>
 
-  <JumpNav items={[{ label: '1 · Waiver', id: 'step-1' }, { label: '2 · Intro Lesson', id: 'step-2' }, { label: '3 · What to Bring', id: 'step-3' }, { label: 'Your Path', id: 'path' }, { label: 'Questions', id: 'questions' }]} top={66} />
+  <JumpNav items={[{ label: '1 · Waiver', id: 'step-1' }, { label: '2 · Your First Lesson', id: 'step-2' }, { label: '3 · What to Bring', id: 'step-3' }, { label: 'Your Path', id: 'path' }, { label: 'Questions', id: 'questions' }]} top={66} />
 
   <div class="gswrap">
     <section id="step-1" class="gsstep">
@@ -54,8 +54,8 @@ const otherFaqs = [
         <div class="gsnum">2</div>
         <div>
           <div class="gseyebrow">Step two</div>
-          <h2 class="gsh2">Book your intro lesson</h2>
-          <p class="gsp">Everyone who wants to learn starts the same way: one hour, one coach, our beginner curriculum. It's a real lesson, and it's how we work out what to recommend next — face to face, not from a price list.</p>
+          <h2 class="gsh2">Book the lesson that fits your goal</h2>
+          <p class="gsp">Learning the basics? The intro is one hour, one coach, our set beginner lesson plan. Working on a specific skill? A private lesson is planned around it. Either one can be your first visit.</p>
         </div>
       </div>
       <div class="gsopts"><IntroStep /></div>
@@ -84,7 +84,7 @@ const otherFaqs = [
     <section id="path" class="gsstep">
       <div class="gsdiv" style="margin:48px 0 0"></div>
       <div class="gspath">
-        <div class="gseyebrow">After your intro</div>
+        <div class="gseyebrow">After your first lesson</div>
         <h2 class="gsh2">Where it goes from here</h2>
         <p class="gsp" style="margin-bottom:30px">Most people move through the gym in three stages. You don't have to follow it in order — your coach will tell you where you fit.</p>
         <PathStrip here="learn" />

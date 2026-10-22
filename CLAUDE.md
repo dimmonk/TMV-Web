@@ -162,10 +162,29 @@ opt-out flag to get wrong.
 
 ## Navigation IA
 
-The primary nav (`nav` in `data/site.ts`) is deliberately capped at **six**. The
+The primary nav (`nav` in `data/site.ts`) is deliberately capped at **seven**
+(Open Gym joined Classes in 2026-10; below 1280px the header drops "New here?" so
+seven fit, and the menu button takes over below 1024px). The
 long tail lives in **`src/data/explore.ts`** — one array rendered by both the
 mobile More sheet and the desktop footer's Explore column. Add a revenue stream
 there once and it appears on both surfaces.
+
+## Camp dates: the Members camp catalogue
+
+Camp dates are never typed here. TMV-Members publishes its sellable camps to a public object
+(`camp-catalog.json`, `PUBLIC_CAMP_CATALOG_URL` in `src/lib/camp-dates.js`); `src/data/camp-dates.ts` reads it once
+per build and `CampDates.astro` re-reads it on page load (`applyCampDates`, text only), like the site config. Dates
+show from the gym's today on, as runs of consecutive days per camp type. A camp with no dates left renders nothing;
+no dates at all hides the Dates section (`data-camp-dates`) and the links to it. A weekly season is offered only
+when it has dates AND its Square link is set. Booking stays on each camp's Square link. A failed read warns
+(`[camp-dates]`) and shows no dates. The test server serves a fixture catalogue.
+
+## The price list: one renderer, a web skin
+
+`/pricing` renders the members app's price list with the shared `src/lib/price-list-renderer.js` in its `'web'`
+variant (cards in the print sheet's column layout, details behind an ⓘ, `src/styles/price-list-web.css` maps each
+section to its site colour). The layout (`src/lib/price-list-layout.js`: sections, rows, bullets such as pass expiry,
+footnotes) is shared with TMV-Members' printed sheet; change both copies together.
 
 ## The guidance layer: sell the progress, not the program
 
@@ -180,17 +199,18 @@ Four rules, and the data module that owns each:
 1. **The client path** — Experience → Learn → Progress. `stages` in
    `data/progression.ts`, rendered by `PathStrip`. Camps live in **Learn**
    (recreational: learn and play), not Experience.
-2. **The Intro Lesson is THE first step** for anyone who wants to learn. It is
-   the simplest thing that gets a person into the gym *with a coach*, so the
-   real recommendation can be made face to face. The home hero books it, the
-   goal picker resolves every "learn" goal to it, and Get Started step two is
-   it — not a menu of four equal options.
+2. **Match the first step to the goal** (owner's rulings, 2026-10-20/21). Learn
+   parkour → the Intro Lesson (a set basics lesson, hence cheaper), then
+   Recreational. A kid trying it out → a drop-in Recreational class (intro as
+   the "or"), leading to Camps and Open Gym, never Athletic. A specific skill →
+   a Private Lesson. Train seriously → Specialized classes and Privates. Get
+   Started step two is the intro, not a menu of four equal options.
 3. **One clear next step** — `goals` in `data/goals.ts` → `GoalPicker`
    (ASK → RECOMMEND → REASON → INVITE). One goal in, ONE recommendation out,
    with the reason and where it leads. Never a list of every program.
 4. **Every page ends with a next step** — `nextSteps` in `data/progression.ts`
-   → `NextStep`. Open Gym → intro; group class → private; training weekly →
-   Athletic; private → pack; Athletic → intro as the assessment.
+   → `NextStep`. Group class → private; training weekly → Athletic; private →
+   pack; Athletic → the first class is the prerequisite check.
 
 Two more from the same procedure: **value before price** (`purchaseFit` →
 `PurchaseFit`, above the live price list) and **the party wrap-up**

@@ -3,9 +3,17 @@
  * ASK → RECOMMEND → REASON → INVITE entry point on Home. One goal → ONE
  * recommendation with a reason, one CTA, and where it usually leads next.
  *
- * Every "learn" goal lands on the Intro Lesson (the designed first step: get
- * them in the gym with a coach); "just play" → Open Gym; "birthday" → a
- * party. Rendered by components/GoalPicker.astro on both chromes.
+ * Match the lesson to the goal (owner's rule, 2026-10-20): a kid trying it out →
+ * a drop-in Recreational class (no booking, no commitment); parkour basics → the
+ * Intro Lesson, a set beginner lesson plan that is the same every time (why it
+ * costs less); a specific skill → a Private Lesson built around it, first visit
+ * included; regular structured training → the Athletic Program, whose
+ * prerequisite is checked in the first class. "Just play" → Open Gym;
+ * "birthday" → a party. Rendered by components/GoalPicker.astro on both chromes.
+ *
+ * Copy names options, never prices or hours: the one number on a card is its
+ * `price` field (the real build reads it from the published price list), and
+ * hours live only in what staff publish.
  */
 import { cat, url } from './site';
 import { sq } from './square-links';
@@ -34,60 +42,63 @@ export interface Goal {
 }
 
 const INTRO = { color: cat.intro, cta: 'Book an intro', href: sq.getStarted.introduction, external: true, price: '$45 · 1 hr · 1-on-1' } as const;
-const openGym = `${url('train')}#opengym`;
+const PRIVATE = { color: cat.private, cta: 'Book a private lesson', href: sq.privateLessons.privateLesson, external: true, price: '1 hr · Kids $65 · Adults $85' } as const;
+const openGym = url('open-gym');
 const dayPass = `${url('store')}#opengym`;
 
 export const goals: Goal[] = [
   {
-    id: 'kid', label: 'Find an activity my kid loves', ...INTRO,
-    eyebrow: "We'd start them with", title: 'An intro lesson with a coach',
-    reason: "One private session on our beginner curriculum. The coach sees where your kid is at, you see how we coach, and you leave knowing exactly which class fits — instead of guessing from a schedule.",
-    altLead: 'Not sure they want a lesson yet?', altLink: 'Try an open gym day pass first — $25.', altHref: dayPass,
+    id: 'kid', label: 'Find an activity my kid loves',
+    color: cat.classes, cta: 'See the class times', href: url('schedule'), price: '$30 · drop-in · ages 3+',
+    eyebrow: "We'd start them with", title: 'A drop-in Recreational class',
+    reason: 'The easiest way to find out if they love it: no booking, no commitment. Parkour and acrobatics at their own pace with a coach and other kids. Come to any class time, and the coach tells you what fits next.',
+    altLead: 'Rather they start one-on-one?', altLink: 'Book an intro lesson with a coach.', altHref: sq.getStarted.introduction,
     sideLabel: 'Where it usually leads',
     leads: [
-      { title: 'Kids Parkour · Recreational', sub: 'Drop-in group class · $30, 10-pack $275', color: cat.classes, href: url('schedule') },
-      { title: 'Camps', sub: 'P.A. Days $90 · Summer weeks $350', color: cat.camps, href: url('camps') },
+      { title: 'Camps', sub: 'School breaks & P.A. Days · ages 5 to 16', color: cat.camps, href: url('camps') },
+      { title: 'Open Gym', sub: 'Play together any day, no booking', color: cat.openGym, href: openGym },
     ],
   },
   {
     id: 'parkour', label: 'Learn parkour', ...INTRO,
     eyebrow: "We'd start you with", title: 'An intro lesson with a coach',
-    reason: "A one-hour private on the beginner curriculum — what parkour is, what you can already do, and how we coach it. You finish with a real recommendation for what to book next, not a menu.",
-    altLead: 'Coming with friends?', altLink: 'Intros are $35 each for two, $30 each for three or more.', altHref: url('private-lessons'),
+    reason: 'One hour on our set beginner lesson plan: the parkour basics, the same proven plan every time. For a specific skill or goal, a private lesson is built around you instead.',
+    altLead: 'Coming with friends?', altLink: 'Intros cost less per person in a group of two or more.', altHref: url('get-started'),
     sideLabel: 'Where it usually leads',
     leads: [
       { title: 'Recreational Parkour', sub: 'Drop-in group classes, all ages', color: cat.classes, href: url('schedule') },
-      { title: 'Private lessons', sub: 'Faster, built around your goals · from $65', color: cat.private, href: url('private-lessons') },
+      { title: 'Private lessons', sub: 'Built around your goal, at your pace', color: cat.private, href: url('private-lessons') },
     ],
   },
   {
-    id: 'backflip', label: 'Land a backflip', ...INTRO,
-    eyebrow: "We'd start you with", title: "An intro lesson — tell the coach it's the backflip",
-    reason: 'The coach builds the hour around that one skill, spots you the whole way, and tells you straight whether Flip Class or a private pack gets you there fastest. Structured coaching, not figuring it out in open gym.',
-    altLead: 'Already flipping?', altLink: 'Drop into Flip Class or Backflip Only (adults, Sat 12 PM) — $30.', altHref: url('schedule'),
-    sideLabel: 'Where it usually leads',
+    id: 'skill', label: 'Work on a specific skill', ...PRIVATE,
+    eyebrow: "We'd start you with", title: 'A private lesson built around your goal',
+    reason: 'A backflip, a handstand, a kong vault: tell us the goal and the coach plans the whole hour around it and your current level. You can book it as your very first visit.',
+    altLead: 'Prefer a group?', altLink: 'See the specialized classes.', altHref: `${url('train')}#specialized`,
+    sideLabel: 'Keep working on your goal',
     leads: [
-      { title: 'Flip Class · Levels 1–2', sub: 'Drop-in · ages 7+ · $30, 10-pack $275', color: cat.classes, href: url('schedule') },
-      { title: 'Private 5-pack', sub: 'The whole session on the one move', color: cat.private, href: url('private-lessons') },
+      { title: 'Specialized group classes', sub: 'Flips, handstands, strength & more', color: cat.classes, href: `${url('train')}#specialized` },
+      { title: 'Private 5-pack', sub: 'Every session on your goal', color: cat.private, href: url('private-lessons') },
     ],
   },
   {
-    id: 'serious', label: 'Train seriously', ...INTRO,
-    eyebrow: "We'd start you with", title: 'An intro lesson — it doubles as your assessment',
-    reason: "The Athletic Program has a prerequisite, and the intro is how a coach checks it. One session and you'll know whether to enroll now or build a base in classes first — and you'll have a coach who knows your name.",
-    altLead: 'Already have the base?', altLink: 'Go straight to the Athletic Program — $150 / month.', altHref: url('athletic-program'),
+    id: 'serious', label: 'Train seriously',
+    color: cat.athletic, cta: 'See the Athletic Program', href: url('athletic-program'), price: '$150 / month · ages 9+',
+    eyebrow: "We'd point you to", title: 'The Athletic Program',
+    reason: 'Two coached 90-minute sessions a week and monthly check-ins. There is a prerequisite: your first class is the check, or a coach who has already worked with you can vouch.',
+    altLead: 'One skill in mind instead?', altLink: 'Book a private lesson built around it.', altHref: sq.privateLessons.privateLesson,
     sideLabel: 'Where it usually leads',
     leads: [
-      { title: 'Athletic Program', sub: '2 × 90 min a week + open gym · ages 9+', color: cat.athletic, href: url('athletic-program') },
-      { title: 'Private lessons', sub: 'Ongoing 1-on-1, built around your goals · from $65', color: cat.private, href: url('private-lessons') },
+      { title: 'Specialized group classes', sub: 'Flips, handstands, strength & more', color: cat.classes, href: `${url('train')}#specialized` },
+      { title: 'Private lessons', sub: 'Extra 1-on-1 on what you are working on', color: cat.private, href: url('private-lessons') },
     ],
   },
   {
     id: 'play', label: 'Just play & burn energy',
     color: cat.openGym, eyebrow: "We'd point you to", title: 'Open Gym — no class, no booking',
-    reason: "Full run of the floor, foam pit and obstacles, every day 11 AM – 10 PM, no time limit. Sign the waiver online, buy a day pass, show up. Everyone's welcome, all ages mixed.",
-    cta: 'Get a day pass', href: dayPass, price: '$25 · all day',
-    altLead: 'Keep working on the same move?', altLink: "That's when an intro lesson is worth it.", altHref: sq.getStarted.introduction,
+    reason: "Full run of the floor, foam pit and obstacles, any time we're open, no time limit. Sign the waiver online, get a day pass, show up. All ages; kids under 7 play with a parent.",
+    cta: 'Plan an open gym visit', href: openGym, price: '$25 · all day',
+    altLead: 'Want coaching on a specific move?', altLink: 'Book a private lesson built around it.', altHref: sq.privateLessons.privateLesson,
     sideLabel: 'Coming back a lot?',
     leads: [
       { title: 'Visit packs', sub: 'Pre-paid, cheaper per visit', color: cat.openGym, href: dayPass },
@@ -97,12 +108,12 @@ export const goals: Goal[] = [
   {
     id: 'party', label: 'Celebrate a birthday',
     color: cat.parties, eyebrow: "We'd point you to", title: 'A Full Birthday Party',
-    reason: 'Two hours: a coached session of games and challenges, then a private party room. Coaches stay with the group the whole time. Your card holds the slot — you pay on the day, by final headcount.',
+    reason: 'Two hours: a coached session of games and challenges, then a private party room. Coaches stay with the group the whole time. Your card holds the slot; you pay on the day, by final headcount.',
     cta: 'Book a party', href: sq.book.fullBirthday, external: true, price: '$350 base · up to 8 kids',
-    altLead: 'Smaller crew or short notice?', altLink: 'Mini party — $30 a kid, 3 kid minimum.', altHref: url('events'),
+    altLead: 'Smaller crew or short notice?', altLink: 'See the mini party.', altHref: url('events'),
     sideLabel: 'After the party',
     leads: [
-      { title: 'Open Gym day pass', sub: 'The easiest way back — $25', color: cat.openGym, href: openGym },
+      { title: 'Open Gym', sub: 'The easiest way back', color: cat.openGym, href: openGym },
       { title: 'Kids Parkour class', sub: "For the one who wouldn't stop", color: cat.classes, href: url('schedule') },
     ],
   },

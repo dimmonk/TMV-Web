@@ -1,18 +1,17 @@
 ---
 /**
- * Get Started · step two — "Book your intro lesson".
+ * Get Started · step two — "Pick the first visit that fits your goal".
  *
- * The client-progression procedure makes the Intro Lesson THE first step for
- * anyone who wants to learn: the simplest way to get someone into the gym,
- * with a coach, so the recommendation can be made face to face. So this is ONE
- * recommendation plus the reasons it's the start — not the four equal options
- * that used to sit here. The other ways in survive as a quiet row underneath,
- * for people who aren't here to learn yet.
+ * Match the lesson to the goal. The intro is a
+ * set basic-parkour lesson plan; a specific skill or goal goes straight to a
+ * private lesson, first visit included. The intro stays the lead card (most
+ * first visits are "learn the basics"), the private lesson is the one clear
+ * alternative right under it, and the other ways in stay a quiet row.
  *
  * Copy/price come from `privateWays[0]` (the intro's SSOT) and
  * src/data/first-session.ts. Content only — both chromes render this.
  */
-import { introWhy, introBonus, otherWaysIn } from '../data/first-session';
+import { introWhy, introBonus, otherWaysIn, privateFirst } from '../data/first-session';
 import { privateWays } from '../data/private-lessons';
 import { sq } from '../data/square-links';
 import { cat } from '../data/site';
@@ -47,7 +46,7 @@ const intro = privateWays.find((w) => w.key === 'intro')!;
     </div>
 
     <div class="is-why">
-      <div class="is-why-label">Why we start here</div>
+      <div class="is-why-label">What the intro is</div>
       <div class="is-why-rows">
         {introWhy.map((w) => (
           <div class="is-why-row">
@@ -63,8 +62,14 @@ const intro = privateWays.find((w) => w.key === 'intro')!;
     </div>
   </div>
 
+  <a class="is-private" href={sq.privateLessons.privateLesson} target="_blank" rel="noopener">
+    <span class="is-private-ic"><i class="bi bi-person-arms-up" aria-hidden="true"></i></span>
+    <span class="is-private-txt"><strong>{privateFirst.label}</strong> {privateFirst.text}</span>
+    <span class="is-private-cta">{privateFirst.cta} <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+  </a>
+
   <div class="is-other">
-    <div class="is-other-label">Not here to learn yet?</div>
+    <div class="is-other-label">Not here for a lesson?</div>
     <div class="is-other-links">
       {otherWaysIn.map((o) => (
         <a class="is-other-link" href={o.href}><span class="is-other-dot" style={`background:${o.color}`}></span>{o.label} <i class="bi bi-chevron-right" aria-hidden="true"></i></a>
@@ -75,6 +80,12 @@ const intro = privateWays.find((w) => w.key === 'intro')!;
 
 <style>
   .is { display: flex; flex-direction: column; gap: 22px; }
+  .is-private { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; padding: 18px 20px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg); text-decoration: none; color: var(--text-2); box-shadow: var(--shadow-sm); }
+  .is-private-ic { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--c-private) 14%, #fff); color: var(--c-private); font-size: 19px; }
+  .is-private-txt { font: 500 14px/1.5 var(--font-body); }
+  .is-private-txt strong { font: 800 15px/1.4 var(--font-display); color: var(--ink); display: block; }
+  .is-private-cta { font: 800 12px/1.2 var(--font-display); text-transform: uppercase; letter-spacing: .04em; color: var(--ink); white-space: nowrap; }
+  @media (max-width: 640px) { .is-private { grid-template-columns: auto 1fr; } .is-private-cta { grid-column: 1 / -1; } }
   .is-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; align-items: stretch; }
 
   .is-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; display: flex; flex-direction: column; }

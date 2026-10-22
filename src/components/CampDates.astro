@@ -1,0 +1,57 @@
+---
+/**
+ * Every camp date, grouped by camp, each group with its one Book button. The dates come from the members app's
+ * camp catalogue (data/camp-dates.ts at build; on page load lib/camp-dates.js re-applies them in place). Every
+ * group is always in the markup, `hidden` when it has nothing left, so a camp staff add later can appear.
+ * Content only, width-agnostic (THE RULE): the page gives it a column and owns the `data-camp-dates` block
+ * around it; the same markup serves both chromes.
+ */
+import { cat } from '../data/site';
+import { campDateGroups } from '../data/camp-dates';
+---
+<div class="cd" style={`--c:${cat.camps}`}>
+  {campDateGroups.map((g) => (
+    <section class="cd-group" data-camp-group={g.key} hidden={g.runs.length === 0} aria-labelledby={`cd-${g.key}`}>
+      <div class="cd-head">
+        <div>
+          <h3 class="cd-title" id={`cd-${g.key}`}>{g.title}</h3>
+          <p class="cd-unit">{g.unit}</p>
+        </div>
+        <a class="cd-book" href={g.href} target="_blank" rel="noopener">Book <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+      </div>
+      <ul class="cd-dates" data-camp-runs>
+        {g.runs.map((r) => <li class="cd-date"><span class="cd-date-l">{r.label}</span>{r.sub && <span class="cd-date-s">{r.sub}</span>}</li>)}
+      </ul>
+    </section>
+  ))}
+  <p class="cd-fine">Spots are confirmed when you book. Booking and payment happen on our Square booking page.</p>
+</div>
+<style>
+  .cd { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .cd-group { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); }
+  .cd-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .cd-title { font: 800 19px/1.15 var(--font-display); margin: 0; }
+  .cd-unit { font: 500 12.5px/1.4 var(--font-body); color: var(--muted); margin: 4px 0 0; }
+  .cd-book { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 10px; background: var(--c); color: #fff; text-decoration: none; font: 800 12px/1 var(--font-display); text-transform: uppercase; letter-spacing: .04em; }
+  .cd-dates { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .cd-fine { grid-column: 1 / -1; font: 500 12.5px/1.5 var(--font-body); color: var(--muted); margin: 2px 0 0; }
+  @media (max-width: 768px) { .cd { grid-template-columns: minmax(0, 1fr); } .cd-group { padding: 16px; } }
+</style>
+<style is:global>
+  /* Global: the browser re-applies these chips (lib/camp-dates.js), so they are not scoped to this component. */
+  .cd-date { display: inline-flex; flex-direction: column; padding: 8px 12px; border-radius: 10px; background: color-mix(in srgb, var(--c) 10%, #fff); border: 1px solid color-mix(in srgb, var(--c) 28%, #fff); }
+  .cd-date-l { font: 800 13px/1.2 var(--font-display); color: var(--ink); }
+  .cd-date-s { font: 500 11px/1.3 var(--font-body); color: var(--muted); }
+</style>
+
+<script>
+  import { applyCampDates, campDates, fetchCampCatalog } from '../lib/camp-dates.js';
+  import { gymNow } from '../lib/gym-clock.js';
+  // The build is the first paint; this keeps it current (a camp added, a date passed) without a release.
+  document.addEventListener('astro:page-load', () => {
+    if (!document.querySelector('[data-camp-dates]')) return;
+    fetchCampCatalog({ cache: 'no-cache' })
+      .then((camps) => applyCampDates(document, campDates(camps, gymNow().wall.slice(0, 10))))
+      .catch((err) => console.warn('[camp-dates] live catalogue fetch failed; keeping the built dates', err));
+  });
+</script>

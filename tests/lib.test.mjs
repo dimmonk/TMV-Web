@@ -7,9 +7,13 @@ import { moveSlotMarkers } from '../src/lib/sq-slot-marker.js';
 import { expiryStamp, isExpired, promoIsShown, promoButton } from '../src/lib/site-promo.js';
 import { gymNow } from '../src/lib/gym-clock.js';
 import { jsonForScript } from '../src/lib/json-for-script.js';
+import { specializedView, splitLevel, clock } from '../src/lib/specialized-classes.js';
+import { applySpecializedClasses } from '../src/lib/apply-specialized-classes.js';
+import { JSDOM } from 'jsdom';
 import {
   weekSchedule, hasOpenDays, hoursSummary, hoursHeading, hoursStat, openingHoursSpec, openStatus, formatClock,
 } from '../src/lib/opening-hours.js';
+import { readCampCatalog, campDates, applyCampDates } from '../src/lib/camp-dates.js';
 
 const ALL_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
   .map((day) => ({ day, time: '11:00 AM – 10:00 PM' }));
@@ -259,4 +263,133 @@ test('a Square slot marker moves into data-sq on its anchor, and any stray marke
     moveSlotMarkers(html),
     '<a href="https://sq.example/x" data-sq="book.introduction" target="_blank">Go</a><i data-x="https://sq.example/y"></i>',
   );
+});
+
+// ---- specialized-classes ----------------------------------------------------
+
+const D = (id, name, over = {}) => ({ id, name, order: 0, accessCategories: ['classes'], description: `${name} body`, headline: `${name} line`, ...over });
+const S = (disciplineId, day, time, ageRange, over = {}) => ({ disciplineId, day, time, ageRange, isCancelled: false, showOnWebsite: true, ...over });
+const SCHEDULE = {
+  disciplines: [
+    D('pk', 'Parkour'), D('f1', 'Flips 1', { order: 2 }), D('f2', 'Flips 2', { order: 3, description: 'Level two body' }),
+    D('tr', 'Tricking', { order: 1, headline: '' }), D('ath', 'Athletic', { accessCategories: ['athletic'] }),
+    D('ex', 'Explosive', { order: 4 }), D('sl', 'Speed League', { order: 5 }), D('hs', 'Handstand', { order: 6 }),
+  ],
+  classes: [
+    S('pk', 1, '17:00', '7-12'),
+    S('f2', 5, '20:00', '18+'), S('f1', 0, '12:00', '7-12'), S('f1', 4, '18:00', '7-12'), S('f1', 3, '19:00', '18+'), S('f2', 3, '20:00', '18+'),
+    S('tr', 2, '19:00', '13+'), S('tr', 4, '19:00', '13+'),
+    S('ath', 2, '18:00', '9-14'),
+    S('sl', 3, '18:00', '9-14', { isCancelled: true }),
+    S('hs', 4, '20:00', '13+', { showOnWebsite: false }),
+  ],
+};
+
+test('the card lists the classes with sessions, levels as one entry, in the schedule order', () => {
+  const rows = specializedView(SCHEDULE, { Flips: 'assets/flips.mp4' });
+  // Parkour is a core program, Athletic is not a drop-in class, Explosive has no
+  // sessions, Speed League only a cancelled one, Handstand only one kept off the website.
+  assert.deepEqual(rows.map((r) => r.id), ['tricking', 'flips']);
+  const [tricking, flips] = rows;
+  assert.deepEqual(tricking, {
+    id: 'tricking', name: 'Tricking', days: 'Tue · Thu', who: 'Ages 13+', when: ['Tue · Thu — 7 PM'],
+    headline: '', body: 'Tricking body', image: '',
+  });
+  assert.equal(flips.name, 'Flips');
+  assert.equal(flips.days, 'Wed · Thu · Fri · Sun');
+  assert.equal(flips.who, 'Ages 7–12 · 18+ · Levels 1–2');
+  assert.deepEqual(flips.when, ['Level 1, ages 7–12: Thu 6 PM · Sun 12 PM', 'Level 1, ages 18+: Wed — 7 PM', 'Level 2, ages 18+: Wed · Fri — 8 PM']);
+  assert.equal(flips.headline, 'Flips 1 line');
+  assert.equal(flips.body, 'Flips 1 body');
+  assert.equal(flips.image, 'assets/flips.mp4');
+});
+
+test('an unreadable schedule lists nothing', () => {
+  assert.deepEqual(specializedView(null), []);
+  assert.deepEqual(specializedView({}), []);
+});
+
+test('a level number is split off the class name, and times read as a clock', () => {
+  assert.deepEqual(splitLevel('Acro Dance 2'), { group: 'Acro Dance', level: 2 });
+  assert.deepEqual(splitLevel('Tricking'), { group: 'Tricking', level: 0 });
+  assert.equal(clock('19:00'), '7 PM');
+  assert.equal(clock('19:30'), '7:30 PM');
+  assert.equal(clock('12:00'), '12 PM');
+  assert.equal(clock('09:15'), '9:15 AM');
+});
+
+test('the browser brings a built card up to date in place, as text', () => {
+  const { document } = new JSDOM(`<div data-class-tabs>
+    ${['tricking', 'flips'].map((id) => `<button data-class-tab="${id}"><span data-class-days>old</span></button>`).join('')}
+    ${['tricking', 'flips'].map((id) => `<div data-class-panel="${id}"><p data-class-headline>old</p><p data-class-body>old</p>
+      <div data-class-who-row><span data-class-who>old</span></div><span data-class-when><span>old</span></span></div>`).join('')}
+  </div>`).window;
+  const root = document.querySelector('[data-class-tabs]');
+  const rows = specializedView({ ...SCHEDULE, disciplines: SCHEDULE.disciplines.map((d) => (d.id === 'tr' ? { ...d, description: '<img src=x onerror=alert(1)>' } : d)) })
+    .filter((r) => r.id === 'tricking');
+  assert.deepEqual(applySpecializedClasses(root, rows), ['tricking']);
+  const tab = (id) => root.querySelector(`[data-class-tab="${id}"]`);
+  const panel = root.querySelector('[data-class-panel="tricking"]');
+  assert.equal(tab('flips').hidden, true);
+  assert.equal(tab('tricking').hidden, false);
+  assert.equal(tab('tricking').querySelector('[data-class-days]').textContent, 'Tue · Thu');
+  assert.equal(panel.querySelector('[data-class-headline]').hidden, true);
+  assert.equal(panel.querySelector('[data-class-body]').textContent, '<img src=x onerror=alert(1)>');
+  assert.equal(panel.querySelector('img'), null);
+  assert.deepEqual([...panel.querySelectorAll('[data-class-when] .ct-when-line')].map((l) => l.textContent), ['Tue · Thu — 7 PM']);
+});
+
+// ---- camp dates ---------------------------------------------------------------
+
+const byKey = (groups) => Object.fromEntries(groups.map((g) => [g.key, g]));
+
+test('the camp catalogue keeps known types and real dates; anything else reads as no camps', () => {
+  assert.deepEqual(readCampCatalog(null), []);
+  assert.deepEqual(readCampCatalog({ camps: 'x' }), []);
+  assert.deepEqual(readCampCatalog({ camps: [
+    { type: 'winter', dates: ['2099-12-21', '21/12/2099', 7] },
+    { type: 'private', dates: ['2099-01-01'] },
+    { type: 'summer' },
+  ] }), [{ type: 'winter', dates: ['2099-12-21'] }]);
+});
+
+test('camp dates fall into runs of consecutive days, from today on, with a summary per camp', () => {
+  const g = byKey(campDates([
+    { type: 'summer', dates: ['2099-07-06', '2099-07-07', '2099-07-08', '2099-07-09', '2099-07-10', '2099-06-29', '2099-06-30', '2099-07-01', '2099-07-02', '2099-07-03', '2099-07-13'] },
+    { type: 'winter', dates: ['2099-12-21', '2099-12-22', '2099-12-28'] },
+    { type: 'pa-day', dates: ['2099-02-13', '2020-01-01', '2099-01-15'] },
+  ], '2026-10-22'));
+  assert.deepEqual(g.summer.runs.map((r) => r.label), ['Jun 29 – Jul 3', 'Jul 6 – 10', 'Mon, Jul 13'], 'a weekend starts a new run');
+  assert.equal(g.summer.runs[0].sub, '5 days');
+  assert.equal(g.summer.summary, '3 weeks from Jun 29');
+  assert.deepEqual(g.winter.runs, [{ label: 'Dec 21 – 22', sub: '2 days' }, { label: 'Mon, Dec 28', sub: '' }]);
+  assert.equal(g.winter.summary, 'Dec 21 – 22 & Mon, Dec 28');
+  assert.deepEqual(g.paday.runs.map((r) => r.label), ['Thu, Jan 15', 'Fri, Feb 13'], 'the past date is gone, the rest in order');
+  assert.equal(g.paday.summary, 'Next: Thu, Jan 15');
+  assert.deepEqual(g.march, { key: 'march', runs: [], summary: '' });
+});
+
+test('three or more runs summarise as a count of weeks', () => {
+  const weeks = ['2099-07-06', '2099-07-13', '2099-07-20'];
+  assert.equal(byKey(campDates([{ type: 'summer', dates: weeks }], '2099-01-01')).summer.summary, '3 weeks from Mon, Jul 6');
+});
+
+test('the browser refresh fills the date lists as text and hides empty camps and an empty block', () => {
+  const { document } = new JSDOM(`<section data-camp-dates>
+    <div data-camp-group="winter"><ul data-camp-runs><li>old</li></ul></div>
+    <div data-camp-group="paday" hidden><ul data-camp-runs></ul></div>
+  </section>`).window;
+  applyCampDates(document, [
+    { key: 'winter', runs: [], summary: '' },
+    { key: 'paday', runs: [{ label: '<b>Thu, Jan 15</b>', sub: '' }], summary: '' },
+  ]);
+  const block = document.querySelector('[data-camp-dates]');
+  assert.equal(block.hidden, false);
+  assert.equal(document.querySelector('[data-camp-group="winter"]').hidden, true);
+  const paday = document.querySelector('[data-camp-group="paday"]');
+  assert.equal(paday.hidden, false);
+  assert.equal(paday.querySelector('.cd-date-l').textContent, '<b>Thu, Jan 15</b>');
+  assert.equal(paday.querySelector('b'), null, 'text, never markup');
+  applyCampDates(document, [{ key: 'winter', runs: [], summary: '' }, { key: 'paday', runs: [], summary: '' }]);
+  assert.equal(block.hidden, true);
 });

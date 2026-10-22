@@ -31,7 +31,6 @@ const benefits = [
 ];
 const classTypes = [
   { label: 'Athletic · core', val: 'Tue & Thu' },
-  { label: 'Explosive', val: 'Mon & Fri' },
   { label: 'Speed League', val: 'Wed' },
 ];
 // Condensed from the desktop page's 5-part class structure — same five
@@ -77,10 +76,11 @@ const structure = [
     <div class="m-gtiers">
       {classTypes.map((c) => <div class="m-gtier"><span>{c.label}</span><span class="m-gtier-v">{c.val}</span></div>)}
     </div>
-    <p class="m-gfine">Athletic is the core stream; Explosive and Speed League are complementary. Exact times are on the live schedule.</p>
+    <p class="m-gfine">Athletic is the core stream; Speed League is complementary. Exact times are on the live schedule.</p>
   </div>
 
-  <h3 class="m-h3" style="margin-bottom:14px">Join the program</h3>
+  <h3 class="m-h3" style="margin-bottom:4px">Join the program</h3>
+  <p class="m-sub" style="margin-bottom:14px">There is a prerequisite: your first class is the check, or a coach who has already coached you can vouch. An athlete who is not the right fit may be moved to group classes.</p>
   <BookingCard color={cat.athletic} bookingTag="Membership" duration="Year-round" title="30-day membership" description="Enroll any time — automatic monthly or one-time, renew whenever. Includes unlimited open gym and half-price add-on classes." pills="Ages 9+ | Cancel anytime" price="$150" priceNote="/ month" actionLabel="Join now" href={sq.athletic.membership} target="_blank" />
 
   {/* Same primary/secondary option pairing GroupsScreen uses (m-gcard +

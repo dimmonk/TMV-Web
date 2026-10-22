@@ -28,7 +28,36 @@ const SOCIAL = { instagram: 'https://www.instagram.com/fixture-ig', youtube: 'ht
 const NO_SOCIAL = { instagram: '', youtube: '', facebook: '' };
 const LIVE_PROMO = { active: true, headline: 'Spring camp is open', body: 'Spots fill fast', ctaLabel: 'Register', ctaUrl: 'https://example.com/camp', expiresAt: '2099-12-31T23:59:59' };
 
-/** What the fixture server answers; each test sets it before it builds. */
+/** The members app's public schedule and price list, as every build reads them (tests/fixtures/projection-redirect.mjs). */
+const SCHEDULE = {
+  schemaVersion: 1,
+  disciplines: [
+    { id: 'pk', name: 'Parkour', order: 0, accessCategories: ['classes'], description: 'Run, jump' },
+    { id: 'tr', name: 'Tricking', order: 1, accessCategories: ['classes'], headline: 'Kicks and flips', description: 'Fixture tricking body' },
+    { id: 'f1', name: 'Flips 1', order: 2, accessCategories: ['classes'], description: 'Fixture flips body' },
+    { id: 'f2', name: 'Flips 2', order: 3, accessCategories: ['classes'] },
+    { id: 'ex', name: 'Explosive', order: 4, accessCategories: ['classes'], description: 'No sessions' },
+  ],
+  classes: [
+    { id: 'c1', day: 1, time: '17:00', disciplineId: 'pk', ageRange: '7-12', isCancelled: false, showOnWebsite: true },
+    { id: 'c2', day: 2, time: '19:00', disciplineId: 'tr', ageRange: '13+', isCancelled: false, showOnWebsite: true },
+    { id: 'c3', day: 4, time: '19:00', disciplineId: 'tr', ageRange: '13+', isCancelled: false, showOnWebsite: true },
+    { id: 'c4', day: 3, time: '19:00', disciplineId: 'f1', ageRange: '18+', isCancelled: false, showOnWebsite: true },
+    { id: 'c5', day: 5, time: '20:00', disciplineId: 'f2', ageRange: '18+', isCancelled: false, showOnWebsite: true },
+  ],
+};
+const PRICE_LIST = { schemaVersion: 1, priceList: { groupClass1x: 31, groupClass10x: 276 } };
+/** The members app's public camp catalogue: one P.A. Day and a four-day winter camp, both ahead of any test run. */
+const CAMP_CATALOG = {
+  schemaVersion: 1,
+  camps: [
+    { id: 'pa', name: 'PA Day', type: 'pa-day', dates: ['2099-01-15'] },
+    { id: 'wi', name: 'Winter Camp', type: 'winter', dates: ['2099-12-21', '2099-12-22', '2099-12-23', '2099-12-24'] },
+    { id: 'old', name: 'Past camp', type: 'summer', dates: ['2020-07-06'] },
+  ],
+};
+
+/** What the fixture server answers for the site config; each test sets it before it builds. */
 let payload = {};
 let status = 200;
 let server;
@@ -36,9 +65,12 @@ let base;
 const workdirs = [];
 
 before(async () => {
-  server = http.createServer((_req, res) => {
-    res.writeHead(status, { 'content-type': 'application/json' });
-    res.end(JSON.stringify(payload));
+  server = http.createServer((req, res) => {
+    const path = new URL(req.url, 'http://fixture').pathname;
+    const body = path === '/schedule.json' ? SCHEDULE : path === '/price-list.json' ? PRICE_LIST
+      : path === '/camp-catalog.json' ? CAMP_CATALOG : payload;
+    res.writeHead(path === '/site-config.json' ? status : 200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify(body));
   });
   await new Promise((ok) => server.listen(0, '127.0.0.1', ok));
   base = `http://127.0.0.1:${server.address().port}/site-config.json`;
@@ -60,7 +92,13 @@ after(() => {
 async function build({ expectFetch = true } = {}) {
   const out = mkdtempSync(join(tmpdir(), 'tmv-web-'));
   workdirs.push(out);
-  const child = spawn('npx', ['astro', 'build', '--outDir', out], { cwd: ROOT, env: { ...process.env, TMV_SITE_CONFIG_URL: base } });
+  const env = {
+    ...process.env,
+    TMV_SITE_CONFIG_URL: base,
+    TMV_PROJECTION_FIXTURE_BASE: base.replace(/site-config\.json$/, ''),
+    NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ''} --import ${join(ROOT, 'tests/fixtures/projection-redirect.mjs')}`.trim(),
+  };
+  const child = spawn('npx', ['astro', 'build', '--outDir', out], { cwd: ROOT, env });
   let log = '';
   child.stdout.on('data', (d) => { log += d; });
   child.stderr.on('data', (d) => { log += d; });
@@ -127,12 +165,33 @@ test('a published banner, hours and social links reach the pages', async () => {
   assert.doesNotMatch(site.page(''), /instagram\.com\/themonkeyvault/);
 });
 
+test('the Specialized Classes card is the Members schedule, and its price the price list', async () => {
+  serve({ hours: WEEK });
+  const site = await build();
+  assert.doesNotMatch(site.log, /\[class-schedule\]/, 'the build read both projections');
+  const train = site.dom('train');
+  const card = train.querySelector('[data-chrome="site"] [data-class-tabs]');
+  const names = [...card.querySelectorAll('.ct-row-t')].map((n) => n.textContent);
+  // Parkour is a core program; Explosive has no sessions; Flips 1 and 2 are one entry.
+  assert.deepEqual(names, ['Tricking', 'Flips']);
+  assert.deepEqual([...card.querySelectorAll('[data-class-days]')].map((d) => d.textContent), ['Tue · Thu', 'Wed · Fri']);
+  const tricking = card.querySelector('[data-class-panel="tricking"]');
+  assert.equal(tricking.querySelector('[data-class-headline]').textContent, 'Kicks and flips');
+  assert.equal(tricking.querySelector('[data-class-body]').textContent, 'Fixture tricking body');
+  assert.equal(card.querySelector('[data-class-panel="flips"] [data-class-headline]').hidden, true);
+  assert.deepEqual([...card.querySelectorAll('[data-class-panel="flips"] .ct-when-line')].map((l) => l.textContent),
+    ['Level 1, ages 18+: Wed — 7 PM', 'Level 2, ages 18+: Fri — 8 PM']);
+  assert.match(card.querySelector('.ct-offer-t').textContent, /All drop-in: \$31 a class · 10 for \$276\./);
+  assert.doesNotMatch(site.page('train'), /Explosive/);
+});
+
 test('a published link reaches its anchors, and a blank one falls back to the default', async () => {
   serve({ links: { getStarted: { introduction: 'https://example.com/intro' } }, hours: WEEK });
-  const doc = (await build()).dom('');
+  const site = await build();
+  const doc = site.dom('');
   const intro = doc.querySelector('a[data-sq="getStarted.introduction"]');
   assert.equal(intro.getAttribute('href'), 'https://example.com/intro');
-  const blank = doc.querySelector('a[data-sq="camps.paDayCamp"]');
+  const blank = site.dom('camps').querySelector('a[data-sq="camps.paDayCamp"]');
   assert.match(blank.getAttribute('href'), /^https:\/\/the-monkey-vault-inc\.square\.site\/product\/pa-day-camps\//);
   // No slot marker is left in any href.
   assert.equal([...doc.querySelectorAll('a')].filter((a) => (a.getAttribute('href') ?? '').includes('tmv-sq')).length, 0);
@@ -206,13 +265,29 @@ test('a published link that is not http(s) never reaches an href', async () => {
   const home = site.dom('');
   const fallback = home.querySelector('a[data-sq="book.fullBirthday"]').getAttribute('href');
   assert.equal(home.querySelector('a[data-sq="getStarted.introduction"]').getAttribute('href'), fallback, 'a bad link falls back to the default');
-  assert.equal(home.querySelector('a[data-sq="camps.paDayCamp"]').getAttribute('href'), 'https://example.com/ok');
+  assert.equal(site.dom('camps').querySelector('a[data-sq="camps.paDayCamp"]').getAttribute('href'), 'https://example.com/ok');
   const store = site.dom('store');
   assert.equal(
     store.querySelector('a[data-sq="store.dayPasses"]').getAttribute('href'),
     store.querySelector('a[data-sq="store.openGymMembership"]').getAttribute('href'),
     'a bad store link falls back to the generic store page',
   );
+});
+
+test('the camp dates are the members catalogue: upcoming runs per camp, past and empty camps hidden', async () => {
+  serve({ hours: WEEK });
+  const site = await build();
+  const camps = site.dom('camps');
+  const chips = (doc, key) => [...doc.querySelectorAll(`[data-camp-group="${key}"] .cd-date`)].map((li) => li.textContent);
+  assert.ok(shown(camps, '#dates[data-camp-dates]'), 'the Dates section shows');
+  assert.deepEqual(chips(camps, 'winter'), ['Dec 21 – 244 days', 'Dec 21 – 244 days'], 'both chromes');
+  assert.deepEqual(chips(camps, 'paday'), ['Thu, Jan 15', 'Thu, Jan 15']);
+  assert.ok(!shown(camps, '[data-camp-group="summer"]'), 'a camp whose dates have passed is hidden');
+  assert.ok(!shown(camps, '[data-camp-group="march"]'), 'a camp with no dates is hidden');
+  // The phone screen renders the same groups under its own anchor.
+  assert.ok(camps.querySelector('[data-chrome="app"] #m-dates'));
+  // The P.A. Day card leads to its dates.
+  assert.ok([...camps.querySelectorAll('a.campresv')].some((a) => a.getAttribute('href') === '#dates'));
 });
 
 test('the shipped client scripts need no syntax lowering for the browser floor (Safari 13.1 / iOS 13.4)', async () => {

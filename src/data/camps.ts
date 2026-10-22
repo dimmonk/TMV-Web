@@ -4,6 +4,7 @@
  * of the fields the layouts use; each reads what it renders.
  */
 import { sq, isLinkSet } from './square-links';
+import { datesSummary } from './camp-dates';
 import type { Surfaced } from './surface';
 
 export interface CampFact { icon: string; text: string; }
@@ -36,10 +37,11 @@ export interface Camp extends Surfaced {
  * pasting its URL over another season's. Each season is its own row now, with
  * its own editable link.
  *
- * `bookable` is NOT hand-maintained: a season is bookable exactly when its
- * link is set in Settings -> Website. A blank field means there is no active
- * Square item for that season right now, so the site stops offering it instead
- * of sending people to a different season's product page.
+ * `bookable` is NOT hand-maintained: a season is bookable exactly when it has
+ * dates left in the members app's camp catalogue (data/camp-dates.ts) AND its
+ * link is set in Settings -> Website. No dates means the camp is not running;
+ * a blank link means there is no active Square item for it. Either way the site
+ * stops offering it instead of sending people somewhere that cannot book it.
  */
 export interface WeeklySeason {
   key: 'winter' | 'march' | 'summer';
@@ -55,9 +57,9 @@ export interface WeeklySeason {
 }
 
 export const weeklySeasons: WeeklySeason[] = [
-  { key: 'winter', label: 'Winter Camp', badge: 'Winter break', when: 'Over the winter break — dates on the booking page', price: '$350 / week', href: sq.camps.winterCamp, bookable: isLinkSet('camps', 'winterCamp') },
-  { key: 'march', label: 'March Break Camp', badge: 'March Break', when: 'March Break week — dates on the booking page', price: '$350 / week', href: sq.camps.marchCamp, bookable: isLinkSet('camps', 'marchCamp') },
-  { key: 'summer', label: 'Summer Camp', badge: 'Summer', when: 'Weekly sessions all summer — dates on the booking page', price: '$350 / week', href: sq.camps.summerCamp, bookable: isLinkSet('camps', 'summerCamp') },
+  { key: 'winter', label: 'Winter Camp', badge: 'Winter break', when: datesSummary('winter'), price: '$350 / week', href: sq.camps.winterCamp, bookable: datesSummary('winter') !== '' && isLinkSet('camps', 'winterCamp') },
+  { key: 'march', label: 'March Break Camp', badge: 'March Break', when: datesSummary('march'), price: '$350 / week', href: sq.camps.marchCamp, bookable: datesSummary('march') !== '' && isLinkSet('camps', 'marchCamp') },
+  { key: 'summer', label: 'Summer Camp', badge: 'Summer', when: datesSummary('summer'), price: '$350 / week', href: sq.camps.summerCamp, bookable: datesSummary('summer') !== '' && isLinkSet('camps', 'summerCamp') },
 ];
 
 /** The seasons a visitor can book today, in calendar order. */
@@ -68,16 +70,19 @@ export const bookableSeasons = (): WeeklySeason[] => weeklySeasons.filter((s) =>
  *  cannot be bought. */
 export const nextSeason = (): WeeklySeason | undefined => bookableSeasons()[0];
 
+/** The P.A. Day card leads to its dates when there are any, else straight to its booking page. */
+const paDayHasDates = datesSummary('paday') !== '';
+
 const allCamps: Camp[] = [
   {
     key: 'weekly', title: 'Weekly Camps', tag: 'Winter · March · Summer', image: 'assets/camp-weekly.png',
     desc: 'A full week of parkour adventure over school breaks — skill-building, games, friendship and unforgettable memories.',
-    facts: [{ icon: 'bi-calendar-week', text: 'Mon–Fri, full weeks' }, { icon: 'bi-people', text: 'Ages 5+, all levels' }, { icon: 'bi-stopwatch', text: '9 AM–2 PM · late pickup to 4 PM' }],
+    facts: [{ icon: 'bi-calendar-week', text: 'Mon–Fri, full weeks' }, { icon: 'bi-people', text: 'Ages 5–16, all levels' }, { icon: 'bi-stopwatch', text: '9 AM–2 PM · late pickup to 4 PM' }],
     back: 'A full week of parkour', included: 'Daily structured lessons, flips, individual skills, games and a cool-down — plus a lunch break. Sessions run over Winter, March Break and Summer.',
-    price: '$350 / week', cta: 'Reserve', href: nextSeason()?.href ?? '',
-    bookingTag: 'Register', pills: 'Ages 5+ | Mon–Fri | All levels', priceNote: 'late pickup to 4 PM',
+    price: '$350 / week', cta: 'See dates', href: '#dates',
+    bookingTag: 'Register', pills: 'Ages 5–16 | Mon–Fri | All levels', priceNote: 'late pickup to 4 PM',
     mobile: { desc: 'A full week of parkour over school breaks — skills, flips, games and friends.' },
-    hub: { dur: '9–2 daily', desc: 'A full week of parkour over Winter, March Break and Summer — coached skills, flips, games and friends. All levels.', pills: 'Ages 5+ | Mon–Fri | All levels', priceNote: 'late pickup to 4 PM', bookingTag: 'Register', cta: 'See camps', href: '' },
+    hub: { dur: '9–2 daily', desc: 'A full week of parkour over Winter, March Break and Summer — coached skills, flips, games and friends. All levels.', pills: 'Ages 5–16 | Mon–Fri | All levels', priceNote: 'late pickup to 4 PM', bookingTag: 'Register', cta: 'See camps', href: '' },
   },
   {
     key: 'private', title: 'Private Day Camp', tag: 'Your own group', image: 'assets/camp-private.png',
@@ -93,11 +98,11 @@ const allCamps: Camp[] = [
     key: 'paday', title: 'P.A. Day Camp', tag: 'Single day · public', image: 'assets/camp-paday.png',
     desc: 'A single day of parkour excitement on your day off school. Open to the public — fun challenges and expert coaching, start to finish.',
     facts: [{ icon: 'bi-sun', text: 'One-day sessions' }, { icon: 'bi-unlock', text: 'Open to the general public' }, { icon: 'bi-clock-history', text: '9 AM–2 PM · late pickup to 4 PM' }],
-    back: 'A day off, well spent', included: 'Expert coaching and non-stop challenges, open to everyone. The next P.A. Day date is always posted on the booking page.',
-    price: '$90 / day', cta: 'Reserve', href: sq.camps.paDayCamp,
-    bookingTag: 'Register', pills: 'Ages 5+ | Single days', priceNote: '9 AM–2 PM',
+    back: 'A day off, well spent', included: 'Expert coaching and non-stop challenges, open to everyone. Every P.A. Day date is listed on this page.',
+    price: '$90 / day', cta: paDayHasDates ? 'See dates' : 'Book', href: paDayHasDates ? '#dates' : sq.camps.paDayCamp,
+    bookingTag: 'Register', pills: 'Ages 5–16 | Single days', priceNote: '9 AM–2 PM',
     mobile: { desc: 'A single day of parkour on a day off school — open to the public.' },
-    hub: { dur: '9–2', desc: 'A single day of parkour on your day off school — expert coaching and non-stop challenges, start to finish.', pills: 'Ages 5+ | Single day', priceNote: 'open to the public', bookingTag: 'Register', cta: 'See dates', href: '' },
+    hub: { dur: '9–2', desc: 'A single day of parkour on your day off school — expert coaching and non-stop challenges, start to finish.', pills: 'Ages 5–16 | Single day', priceNote: 'open to the public', bookingTag: 'Register', cta: paDayHasDates ? 'See dates' : 'Book', href: paDayHasDates ? '' : sq.camps.paDayCamp },
   },
 ];
 

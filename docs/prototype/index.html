@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TMV-Web prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- The app's own stylesheets, in the order dist/train/index.html loads them (the Train page is the screen being designed), through the symlinks in this folder. -->
+<link rel="stylesheet" href="fonts/bootstrap-icons-subset.css">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_astro/BaseLayout.CTlzBftW.css">
+<link rel="stylesheet" href="_astro/MobileHero.CZlbSUWk.css">
+<link rel="stylesheet" href="_astro/JumpNav.CDl-B1oc.css">
+<link rel="stylesheet" href="_astro/BookingCard.Dv3m8JLB.css">
+<link rel="stylesheet" href="_astro/SectionHeader.BF_6E1la.css">
+<link rel="stylesheet" href="_astro/Pill.Cm4qUpD-.css">
+<link rel="stylesheet" href="_astro/train.CkMKyXse.css">
+<link rel="stylesheet" href="_astro/NextStep.DNEiduLg.css">
+<link rel="stylesheet" href="_astro/CtaBand.CPSO062c.css">
+<!-- Prototype-only rules (the frame below, the review chrome). A rule for anything the app already has does NOT belong here. -->
+<link rel="stylesheet" href="proto/proto.css">
+<script>
+  // Boot order of the real app: theme and viewport mode before first paint. The Artifact viewer may set data-theme itself.
+  (function () {
+    var root = document.documentElement;
+    if (!root.hasAttribute('data-theme')) {
+      try {
+        var saved = localStorage.getItem('proto-theme');
+        if (saved) root.setAttribute('data-theme', saved);
+        else if (matchMedia('(prefers-color-scheme: dark)').matches) root.setAttribute('data-theme', 'dark');
+      } catch (e) { /* storage blocked: system theme only */ }
+    }
+    var phone = matchMedia('(max-width: 600px)');
+    function setMode() { root.setAttribute('data-mode', phone.matches ? 'mobile' : 'desktop'); }
+    setMode();
+    phone.addEventListener('change', setMode);
+  })();
+</script>
+</head>
+<body>
+<!--
+  PLACEHOLDER FRAME. When the app has a real shell (title bar, sidebar, bottom nav), replace everything between the markers with
+  that shell's markup from public/index.html, class names unchanged, so the prototype runs inside the real app shell. Keep:
+    - <main id="proto-main">  where the current page renders
+    - data-nav="<page id>"    on every control that opens a page (the router marks the active one with .active)
+    - data-proto="reset|theme|phone" on the three review controls
+-->
+<!-- shell:start -->
+<!-- The real chrome of the Train page (dist/train/index.html), links pointed at the section being designed. -->
+<div class="proto-bar">
+  <span class="proto-bar-name">TMV-Web</span>
+  <span class="proto-chip" title="A design prototype. Nothing here changes the real site.">Prototype</span>
+  <span class="proto-bar-spacer"></span>
+  <nav class="proto-nav" id="proto-nav" aria-label="Pages"></nav>
+  <button type="button" class="proto-btn" data-proto="phone" title="Open at phone width">Phone</button>
+  <button type="button" class="proto-btn" data-proto="reset" title="Put the sample data back as it started">Reset</button>
+</div>
+<header class="m-head" data-chrome="app" data-astro-cid-6wcfqz5g><div class="m-head-row" data-astro-cid-6wcfqz5g><div class="m-brand" data-astro-cid-6wcfqz5g><img src="assets/tmvlogo.png" alt="" width="32" height="32" data-astro-cid-6wcfqz5g><span data-astro-cid-6wcfqz5g>The Monkey Vault</span></div><span class="m-status" data-status data-week="[{&quot;open&quot;:660,&quot;close&quot;:1320},{&quot;open&quot;:660,&quot;close&quot;:1320},{&quot;open&quot;:660,&quot;close&quot;:1320},{&quot;open&quot;:660,&quot;close&quot;:1320},{&quot;open&quot;:660,&quot;close&quot;:1320},{&quot;open&quot;:660,&quot;close&quot;:1440},{&quot;open&quot;:660,&quot;close&quot;:1320}]" data-astro-cid-6wcfqz5g><span class="m-status-dot" data-astro-cid-6wcfqz5g></span><span class="m-status-label" data-astro-cid-6wcfqz5g>Open now</span></span></div></header>
+<header class="sh" data-chrome="site" data-astro-cid-fzpbxy5g><div class="sh-bar container" data-astro-cid-fzpbxy5g><a href="#specialized" class="sh-brand" aria-label="The Monkey Vault — home" data-astro-cid-fzpbxy5g><img src="assets/tmvlogo.png" alt="" width="40" height="40" data-astro-cid-fzpbxy5g><span class="sh-word" data-astro-cid-fzpbxy5g>The&nbsp;Monkey&nbsp;Vault</span></a><nav class="sh-nav" aria-label="Primary" data-astro-cid-fzpbxy5g><a href="#specialized" class="sh-link on" aria-current="page" data-astro-cid-fzpbxy5g>Train</a><a href="#specialized" class="sh-link" data-astro-cid-fzpbxy5g>Camps</a><a href="#specialized" class="sh-link" data-astro-cid-fzpbxy5g>Events</a><a href="#specialized" class="sh-link" data-astro-cid-fzpbxy5g>Pricing</a><a href="#specialized" class="sh-link" data-astro-cid-fzpbxy5g>Store</a><a href="#specialized" class="sh-link" data-astro-cid-fzpbxy5g>About</a></nav><div class="sh-actions" data-astro-cid-fzpbxy5g><a href="#specialized" class="sh-new" data-astro-cid-fzpbxy5g><i class="bi bi-flag" aria-hidden="true" data-astro-cid-fzpbxy5g></i> New here?</a><a href="#specialized" class="sh-cta" data-astro-cid-fzpbxy5g>Book Now</a><button class="sh-burger" aria-label="Menu" aria-expanded="false" aria-controls="sh-menu" data-astro-cid-fzpbxy5g><i class="bi bi-list" aria-hidden="true" data-astro-cid-fzpbxy5g></i></button></div></div><nav id="sh-menu" class="sh-menu" aria-label="Mobile" data-astro-cid-fzpbxy5g><a href="#specialized" class="sh-mlink on" data-astro-cid-fzpbxy5g>Train</a><a href="#specialized" class="sh-mlink" data-astro-cid-fzpbxy5g>Camps</a><a href="#specialized" class="sh-mlink" data-astro-cid-fzpbxy5g>Events</a><a href="#specialized" class="sh-mlink" data-astro-cid-fzpbxy5g>Pricing</a><a href="#specialized" class="sh-mlink" data-astro-cid-fzpbxy5g>Store</a><a href="#specialized" class="sh-mlink" data-astro-cid-fzpbxy5g>About</a><a href="#specialized" class="sh-mlink accent" data-astro-cid-fzpbxy5g><i class="bi bi-flag" aria-hidden="true" data-astro-cid-fzpbxy5g></i> New here? Start here</a><a href="#specialized" class="sh-mlink accent" data-astro-cid-fzpbxy5g><i class="bi bi-calendar-check" aria-hidden="true" data-astro-cid-fzpbxy5g></i> Book Now</a></nav></header>
+<main id="proto-main" class="proto-main"></main>
+<nav class="mtab" data-chrome="app" aria-label="Main" data-astro-cid-k5hk6fbd><a class="mtab-btn" href="#specialized" data-astro-prefetch="viewport" data-astro-cid-k5hk6fbd><i class="bi bi-house-door-fill" aria-hidden="true" data-astro-cid-k5hk6fbd></i><span data-astro-cid-k5hk6fbd>Home</span></a><a class="mtab-btn active" href="#specialized" data-astro-prefetch="viewport" data-astro-cid-k5hk6fbd><i class="bi bi-person-arms-up" aria-hidden="true" data-astro-cid-k5hk6fbd></i><span data-astro-cid-k5hk6fbd>Train</span></a><a class="mtab-btn mtab-center" href="#specialized" data-astro-prefetch="viewport" data-astro-cid-k5hk6fbd><span class="mtab-center-c" data-astro-cid-k5hk6fbd><i class="bi bi-calendar-check-fill" aria-hidden="true" data-astro-cid-k5hk6fbd></i></span><span data-astro-cid-k5hk6fbd>Book</span></a><a class="mtab-btn" href="#specialized" data-astro-prefetch="viewport" data-astro-cid-k5hk6fbd><i class="bi bi-calendar3" aria-hidden="true" data-astro-cid-k5hk6fbd></i><span data-astro-cid-k5hk6fbd>Schedule</span></a><button type="button" class="mtab-btn" data-more-open aria-haspopup="dialog" aria-expanded="false" data-astro-cid-k5hk6fbd><i class="bi bi-grid-fill" aria-hidden="true" data-astro-cid-k5hk6fbd></i><span data-astro-cid-k5hk6fbd>More</span></button></nav>
+<!-- shell:end -->
+<script type="module" src="proto/app.js"></script>
+</body>
+</html>

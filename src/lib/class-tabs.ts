@@ -2,9 +2,14 @@
  * Specialized-classes list/detail card — one discipline visible at a time.
  *
  * Every panel is SERVER-RENDERED; this only swaps which one is shown, so the
- * first discipline reads with JS off and all eleven are in the HTML for search.
+ * first discipline reads with JS off and every class is in the HTML for search.
  * Scoped to each root so the desktop composition and the phone composition can
  * both be on the page without fighting.
+ *
+ * The tabs come from the Members schedule as it stood at the build; on mount
+ * the schedule is read again and the card is brought up to date in place
+ * (apply-specialized-classes.js): a class with no sessions left is hidden, and
+ * the selection moves to the first class still listed.
  *
  * Video handling is deliberately NOT mountCardVideos: those clips live inside
  * hidden panels, so an IntersectionObserver never fires for them and a freshly
@@ -12,6 +17,9 @@
  * played directly on switch and the others are paused, which is both correct
  * and cheaper — only one clip is ever downloading.
  */
+import { specializedView } from './specialized-classes.js';
+import { applySpecializedClasses } from './apply-specialized-classes.js';
+
 export function mountClassTabs(selector = '[data-class-tabs]'): void {
   document.querySelectorAll<HTMLElement>(selector).forEach(mountOne);
 }
@@ -51,22 +59,40 @@ function mountOne(root: HTMLElement): void {
     }
   };
 
-  tabs.forEach((tab, i) => {
+  tabs.forEach((tab) => {
     tab.addEventListener('click', () => show(tab.dataset.classTab!, false, true));
     // The list is a vertical column, so Up/Down are the natural keys (Left/
-    // Right still work — a roving tablist is expected to accept both).
+    // Right still work — a roving tablist is expected to accept both). Moves
+    // among the classes still listed.
     tab.addEventListener('keydown', (e) => {
       const dir = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1
         : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0;
       if (!dir) return;
       e.preventDefault();
-      show(tabs[(i + dir + tabs.length) % tabs.length].dataset.classTab!, true);
+      const listed = tabs.filter((t) => !t.hidden);
+      const at = listed.indexOf(tab);
+      show(listed[(at + dir + listed.length) % listed.length].dataset.classTab!, true);
     });
   });
 
   // Start the clip that is already showing.
   const open = panels.find((p) => !p.hidden)?.querySelector('video');
   if (open) playClip(open);
+
+  void refresh(root, show);
+}
+
+/** Re-read the schedule and bring the card up to date; a failed read keeps what was built. */
+async function refresh(root: HTMLElement, show: (id: string) => void): Promise<void> {
+  try {
+    const { fetchPublicSchedule } = await import('./public-projections.js');
+    const listed = applySpecializedClasses(root, specializedView(await fetchPublicSchedule()));
+    root.hidden = listed.length === 0;
+    const selected = root.querySelector<HTMLElement>('[data-class-tab].on');
+    if (listed.length && (!selected || selected.hidden)) show(listed[0]);
+  } catch (e) {
+    console.warn('[class-tabs] could not refresh the classes from the schedule; keeping what was built:', (e as Error).message);
+  }
 }
 
 /** Same contract as lib/card-video: re-assert muted, fall back to frame one. */

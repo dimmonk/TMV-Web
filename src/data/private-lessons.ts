@@ -50,7 +50,7 @@ const allPrivateWays: PrivateWay[] = [
   {
     key: 'intro', color: cat.intro, title: 'Introduction',
     price: '$45', per: 'first session', sub: '$35 each for 2 · $30 each for 3+',
-    desc: 'A one-time lesson on a set beginner curriculum — the best first taste of parkour, and where everyone starts.',
+    desc: 'A one-time lesson on a set beginner lesson plan: the parkour basics, one-on-one. For a specific skill or goal, book a private lesson instead.',
     cta: 'Book intro',
     hub: { dur: '1 hr', price: '$45', priceNote: 'First session · groups from $30 each', bookingTag: 'By appointment', desc: 'A one-time private lesson and the best first taste of parkour — what it is, what you can do with it, and how we coach it.', pills: 'All ages | 1-on-1' },
   },
