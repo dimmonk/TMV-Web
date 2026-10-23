@@ -1,5 +1,5 @@
 <meta name="robots" content="noindex,nofollow">
-<title>TMV Website Redesign</title>
+<title>TMV Special Events</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
   :root { --bg:#f5f4f1; --ink:#211f1b; --muted:#6b6862; --line:#e5e3de; --card:#fff; --brand:#ffd400; --bar:#211f1b; --barink:#fff; }
@@ -24,7 +24,7 @@
   .stage.full { grid-template-columns: minmax(0, 1440px); } .full .preview:not(.on) { display: none; }
   @media (max-width: 860px) { .stage { grid-template-columns: minmax(0, 1fr); } .stage .preview:not(.on) { display: none; } .phone-only { display: none; } }
 </style>
-<header><h1><b>The Monkey Vault</b> &middot; whole-site prototype</h1><p>Now = the site as built today. Proposed = the signed brief. Nothing here is live.</p></header>
+<header><h1><b>The Monkey Vault</b> &middot; special events prototype</h1><p>Now = the site as built today. Proposed = special events from Members, with sample events. Nothing here is live.</p></header>
 <div class="controls">
   <label>Page<select id="page"></select></label>
   <label class="phone-only">View<select id="view"><option value="phones">Phones side by side</option><option value="full">Full width</option></select></label>
@@ -38,17 +38,8 @@
 <script>
   // One row per page: where it lives in each build, and what changed (shown above the previews).
   var PAGES = [
-    { label: 'Home', now: '', proposed: '', notes: ['Goal picker first: a kid trying it out goes to a drop-in class, parkour basics go to the intro, a specific skill goes straight to a private lesson, regular training goes to the Athletic Program.', 'Hero button finds your starting point instead of booking the intro for everyone.', 'Camps before reviews; no repeated intro banner.'] },
-    { label: 'Classes', now: 'train/', proposed: 'train/', notes: ['"Train" is now "Classes" in the nav and on the phone tab (the address stays /train/).', 'Open Gym has moved to its own page; this page is classes, private coaching and the Athletic Program.', 'Class cards no longer flip: level, ages, booking and price sit on the card, with one description.'] },
-    { label: 'Open Gym', now: 'train/#opengym', proposed: 'open-gym/', notes: ['New page, linked from the top nav: what a visit is, cost, supervision under 7, waiver.', 'Hours come from the hours staff publish in Members, never typed here.'] },
-    { label: 'Schedule', now: 'schedule/', proposed: 'schedule/', notes: ['Unchanged. Now in the desktop nav. The weekly class calendar brief decides this page.'] },
-    { label: 'Pricing', now: 'pricing/', proposed: 'pricing/', notes: ['"Which option fits" guidance above the live price list, category shortcuts and a buy or book button per category.', 'Store folds into these buttons, so it leaves the nav. Prices appear only in the live list.', 'The price list keeps the printed sheet\'s layout (columns, tight rows, details behind the info button) in the site\'s own fonts and colors, and each card ends with where to buy or book.'] },
-    { label: 'Camps', now: 'camps/', proposed: 'camps/', notes: ['Dates shown on the page; booking still goes to Square until the new camp registration flow lands.', 'Ages 5 to 16. Drop-off, packing, food, waiver and cancellation answered on the page.'] },
-    { label: 'Birthday parties', now: 'events/', proposed: 'events/', notes: ['"Events" is now "Birthday Parties".', 'Parent questions come before the come-back-again promotions; the full set on the phone too.', 'The price list says to book a Mini Party when every Full Party slot is taken.'] },
-    { label: 'Book', now: 'book/', proposed: 'book/', notes: ['The $45 intro is bookable from the phone Book tab, alongside every other category.', 'Drop-in activities (open gym, group classes) are explained separately: nothing to book.'] },
-    { label: 'First visit', now: 'get-started/', proposed: 'get-started/', notes: ['Intro (a set basics lesson) and private (built around your goal) are both valid first visits, with the difference stated.', 'Group rates and the 15% same-day offer stay; waiver and arrival follow.'] },
-    { label: 'Visit us', now: 'about/', proposed: 'about/', notes: ['"About" is now "Visit Us".', 'Hours and directions first, then the facility tour.'] },
-    { label: 'Athletic Program', now: 'athletic-program/', proposed: 'athletic-program/', notes: ['The prerequisite is checked in the first class, or from feedback by any coach who has coached them.', 'States plainly that a child can be moved out of the program if it is not the right fit. Explosive is gone (cancelled).'] }
+    { label: 'Birthday parties (Events)', now: 'events/', proposed: 'events/', notes: ['Special events staff add in Members (Settings > Website > Special events) show first, as price list cards: photo, title, day, hours, note, and a Details link when there is one.', 'The three events here are SAMPLES: Members has none published yet. With no event coming up the whole section, heading included, is gone.', 'A past event drops off by itself; a new one shows within minutes of the save, no website release.'] },
+    { label: 'Home', now: '', proposed: '', notes: ['A "Coming up at the gym" card under the Schedule changes card: the next three events, each with its day and hours, and a link to all of them on the Events page.', 'Hidden while nothing is coming up. Sample events only.'] }
   ];
   var page = document.getElementById('page'), view = document.getElementById('view'), stage = document.getElementById('stage'), seg = document.getElementById('seg'), notes = document.getElementById('notes');
   var frames = { now: document.querySelector('[data-v="now"] iframe'), proposed: document.querySelector('[data-v="proposed"] iframe') };

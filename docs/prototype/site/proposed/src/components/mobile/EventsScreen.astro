@@ -1,0 +1,78 @@
+---
+import Priced from '../Priced.astro';
+/**
+ * Birthday Parties (route: /events) — phone composition, verbatim from the /m/
+ * app's `events` screen. Same PartyCard + partyCards data as the desktop page,
+ * just stacked instead of gridded.
+ */
+import MobileHero from '../MobileHero.astro';
+import PartyCard from '../PartyCard.astro';
+import PartyReturn from '../PartyReturn.astro';
+import SpecialEvents from '../SpecialEvents.astro';
+import { cat, url } from '../../data/site';
+import { partyCards } from '../../data/parties';
+import { partyFaqGroups } from '../../data/party-faqs';
+
+// Desktop's "How booking works" — was missing from mobile, so the phone never
+// explained that the card on file isn't charged, which is the single most
+// common parent question before booking.
+const steps = [
+  { t: 'Pick the age range', p: 'Select the average age of the group.' },
+  { t: 'Pick group size', p: 'You can update the headcount later if it changes.' },
+  { t: 'Pick date & time', p: 'Weekend slots fill fast — what you see online is all we have.' },
+  { t: 'Enter payment info', p: 'Your card is not charged — it only holds the slot.' },
+  { t: 'Check your email', p: "Confirmation lands in your inbox. Peek in spam if you don't see it." },
+];
+// The full parent questions, from the one list the desktop page renders.
+const eventFaqs = partyFaqGroups.flatMap((group) => group.items);
+---
+<MobileHero eyebrow="Birthday Parties" title="Parties & group events" desc="Birthdays, school trips and team days — coaches run the whole session while you relax." />
+<div class="m-pad">
+  <!-- Staff's special events, only while one is coming up (the same cards as the desktop page). -->
+  <div style="--site-events-pad:0 0 26px">
+    <SpecialEvents id="m-special-events">
+      <Fragment slot="head"><h3 class="m-h3" style="margin:0 0 12px">Coming up</h3></Fragment>
+    </SpecialEvents>
+  </div>
+
+  <!-- Same <PartyCard> the desktop Events page renders, from the same
+       `partyCards` data — this screen just stacks them. -->
+  <div class="m-partycards">
+    {partyCards.map((card) => <PartyCard card={card} />)}
+  </div>
+
+  <div class="m-hold"><i class="bi bi-shield-lock" aria-hidden="true"></i><span>Your card isn't charged at booking — it just holds the slot. You pay in person on the day, by final headcount.</span></div>
+
+
+  <h3 class="m-h3" style="margin:0 0 4px">How booking works</h3>
+  <p class="m-sub" style="margin-bottom:14px">Five steps, about two minutes.</p>
+  <div style="margin-bottom:28px">
+    {steps.map((st, i) => (
+      <div class="m-step" style={i === steps.length - 1 ? 'margin-bottom:0' : ''}>
+        <span class="m-stepn">{i + 1}</span>
+        <div><div class="m-step-t">{st.t}</div><p class="m-step-p">{st.p}</p></div>
+      </div>
+    ))}
+  </div>
+
+  <div class="m-label">Party FAQ</div>
+  <div class="m-faqbox" style="margin-bottom:22px">
+    {eventFaqs.map((qa) => (
+      <details class="faq">
+        <summary class="m-faq-sum"><span>{qa.q}</span><i class="bi bi-chevron-down faq-chev" aria-hidden="true"></i></summary>
+        <div class="m-faq-a"><Priced text={qa.a} /></div>
+      </details>
+    ))}
+  </div>
+
+  {/* The wrap-up, on the page — the same PartyReturn the desktop page renders. */}
+  <h3 class="m-h3" style="margin:0 0 4px">Three ways to come back</h3>
+  <p class="m-sub" style="margin-bottom:14px">A party is one way to use the gym.</p>
+  <div style="margin-bottom:30px"><PartyReturn /></div>
+
+  <a class="m-groupslink" href={url('groups')}>
+    <span class="m-groupslink-ic" style={`background:color-mix(in srgb,${cat.groups} 14%,#fff)`}><i class="bi bi-people-fill" style={`color:${cat.groups}`} aria-hidden="true"></i></span>
+    <div class="m-groupslink-txt"><div class="m-groupslink-t">Groups &amp; team events</div><div class="m-groupslink-s">Schools, corporate &amp; early access</div></div>
+    <i class="bi bi-chevron-right m-chev" aria-hidden="true"></i>
+  </a>
+</div>

@@ -1,0 +1,15 @@
+/*
+ * Special events (`site-events.js`): price list cards (price-list-web.css) in the events colour. The only part the
+ * price list card has no twin for is the event photo, drawn as the class cards draw their media: full card width,
+ * 16:10, cropped to fill.
+ */
+.se { padding: var(--site-events-pad, 0); }
+.se-card { --c: var(--c-parties); }
+.se-photo {
+  display: block; width: calc(100% + 36px); max-width: none; aspect-ratio: 16 / 10; object-fit: cover;
+  margin: -16px -18px 14px; border-radius: var(--radius) var(--radius) 0 0;
+}
+.se-next .pw-card { max-width: 760px; margin: 0 auto; }
+
+/* ── Phone: the app's card size (mobile-app.css) ── */
+.mapp .se-next .pw-card { border-radius: 14px; }
