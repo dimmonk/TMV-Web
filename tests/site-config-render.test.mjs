@@ -22,13 +22,13 @@ import { gymNow } from '../src/lib/gym-clock.js';
 import { applyPrices } from '../src/lib/apply-prices.js';
 
 const ROOT = resolve(import.meta.dirname, '..');
-const BLANK_PROMO = { active: false, headline: '', body: '', ctaLabel: '', ctaUrl: '', expiresAt: '' };
 const WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
   .map((day) => ({ day, time: day === 'Saturday' || day === 'Sunday' ? '10:00 AM – 6:00 PM' : '11:00 AM – 10:00 PM' }));
 const SOCIAL = { instagram: 'https://www.instagram.com/fixture-ig', youtube: 'https://www.youtube.com/@fixture', facebook: 'https://www.facebook.com/fixture-fb' };
 const NO_SOCIAL = { instagram: '', youtube: '', facebook: '' };
 const CONTACT = { address: { street: '1 Fixture Way, Unit 2', city: 'Fixtureville', region: 'ON', postalCode: 'A1A 1A1' }, phone: '(416) 555-0100', email: 'hello@fixture.test' };
-const LIVE_PROMO = { active: true, headline: 'Spring camp is open', body: 'Spots fill fast', ctaLabel: 'Register', ctaUrl: 'https://example.com/camp', expiresAt: '2099-12-31T23:59:59' };
+/** A banner whose days include today, whenever the test runs. */
+const LIVE_BANNER = { id: 'ban_0000000000000001', headline: 'Spring camp is open', body: 'Spots fill fast', ctaLabel: 'Register', ctaUrl: 'https://example.com/camp', from: '2020-01-01', to: '2099-12-31' };
 
 /** The members app's public schedule and price list, as every build reads them (tests/fixtures/projection-redirect.mjs). */
 const SCHEDULE = {
@@ -49,7 +49,7 @@ const SCHEDULE = {
     { id: 'c5', day: 5, time: '20:00', disciplineId: 'f2', ageRange: '18+', isEnding: false, showOnWebsite: true },
   ],
 };
-const PRICE_LIST = { schemaVersion: 1, priceList: { groupClass1x: 31, groupClass10x: 276 } };
+const PRICE_LIST = { schemaVersion: 1, priceList: { groupClass1x: 31, groupClass10x: 276, groupEventBase: 300, groupEventPerPerson11to30: 27.5, earlyAccessHour: 50 } };
 /** The members app's public camp catalogue: one P.A. Day and a four-day winter camp, both ahead of any test run. */
 const CAMP_CATALOG = {
   schemaVersion: 1,
@@ -114,7 +114,7 @@ async function build({ expectFetch = true } = {}) {
 
 /** Serve this config (over the empty one) to the next build. */
 function serve(config, code = 200) {
-  payload = { fallbacks: {}, links: {}, promo: BLANK_PROMO, hours: [], social: NO_SOCIAL, ...config };
+  payload = { fallbacks: {}, links: {}, banners: [], hours: [], social: NO_SOCIAL, ...config };
   status = code;
 }
 
@@ -123,7 +123,7 @@ const shown = (doc, selector) => [...doc.querySelectorAll(selector)].some((el) =
 
 /** The browser's refresh: bring a built page up to date with a newer published object. */
 function refresh(doc, published, { now = gymNow() } = {}) {
-  const config = readPublishedConfig({ fallbacks: {}, links: {}, promo: BLANK_PROMO, hours: [], social: NO_SOCIAL, ...published });
+  const config = readPublishedConfig({ fallbacks: {}, links: {}, banners: [], hours: [], social: NO_SOCIAL, ...published });
   applyPublishedConfig(doc, config, { linkFor: (page, field) => config.links?.[page]?.[field] || `default:${page}.${field}`, now });
 }
 
@@ -133,7 +133,7 @@ const hoursLines = (doc) => [...doc.querySelectorAll('[data-hours-line]')].map((
 
 test('a published banner, hours and social links reach the pages', async () => {
   serve({
-    promo: LIVE_PROMO,
+    banners: [LIVE_BANNER],
     hours: [...WEEK, { day: 'Holidays', time: 'By appointment' }],
     social: SOCIAL,
   });
@@ -199,23 +199,40 @@ test('a published link reaches its anchors, and a blank one falls back to the de
   assert.equal([...doc.querySelectorAll('a')].filter((a) => (a.getAttribute('href') ?? '').includes('tmv-sq')).length, 0);
 });
 
-test('an expired banner is not shown', async () => {
+test('a banner whose days are over, or still to come, is not shown', async () => {
   serve({
-    promo: { ...LIVE_PROMO, headline: 'Winter sale', expiresAt: '2020-01-31T23:59:59' },
+    banners: [
+      { ...LIVE_BANNER, headline: 'Winter sale', from: '2020-01-01', to: '2020-01-31' },
+      { ...LIVE_BANNER, headline: 'Far future', from: '2099-01-01', to: '2099-01-31' },
+    ],
     hours: WEEK,
   });
   const home = (await build()).dom('');
   assert.ok(!shown(home, '[data-promo]'));
-  assert.doesNotMatch(home.documentElement.outerHTML, /Winter sale/);
+  assert.doesNotMatch(home.documentElement.outerHTML, /Winter sale|Far future/);
 });
 
-test('a banner that is switched off, or has no headline, is not shown', async () => {
-  serve({ promo: { ...BLANK_PROMO, active: false, headline: 'Off banner' }, hours: WEEK });
-  const off = (await build()).dom('');
-  assert.ok(!shown(off, '[data-promo]'));
-  assert.doesNotMatch(off.documentElement.outerHTML, /Off banner/);
-  serve({ promo: { ...BLANK_PROMO, active: true, body: 'No headline' }, hours: WEEK });
-  assert.ok(!shown((await build()).dom(''), '[data-promo]'));
+test('of the year\'s banners, the one whose days include today shows, with its days for the browser', async () => {
+  serve({
+    banners: [
+      { ...LIVE_BANNER, headline: 'Earlier one', from: '2020-01-01', to: '2020-01-31' },
+      { ...LIVE_BANNER, from: '2020-02-01' },
+      { ...LIVE_BANNER, headline: 'Later one', from: '2099-12-31', to: '2099-12-31' },
+    ],
+    hours: WEEK,
+  });
+  const home = (await build()).dom('');
+  assert.ok(shown(home, '[data-promo]'));
+  assert.equal(home.querySelector('[data-promo-head]').textContent, 'Spring camp is open');
+  assert.equal(home.querySelector('[data-promo]').dataset.from, '2020-02-01');
+  assert.equal(home.querySelector('[data-promo]').dataset.to, '2099-12-31');
+});
+
+test('a banner with no headline is not shown', async () => {
+  serve({ banners: [{ ...LIVE_BANNER, headline: '', body: 'No headline' }], hours: WEEK });
+  const home = (await build()).dom('');
+  assert.ok(!shown(home, '[data-promo]'));
+  assert.doesNotMatch(home.documentElement.outerHTML, /No headline/);
 });
 
 test('empty values render nothing: no banner, hours, pill, social or structured hours', async () => {
@@ -315,7 +332,7 @@ test('no built page carries an inline script or an inline event handler (the hos
   // TMV-Members firebase.json (hosting:web) sends a Content-Security-Policy whose script-src is 'self' plus one
   // pinned file, with no 'unsafe-inline'. An inline <script> or an on*= attribute would be blocked in every browser,
   // silently. JSON-LD is data, not script, and is the one inline <script> a page may carry.
-  serve({ hours: WEEK, social: SOCIAL, promo: LIVE_PROMO });
+  serve({ hours: WEEK, social: SOCIAL, banners: [LIVE_BANNER] });
   const site = await build();
   const pages = [];
   const walk = (dir) => readdirSync(dir, { withFileTypes: true }).forEach((e) => {
@@ -375,10 +392,17 @@ test('card prices are the Members price list: filled at build, a missing price h
   assert.ok(classPasses.length > 0 && classPasses.every((el) => el.textContent === 'From $31' && !el.hidden), 'filled from the fixture list');
   const dayPasses = lines(store, 'From {openGym1x}');
   assert.ok(dayPasses.length > 0 && dayPasses.every((el) => el.hidden && el.textContent === ''), 'a price the list lacks shows nothing');
+  // Group event tiers and early access are price-list lines too.
+  const groups = site.dom('groups');
+  assert.equal(lines(groups, '{groupEventBase} base')[0].textContent, '$300 base');
+  assert.equal(lines(groups, '{groupEventPerPerson11to30} each')[0].textContent, '$27.50 each');
+  assert.ok(lines(groups, '{groupEventPerPerson31to50} each').every((el) => el.hidden), 'a tier the list lacks shows nothing');
+  assert.equal(lines(groups, 'From {earlyAccessHour}/hr')[0].textContent, 'From $50/hr');
+  assert.match(groups.querySelector('.ev-gfine').textContent, /^Minimum 10 participants; smaller groups pay the \$300 base\. /);
+  assert.ok(lines(groups, '+ {earlyAccessOpenGym} / person open gym').every((el) => el.hidden));
   // No price is typed in a built page: every amount is a price-list line, or one of the
-  // facts the locked scope keeps in code (group event tiers and early access until Members
-  // publishes them, the camp transaction fee, a partner's own price).
-  const kept = /^\$(300|27\.50|25\.00|22\.50|50|20|100)\b/;
+  // facts the locked scope keeps in code (the camp transaction fee, a partner's own price).
+  const kept = /^\$20\b/;
   for (const path of ['', 'store', 'train', 'camps', 'events', 'groups', 'book', 'private-lessons', 'athletic-program', 'open-gym', 'pricing', 'get-started']) {
     const doc = site.dom(path);
     doc.querySelectorAll('script, style, [data-price-text]').forEach((el) => el.remove());
@@ -415,11 +439,28 @@ test('the refresh updates a changed hours row, adds a row and keeps the build\'s
   assert.equal(JSON.parse(home.querySelector('[data-status]').getAttribute('data-week'))[1].open, 9 * 60);
 });
 
-test('the refresh hides a banner that has expired since the build', async () => {
-  serve({ promo: LIVE_PROMO, hours: WEEK });
+test('the refresh hides a banner whose last day has passed since the build', async () => {
+  serve({ banners: [LIVE_BANNER], hours: WEEK });
   const home = (await build()).dom('');
   assert.ok(shown(home, '[data-promo]'));
-  refresh(home, { promo: { ...LIVE_PROMO, expiresAt: '2020-01-31T23:59:59' }, hours: WEEK });
+  refresh(home, { banners: [{ ...LIVE_BANNER, to: '2020-01-31' }], hours: WEEK });
+  assert.ok(!shown(home, '[data-promo]'));
+});
+
+test('the refresh puts up the next banner on its first day, with no release', async () => {
+  const winter = { ...LIVE_BANNER, headline: 'Winter camp is open', from: '2026-11-01', to: '2026-12-21' };
+  const holidays = { ...LIVE_BANNER, headline: 'Closed for the holidays', body: '', ctaLabel: '', ctaUrl: '', from: '2026-12-22', to: '2027-01-02' };
+  serve({ banners: [winter, holidays], hours: WEEK });
+  const home = (await build()).dom('');
+  const at = (iso) => refresh(home, { banners: [winter, holidays], hours: WEEK }, { now: gymNow(new Date(iso)) });
+  at('2026-12-21T16:00:00Z');
+  assert.equal(home.querySelector('[data-promo-head]').textContent, 'Winter camp is open');
+  assert.ok(shown(home, '[data-promo-cta]'));
+  at('2026-12-22T16:00:00Z');
+  assert.ok(shown(home, '[data-promo]'));
+  assert.equal(home.querySelector('[data-promo-head]').textContent, 'Closed for the holidays');
+  assert.ok(!shown(home, '[data-promo-body]') && !shown(home, '[data-promo-cta]'));
+  at('2027-01-03T16:00:00Z');
   assert.ok(!shown(home, '[data-promo]'));
 });
 
@@ -427,11 +468,11 @@ test('the refresh shows a banner published after the build, and changes its text
   serve({ hours: WEEK });
   const home = (await build()).dom('');
   assert.ok(!shown(home, '[data-promo]'));
-  refresh(home, { promo: LIVE_PROMO, hours: WEEK });
+  refresh(home, { banners: [LIVE_BANNER], hours: WEEK });
   assert.ok(shown(home, '[data-promo]'));
   assert.equal(home.querySelector('[data-promo-head]').textContent, 'Spring camp is open');
   assert.equal(home.querySelector('[data-promo-cta]').getAttribute('href'), 'https://example.com/camp');
-  refresh(home, { promo: { ...LIVE_PROMO, headline: 'Camp is full', ctaUrl: '' }, hours: WEEK });
+  refresh(home, { banners: [{ ...LIVE_BANNER, headline: 'Camp is full', ctaUrl: '' }], hours: WEEK });
   assert.equal(home.querySelector('[data-promo-head]').textContent, 'Camp is full');
   assert.ok(!shown(home, '[data-promo-cta]'), 'a button without a link is not a button');
 });
@@ -450,7 +491,7 @@ test('the refresh re-points a link and shows a social link added after the build
 });
 
 test('the refresh with everything emptied shows nothing', async () => {
-  serve({ promo: LIVE_PROMO, hours: WEEK, social: SOCIAL });
+  serve({ banners: [LIVE_BANNER], hours: WEEK, social: SOCIAL });
   const site = await build();
   const home = site.dom('');
   const about = site.dom('about');

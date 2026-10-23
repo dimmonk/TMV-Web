@@ -49,8 +49,8 @@ import { sq } from '../data/square-links';
         <p class="ev-gdesc">Two hours total — an hour of guided activities, then an hour of open gym. Intro parkour workshops, team-building obstacle courses, games and skill development for all levels. Great for field trips, teams and community events.</p>
         <div class="ev-gfoot">
           <div class="ev-glabel">Price per participant</div>
-          <div class="ev-tiers">{groupTiers.map((t) => <div class="ev-tier"><span>{t.label}</span><span class="ev-tier-v">{t.val}</span></div>)}</div>
-          <p class="ev-gfine">Minimum 10 participants; smaller groups pay the $300 base. Final total is calculated on event day from the final headcount.</p>
+          <div class="ev-tiers">{groupTiers.map((t) => <div class="ev-tier"><span>{t.label}</span><span class="ev-tier-v"><Priced text={t.val} /></span></div>)}</div>
+          <p class="ev-gfine">Minimum 10 participants<Priced text={`; ${eventPricing.groupBaseFine}`} />. Final total is calculated on event day from the final headcount.</p>
           <a href={sq.book.groupEvents} target="_blank" rel="noopener" class="btn btn-dark">Plan an event <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
         </div>
       </div>
@@ -58,7 +58,7 @@ import { sq } from '../data/square-links';
         <div class="ev-ghead"><span class="ev-gic" style="background:color-mix(in srgb,#2e9e4f 14%,#fff)"><i class="bi bi-sunrise" style="color:#2e9e4f" aria-hidden="true"></i></span><div><div class="ev-geyebrow" style="color:#2e9e4f">Early Gym Access</div><div class="ev-gtitle">The gym, all to yourself</div></div></div>
         <p class="ev-gdesc">Reserve The Monkey Vault before we open at 11 AM for exclusive access. Perfect for small groups or focused training with no crowds.</p>
         <div class="ev-gfoot2">
-          <div><div class="ev-big2">{eventPricing.earlyAccessFrom}</div><div class="ev-sub"><Priced text="+ {openGym1x} / person open gym" /></div></div>
+          <div><div class="ev-big2"><Priced text={eventPricing.earlyAccessFrom} /></div><div class="ev-sub"><Priced text={eventPricing.earlyAccessOpenGym} /></div></div>
           <a href={sq.book.earlyGymAccess} target="_blank" rel="noopener" class="btn btn-dark">Reserve time <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
         </div>
       </div>

@@ -158,6 +158,35 @@ export const PRICE_LIST_SECTIONS = [
     ],
   },
   {
+    id: 'group_events',
+    title: 'Groups & Early Access',
+    color: 'blue',
+    intro: false,
+    about: [
+      'Schools, camps, teams and corporate groups: a coached session for your group',
+      'Early Access: the gym before opening hours, just for your group',
+      'Reservation required',
+    ],
+    groups: [
+      {
+        label: 'Group Events',
+        items: [
+          { priceKey: 'groupEventBase', label: 'Up to 10 people' },
+          { priceKey: 'groupEventPerPerson11to30', label: '11 to 30 people', suffix: '/person' },
+          { priceKey: 'groupEventPerPerson31to50', label: '31 to 50 people', suffix: '/person' },
+          { priceKey: 'groupEventPerPerson51Plus', label: '51 people & more', suffix: '/person' },
+        ],
+      },
+      {
+        label: 'Early Access',
+        items: [
+          { priceKey: 'earlyAccessHour', label: 'Gym access', suffix: '/hour' },
+          { priceKey: 'earlyAccessOpenGym', label: 'Open gym', suffix: '/person' },
+        ],
+      },
+    ],
+  },
+  {
     id: 'camps',
     title: 'Camps',
     color: 'orange',
@@ -299,6 +328,14 @@ export const PRICE_LIST_COLUMNS = [
   ['open_gym', 'introduction_class', 'athletic_program'],
   ['birthday_party', 'camps'],
 ];
+
+/**
+ * Sections the website shows and the printed sheet does not: the Letter sheet is full, so
+ * these are edited on the Price list page under the sheet and published with the rest
+ * (`price-list.json` carries every key), but the print, the PDF and the embed lay out
+ * only `PRICE_LIST_COLUMNS`.
+ */
+export const PRICE_LIST_WEB_ONLY = ['group_events'];
 
 export const PRICE_LIST_FOOTNOTES = [
   'All classes include open gym for that day.',
