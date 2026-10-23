@@ -298,7 +298,7 @@ test('a Square slot marker moves into data-sq on its anchor, and any stray marke
 // ---- specialized-classes ----------------------------------------------------
 
 const D = (id, name, over = {}) => ({ id, name, order: 0, accessCategories: ['classes'], description: `${name} body`, ...over });
-const S = (disciplineId, day, time, ageRange, over = {}) => ({ disciplineId, day, time, ageRange, isCancelled: false, showOnWebsite: true, ...over });
+const S = (disciplineId, day, time, ageRange, over = {}) => ({ disciplineId, day, time, ageRange, isEnding: false, showOnWebsite: true, ...over });
 const SCHEDULE = {
   disciplines: [
     D('pk', 'Parkour'), D('f1', 'Flips 1', { order: 2 }), D('f2', 'Flips 2', { order: 3, description: 'Level two body' }),
@@ -310,7 +310,7 @@ const SCHEDULE = {
     S('f2', 5, '20:00', '18+'), S('f1', 0, '12:00', '7-12'), S('f1', 4, '18:00', '7-12'), S('f1', 3, '19:00', '18+'), S('f2', 3, '20:00', '18+'),
     S('tr', 2, '19:00', '13+'), S('tr', 4, '19:00', '13+'),
     S('ath', 2, '18:00', '9-14'),
-    S('sl', 3, '18:00', '9-14', { isCancelled: true }),
+    S('sl', 3, '18:00', '9-14', { isEnding: true }),
     S('hs', 4, '20:00', '13+', { showOnWebsite: false }),
   ],
 };

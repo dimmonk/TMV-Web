@@ -135,7 +135,7 @@ export function buildMobileList(root, filtered, variant, onClick) {
 function buildMobileCard(c, variant, onClick) {
   const ak = ageKeyOf(c.ageGroupName);
   const cls = ['m-card', 'm-age-' + ak, 'm-v-' + variant];
-  if (c.isCancelled) cls.push('m-cancelled');
+  if (c.isEnding) cls.push('m-cancelled');
 
   // Same color routing as the sheet:
   //   color edition  → solid fill, auto-contrast text
@@ -147,8 +147,8 @@ function buildMobileCard(c, variant, onClick) {
   }
 
   const tags = [];
-  if (c.isNew && !c.isCancelled) tags.push(el('span', { className: 'm-tag m-tag-new', text: 'NEW' }));
-  if (c.isCancelled) tags.push(el('span', { className: 'm-tag m-tag-end', text: 'ENDING' }));
+  if (c.isNew && !c.isEnding) tags.push(el('span', { className: 'm-tag m-tag-new', text: 'NEW' }));
+  if (c.isEnding) tags.push(el('span', { className: 'm-tag m-tag-end', text: 'ENDING' }));
 
   const card = el('button', { className: cls.join(' '), style, attrs: { type: 'button' } }, [
     ...tags,

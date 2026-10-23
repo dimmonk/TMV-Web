@@ -60,7 +60,7 @@ export function mountMobileSchedule({ siteConfig }: { siteConfig: () => Promise<
           name: c.disciplineName || '', range: fmtRange(c.time, c.endTime),
           age: c.ageGroupName || '', color: c.color || '#2196f3',
           status: c.status, reason: c.offReason,
-          isNew: !!c.isNew && !c.isCancelled && c.status === 'on', isCancelled: !!c.isCancelled && c.status === 'on',
+          isNew: !!c.isNew && !c.isEnding && c.status === 'on', isEnding: !!c.isEnding && c.status === 'on',
         })),
       });
     });
@@ -98,10 +98,10 @@ export function mountMobileSchedule({ siteConfig }: { siteConfig: () => Promise<
         <div class="m-sched-daylabel">${escapeHtml(day.label)}${day.closed ? `<span class="wk-daylabel-closed">${escapeHtml(day.closed)}</span>` : ''}</div>
         <div class="m-sched-card">
           ${day.sessions.map((s: any) => `
-            <div class="m-sess" style="opacity:${s.status !== 'on' || s.isCancelled ? '.55' : '1'}">
+            <div class="m-sess" style="opacity:${s.status !== 'on' || s.isEnding ? '.55' : '1'}">
               <span class="m-sess-bar" style="background:${escapeHtml(s.color)}"></span>
               <div style="flex:1;min-width:0">
-                <div style="display:flex;align-items:center"><span class="m-sess-name" style="text-decoration:${s.status !== 'on' || s.isCancelled ? 'line-through' : 'none'}">${escapeHtml(s.name)}</span>${s.isNew ? '<span class="m-sess-badge" style="color:#1b6b2f;background:#e6f4ea;border:1px solid #c7e4cf">New</span>' : ''}${s.isCancelled ? '<span class="m-sess-badge" style="color:#8b1f1f;background:#fbeaea;border:1px solid #ecc6c6">Ending</span>' : ''}${s.status === 'cancelled' ? '<span class="m-sess-badge" style="color:#8b1f1f;background:#fbeaea;border:1px solid #ecc6c6">Cancelled</span>' : ''}${s.status === 'closed' ? '<span class="m-sess-badge" style="color:#8b1f1f;background:#fbeaea;border:1px solid #ecc6c6">Closed</span>' : ''}</div>
+                <div style="display:flex;align-items:center"><span class="m-sess-name" style="text-decoration:${s.status !== 'on' || s.isEnding ? 'line-through' : 'none'}">${escapeHtml(s.name)}</span>${s.isNew ? '<span class="m-sess-badge" style="color:#1b6b2f;background:#e6f4ea;border:1px solid #c7e4cf">New</span>' : ''}${s.isEnding ? '<span class="m-sess-badge" style="color:#8b1f1f;background:#fbeaea;border:1px solid #ecc6c6">Ending</span>' : ''}${s.status === 'cancelled' ? '<span class="m-sess-badge" style="color:#8b1f1f;background:#fbeaea;border:1px solid #ecc6c6">Cancelled</span>' : ''}${s.status === 'closed' ? '<span class="m-sess-badge" style="color:#8b1f1f;background:#fbeaea;border:1px solid #ecc6c6">Closed</span>' : ''}</div>
                 <div class="m-sess-meta">${escapeHtml(s.range)} · ${escapeHtml(s.age)}</div>
                 ${s.status === 'cancelled' && s.reason ? `<div class="wk-sess-reason">${escapeHtml(s.reason)}</div>` : ''}
               </div>

@@ -100,7 +100,7 @@ export function changesCard({ changes, onGoto }) {
 function tagFor(s) {
   if (s.status === 'cancelled') return el('span', { class: 'ws-tag is-off', text: 'Cancelled' });
   if (s.status === 'closed') return el('span', { class: 'ws-tag is-off', text: 'Closed' });
-  if (s.isCancelled) return el('span', { class: 'ws-tag', text: 'Ending' });
+  if (s.isEnding) return el('span', { class: 'ws-tag', text: 'Ending' });
   if (s.isNew) return el('span', { class: 'ws-tag is-new', text: 'New' });
   return null;
 }

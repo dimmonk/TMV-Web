@@ -170,7 +170,7 @@ test('Open Gym is the published opening hours, with Friday late split off as adu
   assert.deepEqual(openGymSessions([{ day: 'Friday', time: '11:00 AM – 10:00 PM' }]).map((b) => b.ageGroupName), ['All Ages'], 'no late hours, no adults-only block');
 });
 
-test('a v2 schedule (isEnding, partner, cancellations) draws like v1: Ending tag, cancelled date, reason', async () => {
+test('the v2 schedule (isEnding, partner, cancellations) draws an Ending tag and a cancelled date; v1 is refused', async () => {
   const { fetchPublicSchedule } = await import('../src/lib/public-projections.js');
   const v2 = {
     schemaVersion: 2,
@@ -187,8 +187,8 @@ test('a v2 schedule (isEnding, partner, cancellations) draws like v1: Ending tag
     renderWeekGrid(root, { sessions: sessionsForWeek(schedule.classes, '2026-10-19', exceptions), monday: '2026-10-19', today: TODAY, closed: new Map(), section: 'classes' });
     assert.equal(root.querySelector('.ws-tag').textContent, 'Ending');
     assert.equal(sessionsForWeek(schedule.classes, '2026-10-26', exceptions)[0].status, 'cancelled');
-    globalThis.fetch = async () => ({ ok: true, status: 200, json: async () => ({ ...v2, schemaVersion: 3 }) });
-    await assert.rejects(fetchPublicSchedule(), /schemaVersion 3, expected 1 or 2/);
+    globalThis.fetch = async () => ({ ok: true, status: 200, json: async () => ({ ...v2, schemaVersion: 1 }) });
+    await assert.rejects(fetchPublicSchedule(), /schemaVersion 1, expected 2/);
   } finally {
     globalThis.fetch = realFetch;
   }
@@ -199,7 +199,7 @@ test('the home page card shows only when there is a change, and a date opens tha
   const { weekIndexOf: indexOf } = await import('../src/lib/schedule-weeks.js');
   const today = gymToday();
   const [, nextMonday] = visibleWeeks(today);
-  const body = { schemaVersion: 1, classes: [{ ...CLASSES[0], isNew: false, isCancelled: false }], cancellations: [{ classId: 'pk', date: nextMonday, reason: 'Coach away' }] };
+  const body = { schemaVersion: 2, classes: [{ ...CLASSES[0], isNew: false, isEnding: false }], cancellations: [{ classId: 'pk', date: nextMonday, reason: 'Coach away' }] };
   const realFetch = globalThis.fetch;
   globalThis.fetch = async () => ({ ok: true, status: 200, json: async () => body });
   const host = () => Object.assign(document.createElement('div'), { hidden: true });

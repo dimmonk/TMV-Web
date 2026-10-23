@@ -19,7 +19,7 @@
 
 /**
  * @typedef {{ id: string, name: string, description?: string|null, order?: number, accessCategories?: string[] }} Discipline
- * @typedef {{ day: number, time: string, disciplineId: string, ageRange?: string|null, isCancelled?: boolean, showOnWebsite?: boolean }} Session
+ * @typedef {{ day: number, time: string, disciplineId: string, ageRange?: string|null, isEnding?: boolean, showOnWebsite?: boolean }} Session
  * @typedef {{ disciplines?: Discipline[], classes?: Session[] }} Schedule
  * @typedef {{ id: string, name: string, days: string, who: string, when: string[], body: string, image: string }} ClassRow
  */
@@ -113,7 +113,7 @@ export function specializedView(schedule, clips = {}) {
   const groups = new Map();
   (schedule?.classes ?? []).forEach((session) => {
     const d = disciplines.get(session.disciplineId);
-    if (!d || session.isCancelled || session.showOnWebsite === false) return;
+    if (!d || session.isEnding || session.showOnWebsite === false) return;
     if (!(d.accessCategories ?? []).includes(CLASS_ACCESS)) return;
     const { group, level } = splitLevel(d.name);
     if (CORE_DISCIPLINES.includes(group)) return;

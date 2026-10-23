@@ -5,7 +5,7 @@
  *
  * An admin ticks "Mark as NEW" or "Mark as CANCELLED" (shown as ENDING) on a
  * class; the flag is stamped with when it was set (`isNewSetAt` /
- * `isCancelledSetAt`, db-service) and the badge shows for a fixed number of
+ * `isEndingSetAt`, db-service) and the badge shows for a fixed number of
  * days after that, then quietly stops — no admin has to come back and untick
  * it.
  *
@@ -26,7 +26,7 @@
 /** Days a "NEW" badge shows after the admin ticks it. */
 export const NEW_TAG_DURATION_DAYS = 30;
 /** Days an "ENDING" badge shows after the admin ticks it. */
-export const CANCELLED_TAG_DURATION_DAYS = 30;
+export const ENDING_TAG_DURATION_DAYS = 30;
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -82,19 +82,19 @@ export function tagActive(flag, setAt, days, nowMs = Date.now()) {
 }
 
 /**
- * A NEW class object with `isNew` / `isCancelled` resolved to "showing now".
- * The input is not touched, so a renderer reading `c.isNew` / `c.isCancelled`
+ * A NEW class object with `isNew` / `isEnding` resolved to "showing now".
+ * The input is not touched, so a renderer reading `c.isNew` / `c.isEnding`
  * needs no change.
  *
- * @template {{isNew?: any, isNewSetAt?: any, isCancelled?: any, isCancelledSetAt?: any}} T
+ * @template {{isNew?: any, isNewSetAt?: any, isEnding?: any, isEndingSetAt?: any}} T
  * @param {T} c
  * @param {number} [nowMs]
- * @returns {T & {isNew: boolean, isCancelled: boolean}}
+ * @returns {T & {isNew: boolean, isEnding: boolean}}
  */
 export function resolveClassTags(c, nowMs = Date.now()) {
   return {
     ...c,
     isNew: tagActive(c.isNew, c.isNewSetAt, NEW_TAG_DURATION_DAYS, nowMs),
-    isCancelled: tagActive(c.isCancelled, c.isCancelledSetAt, CANCELLED_TAG_DURATION_DAYS, nowMs),
+    isEnding: tagActive(c.isEnding, c.isEndingSetAt, ENDING_TAG_DURATION_DAYS, nowMs),
   };
 }

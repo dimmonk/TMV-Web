@@ -32,7 +32,8 @@ const LIVE_PROMO = { active: true, headline: 'Spring camp is open', body: 'Spots
 
 /** The members app's public schedule and price list, as every build reads them (tests/fixtures/projection-redirect.mjs). */
 const SCHEDULE = {
-  schemaVersion: 1,
+  schemaVersion: 2,
+  cancellations: [],
   disciplines: [
     { id: 'pk', name: 'Parkour', order: 0, accessCategories: ['classes'], description: 'Run, jump' },
     { id: 'tr', name: 'Tricking', order: 1, accessCategories: ['classes'], description: 'Fixture tricking body' },
@@ -41,11 +42,11 @@ const SCHEDULE = {
     { id: 'ex', name: 'Explosive', order: 4, accessCategories: ['classes'], description: 'No sessions' },
   ],
   classes: [
-    { id: 'c1', day: 1, time: '17:00', disciplineId: 'pk', ageRange: '7-12', isCancelled: false, showOnWebsite: true },
-    { id: 'c2', day: 2, time: '19:00', disciplineId: 'tr', ageRange: '13+', isCancelled: false, showOnWebsite: true },
-    { id: 'c3', day: 4, time: '19:00', disciplineId: 'tr', ageRange: '13+', isCancelled: false, showOnWebsite: true },
-    { id: 'c4', day: 3, time: '19:00', disciplineId: 'f1', ageRange: '18+', isCancelled: false, showOnWebsite: true },
-    { id: 'c5', day: 5, time: '20:00', disciplineId: 'f2', ageRange: '18+', isCancelled: false, showOnWebsite: true },
+    { id: 'c1', day: 1, time: '17:00', disciplineId: 'pk', ageRange: '7-12', isEnding: false, showOnWebsite: true },
+    { id: 'c2', day: 2, time: '19:00', disciplineId: 'tr', ageRange: '13+', isEnding: false, showOnWebsite: true },
+    { id: 'c3', day: 4, time: '19:00', disciplineId: 'tr', ageRange: '13+', isEnding: false, showOnWebsite: true },
+    { id: 'c4', day: 3, time: '19:00', disciplineId: 'f1', ageRange: '18+', isEnding: false, showOnWebsite: true },
+    { id: 'c5', day: 5, time: '20:00', disciplineId: 'f2', ageRange: '18+', isEnding: false, showOnWebsite: true },
   ],
 };
 const PRICE_LIST = { schemaVersion: 1, priceList: { groupClass1x: 31, groupClass10x: 276 } };
