@@ -38,8 +38,7 @@
 <script>
   // One row per page: where it lives in each build, and what changed (shown above the previews).
   var PAGES = [
-    { label: 'Birthday parties (Events)', now: 'events/', proposed: 'events/', notes: ['Special events staff add in Members (Settings > Website > Special events) show first, as price list cards: photo, title, day, hours, note, and a Details link when there is one.', 'The three events here are SAMPLES: Members has none published yet. With no event coming up the whole section, heading included, is gone.', 'A past event drops off by itself; a new one shows within minutes of the save, no website release.'] },
-    { label: 'Home', now: '', proposed: '', notes: ['A "Coming up at the gym" card under the Schedule changes card: the next three events, each with its day and hours, and a link to all of them on the Events page.', 'Hidden while nothing is coming up. Sample events only.'] }
+    { label: 'Home', now: '', proposed: '', notes: ['Special events staff add in Members (Settings > Website > Special events) show under the Schedule changes card, as price list cards: photo, title, day, hours, note, and a Details link when there is one.', 'The three events here are SAMPLES: Members has none published yet. With no event coming up the whole section, heading included, is gone.', 'A past event drops off by itself; a new one shows within minutes of the save, no website release.', 'The Birthday parties page is unchanged.'] }
   ];
   var page = document.getElementById('page'), view = document.getElementById('view'), stage = document.getElementById('stage'), seg = document.getElementById('seg'), notes = document.getElementById('notes');
   var frames = { now: document.querySelector('[data-v="now"] iframe'), proposed: document.querySelector('[data-v="proposed"] iframe') };

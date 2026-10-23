@@ -14,9 +14,6 @@
 import { dayAndDate } from './schedule-weeks.js';
 import { fmtClassTimeRange } from './print-schedule-sheet.js';
 
-/** The home card lists this many; the Events page lists them all. */
-export const COMING_UP_COUNT = 3;
-
 /**
  * @param {import('./published-config.js').SiteEvent[]} events - soonest first, as the reader gives them
  * @param {string} today - the gym's `YYYY-MM-DD`
@@ -66,30 +63,8 @@ export function eventCard(doc, e) {
 }
 
 /**
- * The home page's card: the next few events, one row each, and the way to the Events page.
- * @param {Document} doc
- * @param {import('./published-config.js').SiteEvent[]} events - upcoming, soonest first
- * @param {string} href - the Events page's special events section
- * @returns {HTMLElement}
- */
-export function comingUpCard(doc, events, href) {
-  const el = maker(doc);
-  const icon = (/** @type {string} */ name) => el('i', { class: `bi bi-${name}`, 'aria-hidden': 'true' });
-  const shown = events.slice(0, COMING_UP_COUNT);
-  return el('article', { class: 'pw-card se-card' }, [
-    el('div', { class: 'pw-head' }, [el('h3', { class: 'pw-title', text: 'Coming up at the gym' })]),
-    el('ul', { class: 'pw-items' }, shown.map((e, i) => el('li', { class: `pw-item${i > 0 ? ' pw-item-separated' : ''}` }, [
-      el('div', { class: 'pw-row' }, [el('span', { class: 'pw-label', text: e.title }), el('span', { class: 'pw-amount', text: dayAndDate(e.date) })]),
-      el('ul', { class: 'pw-bullets' }, [el('li', { text: e.note ? `${eventTime(e)} · ${e.note}` : eventTime(e) })]),
-    ]))),
-    el('a', { class: 'pw-action', href }, [events.length > shown.length ? `All ${events.length} events` : 'See the events', icon('arrow-right')]),
-  ]);
-}
-
-/**
- * Draw the events into every host, or hide them all. A host is `[data-site-events="list"]` (the Events page's
- * section: one card per event into its `[data-site-events-cards]`) or `[data-site-events="next"]` (the home card,
- * linking to `data-events-href`).
+ * Draw the events into every host (`[data-site-events]`, one card per event into its `[data-site-events-cards]`),
+ * or hide them all.
  * @param {Document} doc
  * @param {import('./published-config.js').SiteEvent[]} events
  * @param {string} today - the gym's `YYYY-MM-DD`
@@ -99,10 +74,6 @@ export function applySiteEvents(doc, events, today) {
   doc.querySelectorAll('[data-site-events]').forEach((node) => {
     const host = /** @type {HTMLElement} */ (node);
     host.hidden = upcoming.length === 0;
-    if (host.dataset.siteEvents === 'next') {
-      host.replaceChildren(...(upcoming.length ? [comingUpCard(doc, upcoming, host.dataset.eventsHref ?? '')] : []));
-      return;
-    }
     host.querySelector('[data-site-events-cards]')?.replaceChildren(...upcoming.map((e) => eventCard(doc, e)));
   });
 }

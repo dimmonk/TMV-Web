@@ -87,8 +87,12 @@ const camps = [
   <!-- SCHEDULE CHANGES: staff's cancelled dates and closed days, shown only while there are any -->
   <div class="container home-changes"><ScheduleChanges /></div>
 
-  <!-- COMING UP: the next special events, shown only while one is coming up -->
-  <div class="container home-events"><SpecialEvents variant="next" href={`${url('events')}#special-events`} /></div>
+  <!-- SPECIAL EVENTS: staff's public happenings, shown only while one is coming up -->
+  <div class="container home-events">
+    <SpecialEvents id="special-events">
+      <div slot="head" class="home-events-head"><SectionHeader eyebrow="Coming up" title="Special events" color={cat.parties} /></div>
+    </SpecialEvents>
+  </div>
 
   <!-- GOAL PICKER — ASK → RECOMMEND → REASON → INVITE (see data/goals.ts) -->
   <section id="start" class="section container goalsec">
@@ -183,7 +187,8 @@ const camps = [
 
   /* SCHEDULE CHANGES (the card lives in ScheduleChanges.astro) */
   .home-changes { --sched-changes-pad: 36px 0 0; }
-  .home-events { --site-events-pad: 20px 0 0; }
+  .home-events { --site-events-pad: 52px 0 0; }
+  .home-events-head { margin-bottom: 24px; }
 
   /* GOAL PICKER (the picker itself lives in GoalPicker.astro) */
   .goalsec { scroll-margin-top: 80px; padding-block: 52px 40px; }

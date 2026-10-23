@@ -43,8 +43,12 @@ const reviewItems = reviews.items.map((r) => ({ name: r.name, role: r.context, t
 <div class="m-pad">
   {/* Staff's cancelled dates and closed days, only while there are any (the same card as the desktop home). */}
   <div style="--sched-changes-pad:0 0 26px"><ScheduleChanges /></div>
-  {/* The next special events, only while one is coming up (the same card as the desktop home). */}
-  <div style="--site-events-pad:0 0 26px"><SpecialEvents variant="next" href={`${url('events')}#m-special-events`} /></div>
+  {/* Staff's special events, only while one is coming up (the same cards as the desktop home). */}
+  <div style="--site-events-pad:0 0 26px">
+    <SpecialEvents id="m-special-events">
+      <Fragment slot="head"><h3 class="m-h3" style="margin:0 0 12px">Special events</h3></Fragment>
+    </SpecialEvents>
+  </div>
 
   {/* ASK -> RECOMMEND: same GoalPicker the desktop home renders, compact. */}
   <h3 class="m-h3" id="m-start" style="scroll-margin-top:80px">What are you here for?</h3>
