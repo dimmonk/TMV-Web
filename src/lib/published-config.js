@@ -4,14 +4,14 @@
  *
  * TMV-Members republishes `settings/siteConfig` to a static CDN object on every
  * staff save (`functions/site-config-publish.js`). That object carries the
- * per-card Square `links`, the announcement `promo`, the opening `hours`, the
- * `social` links, the `closedDays` (dates the whole gym is closed) and the
+ * per-card Square `links`, the dated announcement `banners`, the opening `hours`,
+ * the `social` links, the `closedDays` (dates the whole gym is closed) and the
  * gym's `address`, `phone` and `email`. This is the one reader of its shape:
  * `src/data/site-config.ts` fetches it once per build and hands it here, and
  * every consumer takes its part from the result.
  *
  * Build and browser share this one reader: `fetchPublishedConfig` fetches and
- * validates, and the visibility rules downstream (`site-promo.js`,
+ * validates, and the visibility rules downstream (`site-banner.js`,
  * `opening-hours.js`) are pure functions of its result.
  *
  * The server already validated the payload; this is the last gate before a
@@ -28,7 +28,7 @@ export const SOCIAL_KEYS = Object.freeze(['instagram', 'facebook', 'youtube']);
 
 /**
  * The most each published value may hold, in characters (rows for
- * `hoursRows`). TMV-Members holds the document to these in its rules, refuses
+ * `hoursRows`, banners for `banners`). TMV-Members holds the document to these in its rules, refuses
  * them at Save and never publishes past them (`SITE_CONFIG_LIMITS` in
  * `functions/site-config-publish.js`, kept in step by hand); this reader drops a
  * value past its limit again (as unset), so a value that got round all of that
@@ -39,6 +39,7 @@ export const LIMITS = Object.freeze({
   headline: 120,
   body: 280,
   ctaLabel: 40,
+  banners: 24,
   hoursRows: 14,
   hoursDay: 40,
   hoursTime: 80,
@@ -52,27 +53,21 @@ export const LIMITS = Object.freeze({
   email: 100,
 });
 
-/** A closed day: a gym calendar day, what the members app writes. */
+/** A closed day or a banner's first and last day: a gym calendar day, what the members app writes. */
 const DATE_FORMAT = /^\d{4}-\d{2}-\d{2}$/;
 
-/** A stored banner expiry: gym-time `YYYY-MM-DDTHH:MM:SS`, what the members app writes. */
-const EXPIRY_FORMAT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/;
-
-/** @type {Promo} The banner when there is none to show: no text at all. */
-const NO_PROMO = Object.freeze({ active: false, headline: '', body: '', ctaLabel: '', ctaUrl: '', expiresAt: '' });
-
 /**
- * @typedef {Object} Promo
- * @property {boolean} active
- * @property {string} headline
- * @property {string} body
- * @property {string} ctaLabel
- * @property {string} ctaUrl
- * @property {string} expiresAt - `YYYY-MM-DDTHH:MM:SS` gym time (the end of the chosen day), or ''.
+ * @typedef {Object} Banner
+ * @property {string} headline - never ''.
+ * @property {string} body - '' when none.
+ * @property {string} ctaLabel - '' when none.
+ * @property {string} ctaUrl - '' when none.
+ * @property {string} from - the first day it shows, `YYYY-MM-DD` gym time.
+ * @property {string} to - the last day it shows (to its end), on or after `from`.
  *
  * @typedef {Object} PublishedConfig
  * @property {Record<string, Record<string, string>>|null} links - null when the object was not an object at all.
- * @property {Promo} promo
+ * @property {Banner[]} banners - soonest first; the one whose days include today shows (`bannerOn`).
  * @property {{day: string, time: string}[]} hours
  * @property {Record<string, string>} social - every key of `SOCIAL_KEYS`, '' where unset.
  * @property {{date: string, reason: string}[]} closedDays - soonest first; past days are the reader's to drop.
@@ -140,14 +135,13 @@ function readLinks(v) {
  */
 export function readPublishedConfig(data) {
   const d = obj(data);
-  const p = obj(d.promo);
   const s = obj(d.social);
   /** @type {Record<string, string>} */
   const social = {};
   SOCIAL_KEYS.forEach((k) => { social[k] = safeUrl(s[k]); });
   return {
     links: readLinks(d.links),
-    promo: readPromo(p),
+    banners: readBanners(d.banners),
     hours: (Array.isArray(d.hours) ? d.hours : [])
       .map((h) => ({ day: text(obj(h).day), time: text(obj(h).time) }))
       .filter((h) => h.day.length <= LIMITS.hoursDay && h.time.length <= LIMITS.hoursTime)
@@ -193,23 +187,29 @@ function readContact(d) {
 }
 
 /**
- * The banner, read the way the members app publishes it: off means no text at
- * all, and an expiry that is not `YYYY-MM-DDTHH:MM:SS` means off (an expiry
- * nobody can read must not mean "never expires").
- * @param {Record<string, any>} p
- * @returns {Promo}
+ * The year's banners, read the way the members app publishes them (`buildBanners`): a banner with no headline,
+ * a day that is not `YYYY-MM-DD` or a last day before its first is dropped whole, a message or button text past
+ * its limit reads as none, and a button link that is not http(s) reads as none. Soonest first, at most
+ * `LIMITS.banners`; the ones that are over are the publisher's to drop and never match today anyway.
+ * @param {unknown} v
+ * @returns {Banner[]}
  */
-function readPromo(p) {
-  const expiresAt = text(p.expiresAt);
-  if (p.active !== true || (expiresAt !== '' && !EXPIRY_FORMAT.test(expiresAt))) return { ...NO_PROMO };
-  return {
-    active: true,
-    headline: bounded(p.headline, LIMITS.headline),
-    body: bounded(p.body, LIMITS.body),
-    ctaLabel: bounded(p.ctaLabel, LIMITS.ctaLabel),
-    ctaUrl: safeUrl(p.ctaUrl),
-    expiresAt,
-  };
+function readBanners(v) {
+  return (Array.isArray(v) ? v : [])
+    .map((raw) => {
+      const b = obj(raw);
+      return {
+        headline: bounded(b.headline, LIMITS.headline),
+        body: bounded(b.body, LIMITS.body),
+        ctaLabel: bounded(b.ctaLabel, LIMITS.ctaLabel),
+        ctaUrl: safeUrl(b.ctaUrl),
+        from: text(b.from),
+        to: text(b.to),
+      };
+    })
+    .filter((b) => b.headline !== '' && DATE_FORMAT.test(b.from) && DATE_FORMAT.test(b.to) && b.from <= b.to)
+    .sort((a, b) => (a.from < b.from ? -1 : a.from > b.from ? 1 : a.to < b.to ? -1 : a.to > b.to ? 1 : 0))
+    .slice(0, LIMITS.banners);
 }
 
 /**

@@ -2,9 +2,9 @@
  * The published site config: the ONE fetch, and the ONE place its parts are
  * taken from.
  *
- * Staff edit the Square links, the announcement banner, the opening hours and
- * the social links in the members app (Settings -> Booking & buy links, and
- * Banner, hours & social). Every save republishes `settings/siteConfig` to a
+ * Staff edit the Square links, the year's dated banners, the opening hours and
+ * the social links in the members app (Settings -> Booking & buy links,
+ * Announcements, and Banner, hours & social). Every save republishes `settings/siteConfig` to a
  * static, CDN-cached object (`functions/site-config-publish.js` in TMV-Members).
  * This module reads that object ONCE at build time, as it always has for links,
  * and everything below it (`square-links.ts` for the links, the layout's banner,
@@ -25,7 +25,7 @@
  */
 import { readPublishedConfig, fetchPublishedConfig, PUBLISHED_CONFIG_URL, type PublishedConfig } from '../lib/published-config.js';
 import { gymNow } from '../lib/gym-clock.js';
-import { promoIsShown } from '../lib/site-promo.js';
+import { bannerOn, gymDay } from '../lib/site-banner.js';
 import { contactView } from '../lib/contact-view.js';
 
 /** Tests point the build at a fixture server; production never sets it. */
@@ -56,8 +56,8 @@ export const hours = published.hours;
 /** Social links; '' where staff left one blank. */
 export const social = published.social;
 
-/** The announcement banner when it should show now, else null (off, no headline, or expired). */
-export const promo = promoIsShown(published.promo, gymNow().wall) ? published.promo : null;
+/** The banner whose days include the gym's today, else null. The browser picks again on page load. */
+export const promo = bannerOn(published.banners, gymDay(gymNow().wall));
 
 /**
  * The gym's address, phone and email as the page shows them (text and links);

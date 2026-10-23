@@ -35,7 +35,7 @@ repository, so `public/version.json` carries only those three values.
 ## The published site config: banner, hours, social, links
 
 Staff own the announcement banner, the opening hours, the social links, the
-gym's address, phone and email, and the per-card Square links (TMV-Members, Settings -> Banner, hours & social and
+gym's address, phone and email, and the per-card Square links (TMV-Members, Settings -> Website: Announcements, Banner, hours & social and
 Booking & buy links). TMV-Members republishes them on every save to a static
 object, and **`src/data/site-config.ts` reads it once per build**: the ONLY
 fetch. `square-links.ts` takes `links` from it; `PromoBanner.astro` takes the
@@ -55,10 +55,11 @@ copy that staff edits no longer reach.
   included). Numbers derived from them (pill, JSON-LD, the one-line summary, the
   hero tile) come from `src/lib/opening-hours.js`, which mirrors TMV-Members
   `core/site-hours.js` `parseHours`; rows it cannot read feed no number.
-- **Banner shows** only when on, with a headline, and before its expiry (the END
-  of the chosen day, gym time, `America/Toronto`: `src/lib/site-promo.js`,
-  `gym-clock.js`). Checked at build and again in the browser, so an expired one
-  comes down between releases.
+- **Banners are dated** (TMV-Members Settings -> Website -> Announcements, ADR-0276): staff set the year's
+  banners ahead, each with a first and last day, published as `banners`. The one whose days include the gym's
+  today shows (`bannerOn` in `src/lib/site-banner.js`, `gym-clock.js`, `America/Toronto`), from the start of its
+  first day to the end of its last. Picked at build and again in the browser, so the next one goes up and a
+  finished one comes down between releases.
 - **The build is the first paint; the browser keeps it current.** On page load
   `src/lib/live-site-config.ts` fetches the SAME object (`PUBLISHED_CONFIG_URL`,
   the same reader `fetchPublishedConfig` the build uses, `cache: 'no-cache'` so
@@ -80,9 +81,9 @@ copy that staff edits no longer reach.
   `src/lib/published-config.js`, so only http(s) reaches an `href` and a bad link reads as unset (the card keeps
   its default); the structured data is written with `jsonForScript` (`src/lib/json-for-script.js`), because a valid
   URL can still carry `</script>`. Every value is bounded (`LIMITS` in `published-config.js`: URLs 500, headline 120,
-  message 280, button text 40, 14 hours rows of day 40 / hours 80, 12 closed days of reason 80, mirroring TMV-Members `SITE_CONFIG_LIMITS` by hand):
-  a value past its limit reads as unset. A switched-off banner carries no text, and a banner whose expiry is not
-  `YYYY-MM-DDTHH:MM:SS` reads as off.
+  message 280, button text 40, 24 banners, 14 hours rows of day 40 / hours 80, 12 closed days of reason 80, mirroring TMV-Members `SITE_CONFIG_LIMITS` by hand):
+  a value past its limit reads as unset. A banner with no headline, a day that is not `YYYY-MM-DD` or a last day
+  before its first is dropped.
 - **No inline script, anywhere.** The hosting sends a Content-Security-Policy (TMV-Members `firebase.json`,
   `hosting:web`, ADR-0169) whose `script-src` allows no inline script. So every script is a file
   (`vite.build.assetsInlineLimit: 0` stops Astro inlining small ones), there is no `is:inline` script, no `on*=`

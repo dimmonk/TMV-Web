@@ -2,8 +2,8 @@
 /**
  * The gym's wall clock.
  *
- * Everything the staff type into Settings -> Banner, hours & social is local
- * gym time with no zone (an opening hour, a banner's end-of-day expiry). So the
+ * Everything the staff type into Settings -> Website is local gym time with no
+ * zone (an opening hour, a banner's first and last day). So the
  * site reads "now" the same way, in the gym's zone, wherever the build runs and
  * wherever the visitor is. One definition, used by the build and by the browser.
  */
@@ -14,7 +14,7 @@ export const GYM_TIME_ZONE = 'America/Toronto';
  * @typedef {Object} GymNow
  * @property {number} dayIndex - 0 (Sunday) to 6, like `Date#getDay`.
  * @property {number} minutes - Minutes since the gym's midnight.
- * @property {string} wall - `YYYY-MM-DDTHH:MM:SS` in the gym's zone: compares as text with a stored `expiresAt`.
+ * @property {string} wall - `YYYY-MM-DDTHH:MM:SS` in the gym's zone: compares as text; its first ten characters are the gym's day.
  */
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
