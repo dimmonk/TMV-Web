@@ -15,6 +15,7 @@ import {
   weekSchedule, hasOpenDays, hoursSummary, hoursHeading, hoursStat, openingHoursSpec, openStatus, formatClock,
 } from '../src/lib/opening-hours.js';
 import { readCampCatalog, campDates, applyCampDates } from '../src/lib/camp-dates.js';
+import { upcomingEvents, eventTime } from '../src/lib/site-events.js';
 
 const ALL_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
   .map((day) => ({ day, time: '11:00 AM – 10:00 PM' }));
@@ -427,4 +428,44 @@ test('the browser refresh fills the date lists as text and hides empty camps and
   assert.equal(paday.querySelector('b'), null, 'text, never markup');
   applyCampDates(document, [{ key: 'winter', runs: [], summary: '' }, { key: 'paday', runs: [], summary: '' }]);
   assert.equal(block.hidden, true);
+});
+
+// ---- special events ---------------------------------------------------------
+
+const PHOTO = 'https://firebasestorage.googleapis.com/v0/b/tmv-management.firebasestorage.app/o/public%2Fsite-events%2Fsev_0000000000000001%2Fjam.jpg?alt=media';
+const jam = { id: 'sev_0000000000000001', title: 'Parkour Jam', date: '2026-11-06', start: '19:00', end: '22:00', note: 'All levels', link: 'https://example.com/jam', photoUrl: PHOTO };
+
+test('special events read soonest first; one without a title, a day or times in order is dropped', () => {
+  const { events } = readPublishedConfig({ events: [
+    { ...jam, id: 'b', title: 'Later', date: '2026-11-20' },
+    { ...jam, id: 'c', title: 'Same day, earlier', start: '10:00', end: '12:00' },
+    { ...jam, id: 'd', title: '' },
+    { ...jam, id: 'e', title: 't'.repeat(LIMITS.eventTitle + 1) },
+    { ...jam, id: 'f', date: 'Nov 6' },
+    { ...jam, id: 'g', start: '7pm' },
+    { ...jam, id: 'h', start: '22:00', end: '19:00' },
+    'x',
+    jam,
+  ] });
+  assert.deepEqual(events.map((e) => e.id), ['c', jam.id, 'b']);
+  assert.deepEqual(events[1], jam);
+  const many = Array.from({ length: LIMITS.events + 2 }, (_, i) => ({ ...jam, id: `m${i}` }));
+  assert.equal(readPublishedConfig({ events: many }).events.length, LIMITS.events);
+});
+
+test('an event note, link or photo that cannot be shown reads as none; the event stays', () => {
+  const [e] = readPublishedConfig({ events: [{
+    ...jam, note: 'two\nlines', link: 'javascript:alert(1)', photoUrl: 'https://evil.example/x.jpg',
+  }] }).events;
+  assert.deepEqual([e.title, e.note, e.link, e.photoUrl], ['Parkour Jam', '', '', '']);
+  const [long] = readPublishedConfig({ events: [{ ...jam, note: 'n'.repeat(LIMITS.eventNote + 1), link: `https://x.example/${'a'.repeat(LIMITS.eventLink)}`, photoUrl: null }] }).events;
+  assert.deepEqual([long.note, long.link, long.photoUrl], ['', '', '']);
+  assert.deepEqual(readPublishedConfig({}).events, []);
+});
+
+test('only events from the gym\'s today on are shown, with their hours', () => {
+  const list = readPublishedConfig({ events: [{ ...jam, id: 'past', date: '2026-11-05' }, jam] }).events;
+  assert.deepEqual(upcomingEvents(list, '2026-11-06').map((e) => e.id), [jam.id]);
+  assert.deepEqual(upcomingEvents(list, '2026-11-07'), []);
+  assert.equal(eventTime(jam), '7pm–10pm');
 });

@@ -5,8 +5,8 @@
  * TMV-Members republishes `settings/siteConfig` to a static CDN object on every
  * staff save (`functions/site-config-publish.js`). That object carries the
  * per-card Square `links`, the dated announcement `banners`, the opening `hours`,
- * the `social` links, the `closedDays` (dates the whole gym is closed) and the
- * gym's `address`, `phone` and `email`. This is the one reader of its shape:
+ * the `social` links, the `closedDays` (dates the whole gym is closed), the
+ * special `events` and the gym's `address`, `phone` and `email`. This is the one reader of its shape:
  * `src/data/site-config.ts` fetches it once per build and hands it here, and
  * every consumer takes its part from the result.
  *
@@ -45,6 +45,10 @@ export const LIMITS = Object.freeze({
   hoursTime: 80,
   closedDays: 12,
   closedReason: 80,
+  events: 12,
+  eventTitle: 60,
+  eventNote: 80,
+  eventLink: 300,
   street: 80,
   city: 60,
   region: 40,
@@ -56,7 +60,27 @@ export const LIMITS = Object.freeze({
 /** A closed day or a banner's first and last day: a gym calendar day, what the members app writes. */
 const DATE_FORMAT = /^\d{4}-\d{2}-\d{2}$/;
 
+/** An event's start or end: `HH:MM`, 24-hour gym time, what the members app writes. */
+const TIME_FORMAT = /^([01]\d|2[0-3]):[0-5]\d$/;
+
 /**
+ * Where an event photo lives: the members app's public event folder in Firebase Storage (TMV-Members ADR-0275,
+ * `siteEventPhotoUrl`). A photo address anywhere else reads as no photo, and this is the one image origin the
+ * hosting's Content-Security-Policy lets the website show it from.
+ */
+export const EVENT_PHOTO_PREFIX = 'https://firebasestorage.googleapis.com/v0/b/tmv-management.firebasestorage.app/o/public%2Fsite-events%2F';
+
+/**
+ * @typedef {Object} SiteEvent
+ * @property {string} id
+ * @property {string} title - never ''.
+ * @property {string} date - `YYYY-MM-DD`, gym day.
+ * @property {string} start - `HH:MM`.
+ * @property {string} end - `HH:MM`, after `start`.
+ * @property {string} note - one line, '' when none.
+ * @property {string} link - http(s), '' when none.
+ * @property {string} photoUrl - an address under `EVENT_PHOTO_PREFIX`, '' when none.
+ *
  * @typedef {Object} Banner
  * @property {string} headline - never ''.
  * @property {string} body - '' when none.
@@ -71,6 +95,7 @@ const DATE_FORMAT = /^\d{4}-\d{2}-\d{2}$/;
  * @property {{day: string, time: string}[]} hours
  * @property {Record<string, string>} social - every key of `SOCIAL_KEYS`, '' where unset.
  * @property {{date: string, reason: string}[]} closedDays - soonest first; past days are the reader's to drop.
+ * @property {SiteEvent[]} events - soonest first; past events are the reader's to drop (`upcomingEvents`).
  * @property {Contact} contact
  *
  * @typedef {Object} Contact
@@ -149,6 +174,7 @@ export function readPublishedConfig(data) {
       .slice(0, LIMITS.hoursRows),
     social,
     closedDays: readClosedDays(d.closedDays),
+    events: readEvents(d.events),
     contact: readContact(d),
   };
 }
@@ -165,6 +191,37 @@ function readClosedDays(v) {
     .filter((r) => DATE_FORMAT.test(r.date))
     .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
     .slice(0, LIMITS.closedDays);
+}
+
+/**
+ * The special events, read the way the members app publishes them (`buildSiteEvents`): one with no title or a
+ * title past its limit, a day that is not `YYYY-MM-DD`, or times that are not `HH:MM` with the end after the start
+ * is dropped whole; a note past its limit or on more than one line reads as none, a link that is not http(s) within
+ * its limit reads as none, and so does a photo outside the event photo folder. Soonest first, at most `LIMITS.events`.
+ * @param {unknown} v
+ * @returns {SiteEvent[]}
+ */
+function readEvents(v) {
+  return (Array.isArray(v) ? v : [])
+    .map((raw) => {
+      const e = obj(raw);
+      const note = bounded(e.note, LIMITS.eventNote);
+      const link = safeUrl(e.link);
+      const photoUrl = safeUrl(e.photoUrl);
+      return {
+        id: text(e.id),
+        title: bounded(e.title, LIMITS.eventTitle),
+        date: text(e.date),
+        start: text(e.start),
+        end: text(e.end),
+        note: /[\r\n]/.test(note) ? '' : note,
+        link: link.length <= LIMITS.eventLink ? link : '',
+        photoUrl: photoUrl.startsWith(EVENT_PHOTO_PREFIX) ? photoUrl : '',
+      };
+    })
+    .filter((e) => e.title !== '' && DATE_FORMAT.test(e.date) && TIME_FORMAT.test(e.start) && TIME_FORMAT.test(e.end) && e.start < e.end)
+    .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : a.start < b.start ? -1 : a.start > b.start ? 1 : 0))
+    .slice(0, LIMITS.events);
 }
 
 /**

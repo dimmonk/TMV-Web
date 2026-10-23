@@ -20,6 +20,7 @@ import { readPublishedConfig } from '../src/lib/published-config.js';
 import { applyPublishedConfig } from '../src/lib/apply-site-config.js';
 import { gymNow } from '../src/lib/gym-clock.js';
 import { applyPrices } from '../src/lib/apply-prices.js';
+import { applySiteEvents } from '../src/lib/site-events.js';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -529,4 +530,35 @@ test('the refresh fills card prices from the live price list, and hides a line w
   assert.equal(first('From {openGym1x}').hidden, false);
   applyPrices(store, { openGym1x: 26 });
   assert.equal(first('From {groupClass1x}').hidden, true);
+});
+
+test('special events: the home page holds a hidden section per chrome, and the browser draws one card per event from today on', async () => {
+  serve({ hours: WEEK });
+  const site = await build();
+  const home = site.dom('');
+  const hosts = [...home.querySelectorAll('[data-site-events]')];
+  assert.deepEqual(hosts.map((h) => h.id), ['m-special-events', 'special-events'], 'one section per chrome, own anchors');
+  assert.ok(hosts.every((h) => h.hidden && h.querySelectorAll('.pw-card').length === 0), 'nothing is built: the browser draws it');
+  assert.ok(!site.page('events').includes('data-site-events'), 'the Birthday parties page has no events');
+  const photo = 'https://firebasestorage.googleapis.com/v0/b/tmv-management.firebasestorage.app/o/public%2Fsite-events%2Fsev_0000000000000001%2Fa.jpg?alt=media';
+  const events = readPublishedConfig({ events: [
+    { id: 'old', title: 'Last week', date: '2026-10-30', start: '10:00', end: '11:00' },
+    { id: 'sev_0000000000000001', title: '<b>Jam</b>', date: '2026-11-06', start: '19:00', end: '22:00', note: 'All levels', link: 'https://example.com/jam', photoUrl: photo },
+    { id: 'sev_0000000000000002', title: 'Speed Challenge', date: '2026-11-15', start: '11:00', end: '16:00', note: null, link: null, photoUrl: null },
+  ] }).events;
+  applySiteEvents(home, events, '2026-11-01');
+  const desk = home.getElementById('special-events');
+  assert.ok(!desk.hidden);
+  const cards = [...desk.querySelectorAll('.pw-card')];
+  assert.equal(cards.length, 2, 'a past event is not drawn');
+  assert.equal(cards[0].querySelector('.pw-title').textContent, '<b>Jam</b>', 'a title is text, never markup');
+  assert.equal(cards[0].querySelector('b'), null);
+  assert.equal(cards[0].querySelector('.pw-glabel').textContent, 'Fri Nov 6');
+  assert.equal(cards[0].querySelector('.pw-label').textContent, '7pm–10pm');
+  assert.equal(cards[0].querySelector('.pw-bullets li').textContent, 'All levels');
+  assert.equal(cards[0].querySelector('img').getAttribute('src'), photo);
+  assert.equal(cards[0].querySelector('a.pw-action').getAttribute('href'), 'https://example.com/jam');
+  assert.ok(!cards[1].querySelector('img') && !cards[1].querySelector('a') && !cards[1].querySelector('.pw-bullets'), 'no photo, link or note: none drawn');
+  applySiteEvents(home, events, '2026-11-16');
+  assert.ok(hosts.every((h) => h.hidden), 'every event over: the section is gone');
 });

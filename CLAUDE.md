@@ -206,6 +206,17 @@ and changes card. Styles: `src/styles/schedule-web.css`. The printed sheet modul
 here alone; the website only borrows their time formatting, filters and description renderer. Tests:
 `tests/schedule-weeks.test.mjs`.
 
+## Special events: the home page
+
+Staff list one-off events in TMV-Members (Settings -> Website), published as `events` in the site config
+(`readEvents` in `published-config.js`: title, date, start/end, optional note, link and photo; at most 12; a bad
+title, date or time drops the event, a bad note, link or photo reads as unset). The home page shows the upcoming
+ones (`SpecialEvents.astro`, one per chrome with its own `id`, cards from the price list's `.pw-*` parts built by
+`src/lib/site-events.js` with `textContent`, styles `site-events.css`). Built hidden and filled in the browser on
+page load from the live config, so an event appears and a finished one goes away with no release; none upcoming
+hides the section. A photo is only ever a Members upload (`EVENT_PHOTO_PREFIX`, Firebase Storage), which the
+website CSP `img-src` allows in TMV-Members `firebase.json`.
+
 ## Card prices: named, never typed
 
 No price is typed in this repo. Card copy names a price by its Members price-list key in braces
@@ -214,7 +225,7 @@ No price is typed in this repo. Card copy names a price by its Members price-lis
 `src/lib/live-prices.ts` re-reads `price-list.json` and re-fills every line (`apply-prices.js`). A line that
 names a price the list lacks renders nothing. Render any field that may carry a price through `<Priced>`.
 The render test fails on a typed `$` amount in a built page, except the few the locked scope keeps in code
-(group event tiers and early access until Members publishes them, the camp transaction fee, a partner's rates).
+(the camp transaction fee, a partner's rates).
 
 ## The price list: one renderer, a web skin
 

@@ -1,5 +1,5 @@
 <meta name="robots" content="noindex,nofollow">
-<title>TMV Special Events</title>
+<title>TMV Website Prototype</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
   :root { --bg:#f5f4f1; --ink:#211f1b; --muted:#6b6862; --line:#e5e3de; --card:#fff; --brand:#ffd400; --bar:#211f1b; --barink:#fff; }
@@ -24,7 +24,7 @@
   .stage.full { grid-template-columns: minmax(0, 1440px); } .full .preview:not(.on) { display: none; }
   @media (max-width: 860px) { .stage { grid-template-columns: minmax(0, 1fr); } .stage .preview:not(.on) { display: none; } .phone-only { display: none; } }
 </style>
-<header><h1><b>The Monkey Vault</b> &middot; special events prototype</h1><p>Now = the site as built today. Proposed = special events from Members, with sample events. Nothing here is live.</p></header>
+<header><h1><b>The Monkey Vault</b> &middot; website prototype</h1><p>Now = the site as built today. Proposed = the change under review. Nothing here is live.</p></header>
 <div class="controls">
   <label>Page<select id="page"></select></label>
   <label class="phone-only">View<select id="view"><option value="phones">Phones side by side</option><option value="full">Full width</option></select></label>
@@ -38,7 +38,7 @@
 <script>
   // One row per page: where it lives in each build, and what changed (shown above the previews).
   var PAGES = [
-    { label: 'Home', now: '', proposed: '', notes: ['Special events staff add in Members (Settings > Website > Special events) show under the Schedule changes card, as price list cards: photo, title, day, hours, note, and a Details link when there is one.', 'The three events here are SAMPLES: Members has none published yet. With no event coming up the whole section, heading included, is gone.', 'A past event drops off by itself; a new one shows within minutes of the save, no website release.', 'The Birthday parties page is unchanged.'] }
+    { label: 'Home', now: '', proposed: '', notes: ['Special events (signed off 2026-10-23) are now in src/: both builds match until the next proposal adds files under proposed/src/.'] }
   ];
   var page = document.getElementById('page'), view = document.getElementById('view'), stage = document.getElementById('stage'), seg = document.getElementById('seg'), notes = document.getElementById('notes');
   var frames = { now: document.querySelector('[data-v="now"] iframe'), proposed: document.querySelector('[data-v="proposed"] iframe') };
