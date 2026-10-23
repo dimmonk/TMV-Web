@@ -195,8 +195,8 @@ adults only (`ADULTS_ONLY_LATE`, a house rule that stays in code by Steven's Mem
 same card (`ScheduleChanges.astro` + `schedule-changes.js`, styles `schedule-changes.css`), hidden while there is
 nothing to list; a date there opens `/schedule?date=` on that week.
 
-The reader (`public-projections.js`, a verbatim Members copy) takes `schedule.json` v1 and v2; a v2 class's
-`isEnding`/`isEndingSetAt` is read back into `isCancelled`/`isCancelledSetAt`, the names every reader still uses.
+The reader (`public-projections.js`, a verbatim Members copy) takes `schedule.json` v2: a class's ending flag is
+`isEnding` (shown as "Ending"), and `cancellations` lists staff's one-date cancels.
 
 Desktop is `schedule-page.js` + `schedule-week-view.js` (an hour grid in the price list's card parts, colour rule per
 class, hover lights a class's repeats, a site-card popup); the phone is `mobile-schedule.ts` with the same week bar

@@ -32,11 +32,8 @@ export const PUBLIC_SCHEDULE_URL = `${PROJECTION_BASE}schedule.json`;
 /** The published price-list object. Server side: `PRICE_LIST_OBJECT_PATH`. */
 export const PUBLIC_PRICE_LIST_URL = `${PROJECTION_BASE}price-list.json`;
 
-/**
- * The payload shapes this reader understands. Server side: `*_SCHEMA_VERSION`, which must be one of these. The
- * schedule reader takes v1 and v2 so it can ship before the server moves to v2.
- */
-export const SCHEDULE_SCHEMA_VERSIONS = [1, 2];
+/** The payload shapes this reader understands. Server side: `*_SCHEMA_VERSION`, which must be one of these. */
+export const SCHEDULE_SCHEMA_VERSIONS = [2];
 export const PRICE_LIST_SCHEMA_VERSION = 1;
 
 /**
@@ -70,24 +67,7 @@ async function fetchProjection(url, schemaVersions, label) {
 }
 
 /**
- * A v2 class names its ending flag `isEnding` / `isEndingSetAt`; v1 named it
- * `isCancelled` / `isCancelledSetAt`, which `resolveClassTags` and every reader
- * still read. So a v2 class is read back into those names here, at the one
- * door, until the readers move to the v2 names. Everything else (v2's
- * `partner`, the top-level `cancellations`) passes through as published.
- *
- * @param {Record<string, any>} c
- * @param {number} schemaVersion
- * @returns {Record<string, any>}
- */
-function classInReaderNames(c, schemaVersion) {
-  if (schemaVersion === 1) return c;
-  const { isEnding, isEndingSetAt, ...rest } = c;
-  return { ...rest, isCancelled: isEnding === true, isCancelledSetAt: isEndingSetAt || null };
-}
-
-/**
- * The public schedule (v1 or v2), with each class's NEW / ENDING badge
+ * The public schedule, with each class's NEW / ENDING badge
  * resolved against this device's clock. Returns a new object; the fetched JSON
  * is not mutated.
  *
@@ -98,7 +78,7 @@ export async function fetchPublicSchedule({ fresh = false } = {}) {
   const json = await fetchProjection(projectionUrl(PUBLIC_SCHEDULE_URL, fresh), SCHEDULE_SCHEMA_VERSIONS, 'schedule');
   if (!Array.isArray(json.classes)) throw new Error('Public schedule has no classes array');
   const nowMs = Date.now();
-  return { ...json, classes: json.classes.map((c) => resolveClassTags(classInReaderNames(c, json.schemaVersion), nowMs)) };
+  return { ...json, classes: json.classes.map((c) => resolveClassTags(c, nowMs)) };
 }
 
 /**

@@ -23,6 +23,6 @@ test('the class colour bar interpolates the colour through escapeHtml', () => {
 });
 
 test('no session field is interpolated raw into the schedule markup', () => {
-  // `s.isCancelled` / `s.isNew` only pick between literals; every string field goes through escapeHtml.
-  assert.deepEqual(RENDER.match(/\$\{s\.(?!isCancelled\b|isNew\b)\w+\}/g) ?? [], []);
+  // `s.isEnding` / `s.isNew` only pick between literals; every string field goes through escapeHtml.
+  assert.deepEqual(RENDER.match(/\$\{s\.(?!isEnding\b|isNew\b)\w+\}/g) ?? [], []);
 });

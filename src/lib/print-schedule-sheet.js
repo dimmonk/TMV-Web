@@ -203,7 +203,7 @@ function el(tag, opts = {}, children = []) {
 function buildClassCard(c, variant, layout, onClick) {
   const ak = ageKeyOf(c.ageGroupName);
   const cls = ['class', 'age-' + ak, 'layout-' + layout];
-  if (c.isCancelled) cls.push('cancelled');
+  if (c.isEnding) cls.push('cancelled');
   // Admin-only: classes hidden from the public schedule are marked
   // `_hidden: true` by the denormalizer. The CSS scope
   // `.schedule-admin-wrap .class.is-hidden` dims/dashes them. The public
@@ -219,8 +219,8 @@ function buildClassCard(c, variant, layout, onClick) {
   const ageShort = (c.ageGroupName || '').toUpperCase();
 
   const children = [];
-  if (c.isNew && !c.isCancelled) children.push(el('span', { className: 'tag new', text: 'NEW' }));
-  if (c.isCancelled) children.push(el('span', { className: 'tag end', text: 'ENDING' }));
+  if (c.isNew && !c.isEnding) children.push(el('span', { className: 'tag new', text: 'NEW' }));
+  if (c.isEnding) children.push(el('span', { className: 'tag end', text: 'ENDING' }));
   children.push(el('div', { className: 'c-name', text: c.disciplineName || '' }));
 
   if (layout === 'compact') {
