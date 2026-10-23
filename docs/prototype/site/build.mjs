@@ -11,6 +11,11 @@
 // config, schedule, price list, camp catalogue) from a copy read once at build time, and refuses any other off-site request, so the
 // published prototype never reaches production. Root-absolute links are rewritten relative, so the result works from
 // any host, including the Artifact viewer.
+//
+// A proposal that needs data the members app does not publish yet adds it in `proposed/sample.mjs` (default export
+// `(published, today) => ({ published, photos })`), for the proposed build only: `published` replaces the copy the pages
+// read, and `photos` maps a published photo address to a site asset, which `offline.js` shows instead (the address
+// names a file that does not exist).
 import { build } from 'astro';
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
@@ -20,6 +25,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const APP = resolve(HERE, '../../..');
 const SRC = join(APP, 'src');
 const PROPOSED = join(HERE, 'proposed', 'src');
+const SAMPLE = join(HERE, 'proposed', 'sample.mjs');
 const OUT = join(APP, 'docs', 'prototype', 'dist', 'site');
 const LIVE = 'https://storage.googleapis.com/tmv-management.firebasestorage.app/public/';
 const PUBLISHED = ['site-config.json', 'schedule.json', 'price-list.json', 'camp-catalog.json'];
@@ -102,7 +108,7 @@ async function readPublished() {
   return Object.fromEntries(entries);
 }
 
-function offlineScript(published) {
+function offlineScript(published, photos = {}) {
   return `// Prototype only: the page runs offline. The members app's published objects come from this copy; any other off-site request is refused.
 (function () {
   var LIVE = ${JSON.stringify(LIVE)};
@@ -117,11 +123,18 @@ function offlineScript(published) {
     }
     return Promise.reject(new TypeError('Prototype: off-site request blocked (' + url.origin + ')'));
   };
+  var PHOTOS = ${JSON.stringify(photos)};
+  var here = document.currentScript ? document.currentScript.src : location.href;
+  var setAttribute = Element.prototype.setAttribute;
+  Element.prototype.setAttribute = function (name, value) {
+    var sample = name === 'src' && this.tagName === 'IMG' && PHOTOS[value];
+    return setAttribute.call(this, name, sample ? new URL('../' + sample, here).href : value);
+  };
 })();
 `;
 }
 
-async function buildVariant(name, published) {
+async function buildVariant(name, published, photos) {
   const outDir = join(OUT, name);
   const proposed = name === 'proposed';
   await build({
@@ -131,7 +144,7 @@ async function buildVariant(name, published) {
     integrations: proposed ? [addedPages()] : [],
     vite: { plugins: proposed ? [proposedTree()] : [] },
   });
-  writeFileSync(join(outDir, 'offline.js'), offlineScript(published));
+  writeFileSync(join(outDir, 'offline.js'), offlineScript(published, photos));
   walk(outDir, (file) => {
     if (/preload-helper\.[\w-]+\.js$/.test(file)) { // Vite preloads '/' + dep; resolve it from the module instead
       writeFileSync(file, readFileSync(file, 'utf8').replace(/function\((\w)\)\{return`\/`\+\1\}/, 'function($1){return new URL(`../`+$1,import.meta.url).href}'));
@@ -153,7 +166,9 @@ mkdirSync(OUT, { recursive: true });
 const published = await readPublished();
 process.env.TMV_SITE_CONFIG_URL = ''; // both builds read the live published config, as the real build does
 await buildVariant('now', published);
-await buildVariant('proposed', published);
+const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Toronto' }).format(new Date());
+const sample = existsSync(SAMPLE) ? (await import(SAMPLE)).default(published, today) : { published, photos: {} };
+await buildVariant('proposed', sample.published, sample.photos);
 cpSync(join(APP, 'public', 'assets'), join(OUT, 'assets'), { recursive: true });
 cpSync(join(HERE, 'compare.html'), join(OUT, 'index.html'));
 console.log(`[prototype] built ${relative(APP, OUT)}: now/, proposed/, assets/, index.html (the comparison page)`);

@@ -1,0 +1,31 @@
+---
+/**
+ * Special events staff list in the members app (TMV-Members ADR-0275), on the home page: one price-list card per
+ * event, drawn in the browser by `applySiteEvents` (src/lib/site-events.js) from the published site config, so a staff
+ * save shows with no release and a past event drops off by itself. Hidden until there is an event, heading included,
+ * so a quiet month shows nothing.
+ *
+ * The page passes its heading in the `head` slot and the section's `id` (one per chrome, since both are in the page).
+ * Content only, width-agnostic (THE RULE): the page gives it a column, and the space around it through
+ * `--site-events-pad` (applied only while it shows).
+ */
+import '../styles/price-list-web.css';
+import '../styles/site-events.css';
+
+interface Props { id: string; }
+const { id } = Astro.props;
+---
+<section class="se" id={id} data-site-events hidden aria-label="Special events">
+  <slot name="head" />
+  <div class="pw-grid" data-site-events-cards></div>
+</section>
+
+<script>
+  import { applySiteEvents } from '../lib/site-events.js';
+  import { publishedSiteConfig } from '../lib/live-site-config';
+  import { gymNow } from '../lib/gym-clock.js';
+  document.addEventListener('astro:page-load', () => {
+    if (!document.querySelector('[data-site-events]')) return;
+    void publishedSiteConfig().then((config) => applySiteEvents(document, config.events, gymNow().wall.slice(0, 10)));
+  });
+</script>
