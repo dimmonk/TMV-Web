@@ -1,26 +1,27 @@
 ---
 /**
- * The announcement banner staff set in the members app (Settings -> Banner,
- * hours & social): a headline, an optional message, an optional button.
+ * The announcement banner staff set in the members app (Settings -> Website ->
+ * Announcements): a headline, an optional message, an optional button, shown
+ * from its first day to the end of its last (`lib/site-banner.js`).
  *
- * It is visible only when `site-config.ts` says it should show (switched on,
- * has a headline, not past its end-of-day expiry); otherwise the element is
- * `hidden` and empty, so nothing shows, not an empty strip. It is always in the
- * markup because the browser fills it in when a banner is published after the
- * build (`lib/live-site-config.ts`, `apply-site-config.js`). It sits above both
- * chromes and scrolls away with the page.
+ * It is visible only when `site-config.ts` found a banner whose days include
+ * the gym's today; otherwise the element is `hidden` and empty, so nothing
+ * shows, not an empty strip. It is always in the markup because the browser
+ * picks again on page load (`lib/live-site-config.ts`, `apply-site-config.js`),
+ * so the next banner of the year shows on its first day with no release. It
+ * sits above both chromes and scrolls away with the page.
  *
- * The expiry is checked at build time and again in the browser (the script
- * below), so a banner that expires between two releases still comes down by
- * itself on the day, even if the published object cannot be fetched. The
- * browser reads the gym's clock, the same one the build uses.
+ * The days are checked at build time and again in the browser (the script
+ * below), so a banner whose last day passed between two releases still comes
+ * down by itself, even if the published object cannot be fetched. The browser
+ * reads the gym's clock, the same one the build uses.
  */
 import { promo } from '../data/site-config';
-import { promoButton } from '../lib/site-promo.js';
+import { bannerButton } from '../lib/site-banner.js';
 
-const button = promo ? promoButton(promo) : null;
+const button = promo ? bannerButton(promo) : null;
 ---
-<aside class="promo" data-promo data-expires={promo?.expiresAt ?? ''} hidden={!promo} aria-label="Announcement">
+<aside class="promo" data-promo data-from={promo?.from ?? ''} data-to={promo?.to ?? ''} hidden={!promo} aria-label="Announcement">
   <div class="promo-in container">
     <strong class="promo-head" data-promo-head>{promo?.headline}</strong>
     <span class="promo-body" data-promo-body hidden={!promo?.body}>{promo?.body}</span>
@@ -37,13 +38,13 @@ const button = promo ? promoButton(promo) : null;
 </style>
 
 <script>
-  import { isExpired } from '../lib/site-promo.js';
+  import { bannerShowsOn, gymDay } from '../lib/site-banner.js';
   import { gymNow } from '../lib/gym-clock.js';
 
   function expireBanner() {
-    const wall = gymNow().wall;
+    const day = gymDay(gymNow().wall);
     document.querySelectorAll<HTMLElement>('[data-promo]').forEach((el) => {
-      if (isExpired(el.dataset.expires ?? '', wall)) el.hidden = true;
+      if (!bannerShowsOn({ from: el.dataset.from ?? '', to: el.dataset.to ?? '' }, day)) el.hidden = true;
     });
   }
   document.addEventListener('astro:page-load', expireBanner);

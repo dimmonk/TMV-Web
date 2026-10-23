@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { fillPrices, hasPriceToken } from '../src/lib/price-text.js';
 import { readPublishedConfig, fetchPublishedConfig, hasSocial, LIMITS } from '../src/lib/published-config.js';
 import { moveSlotMarkers } from '../src/lib/sq-slot-marker.js';
-import { expiryStamp, isExpired, promoIsShown, promoButton } from '../src/lib/site-promo.js';
+import { bannerOn, bannerButton, bannerShowsOn, gymDay } from '../src/lib/site-banner.js';
 import { gymNow } from '../src/lib/gym-clock.js';
 import { jsonForScript } from '../src/lib/json-for-script.js';
 import { specializedView, splitLevel, clock } from '../src/lib/specialized-classes.js';
@@ -26,20 +26,20 @@ test('a value past its limit reads as unset, a value at its limit is kept', () =
   const at = readPublishedConfig({
     links: { book: { introduction: url(LIMITS.url) } },
     social: { instagram: url(LIMITS.url) },
-    promo: { active: true, headline: 'h'.repeat(LIMITS.headline), body: 'b'.repeat(LIMITS.body), ctaLabel: 'c'.repeat(LIMITS.ctaLabel), ctaUrl: url(LIMITS.url), expiresAt: '' },
+    banners: [{ headline: 'h'.repeat(LIMITS.headline), body: 'b'.repeat(LIMITS.body), ctaLabel: 'c'.repeat(LIMITS.ctaLabel), ctaUrl: url(LIMITS.url), from: '2026-11-01', to: '2026-11-30' }],
   });
   assert.equal(at.links.book.introduction.length, LIMITS.url);
   assert.equal(at.social.instagram.length, LIMITS.url);
-  assert.equal(at.promo.headline.length, LIMITS.headline);
-  assert.equal(at.promo.ctaUrl.length, LIMITS.url);
+  assert.equal(at.banners[0].headline.length, LIMITS.headline);
+  assert.equal(at.banners[0].ctaUrl.length, LIMITS.url);
   const over = readPublishedConfig({
     links: { book: { introduction: url(LIMITS.url + 1) } },
     social: { instagram: url(LIMITS.url + 1) },
-    promo: { active: true, headline: 'h'.repeat(LIMITS.headline + 1), body: 'b'.repeat(LIMITS.body + 1), ctaLabel: 'c'.repeat(LIMITS.ctaLabel + 1), ctaUrl: url(LIMITS.url + 1), expiresAt: '' },
+    banners: [{ headline: 'Spring camp', body: 'b'.repeat(LIMITS.body + 1), ctaLabel: 'c'.repeat(LIMITS.ctaLabel + 1), ctaUrl: url(LIMITS.url + 1), from: '2026-11-01', to: '2026-11-30' }],
   });
   assert.equal(over.links.book.introduction, '');
   assert.equal(over.social.instagram, '');
-  assert.deepEqual(over.promo, { active: true, headline: '', body: '', ctaLabel: '', ctaUrl: '', expiresAt: '' });
+  assert.deepEqual(over.banners, [{ headline: 'Spring camp', body: '', ctaLabel: '', ctaUrl: '', from: '2026-11-01', to: '2026-11-30' }]);
 });
 
 test('hours rows past a limit are left out, and only the first rows up to the limit are read', () => {
@@ -53,21 +53,28 @@ test('hours rows past a limit are left out, and only the first rows up to the li
   assert.deepEqual(hours[0], { day: 'Row 0', time: 'Closed' });
 });
 
-test('a switched-off banner carries no text, and an expiry nobody can read means off', () => {
-  const live = { active: true, headline: 'Spring camp', body: 'b', ctaLabel: 'Go', ctaUrl: 'https://e.com', expiresAt: '2099-12-31T23:59:59' };
-  const blank = { active: false, headline: '', body: '', ctaLabel: '', ctaUrl: '', expiresAt: '' };
-  assert.deepEqual(readPublishedConfig({ promo: { ...live, active: false } }).promo, blank);
-  for (const expiresAt of ['2099-12-31', 'someday', '2099-12-31T23:59']) {
-    assert.deepEqual(readPublishedConfig({ promo: { ...live, expiresAt } }).promo, blank, expiresAt);
-  }
-  assert.deepEqual(readPublishedConfig({ promo: live }).promo, live);
+test('a banner with no headline, an unreadable day or its days backwards is dropped; the rest read soonest first', () => {
+  const ok = { headline: 'Winter camp', body: null, ctaLabel: null, ctaUrl: null, from: '2026-11-01', to: '2026-12-21' };
+  const { banners } = readPublishedConfig({ banners: [
+    { ...ok, headline: 'Holidays', from: '2026-12-22', to: '2027-01-02' },
+    { ...ok, headline: '' },
+    { ...ok, headline: 'h'.repeat(LIMITS.headline + 1) },
+    { ...ok, from: 'soon' },
+    { ...ok, to: '2026-12-21T23:59:59' },
+    { ...ok, from: '2026-12-22', to: '2026-12-21' },
+    'x',
+    ok,
+  ] });
+  assert.deepEqual(banners.map((b) => b.headline), ['Winter camp', 'Holidays']);
+  assert.deepEqual(banners[0], { headline: 'Winter camp', body: '', ctaLabel: '', ctaUrl: '', from: '2026-11-01', to: '2026-12-21' });
+  const many = Array.from({ length: LIMITS.banners + 3 }, (_, i) => ({ ...ok, from: `2027-01-${String(i + 1).padStart(2, '0')}`, to: `2027-01-${String(i + 1).padStart(2, '0')}` }));
+  assert.equal(readPublishedConfig({ banners: many }).banners.length, LIMITS.banners);
 });
 
-
 test('a missing or malformed object reads as empty, not as a throw', () => {
-  for (const bad of [null, undefined, 'x', 7, [], { promo: 'x', hours: 'x', social: 'x' }]) {
+  for (const bad of [null, undefined, 'x', 7, [], { banners: 'x', hours: 'x', social: 'x' }]) {
     const c = readPublishedConfig(bad);
-    assert.equal(c.promo.active, false);
+    assert.deepEqual(c.banners, []);
     assert.deepEqual(c.hours, []);
     assert.deepEqual(c.social, { instagram: '', facebook: '', youtube: '' });
   }
@@ -93,15 +100,15 @@ test('a price template fills from the price list, all or nothing', () => {
   assert.equal(hasPriceToken('Ages 3+ {}'), false);
 });
 
-test('only http(s) URLs survive into social and the promo button', () => {
+test('only http(s) URLs survive into social and the banner button', () => {
   const c = readPublishedConfig({
     social: { instagram: 'javascript:alert(1)', facebook: 'https://facebook.com/x', youtube: 'not a url' },
-    promo: { active: true, headline: 'H', ctaUrl: 'data:text/html,x' },
+    banners: [{ headline: 'H', ctaLabel: 'Go', ctaUrl: 'data:text/html,x', from: '2026-11-01', to: '2026-11-01' }],
   });
   assert.equal(c.social.instagram, '');
   assert.equal(c.social.facebook, 'https://facebook.com/x');
   assert.equal(c.social.youtube, '');
-  assert.equal(c.promo.ctaUrl, '');
+  assert.equal(c.banners[0].ctaUrl, '');
 });
 
 test('a published Square link that is not http(s) reads as unset, so the card keeps its default', () => {
@@ -128,35 +135,30 @@ test('hours keep their order and their text; rows with neither day nor time are 
   assert.deepEqual(c.hours, [{ day: 'Sunday', time: '10 AM' }, { day: 'Holidays', time: 'By appointment' }]);
 });
 
-// ---- promo rules ------------------------------------------------------------
+// ---- banner rules -----------------------------------------------------------
 
-const live = { active: true, headline: 'Spots open', body: '', ctaLabel: '', ctaUrl: '', expiresAt: '' };
+const banner = (headline, from, to) => ({ headline, body: '', ctaLabel: '', ctaUrl: '', from, to });
+const year = [banner('Winter camp', '2026-11-01', '2026-12-21'), banner('Holidays', '2026-12-22', '2027-01-02')];
 
-test('the banner shows only when on, with a headline, and not expired', () => {
-  assert.equal(promoIsShown(live, '2026-10-12T12:00:00'), true);
-  assert.equal(promoIsShown({ ...live, active: false }, '2026-10-12T12:00:00'), false);
-  assert.equal(promoIsShown({ ...live, headline: '' }, '2026-10-12T12:00:00'), false);
+test('the banner showing is the one whose days include today, first day to last day', () => {
+  assert.equal(bannerOn(year, '2026-10-31'), null);
+  assert.equal(bannerOn(year, '2026-11-01').headline, 'Winter camp');
+  assert.equal(bannerOn(year, '2026-12-21').headline, 'Winter camp');
+  assert.equal(bannerOn(year, '2026-12-22').headline, 'Holidays');
+  assert.equal(bannerOn(year, '2027-01-03'), null);
+  assert.equal(bannerOn([], '2026-11-01'), null);
 });
 
-test('the expiry is the END of the chosen day, not the midnight that starts it', () => {
-  const promo = { ...live, expiresAt: '2026-10-12T23:59:59' };
-  assert.equal(promoIsShown(promo, '2026-10-12T00:00:01'), true);
-  assert.equal(promoIsShown(promo, '2026-10-12T23:59:59'), true);
-  assert.equal(promoIsShown(promo, '2026-10-13T00:00:00'), false);
-});
-
-test('a date-only or minute-only expiry means the end of that day / minute', () => {
-  assert.equal(expiryStamp('2026-10-12'), '2026-10-12T23:59:59');
-  assert.equal(expiryStamp('2026-10-12T18:30'), '2026-10-12T18:30:59');
-  assert.equal(expiryStamp('soon'), '');
-  assert.equal(isExpired('soon', '2099-01-01T00:00:00'), false);
-  assert.equal(isExpired('', '2099-01-01T00:00:00'), false);
+test('if two banners overlap anyway, the soonest one shows', () => {
+  const both = readPublishedConfig({ banners: [banner('Later', '2026-11-10', '2026-11-20'), banner('First', '2026-11-01', '2026-11-30')] }).banners;
+  assert.equal(bannerOn(both, '2026-11-15').headline, 'First');
 });
 
 test('the banner button needs both a label and a link', () => {
-  assert.deepEqual(promoButton({ ...live, ctaLabel: 'Go', ctaUrl: 'https://x.example' }), { label: 'Go', href: 'https://x.example' });
-  assert.equal(promoButton({ ...live, ctaLabel: 'Go' }), null);
-  assert.equal(promoButton({ ...live, ctaUrl: 'https://x.example' }), null);
+  const b = year[0];
+  assert.deepEqual(bannerButton({ ...b, ctaLabel: 'Go', ctaUrl: 'https://x.example' }), { label: 'Go', href: 'https://x.example' });
+  assert.equal(bannerButton({ ...b, ctaLabel: 'Go' }), null);
+  assert.equal(bannerButton({ ...b, ctaUrl: 'https://x.example' }), null);
 });
 
 test('the social wrapper shows when any one link is set', () => {
@@ -191,12 +193,17 @@ test('the gym clock follows Toronto through both daylight-saving changes', () =>
   assert.equal(gymNow(new Date('2026-11-02T05:00:00Z')).wall, '2026-11-02T00:00:00');
 });
 
-test('a banner expiring on a daylight-saving day comes down at the gym\'s midnight, not an hour early or late', () => {
-  const shownAt = (expiresAt, iso) => promoIsShown({ ...live, expiresAt }, gymNow(new Date(iso)).wall);
-  assert.equal(shownAt('2026-03-08T23:59:59', '2026-03-09T03:59:59Z'), true);
-  assert.equal(shownAt('2026-03-08T23:59:59', '2026-03-09T04:00:00Z'), false);
-  assert.equal(shownAt('2026-11-01', '2026-11-02T04:59:59Z'), true);
-  assert.equal(shownAt('2026-11-01', '2026-11-02T05:00:00Z'), false);
+test('a banner\'s last day ends at the gym\'s midnight on a daylight-saving day, not an hour early or late', () => {
+  const shownAt = (iso) => bannerShowsOn(year[0], gymDay(gymNow(new Date(iso)).wall));
+  // 2026-12-21 is EST: its end is 04:59:59 UTC the next day.
+  assert.equal(shownAt('2026-12-22T04:59:59Z'), true);
+  assert.equal(shownAt('2026-12-22T05:00:00Z'), false);
+  const spring = banner('Spring', '2026-03-01', '2026-03-08');
+  assert.equal(bannerShowsOn(spring, gymDay(gymNow(new Date('2026-03-09T03:59:59Z')).wall)), true);
+  assert.equal(bannerShowsOn(spring, gymDay(gymNow(new Date('2026-03-09T04:00:00Z')).wall)), false);
+  const fall = banner('Fall', '2026-10-25', '2026-11-01');
+  assert.equal(bannerShowsOn(fall, gymDay(gymNow(new Date('2026-11-02T04:59:59Z')).wall)), true);
+  assert.equal(bannerShowsOn(fall, gymDay(gymNow(new Date('2026-11-02T05:00:00Z')).wall)), false);
 });
 
 // ---- opening hours ----------------------------------------------------------

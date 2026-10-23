@@ -20,12 +20,12 @@
  *     a link to it; [data-contact-wrap="phone|email|address"] the whole line around it
  *
  * The visibility rules are the build's own: it calls the same pure functions
- * (`promoIsShown`, `hoursSummary`, ...) on the same reader's result, so there
+ * (`bannerOn`, `hoursSummary`, ...) on the same reader's result, so there
  * is no second definition. Empty renders nothing: a hook with nothing to show
  * is `hidden`, never left empty and visible. JSON-LD is not touched (build only).
  */
 
-import { promoIsShown, promoButton } from './site-promo.js';
+import { bannerOn, bannerButton, gymDay } from './site-banner.js';
 import { hasSocial } from './published-config.js';
 import { contactView, CONTACT_PARTS } from './contact-view.js';
 import { weekSchedule, hasOpenDays, hoursSummary, hoursHeading, hoursStat } from './opening-hours.js';
@@ -47,7 +47,7 @@ function setText(el, text) {
  */
 export function applyPublishedConfig(doc, config, { linkFor, now }) {
   applyLinks(doc, linkFor);
-  applyPromo(doc, config.promo, now.wall);
+  applyPromo(doc, bannerOn(config.banners, gymDay(now.wall)));
   applyHours(doc, config.hours);
   applySocial(doc, config.social);
   applyContact(doc, config.contact);
@@ -63,19 +63,20 @@ function applyLinks(doc, linkFor) {
   });
 }
 
-/** @param {Document} doc @param {import('./published-config.js').Promo} promo @param {string} wall */
-function applyPromo(doc, promo, wall) {
+/** @param {Document} doc @param {import('./published-config.js').Banner|null} promo - today's banner, or null */
+function applyPromo(doc, promo) {
   const el = /** @type {HTMLElement|null} */ (doc.querySelector('[data-promo]'));
   if (!el) return;
-  if (!promoIsShown(promo, wall)) { el.hidden = true; return; }
-  el.dataset.expires = promo.expiresAt;
+  if (!promo) { el.hidden = true; return; }
+  el.dataset.from = promo.from;
+  el.dataset.to = promo.to;
   setText(el.querySelector('[data-promo-head]'), promo.headline);
   const body = /** @type {HTMLElement|null} */ (el.querySelector('[data-promo-body]'));
   setText(body, promo.body);
   if (body) body.hidden = promo.body === '';
   const cta = /** @type {HTMLAnchorElement|null} */ (el.querySelector('[data-promo-cta]'));
   if (cta) {
-    const button = promoButton(promo);
+    const button = bannerButton(promo);
     cta.hidden = !button;
     if (button) { setText(cta, button.label); cta.setAttribute('href', button.href); }
   }
