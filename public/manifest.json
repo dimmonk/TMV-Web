@@ -1,7 +1,7 @@
 {
   "name": "The Monkey Vault",
   "short_name": "Monkey Vault",
-  "description": "Toronto's parkour & movement training centre — book a class, buy a pass, or check the schedule.",
+  "description": "Toronto's parkour & movement training centre. Book a class, buy a pass, or check the schedule.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

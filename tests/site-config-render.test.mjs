@@ -439,6 +439,7 @@ test('no built page or client script carries an em dash: the copy reads as a per
     const code = readFileSync(join(site.out, '_astro', file), 'utf8').replaceAll('(?:\u2013|\u2014|-|to)', '');
     assert.ok(!code.includes('\u2014'), `${file} writes no em dash`);
   }
+  assert.ok(!readFileSync(join(site.out, 'manifest.json'), 'utf8').includes('\u2014'), 'the app manifest has no em dash');
 });
 
 // ---- the browser's refresh over a built page --------------------------------
