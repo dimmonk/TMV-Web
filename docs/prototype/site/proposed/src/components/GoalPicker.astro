@@ -119,21 +119,25 @@ import { goals } from '../data/goals';
     .gp-side { padding: 20px 24px 22px; }
   }
 
-  /* Phone: one column. Each goal is a row and its recommendation opens right under it. */
+  /* Phone: one column, no outer box. The goals are a plain list on the page and the open answer is the only card,
+     so the text gets the page width minus the gutter and one card padding. */
   @media (max-width: 767px) {
-    .gp { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; background: #faf9f6; padding: 6px 0; }
+    .gp { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; background: none; border: 0; border-radius: 0; box-shadow: none; overflow: visible; border-top: 1px solid var(--line); }
     .gp::before { display: none; }
-    .gp-row { grid-row: auto; margin: 2px 6px; min-height: 52px; scroll-margin-top: calc(76px + env(safe-area-inset-top, 0px)); }
-    .gp-row:first-of-type { margin-top: 2px; }
+    .gp-row { grid-row: auto; margin: 0; padding: 8px 4px; border-radius: 0; border: 0; border-bottom: 1px solid var(--line); min-height: 56px; scroll-margin-top: calc(76px + env(safe-area-inset-top, 0px)); }
+    .gp-row:first-of-type { margin-top: 0; }
+    .gp-row:hover { background: transparent; border-color: var(--line); }
+    .gp-row.on { border-color: var(--line); }
+    .gp-row-t { font-size: 16px; }
     .gp-row-chev { opacity: 1; transform: rotate(90deg); }
     .gp-row.on .gp-row-chev { transform: rotate(-90deg); }
-    .gp-card { grid-column: 1; grid-row: auto; margin: 2px 6px 8px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
-    .gp-main { padding: 18px 18px 20px; gap: 11px; }
+    .gp-card { grid-column: 1; grid-row: auto; margin: 10px 0 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    .gp-main { padding: 16px 16px 18px; gap: 11px; }
     .gp-title { font-size: 21px; line-height: 1.1; }
-    .gp-reason { font-size: 14px; line-height: 1.55; }
+    .gp-reason { font-size: 15px; line-height: 1.55; }
     .gp .btn { width: 100%; justify-content: center; min-height: 44px; }
     .gp-actions { gap: 10px; }
-    .gp-side { padding: 16px 18px 18px; }
+    .gp-side { padding: 14px 16px 16px; }
     /* A 44px tap area around the inline link, without moving its underline. */
     .gp-alt a { position: relative; }
     .gp-alt a::after { content: ""; position: absolute; inset: -12px 0; }
@@ -141,7 +145,7 @@ import { goals } from '../data/goals';
   /* Phone with JS: every goal starts closed so the whole list fits on one screen; a tap opens one (goal-picker.ts). */
   @media (max-width: 767px) and (scripting: enabled) {
     .gp:not([data-picked]) .gp-card { display: none; }
-    .gp:not([data-picked]) .gp-row.on { background: transparent; border-color: transparent; }
+    .gp:not([data-picked]) .gp-row.on { background: transparent; }
     .gp:not([data-picked]) .gp-row.on .gp-row-t { color: var(--ink); }
     .gp:not([data-picked]) .gp-row.on .gp-row-chev { transform: rotate(90deg); color: var(--faint); }
   }
