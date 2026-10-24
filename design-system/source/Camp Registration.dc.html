@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0; background:#f5f4f1;}
+  *{box-sizing:border-box;}
+  ::selection{background:#ffd400; color:#211f1b;}
+  a{color:#a2601f;}
+  a:hover{color:#e27902;}
+</style>
+</helmet>
+<div data-screen-label="Camp registration" style="min-height:100vh; background:#f5f4f1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b;">
+
+  <div data-noprint="">
+    <dc-import name="SiteHeader" active="camps" style="position:sticky; top:0; z-index:50;" hint-size="100%,66px"></dc-import>
+  </div>
+
+  <!-- The registration flow itself is CampRegForm.dc.html — the SAME component
+       the mobile site mounts (Camps → Register). Edit it there, once. -->
+  <dc-import name="CampRegForm" accent="{{ accent }}" day-camp-late-pickup="{{ dayCampLatePickup }}" hint-size="100%,1400px"></dc-import>
+
+  <div data-noprint="">
+    <dc-import name="SiteFooter" hint-size="100%,360px"></dc-import>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#e27902&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#e27902&quot;,&quot;#2196f3&quot;,&quot;#f44336&quot;,&quot;#2e9e4f&quot;,&quot;#ffd400&quot;]},&quot;dayCampLatePickup&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}"></script>
+</body>
+</html>

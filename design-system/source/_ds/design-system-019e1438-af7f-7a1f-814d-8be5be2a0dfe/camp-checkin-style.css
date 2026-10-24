@@ -1,0 +1,433 @@
+/* ==========================================================================
+   Camp Check-in — prototype-only scaffold + CSS additions that were merged
+   into public/css/style.css in the live codebase.
+
+   THIS FILE IS USED BY THE PROTOTYPE ONLY.
+   The live app has all of this in style.css (search for "CAMP CHECK-IN").
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Camp tokens (live: style.css :root / [data-bs-theme="dark"] blocks)
+   -------------------------------------------------------------------------- */
+:root {
+  --color-camp:       #795548;
+  --color-camp-dark:  #5d4037;
+  --color-camp-light: #a1887f;
+}
+[data-bs-theme="dark"] {
+  --color-camp:      #a1887f;
+  --color-camp-dark: #8d6e63;
+}
+
+/* --------------------------------------------------------------------------
+   PROTOTYPE-ONLY: App shell scaffold
+   (The real app shell lives in app.js / index.html — not in style.css)
+   -------------------------------------------------------------------------- */
+.app-shell { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+.app-nav {
+  background: var(--color-header-bg, #333);
+  color: var(--color-header-text, #f8fafc);
+  display: flex; align-items: center;
+  padding: 0 16px; height: 46px; flex-shrink: 0; gap: 6px;
+}
+.app-nav-brand { font-size: 14px; font-weight: 700; color: #f8fafc; margin-right: 6px; letter-spacing: -0.02em; }
+.app-nav-tab {
+  background: transparent; border: none; color: rgba(255,255,255,0.55);
+  font-size: 13px; font-weight: 500; padding: 5px 10px;
+  border-radius: var(--radius-sm); transition: all 0.15s;
+}
+.app-nav-tab:hover  { background: rgba(255,255,255,0.10); color: #fff; }
+.app-nav-tab.active { background: rgba(255,255,255,0.15); color: #fff; }
+.app-nav-spacer { flex: 1; }
+.app-nav-staff  { font-size: 12px; color: rgba(255,255,255,0.45); }
+
+/* Prototype design controls bar */
+.proto-controls {
+  background: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border);
+  padding: 5px 14px;
+  display: flex; align-items: center; gap: 14px;
+  font-size: 11px; color: var(--color-text-muted); flex-shrink: 0; flex-wrap: wrap;
+}
+.proto-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--color-text-muted); background: var(--color-bg-subtle);
+  padding: 2px 6px; border-radius: var(--radius-sm); flex-shrink: 0;
+}
+.proto-group { display: flex; align-items: center; gap: 6px; }
+.proto-group-label { color: var(--color-text-secondary); font-size: 11px; flex-shrink: 0; }
+.seg-ctrl { display: flex; gap: 1px; background: var(--color-bg-subtle); padding: 2px; border-radius: 5px; }
+.seg-ctrl button {
+  padding: 2px 9px; border: none; background: transparent;
+  border-radius: 3px; font-size: 11px; color: var(--color-text-secondary); transition: all 0.12s;
+}
+.seg-ctrl button.active {
+  background: var(--color-bg-elevated); color: var(--color-text);
+  font-weight: 600; box-shadow: var(--shadow-sm);
+}
+
+/* App body + schedule sidebar */
+.app-body { display: flex; flex: 1; overflow: hidden; }
+
+.schedule-sidebar {
+  width: 270px; flex-shrink: 0;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+  overflow-y: auto; display: flex; flex-direction: column; transition: width 0.2s;
+}
+.schedule-sidebar.collapsed { width: 0; overflow: hidden; }
+
+.sidebar-date-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border-bottom: 1px solid var(--color-border-subtle); flex-shrink: 0;
+}
+.sidebar-date-label { font-size: 13px; font-weight: 600; }
+.sidebar-nav-btn {
+  width: 26px; height: 26px; border: 1px solid var(--color-border);
+  background: var(--color-bg-elevated); border-radius: var(--radius-sm);
+  color: var(--color-text-secondary); display: inline-flex;
+  align-items: center; justify-content: center; font-size: 12px; transition: all 0.15s;
+}
+.sidebar-nav-btn:hover { background: var(--color-bg-subtle); }
+
+.schedule-time-group { padding-bottom: 4px; }
+.schedule-time-header {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--color-text-muted); padding: 8px 14px 4px;
+}
+.schedule-class-item {
+  position: relative; display: flex; align-items: center; justify-content: space-between;
+  width: calc(100% - 18px); margin: 0 6px 3px 6px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--class-color, var(--color-bg-muted)) 15%, var(--color-bg-elevated));
+  border: 1px solid color-mix(in srgb, var(--class-color, var(--color-border)) 22%, var(--color-border));
+  border-radius: var(--radius-md); text-align: left; font-size: 13px; color: var(--color-text); transition: all 0.15s;
+}
+.schedule-class-item:hover {
+  background: color-mix(in srgb, var(--class-color, var(--color-bg-muted)) 26%, var(--color-bg-elevated));
+}
+.schedule-class-item.selected {
+  background: color-mix(in srgb, var(--class-color, var(--color-primary)) 28%, var(--color-bg-elevated));
+  border-color: var(--class-color, var(--color-primary));
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--class-color, var(--color-primary)) 20%, transparent);
+}
+.class-item-info { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.class-item-name { font-size: 13px; font-weight: 600; line-height: 1.3; }
+.class-item-age  { font-size: 11px; color: var(--color-text-muted); line-height: 1.3; }
+.class-item-reg  { font-size: 11px; color: var(--color-text-secondary); line-height: 1.3; }
+.class-item-count {
+  min-width: 22px; height: 22px; padding: 0 6px;
+  background: var(--color-bg-subtle); border-radius: var(--radius-full);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--color-text-secondary); flex-shrink: 0;
+}
+.class-item-count.has-checkins { background: var(--class-color, var(--color-primary)); color: #fff; }
+
+.main-content { flex: 1; overflow-y: auto; padding: 14px; background: var(--color-bg); }
+.class-checkin-layout { display: flex; flex-direction: column; gap: var(--space-4); max-width: 1200px; }
+
+/* Mobile preview mode */
+.mobile-preview .schedule-sidebar { display: none !important; }
+.mobile-preview .main-content { max-width: 420px; }
+
+/* --------------------------------------------------------------------------
+   LIVE CSS: Two-column body layout
+   (style.css lines 6694–6727)
+   -------------------------------------------------------------------------- */
+.class-checkin-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.class-checkin-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+@media (max-width: 1080px) {
+  .class-checkin-body { grid-template-columns: 1fr; }
+  .class-checkin-column.search-column    { order: 1; }
+  .class-checkin-column.attendance-column { order: 2; }
+}
+
+/* --------------------------------------------------------------------------
+   LIVE CSS: Header stats — clickable filter pills
+   (style.css lines ~22161–22171)
+   -------------------------------------------------------------------------- */
+#tab-camp-checkin .stat-item.clickable {
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+#tab-camp-checkin .stat-item.clickable:hover {
+  border-color: var(--color-camp);
+}
+#tab-camp-checkin .stat-item.is-active {
+  border-color: var(--color-camp);
+  background: color-mix(in srgb, var(--color-camp) 8%, var(--color-bg-elevated));
+}
+#tab-camp-checkin .stat-item .stat-value.warn   { color: var(--color-warning); }
+#tab-camp-checkin .stat-item .stat-value.danger { color: var(--color-danger); }
+
+/* --------------------------------------------------------------------------
+   LIVE CSS: Toolbar
+   (style.css lines ~22173–22195)
+   -------------------------------------------------------------------------- */
+.camp-toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.camp-toolbar .toolbar-left  { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 200px; }
+.camp-toolbar .toolbar-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.camp-toolbar .search-wrap   { position: relative; flex: 1; max-width: 260px; }
+.camp-toolbar .search-icon-el {
+  position: absolute; left: 9px; top: 50%; transform: translateY(-50%);
+  color: var(--color-text-muted); font-size: 12px; pointer-events: none;
+}
+.camp-toolbar .search-wrap .form-input { padding-left: 28px; }
+.camp-toolbar .filter-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 6px 10px; border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); background: var(--color-bg-elevated);
+  color: var(--color-text-secondary); font-size: 12px; font-weight: 500;
+  white-space: nowrap; transition: all 0.15s;
+}
+.camp-toolbar .filter-chip:hover { border-color: var(--color-text-muted); background: var(--color-bg-secondary); }
+.camp-toolbar .filter-chip.is-active {
+  border-color: var(--color-camp);
+  background: color-mix(in srgb, var(--color-camp) 10%, var(--color-bg-elevated));
+  color: var(--color-camp);
+}
+.camp-toolbar .filter-chip .chevron { font-size: 10px; opacity: 0.6; }
+
+/* Brown camp button variant */
+.btn-camp { background: var(--color-camp); color: #fff; border-color: var(--color-camp); }
+.btn-camp:hover { background: var(--color-camp-dark); border-color: var(--color-camp-dark); }
+
+/* Present-column count badge */
+.card-count-badge {
+  background: var(--color-camp); color: #fff;
+  border-radius: var(--radius-full);
+  padding: 1px 8px; font-size: 12px; font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   LIVE CSS: card-body padding + row padding (scoped to #tab-camp-checkin)
+   (style.css lines ~22208–22230)
+
+   card-body is zero-padded. Family headers and section headers bleed to full
+   card width naturally. Rows supply their own side padding.
+   -------------------------------------------------------------------------- */
+#tab-camp-checkin .card-body    { padding: 0; }
+#tab-camp-checkin .attendance-row {
+  padding-left:  var(--space-4);
+  padding-right: var(--space-4);
+}
+#tab-camp-checkin .empty-state  { padding: var(--space-3) var(--space-4); }
+#tab-camp-checkin .attendance-list { margin: 0; }
+
+/* Row internals: name stacks above time/medical line */
+#tab-camp-checkin .row-main {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+}
+#tab-camp-checkin .row-name {
+  display: flex; align-items: center; gap: 5px; flex-wrap: wrap; line-height: 1.4;
+}
+#tab-camp-checkin .row-actions { margin-left: auto; }
+#tab-camp-checkin .row-time {
+  font-size: 11px; color: var(--color-text-muted); line-height: 1.3;
+}
+
+/* Checked-out rows: half opacity */
+#tab-camp-checkin .attendance-row.is-out { opacity: 0.5; }
+
+/* No-show rows: dimmed + strikethrough name */
+#tab-camp-checkin .attendance-row.camp-noshow-row { opacity: 0.6; }
+#tab-camp-checkin .attendance-row.camp-noshow-row .row-name {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   LIVE CSS: Safety-critical medical alert line
+   (style.css lines ~22232–22237)
+   -------------------------------------------------------------------------- */
+.roster-item-medical {
+  display: flex; align-items: flex-start; gap: 4px;
+  font-size: 12px; font-weight: 500; color: var(--color-warning);
+  margin-top: 2px; line-height: 1.35;
+}
+.roster-item-medical i { flex-shrink: 0; margin-top: 1px; }
+
+/* --------------------------------------------------------------------------
+   LIVE CSS: Late-pickup badge (unmissable amber pill)
+   (style.css lines ~22239–22247)
+   -------------------------------------------------------------------------- */
+.late-badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10px; font-weight: 700; color: var(--color-warning);
+  background: color-mix(in srgb, var(--color-warning) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 22%, transparent);
+  border-radius: var(--radius-full); padding: 2px 6px; white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   LIVE CSS: Section subtitle headers (Late Pickup / Checked Out / No-Show)
+   Full-width tinted bands. Replaces the old .late-pickup-panel / .checked-out-panel.
+   (style.css lines ~22249–22275)
+   -------------------------------------------------------------------------- */
+#tab-camp-checkin .camp-section-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px var(--space-4);
+  background: var(--color-bg-subtle);
+  color: var(--color-text-muted);
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+#tab-camp-checkin .camp-section-header > i    { font-size: 11px; flex-shrink: 0; }
+#tab-camp-checkin .camp-section-label         { flex: 1; }
+#tab-camp-checkin .camp-section-count         { font-weight: 600; }
+
+/* Late pickup variant — amber */
+#tab-camp-checkin .camp-section-header.late {
+  background: color-mix(in srgb, var(--color-warning) 12%, var(--color-bg-elevated));
+  color: var(--color-warning);
+}
+#tab-camp-checkin .camp-section-header.late > i { color: var(--color-warning); }
+
+/* No-show variant — danger */
+#tab-camp-checkin .camp-section-header.danger {
+  background: color-mix(in srgb, var(--color-danger) 10%, var(--color-bg-elevated));
+  color: var(--color-danger);
+}
+#tab-camp-checkin .camp-section-header.danger > i { color: var(--color-danger); }
+
+/* --------------------------------------------------------------------------
+   LIVE CSS: Family cluster header — blue accent band
+   (style.css lines ~22277–22312)
+   -------------------------------------------------------------------------- */
+#tab-camp-checkin .camp-family-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px var(--space-4);
+  background: color-mix(in srgb, #2196f3 9%, var(--color-bg-elevated));
+  color: #1565c0;
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+[data-bs-theme="dark"] #tab-camp-checkin .camp-family-header {
+  background: color-mix(in srgb, #2196f3 15%, var(--color-bg-elevated));
+  color: #90caf9;
+}
+#tab-camp-checkin .camp-family-icon {
+  width: 18px; height: 18px; border-radius: 3px; flex-shrink: 0;
+  background: #2196f3; color: #fff;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 10px;
+}
+#tab-camp-checkin .camp-family-name  { flex: 1; }
+#tab-camp-checkin .camp-family-count { font-weight: 600; }
+#tab-camp-checkin .camp-family-header .member-overflow { margin-left: 2px; }
+
+/* Family member rows: subtle blue tint + left indent */
+#tab-camp-checkin .attendance-row.is-family-member {
+  background: color-mix(in srgb, #2196f3 6%, var(--color-bg-elevated));
+  padding-left: calc(var(--space-4) + var(--space-2));
+}
+
+/* Family check-in button inherits blue palette */
+.family-action-btn { color: #1565c0 !important; border-color: #1976d2 !important; }
+.family-action-btn:hover:not(.checked-in) {
+  background: #2196f3 !important;
+  color: #fff !important;
+  border-color: #2196f3 !important;
+}
+
+/* --------------------------------------------------------------------------
+   LIVE CSS: Checkout modal — alert panels + roll-call counter
+   (style.css lines ~22315–22345)
+   -------------------------------------------------------------------------- */
+.alert-panel {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 13px; margin-bottom: 12px;
+  border-radius: var(--radius-md); font-size: 13px;
+}
+.alert-panel.danger  {
+  background: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 20%, transparent);
+}
+.alert-panel.warning {
+  background: color-mix(in srgb, var(--color-warning) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 20%, transparent);
+}
+.alert-icon          { font-size: 18px; flex-shrink: 0; }
+.alert-icon.danger   { color: var(--color-danger); }
+.alert-icon.warning  { color: var(--color-warning); }
+.alert-body          { flex: 1; }
+.alert-body strong   { display: block; font-size: 13px; font-weight: 600; }
+.alert-body small    { font-size: 11px; color: var(--color-text-secondary); }
+.alert-amount        { font-size: 17px; font-weight: 700; }
+.alert-amount.danger  { color: var(--color-danger); }
+.alert-amount.warning { color: var(--color-warning); }
+.checkbox-row { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; margin-top: 4px; }
+.checkbox-row input { width: 15px; height: 15px; accent-color: var(--color-camp); cursor: pointer; }
+
+/* Roll-call modal */
+.rc-hdr     { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.rc-time    { font-size: 11px; color: var(--color-text-muted); }
+.rc-count   { font-size: 30px; font-weight: 700; text-align: center; color: var(--color-camp); line-height: 1; }
+.rc-sublabel{ font-size: 12px; color: var(--color-text-muted); text-align: center; margin: 3px 0 12px; }
+.rc-progress{ height: 4px; background: var(--color-bg-subtle); border-radius: var(--radius-full); margin-bottom: 14px; overflow: hidden; }
+.rc-progress-bar { height: 100%; background: var(--color-camp); border-radius: var(--radius-full); transition: width 0.3s; }
+.rc-list    { max-height: 50vh; overflow-y: auto; }
+.rc-row     { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--color-border-subtle); }
+.rc-row:last-child { border-bottom: none; }
+.rc-name    { flex: 1; font-size: 13px; font-weight: 500; }
+.rc-name.counted { color: var(--color-text-muted); }
+.rc-toggle  {
+  width: 30px; height: 30px; border-radius: var(--radius-full);
+  border: 2px solid var(--color-border); background: transparent;
+  color: var(--color-text-muted); display: inline-flex;
+  align-items: center; justify-content: center; font-size: 14px;
+  transition: all 0.15s; flex-shrink: 0;
+}
+.rc-toggle:hover   { border-color: var(--color-camp); color: var(--color-camp); }
+.rc-toggle.counted { background: var(--color-success); border-color: var(--color-success); color: #fff; }
+
+/* --------------------------------------------------------------------------
+   PROTOTYPE-ONLY: Modal overlay (live app uses createModal/showModal)
+   -------------------------------------------------------------------------- */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  align-items: center; justify-content: center;
+  z-index: 10000; padding: 16px;
+}
+.modal-overlay.open { display: flex; }
+.modal-subtitle     { font-size: 13px; color: var(--color-text-secondary); margin-top: 1px; }
+
+/* --------------------------------------------------------------------------
+   PROTOTYPE-ONLY: Toast notifications
+   -------------------------------------------------------------------------- */
+.toast-area {
+  position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+  z-index: 20000; display: flex; flex-direction: column; gap: 6px; pointer-events: none;
+}
+.toast {
+  padding: 9px 16px; background: #1a1a1a; color: #fff;
+  border-radius: var(--radius-full); font-size: 13px; font-weight: 500;
+  box-shadow: var(--shadow-md); opacity: 0; transform: translateY(8px);
+  transition: opacity 0.2s, transform 0.2s; pointer-events: none; white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+[data-bs-theme="dark"] .toast { background: #e9ecef; color: #1a1d21; }
+
+/* --------------------------------------------------------------------------
+   LIVE CSS: Mobile responsive
+   (style.css lines ~22343–22348)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  #tab-camp-checkin .class-header-stats {
+    gap: 8px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px;
+  }
+  #tab-camp-checkin .stat-item .stat-value { font-size: 18px; }
+  .camp-toolbar .toolbar-right .btn-ghost  { display: none; }
+}

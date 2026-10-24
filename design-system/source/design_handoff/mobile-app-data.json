@@ -1,0 +1,242 @@
+{
+  "$meta": {
+    "name": "The Monkey Vault — member app",
+    "source": "Mobile App Mockup.dc.html (first-draft design concept)",
+    "purpose": "Content + IA spec for the members app first draft. This is the design's data, extracted 1:1 from the concept. Live values (schedule, prices, passes, visits) should come from the members-app backend — see $liveDataSources.",
+    "generatedFor": "members-app team handoff",
+    "notes": [
+      "Category accent colours are the single source of truth in categories.js — do not hardcode; resolve by key.",
+      "All booking/store/waiver URLs route through site-config.js — use the canonical key, never a pasted URL.",
+      "Sample member data (name, days-left, passes, visits) is placeholder to show the shape; replace with the logged-in member's real record."
+    ]
+  },
+
+  "$liveDataSources": {
+    "schedule": "GET https://us-central1-tmv-management.cloudfunctions.net/getPublicSchedule -> { classes, disciplines, ageGroups, scheduleDisplay }",
+    "prices": "GET https://us-central1-tmv-management.cloudfunctions.net/getPublicPriceList -> { priceList (key->number), priceListDisplay }",
+    "memberProfile": "members-app backend (name, memberSince, membership status, days remaining, waiver status)",
+    "passes": "members-app backend (active memberships + class packs with remaining counts)",
+    "visits": "members-app backend (check-in history)"
+  },
+
+  "brand": {
+    "ink": "#211f1b",
+    "brandYellow": "#ffd400",
+    "paper": "#f5f4f1",
+    "displayFont": "Archivo (700-900)",
+    "bodyFont": "native system sans"
+  },
+
+  "categoryColors": {
+    "_source": "categories.js — catColor(key)",
+    "classes": "#2196f3",
+    "athletic": "#ffb82a",
+    "private": "#f44336",
+    "openGym": "#2e9e4f",
+    "camps": "#e27902",
+    "parties": "#ffd400"
+  },
+
+  "navigation": {
+    "type": "persistent bottom bar, 5 destinations",
+    "primaryAction": "book (raised + centered, brand yellow FAB)",
+    "tabs": [
+      { "key": "home",    "label": "Home",    "icon": "bi-house-door-fill" },
+      { "key": "classes", "label": "Classes", "icon": "bi-lightning-charge-fill" },
+      { "key": "book",    "label": "Book",    "icon": "bi-calendar-check-fill", "center": true },
+      { "key": "shop",    "label": "Shop",    "icon": "bi-bag-fill" },
+      { "key": "account", "label": "Account", "icon": "bi-person-fill" }
+    ]
+  },
+
+  "screens": {
+    "home": {
+      "greeting": { "line1": "Hey {memberName}", "line2": "Ready to move today?" },
+      "membershipCard": {
+        "statusChip": "Open now",
+        "hours": "11 AM – 10 PM",
+        "membershipName": "Open Gym Membership",
+        "daysRemaining": 18,
+        "daysTotal": 30,
+        "_note": "days + membership name come from memberProfile"
+      },
+      "quickActions": [
+        { "label": "Book",     "icon": "bi-calendar-check", "target": "book" },
+        { "label": "Check in", "icon": "bi-qr-code",        "target": "account" },
+        { "label": "Schedule", "icon": "bi-calendar3",      "target": "classes" }
+      ],
+      "bookingNow": {
+        "_note": "featured/promoted booking, rendered as a BookingCard",
+        "category": "camps",
+        "duration": "9–2 daily",
+        "bookingTag": "Register",
+        "title": "Summer Camps 2026",
+        "description": "A full week of parkour over the break — skills, flips, games and friends.",
+        "pills": ["Ages 5+", "Mon–Fri", "All levels"],
+        "price": "$350 / week",
+        "priceNote": "booking now",
+        "action": "Reserve"
+      },
+      "jumpBackIn": [
+        { "title": "Recreational",     "sub": "Drop-in parkour",      "icon": "bi-person-arms-up", "category": "classes",  "target": "classes" },
+        { "title": "Athletic Program", "sub": "Train like an athlete", "icon": "bi-trophy-fill",    "category": "athletic", "target": "classes" }
+      ]
+    },
+
+    "classes": {
+      "subtitle": "Every group class, all ages & levels.",
+      "filters": ["All", "Kids", "Teens & adults", "Drop-in", "Membership"],
+      "_note": "each item is a ClassCard (front + flip back). Card-back spec vocabulary is fixed: Level -> Ages -> Schedule -> Booking -> Price.",
+      "cards": [
+        {
+          "category": "Parkour",
+          "title": "Recreational",
+          "description": "Parkour & acrobatics at your own pace. All fun, zero pressure.",
+          "bookingTag": "Drop-in",
+          "pills": ["All ages", "All levels"],
+          "image": "assets/recreational.gif",
+          "back": {
+            "eyebrow": "Recreational · Parkour",
+            "headline": "At your own pace, zero pressure",
+            "body": "Relaxed, drop-in parkour and acrobatics. Coaches meet you exactly where you are — no commitment, no pressure.",
+            "specs": {
+              "Level": "All levels",
+              "Ages": "All ages — Parent & Child (3+) to Adults",
+              "Booking": "Drop-in · no reservation needed",
+              "Price": "$30 single · 10-pack $275"
+            }
+          }
+        },
+        {
+          "category": "Flips",
+          "title": "Flip Class",
+          "description": "Master your flips, safely — from first roll to backflip.",
+          "bookingTag": "Drop-in",
+          "pills": ["Ages 7+", "Levels 1–2"],
+          "image": "assets/flips.gif",
+          "back": {
+            "eyebrow": "Flips",
+            "headline": "From first roll to backflip",
+            "body": "A safe, levelled path from first roll to standing backflip. Always spotted and matted.",
+            "specs": {
+              "Level": "Levels 1–2 · backflip-only track",
+              "Ages": "7+",
+              "Booking": "Drop-in · no reservation needed",
+              "Price": "$30 single · 10-pack $275"
+            }
+          }
+        },
+        {
+          "category": "Strength",
+          "title": "Calisthenics",
+          "description": "Build serious bodyweight strength and control.",
+          "bookingTag": "Drop-in",
+          "pills": ["Teens & Adults (13+)", "Weekday eves"],
+          "image": "assets/calisthenics.gif",
+          "back": {
+            "eyebrow": "Strength",
+            "headline": "Bodyweight strength & control",
+            "body": "Bodyweight strength, control and mobility. Stands alone or powers up everything else you train.",
+            "specs": {
+              "Level": "All levels",
+              "Ages": "Teens & Adults (13+)",
+              "Schedule": "Weekday evenings",
+              "Booking": "Drop-in · no reservation needed",
+              "Price": "$30 single · 10-pack $275"
+            }
+          }
+        },
+        {
+          "category": "Tricking",
+          "title": "Tricking",
+          "description": "Kicks, flips and twists — martial arts meets acrobatics.",
+          "bookingTag": "Drop-in",
+          "pills": ["Teens & Adults (13+)", "Tue & Thu — 7 PM"],
+          "image": "assets/tricking.gif",
+          "back": {
+            "eyebrow": "Tricking",
+            "headline": "Martial arts meets acrobatics",
+            "body": "Kicks, flips and twists chained into flowing combos. High-energy — and you build your own style.",
+            "specs": {
+              "Level": "All levels",
+              "Ages": "Teens & Adults (13+)",
+              "Schedule": "Tue · Thu — 7 PM",
+              "Booking": "Drop-in · no reservation needed",
+              "Price": "$30 single · 10-pack $275"
+            }
+          }
+        },
+        {
+          "category": "Gymnastics",
+          "title": "Gymnastics",
+          "description": "Strength, flexibility and clean form — the base for everything.",
+          "bookingTag": "Drop-in",
+          "pills": ["Teens & Adults (13+)", "Tue & Fri — 6 PM"],
+          "image": "assets/gymnastics.gif",
+          "back": {
+            "eyebrow": "Gymnastics",
+            "headline": "The foundation under everything",
+            "body": "Strength, flexibility and clean form — the fundamentals that make everything else safer and sharper.",
+            "specs": {
+              "Level": "All levels",
+              "Ages": "Teens & Adults (13+)",
+              "Schedule": "Tue · Fri — 6 PM",
+              "Booking": "Drop-in · no reservation needed",
+              "Price": "$30 single · 10-pack $275"
+            }
+          }
+        }
+      ]
+    },
+
+    "book": {
+      "subtitle": "What would you like to book?",
+      "_note": "each item is a BookingCard; action opens the relevant Square booking flow (site-config.js key).",
+      "options": [
+        { "category": "private", "bookingTag": "By appointment", "title": "Private Lesson", "description": "1-on-1 coaching built around your goals and pace.", "pills": ["All ages", "Your coach or ours"], "price": "From $85", "priceNote": "5-packs available", "action": "Book",     "link": "booking" },
+        { "category": "openGym", "bookingTag": "Drop-in",        "title": "Open Gym",      "description": "Drop in any day and stay as long as you like.",       "pills": ["All ages", "No time limit"],   "price": "From $25", "priceNote": "11 AM – 10 PM daily", "action": "Get a pass", "link": "store" },
+        { "category": "camps",   "bookingTag": "Register",       "title": "Weekly Camps",  "description": "A full week of parkour over school breaks.",           "pills": ["Ages 5+", "Mon–Fri"],          "price": "$350 / week", "priceNote": "late pickup to 4 PM", "action": "See dates", "link": "summerCamp" },
+        { "category": "parties", "bookingTag": "By appointment", "title": "Birthday Party","description": "A coached session, a private room and free play.",     "pills": ["Ages 5+", "Private room"],     "price": "From $350", "priceNote": "up to 15 kids", "action": "Enquire",   "link": "booking" }
+      ]
+    },
+
+    "shop": {
+      "subtitle": "Passes, packs & gear.",
+      "cartCount": 2,
+      "_note": "same catalog the website Store page sells; each buy opens the item's Square checkout (site-config.js storeItems).",
+      "products": [
+        { "category": "openGym",  "title": "Day Passes",            "description": "Walk in and train as long as you like — single, or save with a 10 or 20 pack.", "pills": ["All ages", "No time limit"], "price": "From $25",  "priceNote": "single pass",   "action": "Buy", "storeItem": "dayPasses" },
+        { "category": "openGym",  "title": "Open Gym Membership",   "description": "Unlimited open gym for whatever stretch suits you — 30 days to a year.",       "pills": ["Unlimited", "30–360 days"],  "price": "From $110", "priceNote": "30 days",       "action": "Buy", "storeItem": "openGymMembership" },
+        { "category": "classes",  "title": "Class Passes",          "description": "Good for any group class on the schedule — single or 10/20 pack.",             "pills": ["Any class", "All levels"],   "price": "From $30",  "priceNote": "single class",  "action": "Buy", "storeItem": "classPasses" },
+        { "category": "classes",  "title": "Class Membership",      "description": "Unlimited group classes and open gym for 30 days.",                            "pills": ["Classes + open gym"],        "price": "$180",      "priceNote": "30 days",       "action": "Buy", "storeItem": "classMembership" },
+        { "category": "private",  "title": "Private Class Pack",    "description": "A block of private lessons at a better rate — book each as you go.",            "pills": ["1-on-1", "Book as you go"],  "price": "From $250", "priceNote": "5-pack · kids", "action": "Buy", "storeItem": "privateClassPack" },
+        { "category": "athletic", "title": "Athletic Membership",   "description": "Unlimited Athletic Program training, monthly.",                                "pills": ["Ages 9+", "Monthly"],        "price": "$150",      "priceNote": "per month",     "action": "Buy", "storeItem": "athleticMembership" }
+      ]
+    },
+
+    "account": {
+      "memberCard": {
+        "name": "{memberName} Rivera",
+        "memberSince": 2023,
+        "waiverStatus": "OK",
+        "_note": "all fields from memberProfile"
+      },
+      "primaryAction": { "label": "Check in at the gym", "icon": "bi-qr-code", "_note": "opens QR check-in" },
+      "passes": [
+        { "title": "Open Gym Membership", "sub": "Renews in 18 days", "value": "Active",  "icon": "bi-arrow-repeat",       "category": "openGym" },
+        { "title": "Class 10-Pack",       "sub": "Group classes",      "value": "6 left",  "icon": "bi-ticket-perforated",  "category": "classes" }
+      ],
+      "recentVisits": [
+        { "activity": "Open Gym",           "date": "Wed · Jul 9", "duration": "2h 10m" },
+        { "activity": "Recreational Class", "date": "Mon · Jul 7", "duration": "1h" },
+        { "activity": "Open Gym",           "date": "Sat · Jul 5", "duration": "1h 40m" }
+      ],
+      "settings": [
+        { "label": "Waiver & documents", "icon": "bi-file-earmark-check" },
+        { "label": "Payment methods",    "icon": "bi-credit-card" },
+        { "label": "Notifications",       "icon": "bi-bell" },
+        { "label": "Help & contact",      "icon": "bi-question-circle" }
+      ]
+    }
+  }
+}

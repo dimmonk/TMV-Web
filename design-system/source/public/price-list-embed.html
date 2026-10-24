@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TMV Price List</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/css/price-list-sheet.css">
+  <style>
+    /* Embed page chrome — matches the schedule embed: dark backdrop
+       (#333) so it sits cleanly inside the host site, sheet itself
+       renders on its own white/warm/black paper. */
+    html, body {
+      margin: 0;
+      padding: 0;
+      /* No background — inherits the host container's color so the
+         embed blends with whatever section it's dropped into. */
+      font-family: 'Mulish', sans-serif;
+      color: #1a1a1a;
+      overflow-x: hidden;
+      /* Parent iframe auto-sizes to body content via postMessage so
+         scrollbars inside the iframe should never appear. Hide them
+         cross-browser anyway — avoids any 1px flash during a resize. */
+      scrollbar-width: none;       /* Firefox */
+      -ms-overflow-style: none;    /* IE / legacy Edge */
+    }
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;               /* WebKit */
+    }
+    .pl-embed-shell {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+    /* The sheet renders at a predetermined fixed width (the Letter-
+       landscape print-canvas width, defined once in
+       price-list-sheet.css) and centers itself — it does NOT stretch
+       to the host container. Only the HEIGHT adapts: expanding/
+       collapsing an ⓘ panel grows the body, and the postMessage
+       height-reporter at the bottom of this file notifies the parent
+       iframe so it can resize. The print PDF (fixed Letter canvas) is
+       generated from print-price-list.html, not this page. Do NOT
+       re-declare .pl-page width here — the stylesheet owns it. */
+    .pl-embed-desktop {
+      width: 100%;
+    }
+    .pl-embed-desktop #pl-embed-root {
+      width: 100%;
+    }
+    .pl-embed-error {
+      padding: 40px;
+      text-align: center;
+      color: #b03030;
+      background: #fff;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="pl-embed-shell">
+    <div class="pl-embed-desktop">
+      <div id="pl-embed-root"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { renderPriceListSheet } from '/js/standalone/price-list-renderer.js';
+
+    // URL params are PASS-THROUGH OVERRIDES only. If the host site doesn't
+    // pass any, the renderer falls back to `settings/app.priceListDisplay`
+    // — i.e. whatever the admin picked in the Pricing tab. That way the
+    // copied embed snippet doesn't need to bake in variant/title/bw; the
+    // staff's saved default just propagates.
+    const params = new URLSearchParams(window.location.search);
+    const VALID_VARIANTS = ['editorial', 'index'];
+    const VALID_TITLE_SIZES = ['small', 'hidden'];
+
+    const variantParam = params.get('variant');
+    const titleSizeParam = params.get('titleSize');
+    const bwParam = params.get('bwMode');
+
+    const variant = VALID_VARIANTS.includes(variantParam) ? variantParam : undefined;
+    const titleSize = VALID_TITLE_SIZES.includes(titleSizeParam) ? titleSizeParam : undefined;
+    const bwMode = bwParam === '1' ? true : bwParam === '0' ? false : undefined;
+
+    const root = document.getElementById('pl-embed-root');
+
+    try {
+      await renderPriceListSheet(root, { variant, titleSize, bwMode });
+    } catch (err) {
+      console.error('[price-list-embed] render failed', err);
+      root.innerHTML = '<div class="pl-embed-error">Unable to load price list. Please refresh.</div>';
+    }
+
+    // postMessage height reporting — uses body.getBoundingClientRect()
+    // .height so the measurement DOESN'T track the iframe viewport. The
+    // earlier Math.max(documentElement.scrollHeight, body.scrollHeight)
+    // + 2 buffer pattern created a feedback loop: parent resized iframe
+    // → html.scrollHeight grew to match → next report added +2 → loop
+    // forever. Math.ceil on the sub-pixel float prevents phantom
+    // scrollbars without a compounding buffer.
+    let lastReported = 0;
+    function reportHeight() {
+      const h = Math.ceil(document.body.getBoundingClientRect().height);
+      if (h === lastReported) return;
+      lastReported = h;
+      try { parent.postMessage({ tmvPriceListEmbedHeight: h }, '*'); } catch {}
+    }
+    window.addEventListener('load', reportHeight);
+    window.addEventListener('resize', reportHeight);
+    if ('ResizeObserver' in window) new ResizeObserver(reportHeight).observe(document.body);
+    requestAnimationFrame(() => {
+      reportHeight();
+      requestAnimationFrame(reportHeight);
+    });
+  </script>
+</body>
+</html>

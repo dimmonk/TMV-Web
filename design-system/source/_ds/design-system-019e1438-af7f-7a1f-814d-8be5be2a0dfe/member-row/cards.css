@@ -1,0 +1,193 @@
+/* ============================================================
+   Mobile member card — Option A (action footer).
+   Built on the real design tokens from css/style.css.
+   ============================================================ */
+
+.mcard-phone {
+  width: 380px;
+  height: 760px;
+  background: var(--color-bg);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* status bar stays pinned; header pinned; only the member list scrolls,
+   exactly like a real device screen. */
+.mcard-statusbar, .mcard-header { flex: 0 0 auto; }
+
+/* --- status bar (device chrome) --- */
+.mcard-statusbar {
+  height: 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 22px;
+  font-size: 13px; font-weight: 600;
+  background: var(--color-bg-elevated);
+}
+.mcard-statusbar .si { display: flex; gap: 6px; align-items: center; color: var(--color-text); }
+.mcard-statusbar .si .ic { width: 15px; height: 15px; }
+
+/* --- list header: title + filter + add + search bar (ships) --- */
+.mcard-header {
+  background: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border);
+  padding: 10px 14px 12px;
+}
+.mcard-header-top { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.mcard-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; color: var(--color-text); margin-right: auto; }
+.mcard-hbtn {
+  appearance: none; flex: none;
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: pointer; position: relative;
+  transition: background .15s ease, color .15s ease, border-color .15s ease, transform .1s ease;
+}
+.mcard-hbtn:hover { background: var(--color-bg-muted); color: var(--color-text); }
+.mcard-hbtn:active { transform: scale(0.94); }
+.mcard-hbtn .ic { width: 17px; height: 17px; }
+.mcard-filter-dot {
+  position: absolute; top: 6px; right: 6px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--color-classes); border: 2px solid var(--color-bg-elevated);
+}
+.mcard-filter.active { background: var(--color-classes); border-color: var(--color-classes); color: #fff; }
+.mcard-search {
+  display: flex; align-items: center; gap: 8px;
+  height: 40px; padding: 0 8px 0 12px;
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.mcard-search:focus-within {
+  background: var(--color-bg-elevated);
+  border-color: var(--color-classes);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-classes) 20%, transparent);
+}
+.mcard-search > .ic { width: 16px; height: 16px; flex: none; }
+.mcard-search-input {
+  flex: 1; min-width: 0;
+  border: 0; background: transparent; outline: 0;
+  font-family: inherit; font-size: 15px; color: var(--color-text); padding: 0;
+}
+.mcard-search-input::placeholder { color: var(--color-text-muted); }
+.mcard-search-input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.mcard-search-clear {
+  appearance: none; flex: none;
+  width: 22px; height: 22px;
+  border: 0; background: transparent; color: var(--color-text-muted);
+  cursor: pointer; display: none; align-items: center; justify-content: center;
+  border-radius: 50%;
+}
+.mcard-search-clear:hover { background: var(--color-bg-muted); color: var(--color-text); }
+.mcard-search-clear .ic { width: 13px; height: 13px; }
+.mcard-search.has-text .mcard-search-clear { display: inline-flex; }
+
+.mcard-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex; flex-direction: column; gap: 10px; padding: 12px;
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.mcard {
+  position: relative;
+  display: flex; flex-direction: column; gap: 11px;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  padding: 13px 14px;
+}
+
+.mc-top { padding-right: 30px; }
+.mc-id { min-width: 0; }
+.mc-name {
+  font-size: 16px; font-weight: 600; line-height: 1.3;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.mc-name .age { color: var(--color-text-muted); font-weight: 400; font-size: 0.88em; }
+.mc-contact {
+  font-size: 12px; color: var(--color-text-muted); margin-top: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mc-waiver-warn {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 600;
+  color: #b42318; background: #fdecea;
+  border: 1px solid #f6c9c4; padding: 1px 7px 1px 6px; border-radius: 999px;
+}
+.mc-waiver-warn .ic { width: 12px; height: 12px; }
+
+/* overflow ⋮ — top-right */
+.mc-overflow {
+  position: absolute; top: 9px; right: 9px;
+  width: 30px; height: 30px; border-radius: 50%;
+  border: none; background: transparent; color: var(--color-text-muted);
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.mc-overflow .ic { width: 16px; height: 16px; }
+.mc-overflow:hover { background: var(--color-bg-subtle); color: var(--color-text-secondary); }
+
+/* ---- badges: one per row ---- */
+.mc-badges { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.mc-badge-row { display: flex; }
+.mc-nobadge { font-size: 12px; color: var(--color-text-muted); font-style: italic; }
+
+/* note preview */
+.mc-note {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: #9a6a00;
+  background: #fff8e6; border: 1px solid #f3e2b3; border-radius: 8px;
+  padding: 7px 9px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mc-note .ic { width: 14px; height: 14px; flex-shrink: 0; }
+.mc-note span { overflow: hidden; text-overflow: ellipsis; }
+
+/* ============================================================
+   ACTION FOOTER — the two primary buttons, side by side.
+   Mirrors the live .member-icon-single (green) /
+   .member-schedule-btn (blue): colored icon on white by default,
+   fills with its accent color when checked in.
+   ============================================================ */
+.mc-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.ci {
+  appearance: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  height: 42px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  background: var(--color-bg-elevated);
+  border: 1px solid transparent;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
+  transition: all 0.15s ease;
+}
+.ci .ic { width: 17px; height: 17px; }
+.ci:active { transform: scale(0.97); }
+
+/* Waiver = green */
+.ci-waiver { color: var(--color-success); }
+.ci-waiver:hover:not(.done) { background: var(--color-success); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+.ci-waiver.done { background: var(--color-success); color: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+.ci-waiver.done:hover { background: var(--color-danger); }
+
+/* Check-in = blue (classes) */
+.ci-checkin { color: var(--color-classes); }
+.ci-checkin:hover:not(.done) { background: var(--color-classes); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+.ci-checkin.done { background: var(--color-classes); color: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+
+/* shared icon sizing fallback */
+.ic { display: inline-block; vertical-align: -0.125em; flex: none; }

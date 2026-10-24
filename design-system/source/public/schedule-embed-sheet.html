@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TMV Class Schedule</title>
+  <link rel="stylesheet" href="/css/print-schedule-sheet.css">
+  <style>
+    /* ── Embed page chrome ; uses the same design tokens as the sheet ── */
+
+    :root {
+      --emb-ink: #14110f;
+      --emb-ink-2: #3a3530;
+      --emb-paper: #ffffff;
+      --emb-hairline: #d8d2ca;
+      --emb-warm: #faf7f1;
+      /* Program tints ; match the membership badge colors so each
+         service reads instantly in the filter row:
+           Classes (blue), Athletic (yellow), Open Gym (green).
+         Mirrored from --color-classes / --color-athletic / --color-opengym
+         in the main style.css. */
+      --emb-classes: #2196f3;
+      --emb-athletic: #ffb82a;
+      --emb-opengym: #4caf50;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      /* No background — inherits the host container's color so the
+         embed blends with whatever section it's dropped into.
+         (The schedule sheet itself still renders on its own white/
+         warm/black paper; the chrome around it is transparent.) */
+      font-family: 'Roboto', sans-serif;
+      color: var(--emb-ink);
+      /* Suppress horizontal overflow that occasionally peeks in from
+         the aspect-ratio sized sheet at sub-pixel widths. The parent
+         iframe sizes vertically via postMessage; horizontal scrolling
+         inside an embed is never desirable. */
+      overflow-x: hidden;
+      /* Hide scrollbars entirely. The parent iframe auto-sizes to body
+         content via postMessage, so the inner page should never need
+         to scroll. If something briefly mis-sizes by a pixel during a
+         resize tick, we don't want a flashing scrollbar inside the
+         iframe — kill all scrollbar chrome cross-browser. */
+      scrollbar-width: none;       /* Firefox */
+      -ms-overflow-style: none;    /* IE / legacy Edge */
+    }
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;               /* WebKit (Chrome, Safari, Edge) */
+    }
+
+    .embed-shell {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    /* ── Filter pills ── */
+    .embed-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin: 0 0 14px;
+    }
+    .embed-filter {
+      font-family: 'Oswald', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1.5px solid var(--emb-paper);
+      background: transparent;
+      color: var(--emb-paper);
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .embed-filter:hover { background: rgba(255, 255, 255, 0.10); }
+    .embed-filter.active { background: var(--emb-paper); color: var(--emb-ink); }
+
+    /* Program-tinted filter pills (Classes blue, Athletic yellow, Open Gym green) */
+    .embed-filter[data-filter="all"],
+    .embed-filter[data-filter="kids"],
+    .embed-filter[data-filter="teens"],
+    .embed-filter[data-filter="adults"] {
+      border-color: var(--emb-classes);
+      color: var(--emb-classes);
+    }
+    .embed-filter[data-filter="all"]:hover,
+    .embed-filter[data-filter="kids"]:hover,
+    .embed-filter[data-filter="teens"]:hover,
+    .embed-filter[data-filter="adults"]:hover {
+      background: color-mix(in srgb, var(--emb-classes) 22%, transparent);
+    }
+    .embed-filter[data-filter="all"].active,
+    .embed-filter[data-filter="kids"].active,
+    .embed-filter[data-filter="teens"].active,
+    .embed-filter[data-filter="adults"].active {
+      background: var(--emb-classes);
+      border-color: var(--emb-classes);
+      color: #fff;
+    }
+    .embed-filter[data-filter="athletic"] {
+      border-color: var(--emb-athletic);
+      color: var(--emb-athletic);
+    }
+    .embed-filter[data-filter="athletic"]:hover {
+      background: color-mix(in srgb, var(--emb-athletic) 22%, transparent);
+    }
+    .embed-filter[data-filter="athletic"].active {
+      background: var(--emb-athletic);
+      border-color: var(--emb-athletic);
+      color: var(--emb-ink);
+    }
+    .embed-filter[data-filter="open-gym"] {
+      border-color: var(--emb-opengym);
+      color: var(--emb-opengym);
+    }
+    .embed-filter[data-filter="open-gym"]:hover {
+      background: color-mix(in srgb, var(--emb-opengym) 22%, transparent);
+    }
+    .embed-filter[data-filter="open-gym"].active {
+      background: var(--emb-opengym);
+      border-color: var(--emb-opengym);
+      color: #fff;
+    }
+
+    /* ── Desktop sheet wrap ── */
+    .embed-desktop {
+      width: 100%;
+      aspect-ratio: 11 / 8.5;
+    }
+    .embed-desktop #embed-desktop-root,
+    .embed-desktop #embed-desktop-root .sheet { width: 100%; height: 100%; }
+
+    /* Make all-classes view's class cards clickable cue (pointer cursor
+       applied inline by renderer) ; also widen the hit target slightly. */
+    .embed-desktop .sheet .class { transition: outline 0.1s ease; }
+    .embed-desktop .sheet .class:hover { outline: 2px solid var(--emb-ink); outline-offset: -2px; }
+
+    /* ── Mobile list ── */
+    .embed-mobile { display: none; }
+    .embed-mobile .m-day { margin: 0 0 18px; }
+    .embed-mobile .m-day-name {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--emb-paper); /* readable on the #333 backdrop */
+      margin: 0 0 8px;
+      padding: 0 0 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.20);
+    }
+    .embed-mobile .m-card {
+      display: block;
+      width: 100%;
+      text-align: left;
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px;
+      line-height: 1.3;
+      padding: 14px 16px;
+      margin: 0 0 8px;
+      border: 1.25px solid var(--emb-ink);
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      background: var(--emb-paper);
+      color: var(--emb-ink);
+    }
+    .embed-mobile .m-card:hover { background: var(--emb-warm); }
+    .embed-mobile .m-name {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: 17px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .embed-mobile .m-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--emb-ink-2);
+    }
+    .embed-mobile .m-time {
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 500;
+    }
+    .embed-mobile .m-dot { opacity: 0.5; }
+    .embed-mobile .m-age {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .embed-mobile .m-tag {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      padding: 1px 6px;
+      border-radius: 1px;
+      background: var(--emb-paper);
+      border: 1px solid currentColor;
+    }
+    .embed-mobile .m-tag-new { color: #1f6f3f; }
+    .embed-mobile .m-tag-end { color: #8b1f1f; }
+    .embed-mobile .m-cancelled .m-name { text-decoration: line-through; }
+    .embed-mobile .m-cancelled { opacity: 0.55; }
+    .embed-mobile .m-empty {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6); /* readable on the #333 backdrop */
+      font-style: italic;
+      padding: 24px;
+    }
+
+    /* Color-edition mobile cards: solid fill, auto-contrast text (set inline) */
+    .embed-mobile .m-card.m-v-color .m-meta { color: inherit; opacity: 0.85; }
+    .embed-mobile .m-card.m-v-color .m-meta .m-time,
+    .embed-mobile .m-card.m-v-color .m-meta .m-age { color: inherit; }
+
+    /* Editorial mobile: warm paper, no fill, left rule in discipline color */
+    .embed-mobile .m-card.m-v-editorial {
+      background: var(--emb-warm);
+      border-left: 5px solid var(--c, var(--emb-ink));
+    }
+
+    /* B&W mobile: clean white card, no fill, just border + bold name */
+    .embed-mobile .m-card.m-v-bw .m-name { font-weight: 700; }
+
+    .embed-error {
+      padding: 40px;
+      text-align: center;
+      color: #b03030;
+    }
+
+    /* ── Popup modal ── */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 17, 15, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 9999;
+      animation: popup-fade 0.15s ease;
+    }
+    .popup-overlay.is-open { display: flex; }
+    @keyframes popup-fade {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .popup {
+      background: var(--emb-paper);
+      max-width: 480px;
+      width: 100%;
+      border-radius: 4px;
+      padding: 28px 28px 24px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+      position: relative;
+      box-sizing: border-box;
+    }
+    .popup-stripe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      background: var(--emb-ink);
+    }
+    .popup-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: transparent;
+      border: 0;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      color: var(--emb-ink-2);
+      padding: 4px 8px;
+    }
+    .popup-close:hover { color: var(--emb-ink); }
+    .popup-title {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: 26px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      line-height: 1.05;
+      margin: 12px 36px 14px 0;
+    }
+    .popup-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin: 8px 0;
+      font-size: 14px;
+      color: var(--emb-ink-2);
+    }
+    .popup-row-label {
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--emb-ink-2);
+      min-width: 56px;
+    }
+    .popup-row-value {
+      font-family: 'Roboto', sans-serif;
+      color: var(--emb-ink);
+      font-size: 15px;
+    }
+    .popup-time { font-family: 'Roboto Mono', monospace; }
+    .popup-age {
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .popup-desc-wrap { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--emb-hairline); }
+    .popup-desc {
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--emb-ink);
+      /* Markdown-rendered output (renderMarkdown in schedule-embed-sheet.js).
+         Newlines, paragraph breaks, and bullet lists come through as real
+         block elements ; no white-space:pre-wrap needed. */
+    }
+    .popup-desc strong { font-weight: 600; color: var(--emb-ink); }
+    .popup-desc em     { font-style: italic; }
+    .popup-desc code   {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 13px;
+      background: var(--emb-warm);
+      border: 1px solid var(--emb-hairline);
+      border-radius: 3px;
+      padding: 1px 5px;
+    }
+    .popup-desc a      {
+      color: var(--emb-classes);
+      text-decoration: underline;
+    }
+    .popup-desc ul     {
+      margin: 6px 0 6px 18px;
+      padding-left: 0;
+    }
+    .popup-desc li     {
+      margin: 2px 0;
+    }
+
+    /* ── Viewport switch ── */
+    @media (max-width: 768px) {
+      .embed-desktop { display: none; }
+      .embed-mobile { display: block; }
+      .embed-shell { padding: 10px; }
+      .embed-filter { padding: 6px 12px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="embed-shell">
+    <div class="embed-filters" id="embed-filters">
+      <button class="embed-filter active" data-filter="all">All Classes</button>
+      <button class="embed-filter" data-filter="kids">Parent &amp; Child &middot; Kids</button>
+      <button class="embed-filter" data-filter="teens">Teens</button>
+      <button class="embed-filter" data-filter="adults">Adults</button>
+      <button class="embed-filter" data-filter="athletic">Athletic Program</button>
+      <button class="embed-filter" data-filter="open-gym">Open Gym</button>
+    </div>
+
+    <!-- Desktop: full sheet, 11:8.5 letter-landscape aspect -->
+    <div class="embed-desktop">
+      <div id="embed-desktop-root"></div>
+    </div>
+
+    <!-- Mobile: day-grouped class list -->
+    <div class="embed-mobile" id="embed-mobile-root"></div>
+  </div>
+
+  <!-- Popup modal -->
+  <div class="popup-overlay" id="embed-popup-overlay">
+    <div class="popup" id="embed-popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+      <div class="popup-stripe"></div>
+      <button class="popup-close" type="button" aria-label="Close">&times;</button>
+      <h2 class="popup-title" id="popup-title"></h2>
+      <div class="popup-row">
+        <span class="popup-row-label">Time</span>
+        <span class="popup-row-value popup-time"></span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-row-label">Age</span>
+        <span class="popup-row-value popup-age"></span>
+      </div>
+      <div class="popup-desc-wrap" style="display:none;">
+        <div class="popup-desc"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initEmbed } from '/js/standalone/schedule-embed-sheet.js';
+    initEmbed();
+  </script>
+</body>
+</html>

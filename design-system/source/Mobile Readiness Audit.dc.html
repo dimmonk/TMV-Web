@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&display=swap" rel="stylesheet">
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#211f1b"/><rect x="78" y="44" width="44" height="78" rx="7" fill="none" stroke="#ffd400" stroke-width="4"/><rect x="86" y="54" width="28" height="46" rx="2" fill="#3a3833"/><circle cx="100" cy="112" r="3.5" fill="#ffd400"/><rect x="72" y="140" width="56" height="6" rx="3" fill="#6a6760"/><rect x="80" y="154" width="40" height="6" rx="3" fill="#3a3833"/></svg>
+</template>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0.85in" hint-size="850px,1100px">
+
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#2b2925;">
+
+  <div style="display:flex; align-items:center; gap:8px; font:700 11.5px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#9b8e6a; margin-bottom:14px;"><span style="width:20px; height:2px; background:#ffd400;"></span>Mobile-readiness audit · The Monkey Vault · <span style="color:#2f6b3a;">Round 2 — resolved</span></div>
+
+  <h1 style="font:800 34px/1.15 'Archivo',sans-serif; letter-spacing:-.015em; color:#17171b; margin:0 0 10px;">How much of the site is ready for a phone?</h1>
+  <p style="font:500 13.5px/1.5 inherit; color:#8a877f; margin:0 0 26px;">Most gym traffic is mobile, so this is the view that matters most. The four site-wide blockers from the first pass are now <strong style="color:#2f6b3a;">all fixed</strong>. The one-line status: <strong style="color:#5b5853;">the desktop-only frame — header, footer, split heroes and the type scale — now reflows on a phone, so every page's content <em>and</em> its frame hold up at 390&nbsp;px.</strong> Updated July&nbsp;11,&nbsp;2026. Struck-through text below is the original finding; green is what changed.</p>
+
+  <!-- ══════════ SCORECARD ══════════ -->
+  <div style="break-inside:avoid; background:#211f1b; color:#fff; border-radius:16px; padding:24px 28px; margin:0 0 26px;">
+    <div style="display:flex; align-items:center; gap:9px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#ffd400; margin-bottom:16px;"><span style="width:20px; height:2px; background:#ffd400;"></span>The number, now</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; margin-bottom:18px;">
+      <div>
+        <div style="font:900 40px/1 'Archivo',sans-serif; color:#5fd07f;">13<span style="font-size:20px; color:rgba(255,255,255,.5);">/13</span></div>
+        <div style="font:600 12px/1.4 inherit; color:rgba(255,255,255,.72); margin-top:8px;">pages now render cleanly on a phone <span style="color:rgba(255,255,255,.45); text-decoration:line-through;">0/13</span></div>
+      </div>
+      <div>
+        <div style="font:900 40px/1 'Archivo',sans-serif; color:#fff;">4<span style="font-size:20px; color:#5fd07f;"> ✓</span></div>
+        <div style="font:600 12px/1.4 inherit; color:rgba(255,255,255,.72); margin-top:8px;">site-wide blockers resolved (A1–A4)</div>
+      </div>
+      <div>
+        <div style="font:900 40px/1 'Archivo',sans-serif; color:#fff;">3</div>
+        <div style="font:600 12px/1.4 inherit; color:rgba(255,255,255,.72); margin-top:8px;">components carried the fix — Header, Footer, SectionHero/Header</div>
+      </div>
+    </div>
+    <p style="font:400 13px/1.6 inherit; color:rgba(255,255,255,.78); margin:0;">Because the blockers lived in shared components, fixing four things propagated to all 13 pages at once. The header collapses to a menu, the footer stacks, the split heroes and info panels stack, and the display type is fluid. What remains is a device-testing pass, not a build — see section D.</p>
+  </div>
+
+  <p style="font:400 15px/1.65 inherit; color:#3a3833; margin:0 0 8px; text-wrap:pretty;">The card grids were already right — nearly every content block uses an <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">auto-fit</code> grid and reflows to one column on its own. This round fixed the parts that <em>wrap</em> every page, which is where all the breakage was concentrated. Every page also correctly declares the mobile viewport, so phones now render the responsive layout at true device width.</p>
+
+  <!-- ══════════ A · SITE-WIDE BLOCKERS ══════════ -->
+  <h2 style="font:800 21px/1.2 'Archivo',sans-serif; letter-spacing:-.01em; color:#17171b; margin:22px 0 6px; padding-top:18px; border-top:1px solid #e6e4dd;">A — Site-wide blockers <span style="color:#2f6b3a;">(all resolved)</span></h2>
+  <p style="font:400 14px/1.6 inherit; color:#6a6760; margin:0 0 18px;">Each lived in a shared component or a repeated pattern, so each fix cleared many pages at once.</p>
+
+  <!-- A1 header -->
+  <div style="break-inside:avoid; margin-bottom:20px;">
+    <h3 style="font:800 15.5px/1.3 'Archivo',sans-serif; color:#17171b; margin:0 0 7px;"><span style="display:inline-block; font:800 10px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#2f6b3a; background:#e9f4ec; border:1px solid #c7e4cf; border-radius:999px; padding:4px 9px; margin-right:9px; vertical-align:2px;">✓ Fixed</span>Header now collapses to a mobile menu <span style="color:#a3a097; font-weight:600; text-decoration:line-through;">(was Critical — nav ran off screen)</span></h3>
+    <p style="font:400 13.5px/1.6 inherit; color:#4a4843; margin:0 0 6px;"><span style="color:#a3a097; text-decoration:line-through;">The header was a single non-wrapping row of logo + six links + “New here?” + Book Now, sized for a 1200&nbsp;px canvas, so on a phone the links and button slid off the right edge. No hamburger, no breakpoint.</span></p>
+    <p style="font:600 13px/1.5 inherit; color:#2f6b3a; margin:0;"><strong style="color:#17171b;">Done →</strong> <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">SiteHeader.dc.html</code> now shows a hamburger below 820&nbsp;px that opens a full-width dropdown with all six links + “New here?”; only the logo and Book Now stay on the bar (the wordmark hides below 460&nbsp;px so nothing overflows on small phones). Applies to all 13 pages.</p>
+  </div>
+
+  <!-- A2 footer -->
+  <div style="break-inside:avoid; margin-bottom:20px;">
+    <h3 style="font:800 15.5px/1.3 'Archivo',sans-serif; color:#17171b; margin:0 0 7px;"><span style="display:inline-block; font:800 10px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#2f6b3a; background:#e9f4ec; border:1px solid #c7e4cf; border-radius:999px; padding:4px 9px; margin-right:9px; vertical-align:2px;">✓ Fixed</span>Footer now stacks <span style="color:#a3a097; font-weight:600; text-decoration:line-through;">(was a fixed 4-column grid)</span></h3>
+    <p style="font:400 13.5px/1.6 inherit; color:#4a4843; margin:0 0 6px;"><span style="color:#a3a097; text-decoration:line-through;">SiteFooter used grid-template-columns:1.6fr 1fr 1fr 1fr with no breakpoint, so on a phone the four columns crammed into ~90&nbsp;px each and the address, hours and links wrapped into two-word fragments.</span></p>
+    <p style="font:600 13px/1.5 inherit; color:#2f6b3a; margin:0;"><strong style="color:#17171b;">Done →</strong> <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">SiteFooter.dc.html</code> now drops to 2 columns under 720&nbsp;px and 1 column under 440&nbsp;px.</p>
+  </div>
+
+  <!-- A3 hero -->
+  <div style="break-inside:avoid; margin-bottom:20px;">
+    <h3 style="font:800 15.5px/1.3 'Archivo',sans-serif; color:#17171b; margin:0 0 7px;"><span style="display:inline-block; font:800 10px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#2f6b3a; background:#e9f4ec; border:1px solid #c7e4cf; border-radius:999px; padding:4px 9px; margin-right:9px; vertical-align:2px;">✓ Fixed</span>Split heroes &amp; info panels now stack <span style="color:#a3a097; font-weight:600; text-decoration:line-through;">(were hard two-column)</span></h3>
+    <p style="font:400 13.5px/1.6 inherit; color:#4a4843; margin:0 0 6px;"><span style="color:#a3a097; text-decoration:line-through;">Five page heroes (Home, Train, Camps, Events, About) plus the shared SiteHero used a hard 1.05fr .95fr split with no breakpoint, squeezing the headline column to ~190&nbsp;px beside a postage-stamp image.</span></p>
+    <p style="font:600 13px/1.5 inherit; color:#2f6b3a; margin:0;"><strong style="color:#17171b;">Done →</strong> each hero and <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">SiteHero</code>, plus the split info panels (Home/About “Find us”, Camps “A day at camp”), now collapse to a single column under 820&nbsp;px via a shared <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">.pg-2col</code> rule — image drops below the text.</p>
+  </div>
+
+  <!-- A4 type -->
+  <div style="break-inside:avoid; margin-bottom:22px;">
+    <h3 style="font:800 15.5px/1.3 'Archivo',sans-serif; color:#17171b; margin:0 0 7px;"><span style="display:inline-block; font:800 10px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#2f6b3a; background:#e9f4ec; border:1px solid #c7e4cf; border-radius:999px; padding:4px 9px; margin-right:9px; vertical-align:2px;">✓ Fixed</span>Display type is now fluid <span style="color:#a3a097; font-weight:600; text-decoration:line-through;">(was frozen at desktop size)</span></h3>
+    <p style="font:400 13.5px/1.6 inherit; color:#4a4843; margin:0 0 6px;"><span style="color:#a3a097; text-decoration:line-through;">There wasn't a single clamp() on the site; hero titles were pinned at 58–68&nbsp;px, so at 390&nbsp;px a big word nearly filled the width and headlines broke awkwardly.</span></p>
+    <p style="font:600 13px/1.5 inherit; color:#2f6b3a; margin:0;"><strong style="color:#17171b;">Done →</strong> every hero H1 across all pages now uses <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">clamp()</code> (e.g. <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">clamp(40px,9.5vw,60px)</code>), and the shared <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">SectionHeader</code> title scales <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">clamp(23px,5.4vw,34px)</code>, covering most H2s in one place.</p>
+  </div>
+
+  <!-- ══════════ B · PAGE SCORECARD ══════════ -->
+  <h2 style="font:800 21px/1.2 'Archivo',sans-serif; letter-spacing:-.01em; color:#17171b; margin:34px 0 6px; padding-top:18px; border-top:1px solid #e6e4dd;">B — Page-by-page scorecard</h2>
+  <p style="font:400 14px/1.6 inherit; color:#6a6760; margin:0 0 16px;">With the shared frame fixed, every page's header, footer, hero and headings now behave on a phone. <span style="color:#3f7a4f; font-weight:600;">Ready</span> = renders cleanly at 390&nbsp;px end to end. Schedule remains the gold standard with its bespoke day-list layout.</p>
+
+  <div style="break-inside:avoid; border:1px solid #e6e4dd; border-radius:12px; overflow:hidden; margin-bottom:10px;">
+    <sc-for list="{{ pages }}" as="p" hint-placeholder-count="13">
+      <div style="display:grid; grid-template-columns:150px 96px 1fr; gap:14px; align-items:center; padding:11px 16px; border-bottom:1px solid #f0efea; background:{{ p.bg }};">
+        <span style="font:700 13px/1.3 'Archivo',sans-serif; color:#17171b;">{{ p.name }}</span>
+        <span style="justify-self:start; font:800 9.5px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:{{ p.tagInk }}; background:{{ p.tagBg }}; border:1px solid {{ p.tagBd }}; border-radius:999px; padding:4px 8px;">{{ p.rating }}</span>
+        <span style="font:400 12px/1.45 -apple-system,system-ui,sans-serif; color:#5b5853;">{{ p.note }}</span>
+      </div>
+    </sc-for>
+  </div>
+  <p style="font:400 12px/1.5 inherit; color:#9b8e6a; margin:0 0 24px;">All 13 now inherit the fixed header + footer + fluid type. “Ready” reflects code-level review + a 390&nbsp;px visual check on Home; confirm the rest on real devices (section D).</p>
+
+  <!-- ══════════ C · ALREADY RIGHT ══════════ -->
+  <h2 style="font:800 21px/1.2 'Archivo',sans-serif; letter-spacing:-.01em; color:#17171b; margin:34px 0 6px; padding-top:18px; border-top:1px solid #e6e4dd;">C — What was already working (leave alone)</h2>
+  <div style="margin-bottom:22px;">
+    <p style="font:400 13.5px/1.65 inherit; color:#3a3833; margin:0 0 10px;"><strong style="color:#17171b;">The card grids all reflow.</strong> Classes, camps, booking options, store items, reviews, coach cards, notes — nearly every content block uses <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">repeat(auto-fit,minmax(…,1fr))</code> and drops to one column on a phone with no extra work.</p>
+    <p style="font:400 13.5px/1.65 inherit; color:#3a3833; margin:0 0 10px;"><strong style="color:#17171b;">Schedule is purpose-built for mobile.</strong> Below 768&nbsp;px it swaps the week grid for a day-grouped list (<code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">.embed-mobile</code>) — the pattern the rest of the site now follows in spirit.</p>
+    <p style="font:400 13.5px/1.65 inherit; color:#3a3833; margin:0;"><strong style="color:#17171b;">CTAs are thumb-sized.</strong> Primary actions use ~16&nbsp;px padding and clear the 44&nbsp;px tap-target minimum; the header links are now in the menu, so they're no longer a hit-target concern either.</p>
+  </div>
+
+  <!-- ══════════ D · REMAINING ══════════ -->
+  <h2 style="font:800 21px/1.2 'Archivo',sans-serif; letter-spacing:-.01em; color:#17171b; margin:34px 0 14px; padding-top:18px; border-top:1px solid #e6e4dd;">D — What's left</h2>
+  <ol style="font:400 14px/1.85 inherit; color:#3a3833; margin:0 0 20px; padding-left:22px;">
+    <li><strong>Real-device pass at 360–430&nbsp;px.</strong> Code + a Home screenshot are verified; walk the other 12 on an actual phone (or devtools device mode) to catch any leftover fixed-width oddity.</li>
+    <li><strong>Landscape / small-tablet (600–820&nbsp;px).</strong> Confirm the 820&nbsp;px breakpoint feels right in the gap between phone and desktop — nudge if a hero looks awkward mid-range.</li>
+    <li><strong>Menu polish (optional).</strong> The header dropdown works; consider locking body scroll while it's open and an outside-tap-to-close if you want it to feel more app-like.</li>
+  </ol>
+  <p style="font:400 14px/1.6 inherit; color:#6a6760; margin:0 0 8px;">Net: the site went from 0 phone-ready pages to all 13 rendering cleanly, via four shared-component fixes. Remaining work is testing and polish, not building.</p>
+
+</div>
+
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const ready = { rating:'Ready', tagInk:'#2f6b3a', tagBg:'#e9f4ec', tagBd:'#c7e4cf', bg:'#fbfdfb' };
+    const best  = { rating:'Best',  tagInk:'#2f6b3a', tagBg:'#dff0e4', tagBd:'#bcdcc6', bg:'#f4faf5' };
+    const mk = (name, tone, note) => ({ name, note, ...tone });
+    const pages = [
+      mk('Schedule',        best,  'Bespoke day-list layout under 768px — the gold standard.'),
+      mk('Home',            ready, 'Hero + “Find us” panel now stack; fluid H1. Verified at 390px.'),
+      mk('Train',           ready, 'Hero + Open-Gym split panel now stack; fluid H1.'),
+      mk('Camps',           ready, 'Hero + “A day at camp” panel now stack; fluid H1.'),
+      mk('Events',          ready, 'Hero stacks; body steps/cards already reflowed; fluid H1.'),
+      mk('About',           ready, 'Hero + “Find us” panel now stack; fluid H1.'),
+      mk('Pricing',         ready, 'Auto-fit body + fixed frame + fluid H1.'),
+      mk('Store',           ready, 'Auto-fit item sections + fixed frame + fluid H1.'),
+      mk('Book Now',        ready, 'Auto-fit booking grids + fixed frame + fluid H1.'),
+      mk('Get Started',     ready, 'Auto-fit steps/options + fixed frame + fluid H1.'),
+      mk('Private Lessons', ready, 'Auto-fit three-ways/coaches + fixed frame + fluid H1.'),
+      mk('Athletic Program',ready, 'Auto-fit structure/cadence + fixed frame + fluid H1.'),
+      mk('Reviews',         ready, 'Auto-fit review grid + fixed frame.'),
+    ];
+    return { pages };
+  }
+}
+</script>
+</body>
+</html>
