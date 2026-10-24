@@ -52,21 +52,21 @@ const allPrivateWays: PrivateWay[] = [
     price: '{introClass1x}', per: 'first session', sub: '{introClass2x} each for 2 · {introClass3xPlus} each for 3+',
     desc: 'A one-time lesson on a set beginner lesson plan: the parkour basics, one-on-one. For a specific skill or goal, book a private lesson instead.',
     cta: 'Book intro',
-    hub: { dur: '1 hr', price: '{introClass1x}', priceNote: 'First session · groups from {introClass3xPlus} each', bookingTag: 'By appointment', desc: 'A one-time private lesson and the best first taste of parkour — what it is, what you can do with it, and how we coach it.', pills: 'All ages | 1-on-1' },
+    hub: { dur: '1 hr', price: '{introClass1x}', priceNote: 'First session · groups from {introClass3xPlus} each', bookingTag: 'By appointment', desc: 'A one-time private lesson and the best first taste of parkour: what it is, what you can do with it, and how we coach it.', pills: 'All ages | 1-on-1' },
   },
   {
     key: 'private', color: cat.private, title: 'Private Lesson',
     price: 'From {privateKid1x}', per: 'per session', sub: 'Kids {privateKid1x} · Adults {privateAdult1x} · 5-packs available',
     desc: 'Ongoing one-on-one (or your own small group) with whichever coach is on shift. All ages, all levels, flexible scheduling.',
     cta: 'Book a private',
-    hub: { dur: '1 hr', price: 'From {privateKid1x}', priceNote: 'Any coach on shift · 5-packs available', bookingTag: 'By appointment', desc: 'Ongoing one-on-one or small-group coaching, built around your goals with flexible scheduling. Pick your age group when you book — we’ll match a coach.', pills: '1-on-1 | All ages' },
+    hub: { dur: '1 hr', price: 'From {privateKid1x}', priceNote: 'Any coach on shift · 5-packs available', bookingTag: 'By appointment', desc: 'Ongoing one-on-one or small-group coaching, built around your goals with flexible scheduling. Pick your age group when you book and we’ll match a coach.', pills: '1-on-1 | All ages' },
   },
   {
     key: 'coach', color: cat.private, title: 'Train with a specific coach',
     price: "Coach's rate", sub: 'Set per coach · ongoing 1-on-1',
-    desc: "Pick the coach whose style fits your goals and stick with them — one instructor who follows your whole progress, building each session on the last. They'll come in just for you, even on a day off.",
+    desc: "Pick the coach whose style fits your goals and stick with them: one instructor who follows your whole progress, building each session on the last. They'll come in just for you, even on a day off.",
     cta: 'Choose a coach',
-    hub: { flag: 'Pick your coach', priceNote: 'Coach sets their own rate', bookingTag: 'By appointment', desc: 'Pick a coach and stick with them — one instructor who follows your whole progress and comes in just for your session, even on a day off.', pills: '1-on-1 | Your coach' },
+    hub: { flag: 'Pick your coach', priceNote: 'Coach sets their own rate', bookingTag: 'By appointment', desc: 'Pick a coach and stick with them: one instructor who follows your whole progress and comes in just for your session, even on a day off.', pills: '1-on-1 | Your coach' },
   },
 ];
 

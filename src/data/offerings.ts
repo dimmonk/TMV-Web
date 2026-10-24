@@ -34,13 +34,13 @@ export const offerings: Offering[] = [
     color: cat.classes,
     image: 'assets/athletic.mp4',
     placeholder: 'Athletes training — open gym floor or a class mid-session',
-    desc: 'Drop in for open gym, book a class, or train like an athlete — every age and level.',
+    desc: 'Drop in for open gym, book a class, or train like an athlete, at every age and level.',
     back: 'How you can train',
     points: [
-      { icon: 'bi-unlock', text: 'Open Gym — drop in daily, no time limit' },
-      { icon: 'bi-mortarboard', text: 'Group Classes — parkour, flips, calisthenics, tricking & more' },
-      { icon: 'bi-trophy', text: 'Athletic Program — structured, athlete-level coaching' },
-      { icon: 'bi-person-arms-up', text: 'Private — one-on-one, built around your goals' },
+      { icon: 'bi-unlock', text: 'Open Gym: drop in daily, no time limit' },
+      { icon: 'bi-mortarboard', text: 'Group Classes: parkour, flips, calisthenics, tricking & more' },
+      { icon: 'bi-trophy', text: 'Athletic Program: structured, athlete-level coaching' },
+      { icon: 'bi-person-arms-up', text: 'Private: one-on-one, built around your goals' },
     ],
   },
   {
@@ -53,9 +53,9 @@ export const offerings: Offering[] = [
     desc: 'Full days of skills, flips, games and friends over school breaks and P.A. days.',
     back: 'Pick your camp',
     points: [
-      { icon: 'bi-calendar-week', text: 'Weekly Camps — Winter, March & Summer' },
-      { icon: 'bi-people', text: 'Private Day Camp — your own crew, any day' },
-      { icon: 'bi-sun', text: 'P.A. Day Camp — single days, open to all' },
+      { icon: 'bi-calendar-week', text: 'Weekly Camps: Winter, March & Summer' },
+      { icon: 'bi-people', text: 'Private Day Camp: your own crew, any day' },
+      { icon: 'bi-sun', text: 'P.A. Day Camp: single days, open to all' },
     ],
   },
   {
@@ -68,8 +68,8 @@ export const offerings: Offering[] = [
     back: 'Celebrate with us',
     points: [
       { icon: 'bi-balloon', text: 'Full & Mini birthday parties' },
-      { icon: 'bi-people-fill', text: 'Group events — schools, teams, orgs' },
-      { icon: 'bi-sunrise', text: 'Early gym access — the space to yourselves' },
+      { icon: 'bi-people-fill', text: 'Group events: schools, teams, orgs' },
+      { icon: 'bi-sunrise', text: 'Early gym access: the space to yourselves' },
     ],
   },
 ];

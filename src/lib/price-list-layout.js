@@ -116,7 +116,7 @@ export const PRICE_LIST_SECTIONS = [
     intro: false,
     about: [
       'Birthday party packages centered around parkour and movement activities',
-      'Party Duration: 2 hours total — 1 hour of instructed activities + 1 hour for food, celebrations and free time around the gym',
+      'Party Duration: 2 hours total: 1 hour of instructed activities + 1 hour for food, celebrations and free time around the gym',
       'Food and Decorations: bring your own food, drinks, and decorations',
       'Short notice, a small group, or every Full Party slot taken? Book a Mini Party: no party room needed',
       'Reservations required',
@@ -192,7 +192,7 @@ export const PRICE_LIST_SECTIONS = [
     color: 'orange',
     intro: false,
     about: [
-      'Action-packed parkour training and games for all skill levels — combining skill-building with fun every session',
+      'Action-packed parkour training and games for all skill levels, combining skill-building with fun every session',
       'Weekly: Winter, March break, and summer week-long camps. Single day options available',
       'P.A. Day Camp: single-day camp on school P.A. days',
       'Private Day Camp: plan your own private camp with minimum 5 kids',
@@ -260,7 +260,7 @@ export const PRICE_LIST_SECTIONS = [
     color: 'gray',
     intro: false,
     about: [
-      'Designed for first-timers — covers parkour basics, essential safety skills, and gym rules to give a good starting point',
+      'Designed for first-timers. Covers parkour basics, essential safety skills, and gym rules to give a good starting point',
       'Typically a one-time class',
       'Day Pass included for that day',
       'Reservation required',
@@ -279,7 +279,7 @@ export const PRICE_LIST_SECTIONS = [
     about: [
       'Develops versatile, well-rounded athletes through physical conditioning, parkour, and acrobatics training',
       'Training Focus: strength, speed, and readiness to excel in various sports, starting with parkour and acrobatics',
-      'Monthly membership is the primary option — best for athletes training multiple times a week',
+      'Monthly membership is the primary option, best for athletes training multiple times a week',
       '10x Pass is a fallback for athletes who can only attend once a week',
       '1st time trial class available (group class base rate applies)',
       'No reservation required',

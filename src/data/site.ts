@@ -37,7 +37,7 @@ export const site = {
   tagline: 'Parkour & Movement Training Centre',
   city: 'Toronto',
   description:
-    "Toronto's home for parkour, flips and movement. Drop in to open gym, join a group class, send the kids to camp or throw a party — every age, every level.",
+    "Toronto's home for parkour, flips and movement. Drop in to open gym, join a group class, send the kids to camp or throw a party. Every age, every level.",
   /** ISO country for the structured data. The address, phone and email are the
    *  ones staff publish (`contact` in site-config.ts); none of them is typed here. */
   country: 'CA',
@@ -135,20 +135,20 @@ export const seo = {
     title:
       'The Monkey Vault | Parkour & Movement Training Centre in Toronto',
     description:
-      "Toronto's home for parkour, flips and movement. Drop in to open gym, join a group class, send the kids to camp or throw a party — every age, every level, in Downsview Park.",
+      "Toronto's home for parkour, flips and movement. Drop in to open gym, join a group class, send the kids to camp or throw a party. Every age, every level, in Downsview Park.",
   },
   getStarted: {
-    title: 'Get Started | The Monkey Vault — Your First Parkour Visit',
+    title: 'Get Started | Your First Parkour Visit | The Monkey Vault',
     description:
       'New to parkour? Get started at The Monkey Vault in three steps: sign your waiver, book your first session, and learn what to bring. No experience needed.',
   },
   train: {
-    title: 'Classes | Group Classes, Private Coaching & Athletic Program — The Monkey Vault',
+    title: 'Classes | Group Classes, Private Coaching & Athletic Program | The Monkey Vault',
     description:
       'Parkour classes in Toronto for kids, teens and adults: drop-in group classes in parkour, flips, calisthenics and tricking, private coaching, or the structured Athletic Program.',
   },
   openGym: {
-    title: 'Open Gym | Drop In and Play — The Monkey Vault',
+    title: 'Open Gym | Drop In and Play | The Monkey Vault',
     description:
       'Open gym at The Monkey Vault in Toronto: no booking, all ages, stay as long as you like. What a visit costs, supervision for under-7s and how to sign the waiver.',
   },
@@ -165,57 +165,57 @@ export const seo = {
   groups: {
     title: 'Group Events for Schools, Teams & Corporate | The Monkey Vault',
     description:
-      'Field trips, team-building and corporate group events at The Monkey Vault in Toronto — guided parkour activities plus open gym, or reserve the gym before we open.',
+      'Field trips, team-building and corporate group events at The Monkey Vault in Toronto: guided parkour activities plus open gym, or reserve the gym before we open.',
   },
   makeInvitation: {
     title: 'Design Your Invite | The Monkey Vault Toronto',
     description:
-      "Make a birthday invitation for your Monkey Vault party in seconds — pick a style, fill in the details, and download to text, post or print.",
+      "Make a birthday invitation for your Monkey Vault party in seconds. Pick a style, fill in the details, and download to text, post or print.",
   },
   campRegistration: {
     title: 'Camp Registration | The Monkey Vault Toronto',
     description:
-      "Register your kids for Monkey Vault parkour camp — add each child, pick their weeks or P.A. Days and late pickup, and pay once, securely, at the end.",
+      "Register your kids for Monkey Vault parkour camp. Add each child, pick their weeks or P.A. Days and late pickup, and pay once, securely, at the end.",
   },
   pricing: {
     title: 'Passes, Memberships & Pricing | The Monkey Vault',
     description:
-      "Open gym day passes, class packages and memberships at The Monkey Vault — Toronto's parkour and movement training centre.",
+      "Open gym day passes, class packages and memberships at The Monkey Vault, Toronto's parkour and movement training centre.",
   },
   store: {
-    title: 'Online Store | Passes & Memberships — The Monkey Vault',
+    title: 'Online Store | Passes & Memberships | The Monkey Vault',
     description:
-      'Buy open gym passes, visit packs, class packs, memberships and gift cards online — ready at the front desk when you arrive at The Monkey Vault, Toronto.',
+      'Buy open gym passes, visit packs, class packs, memberships and gift cards online, ready at the front desk when you arrive at The Monkey Vault, Toronto.',
   },
   about: {
-    title: "Visit Us | Hours, Directions & the Space — The Monkey Vault",
+    title: "Visit Us | Hours, Directions & the Space | The Monkey Vault",
     description:
       "Meet The Monkey Vault: Toronto's parkour and movement training centre in Downsview Park, built for every age and every level.",
   },
   privateLessons: {
     title: 'Private Parkour Lessons | The Monkey Vault Toronto',
     description:
-      'One-on-one parkour coaching at The Monkey Vault, built around your goals and pace. All ages and levels — book an intro or a private with your coach.',
+      'One-on-one parkour coaching at The Monkey Vault, built around your goals and pace. All ages and levels. Book an intro or a private with your coach.',
   },
   athletic: {
-    title: 'Athletic Program | Athlete-Level Parkour Training — The Monkey Vault',
+    title: 'Athletic Program | Athlete-Level Parkour Training | The Monkey Vault',
     description:
       'Structured, athlete-level parkour training at The Monkey Vault. Coached progressions and progress tracking for dedicated movers, ages 9+.',
   },
   reviews: {
-    title: 'Reviews | The Monkey Vault — 4.6★ on Google',
+    title: 'Reviews | The Monkey Vault | 4.6★ on Google',
     description:
-      'See what Toronto families and athletes say about The Monkey Vault — 449 Google reviews from parents, open-gym members and first-timers.',
+      'See what Toronto families and athletes say about The Monkey Vault: 449 Google reviews from parents, open-gym members and first-timers.',
   },
   book: {
-    title: 'Book Now | Classes, Private Lessons & Parties — The Monkey Vault',
+    title: 'Book Now | Classes, Private Lessons & Parties | The Monkey Vault',
     description:
       'Book your parkour session at The Monkey Vault: drop in for open gym, reserve a private lesson, register for camp or plan a birthday party.',
   },
   schedule: {
-    title: 'Class Schedule | The Monkey Vault — Toronto Parkour',
+    title: 'Class Schedule | The Monkey Vault | Toronto Parkour',
     description:
-      "The Monkey Vault's live group-class schedule — parkour, flips, calisthenics and tricking, filterable by age. Straight from our booking system.",
+      "The Monkey Vault's live group-class schedule: parkour, flips, calisthenics and tricking, filterable by age. Straight from our booking system.",
   },
 } as const;
 

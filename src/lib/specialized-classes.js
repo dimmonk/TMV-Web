@@ -65,7 +65,7 @@ const dash = (/** @type {string} */ range) => range.replace('-', '–');
  */
 function timesLine(sessions) {
   const times = new Set(sessions.map((s) => s.time));
-  if (times.size === 1) return `${[...new Set(sessions.map((s) => DAY_SHORT[s.day]))].join(' · ')} — ${clock(sessions[0].time)}`;
+  if (times.size === 1) return `${[...new Set(sessions.map((s) => DAY_SHORT[s.day]))].join(' · ')}, ${clock(sessions[0].time)}`;
   return sessions.map((s) => `${DAY_SHORT[s.day]} ${clock(s.time)}`).join(' · ');
 }
 

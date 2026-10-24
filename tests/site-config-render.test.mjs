@@ -183,7 +183,7 @@ test('the Specialized Classes card is the Members schedule, and its price the pr
   assert.equal(tricking.querySelector('[data-class-body]').textContent, 'Fixture tricking body');
   assert.equal(card.querySelector('[data-class-headline]'), null);
   assert.deepEqual([...card.querySelectorAll('[data-class-panel="flips"] .ct-when-line')].map((l) => l.textContent),
-    ['Level 1, ages 18+: Wed — 7 PM', 'Level 2, ages 18+: Fri — 8 PM']);
+    ['Level 1, ages 18+: Wed, 7 PM', 'Level 2, ages 18+: Fri, 8 PM']);
   assert.match(card.querySelector('.ct-offer-t').textContent, /All drop-in: \$31 a class · 10 for \$276\./);
   assert.doesNotMatch(site.page('train'), /Explosive/);
 });
@@ -412,6 +412,32 @@ test('card prices are the Members price list: filled at build, a missing price h
     const typed = (words.replace(/\$30 drop-in · \$100 \/ month/g, '').match(/\$\d+(\.\d+)?/g) ?? []).filter((m) => !kept.test(m));
     assert.deepEqual(typed, [], `${path || 'home'} types no price`);
     assert.doesNotMatch(doc.body.textContent, /\{[A-Za-z][A-Za-z0-9]*\}/, `${path || 'home'} shows no raw price key`);
+  }
+});
+
+test('no built page or client script carries an em dash: the copy reads as a person wrote it', async () => {
+  serve({ hours: WEEK, social: SOCIAL, contact: CONTACT });
+  const site = await build();
+  const pages = [];
+  const walk = (dir) => readdirSync(join(site.out, dir), { withFileTypes: true }).forEach((e) => {
+    if (e.isDirectory() && e.name !== '_astro') walk(join(dir, e.name));
+    else if (e.name === 'index.html') pages.push(dir);
+  });
+  walk('');
+  assert.ok(pages.length > 10, 'every page was found');
+  for (const path of pages) {
+    const doc = site.dom(path);
+    doc.querySelectorAll('script:not([type="application/ld+json"]), style').forEach((el) => el.remove());
+    const attrs = [...doc.querySelectorAll('[aria-label], [title], [alt], [placeholder], meta[content]')]
+      .flatMap((el) => ['aria-label', 'title', 'alt', 'placeholder', 'content'].map((a) => el.getAttribute(a) ?? ''));
+    const found = [doc.title, doc.body.textContent, ...doc.querySelectorAll('script[type="application/ld+json"]')].map((x) => (typeof x === 'string' ? x : x.textContent)).concat(attrs)
+      .join('\n').split('\n').filter((line) => line.includes('\u2014')).map((line) => line.trim());
+    assert.deepEqual(found, [], `${path || 'home'} has no em dash`);
+  }
+  // The hours reader (opening-hours.js) accepts a dash in what staff type; that is input, not copy.
+  for (const file of readdirSync(join(site.out, '_astro')).filter((f) => f.endsWith('.js'))) {
+    const code = readFileSync(join(site.out, '_astro', file), 'utf8').replaceAll('(?:\u2013|\u2014|-|to)', '');
+    assert.ok(!code.includes('\u2014'), `${file} writes no em dash`);
   }
 });
 

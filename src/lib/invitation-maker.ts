@@ -177,7 +177,7 @@ export function mountInvitationMaker(root: HTMLElement, opts: InvitationMakerOpt
 
     // Ticket
     $('inv-t-name').textContent = name;
-    $('inv-t-turns').textContent = `turns ${age} — ${hype}`;
+    $('inv-t-turns').textContent = `turns ${age}! ${hype}`;
     $('inv-t-date').textContent = date;
     $('inv-t-time').textContent = time;
     $('inv-t-bringline').textContent = bringLine;
@@ -219,7 +219,7 @@ export function mountInvitationMaker(root: HTMLElement, opts: InvitationMakerOpt
     });
     $('inv-finish-label').textContent = ink ? '· Ink-friendly' : '· Full colour';
     $('inv-hint-text').textContent = ink
-      ? 'Ink-friendly swaps the heavy backgrounds for white with accent detailing — far less ink at home. Download a PNG to text or post, or print and arrange as many per page as you like in your print dialog.'
+      ? 'Ink-friendly swaps the heavy backgrounds for white with accent detailing, far less ink at home. Download a PNG to text or post, or print and arrange as many per page as you like in your print dialog.'
       : 'Download a high-res PNG to text or post to your story, or print it. In the print dialog you can scale it or fit several per page. Drop a photo into the Invite style first.';
 
     // portrait

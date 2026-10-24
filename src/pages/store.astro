@@ -22,7 +22,7 @@ const storeBySection = (s: string) => desktopStore.filter((p) => p.section === s
     <div class="container pagehero-inner">
       <div class="pagehero-kicker"><span class="rule"></span>Online store · buy before you arrive</div>
       <h1 class="pagehero-title">Passes &amp; Memberships.</h1>
-      <p class="pagehero-lead">Pick what you need, check out securely with Square, and it's ready at the front desk when you walk in — no line, no paperwork.</p>
+      <p class="pagehero-lead">Pick what you need, check out securely with Square, and it's ready at the front desk when you walk in. No line, no paperwork.</p>
       <p class="pagehero-fine">All prices in CAD, HST included. Pre-paid packs are valid 10–20 months depending on size. Full rate sheet on the <a href={url('pricing')}>price list</a>.</p>
     </div>
   </section>
@@ -31,21 +31,21 @@ const storeBySection = (s: string) => desktopStore.filter((p) => p.section === s
 
   <div class="storewrap">
     <section id="opengym" class="storesec">
-      <div class="storesec-head"><SectionHeader num="01" eyebrow="Drop in any day" title="Open Gym" description="Come whenever, stay as long as you want — 11 AM to 10 PM daily." color={cat.openGym} /></div>
+      <div class="storesec-head"><SectionHeader num="01" eyebrow="Drop in any day" title="Open Gym" description="Come whenever, stay as long as you want, 11 AM to 10 PM daily." color={cat.openGym} /></div>
       <div class="storegrid">
         {storeBySection('opengym').map((p) => <BookingCard {...p} actionLabel="Buy" target="_blank" />)}
       </div>
     </section>
 
     <section id="classes" class="storesec">
-      <div class="storesec-head"><SectionHeader num="02" eyebrow="Passes, memberships & packs" title="Classes" description="Group class passes good for any class on the schedule — plus pre-paid packs for private lessons." color={cat.classes} /></div>
+      <div class="storesec-head"><SectionHeader num="02" eyebrow="Passes, memberships & packs" title="Classes" description="Group class passes good for any class on the schedule, plus pre-paid packs for private lessons." color={cat.classes} /></div>
       <div class="storegrid">
         {storeBySection('classes').map((p) => <BookingCard {...p} actionLabel="Buy" target="_blank" />)}
       </div>
     </section>
 
     <section id="athletic" class="storesec">
-      <div class="storesec-head"><SectionHeader num="03" eyebrow="For enrolled athletes" title="Athletic Program" description="The structured training stream — a coach confirms you're ready before your first session." color={cat.athletic} /></div>
+      <div class="storesec-head"><SectionHeader num="03" eyebrow="For enrolled athletes" title="Athletic Program" description="The structured training stream. A coach confirms you're ready before your first session." color={cat.athletic} /></div>
       <div class="storegrid">
         {storeBySection('athletic').map((p) => <BookingCard {...p} actionLabel="Buy" target="_blank" />)}
       </div>
@@ -56,13 +56,13 @@ const storeBySection = (s: string) => desktopStore.filter((p) => p.section === s
       <a href={sq.store.giftCard} target="_blank" rel="noopener" class="giftcard">
         <div class="giftcard-left">
           <span class="giftcard-ic"><i class="bi bi-gift-fill" aria-hidden="true"></i></span>
-          <div><div class="giftcard-eyebrow">The easy gift</div><div class="giftcard-title">Gift cards — any amount</div></div>
+          <div><div class="giftcard-eyebrow">The easy gift</div><div class="giftcard-title">Gift cards, any amount</div></div>
         </div>
         <span class="giftcard-btn">Buy a gift card <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
       </a>
     </section>
 
-    <p class="storefine">Camps register on the <a href={url('camps')}>Camps page</a>. Birthday parties, private sessions and group events are booked, not bought — reserve them through <a href={url('book')}>Book Now</a> and your card just holds the slot.</p>
+    <p class="storefine">Camps register on the <a href={url('camps')}>Camps page</a>. Birthday parties, private sessions and group events are booked, not bought. Reserve them through <a href={url('book')}>Book Now</a> and your card just holds the slot.</p>
 
     <section class="storesec">
       <CtaBand cards={[

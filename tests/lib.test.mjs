@@ -330,13 +330,13 @@ test('the card lists the classes with sessions, levels as one entry, in the sche
   assert.deepEqual(rows.map((r) => r.id), ['tricking', 'flips']);
   const [tricking, flips] = rows;
   assert.deepEqual(tricking, {
-    id: 'tricking', name: 'Tricking', days: 'Tue · Thu', who: 'Ages 13+', when: ['Tue · Thu — 7 PM'],
+    id: 'tricking', name: 'Tricking', days: 'Tue · Thu', who: 'Ages 13+', when: ['Tue · Thu, 7 PM'],
     body: 'Tricking body', image: '',
   });
   assert.equal(flips.name, 'Flips');
   assert.equal(flips.days, 'Wed · Thu · Fri · Sun');
   assert.equal(flips.who, 'Ages 7–12 · 18+ · Levels 1–2');
-  assert.deepEqual(flips.when, ['Level 1, ages 7–12: Thu 6 PM · Sun 12 PM', 'Level 1, ages 18+: Wed — 7 PM', 'Level 2, ages 18+: Wed · Fri — 8 PM']);
+  assert.deepEqual(flips.when, ['Level 1, ages 7–12: Thu 6 PM · Sun 12 PM', 'Level 1, ages 18+: Wed, 7 PM', 'Level 2, ages 18+: Wed · Fri, 8 PM']);
   assert.equal(flips.body, 'Flips 1 body');
   assert.equal(flips.image, 'assets/flips.mp4');
 });
@@ -372,7 +372,7 @@ test('the browser brings a built card up to date in place, as text', () => {
   assert.equal(tab('tricking').querySelector('[data-class-days]').textContent, 'Tue · Thu');
   assert.equal(panel.querySelector('[data-class-body]').textContent, '<img src=x onerror=alert(1)>');
   assert.equal(panel.querySelector('img'), null);
-  assert.deepEqual([...panel.querySelectorAll('[data-class-when] .ct-when-line')].map((l) => l.textContent), ['Tue · Thu — 7 PM']);
+  assert.deepEqual([...panel.querySelectorAll('[data-class-when] .ct-when-line')].map((l) => l.textContent), ['Tue · Thu, 7 PM']);
 });
 
 // ---- camp dates ---------------------------------------------------------------

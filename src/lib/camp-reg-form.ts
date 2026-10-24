@@ -174,8 +174,8 @@ export function mountCampRegForm(root: HTMLElement, opts: CampRegFormOptions): v
     const displayName = k.name.trim() || ('Camper ' + (ki + 1));
     let summaryLine: string;
     if (isPrivate) summaryLine = 'Private day · booked by appointment';
-    else if (k.camp === 'weekly') { const n = Object.keys(k.weeks).length; summaryLine = n ? ('Weekly Camp · ' + n + ' week' + (n>1?'s':'')) : 'Weekly Camp — pick weeks'; }
-    else { const n = Object.keys(k.paDates).length; summaryLine = n ? ('P.A. Day · ' + n + ' day' + (n>1?'s':'')) : 'P.A. Day — pick dates'; }
+    else if (k.camp === 'weekly') { const n = Object.keys(k.weeks).length; summaryLine = n ? ('Weekly Camp · ' + n + ' week' + (n>1?'s':'')) : 'Weekly Camp: pick weeks'; }
+    else { const n = Object.keys(k.paDates).length; summaryLine = n ? ('P.A. Day · ' + n + ' day' + (n>1?'s':'')) : 'P.A. Day: pick dates'; }
     const priceLabel = (isPrivate || comp.total === 0) ? '' : money(comp.total);
     const cardBorder = isExp ? 'var(--acc)' : '#eae7df';
     const headBg = isExp ? '#fffdf9' : '#fff';
@@ -226,7 +226,7 @@ export function mountCampRegForm(root: HTMLElement, opts: CampRegFormOptions): v
     const letter = d[0];
     const num = w.nums[d] || '';
     const hol = w.days.indexOf(d) === -1;
-    if (hol) return `<span title="Holiday — no camp" style="width:40px; padding:6px 0 7px; text-align:center; border-radius:9px; background:#f3f2ee; border:1.5px solid #f3f2ee;"><span style="display:block; font:700 8.5px/1 'Archivo',sans-serif; letter-spacing:.04em; color:#c9c4b8;">${letter}</span><span style="display:block; font:800 13.5px/1 'Archivo',sans-serif; color:#c9c4b8; margin-top:3px;">–</span></span>`;
+    if (hol) return `<span title="Holiday, no camp" style="width:40px; padding:6px 0 7px; text-align:center; border-radius:9px; background:#f3f2ee; border:1.5px solid #f3f2ee;"><span style="display:block; font:700 8.5px/1 'Archivo',sans-serif; letter-spacing:.04em; color:#c9c4b8;">${letter}</span><span style="display:block; font:800 13.5px/1 'Archivo',sans-serif; color:#c9c4b8; margin-top:3px;">–</span></span>`;
     if (dayExpired(w, d)) return `<span title="This day has passed" style="width:40px; padding:6px 0 7px; text-align:center; border-radius:9px; background:#f3f2ee; border:1.5px solid #eae7df; cursor:not-allowed;"><span style="display:block; font:700 8.5px/1 'Archivo',sans-serif; letter-spacing:.04em; color:#c9c4b8;">${letter}</span><span style="display:block; font:800 13.5px/1 'Archivo',sans-serif; color:#c4c0b7; margin-top:3px; text-decoration:line-through;">${num}</span></span>`;
     const e = k.weeks[w.id];
     const on = !!(e && e.days[d]);
@@ -292,7 +292,7 @@ export function mountCampRegForm(root: HTMLElement, opts: CampRegFormOptions): v
     const rows = WEEKS.map((w) => weekRowHTML(k, w)).join('');
     return `<div>
       <div style="font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#9b9890; margin-bottom:6px;">Pick your days</div>
-      <div style="font:600 12px/1.4 inherit; color:#a8a49b; margin-bottom:10px;">Tap days — or tap a week's name to take the whole week.</div>
+      <div style="font:600 12px/1.4 inherit; color:#a8a49b; margin-bottom:10px;">Tap days, or tap a week's name to take the whole week.</div>
       <div style="display:flex; flex-direction:column; gap:8px;">${rows}</div>
     </div>`;
   }
@@ -338,7 +338,7 @@ export function mountCampRegForm(root: HTMLElement, opts: CampRegFormOptions): v
         <span style="flex:none; width:38px; height:38px; border-radius:10px; background:#fff7ef; display:flex; align-items:center; justify-content:center;"><i class="bi bi-calendar2-week" style="color:var(--acc); font-size:17px;"></i></span>
         <div style="flex:1;">
           <div style="font:800 14.5px/1.15 'Archivo',sans-serif; margin-bottom:6px;">Private days are booked by appointment</div>
-          <p style="font:400 13px/1.5 inherit; color:#5b5853; margin:0; text-wrap:pretty;">You pick your own date and we build the day around your group (5+ kids, $90 each). Reserve your date through our booking system — no need to fill out this form.</p>
+          <p style="font:400 13px/1.5 inherit; color:#5b5853; margin:0; text-wrap:pretty;">You pick your own date and we build the day around your group (5+ kids, $90 each). Reserve your date through our booking system. No need to fill out this form.</p>
         </div>
       </div>
       <a href="${BOOKING_URL}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:9px; text-decoration:none; background:#ffd400; color:#211f1b; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; padding:13px 18px; border-radius:10px;">Book a private day <i class="bi bi-arrow-up-right"></i></a>
@@ -353,19 +353,19 @@ export function mountCampRegForm(root: HTMLElement, opts: CampRegFormOptions): v
     const waiverBg = wStat === 'ok' ? '#f0f8f2' : (wStat === 'todo' ? '#fff7ef' : '#faf9f5');
 
     const yesChip = k.waiver === 'yes'
-      ? `<span class="reg-chip" data-act="waiver" data-kid="${k.id}" data-val="yes" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:11px; border-radius:10px; border:1.5px solid #1b6b2f; background:#eef7f0; color:#1b6b2f; font:800 13px/1 'Archivo',sans-serif;"><i class="bi bi-check-circle-fill"></i>Yes — on file</span>`
-      : `<span class="reg-chip" data-act="waiver" data-kid="${k.id}" data-val="yes" style="flex:1; display:inline-flex; align-items:center; justify-content:center; padding:11px; border-radius:10px; border:1.5px solid #e0dcd3; background:#fff; color:#5b5853; font:700 13px/1 'Archivo',sans-serif;">Yes — done before</span>`;
+      ? `<span class="reg-chip" data-act="waiver" data-kid="${k.id}" data-val="yes" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:11px; border-radius:10px; border:1.5px solid #1b6b2f; background:#eef7f0; color:#1b6b2f; font:800 13px/1 'Archivo',sans-serif;"><i class="bi bi-check-circle-fill"></i>Yes, on file</span>`
+      : `<span class="reg-chip" data-act="waiver" data-kid="${k.id}" data-val="yes" style="flex:1; display:inline-flex; align-items:center; justify-content:center; padding:11px; border-radius:10px; border:1.5px solid #e0dcd3; background:#fff; color:#5b5853; font:700 13px/1 'Archivo',sans-serif;">Yes, done before</span>`;
     const noChip = k.waiver === 'no'
-      ? `<span class="reg-chip" data-act="waiver" data-kid="${k.id}" data-val="no" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:11px; border-radius:10px; border:1.5px solid var(--acc); background:#fff7ef; color:#a2601f; font:800 13px/1 'Archivo',sans-serif;"><i class="bi bi-check-circle-fill"></i>No — first time</span>`
-      : `<span class="reg-chip" data-act="waiver" data-kid="${k.id}" data-val="no" style="flex:1; display:inline-flex; align-items:center; justify-content:center; padding:11px; border-radius:10px; border:1.5px solid #e0dcd3; background:#fff; color:#5b5853; font:700 13px/1 'Archivo',sans-serif;">No — first time</span>`;
+      ? `<span class="reg-chip" data-act="waiver" data-kid="${k.id}" data-val="no" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:11px; border-radius:10px; border:1.5px solid var(--acc); background:#fff7ef; color:#a2601f; font:800 13px/1 'Archivo',sans-serif;"><i class="bi bi-check-circle-fill"></i>No, first time</span>`
+      : `<span class="reg-chip" data-act="waiver" data-kid="${k.id}" data-val="no" style="flex:1; display:inline-flex; align-items:center; justify-content:center; padding:11px; border-radius:10px; border:1.5px solid #e0dcd3; background:#fff; color:#5b5853; font:700 13px/1 'Archivo',sans-serif;">No, first time</span>`;
 
     let step2 = '';
     if (k.waiver === 'no') {
       const doneRow = k.waiverDone
-        ? `<span style="flex:none; width:20px; height:20px; border-radius:6px; background:#1b6b2f; display:flex; align-items:center; justify-content:center;"><i class="bi bi-check-lg" style="color:#fff; font-size:13px;"></i></span><span style="font:700 12.5px/1.2 'Archivo',sans-serif; color:#1b6b2f;">Waiver submitted — all set</span>`
+        ? `<span style="flex:none; width:20px; height:20px; border-radius:6px; background:#1b6b2f; display:flex; align-items:center; justify-content:center;"><i class="bi bi-check-lg" style="color:#fff; font-size:13px;"></i></span><span style="font:700 12.5px/1.2 'Archivo',sans-serif; color:#1b6b2f;">Waiver submitted, all set</span>`
         : `<span style="flex:none; width:20px; height:20px; border-radius:6px; border:2px solid #d5b48a;"></span><span style="font:700 12.5px/1.2 'Archivo',sans-serif; color:#a2601f;">I've completed the waiver</span>`;
       step2 = `<div style="margin-top:12px; padding-top:12px; border-top:1px dashed #e6dcc8;">
-        <div style="font:700 12.5px/1.35 'Archivo',sans-serif; color:#a2601f; margin-bottom:9px;">Step 2 — sign the one-time waiver, then confirm it's done.</div>
+        <div style="font:700 12.5px/1.35 'Archivo',sans-serif; color:#a2601f; margin-bottom:9px;">Step 2: sign the one-time waiver, then confirm it's done.</div>
         <a href="${WAIVER_URL}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; background:#ffd400; color:#211f1b; font:800 12.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; padding:11px 15px; border-radius:9px; margin-bottom:10px;"><i class="bi bi-pencil-square"></i>Please sign the waiver here</a>
         <div class="reg-pill" data-act="waiverDone" data-kid="${k.id}" style="display:flex; align-items:center; gap:9px;">${doneRow}</div>
       </div>`;
@@ -382,7 +382,7 @@ export function mountCampRegForm(root: HTMLElement, opts: CampRegFormOptions): v
         <textarea class="reg-in" placeholder="Anything the coaches should know? (optional)" data-field="${k.id}.notes">${esc(k.notes)}</textarea>
         <div style="border:1px solid ${waiverBorder}; background:${waiverBg}; border-radius:11px; padding:13px 14px;">
           <div style="font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#9b9890; margin-bottom:9px;">Waiver</div>
-          <div style="font:700 13px/1.35 'Archivo',sans-serif; margin-bottom:11px;">Step 1 — has this camper filled out a Monkey Vault waiver before?</div>
+          <div style="font:700 13px/1.35 'Archivo',sans-serif; margin-bottom:11px;">Step 1: has this camper filled out a Monkey Vault waiver before?</div>
           <div style="display:flex; gap:8px;">${yesChip}${noChip}</div>
           ${step2}
         </div>
@@ -405,7 +405,7 @@ export function mountCampRegForm(root: HTMLElement, opts: CampRegFormOptions): v
     const canCopySchedule = !!k0 && k0.camp !== 'private' && (Object.keys(k0.weeks).length > 0 || Object.keys(k0.paDates).length > 0);
     const copyFromName = (k0 && k0.name.trim()) || 'Camper 1';
     const siblingBtn = canCopySchedule
-      ? `<div class="reg-cta" data-act="addSibling" style="flex:1; min-width:180px; border:1.5px dashed #e6c98f; border-radius:14px; padding:15px; text-align:center; font:800 13.5px/1 'Archivo',sans-serif; color:#a2601f; background:#fffdf9;"><i class="bi bi-people"></i>&nbsp; Add a sibling — same days as ${esc(copyFromName)}</div>`
+      ? `<div class="reg-cta" data-act="addSibling" style="flex:1; min-width:180px; border:1.5px dashed #e6c98f; border-radius:14px; padding:15px; text-align:center; font:800 13.5px/1 'Archivo',sans-serif; color:#a2601f; background:#fffdf9;"><i class="bi bi-people"></i>&nbsp; Add a sibling, same days as ${esc(copyFromName)}</div>`
       : '';
 
     const waiverWarn = waiverPending
@@ -420,7 +420,7 @@ export function mountCampRegForm(root: HTMLElement, opts: CampRegFormOptions): v
 
     const sheet = state.mSumOpen ? `<div style="width:100%; max-height:270px; overflow-y:auto; padding:16px 18px 6px; border-bottom:1px solid rgba(255,255,255,.12);">
       ${mobileSheetLinesHTML()}
-      <div style="font:500 10.5px/1.4 inherit; color:rgba(255,255,255,.5); padding-bottom:8px;">HST included. Cancel any week up to two weeks before it starts for a full refund, minus a $20 fee — less notice, 15% retained.</div>
+      <div style="font:500 10.5px/1.4 inherit; color:rgba(255,255,255,.5); padding-bottom:8px;">HST included. Cancel any week up to two weeks before it starts for a full refund, minus a $20 fee. With less notice, 15% is retained.</div>
     </div>` : '';
     const mSumChev = state.mSumOpen ? 'bi-chevron-down' : 'bi-chevron-up';
 
@@ -434,7 +434,7 @@ export function mountCampRegForm(root: HTMLElement, opts: CampRegFormOptions): v
       <div style="max-width:1140px; margin:0 auto; padding:40px 24px 44px; position:relative;">
         <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--acc); margin-bottom:16px;"><span style="width:22px; height:2px; background:var(--acc);"></span>Camp registration</div>
         <h1 style="font:900 clamp(30px,6vw,44px)/1.02 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 12px;">Build your camp registration</h1>
-        <p style="font:400 15.5px/1.55 inherit; color:rgba(255,255,255,.72); max-width:560px; margin:0; text-wrap:pretty;">Add each child, pick their camp and days, add late pickup only where you need it. Your total updates as you go — pay once, securely, at the end.</p>
+        <p style="font:400 15.5px/1.55 inherit; color:rgba(255,255,255,.72); max-width:560px; margin:0; text-wrap:pretty;">Add each child, pick their camp and days, add late pickup only where you need it. Your total updates as you go. Pay once, securely, at the end.</p>
       </div>
     </section>` : '';
 
@@ -514,15 +514,15 @@ export function mountCampRegForm(root: HTMLElement, opts: CampRegFormOptions): v
   // ---- confirm stage ----
   const INSTRUCTIONS = [
     { icon:'bi-clipboard-check', title:'Before camp', items:[
-      'Sign the one-time waiver for any first-time camper — it must be done before day 1.',
+      'Sign the one-time waiver for any first-time camper. It must be done before day 1.',
       'Pack a lunch and snacks (please avoid nuts), a labelled water bottle, clean indoor running shoes, and comfy clothes to move in. Label everything.' ] },
     { icon:'bi-sun', title:'The day of camp', items:[
       'Doors open at 8:45 AM for arrival. Camp runs 9:00 AM – 2:00 PM.',
       'On day one, arrive a few minutes early so we can check your camper in.' ] },
     { icon:'bi-box-arrow-in-right', title:'Check-in & check-out', items:[
-      'Check in at the front desk — a parent/guardian signs each camper in and out.',
+      'Check in at the front desk. A parent/guardian signs each camper in and out.',
       'Standard pickup is 2:00 PM; late pickup (where purchased) runs until 4:00 PM.',
-      'Running late, or need late pickup added last-minute? Call us — we’ll keep your camper until you arrive.',
+      'Running late, or need late pickup added last-minute? Call us and we’ll keep your camper until you arrive.',
       'Let us know in advance who else is authorized to pick up your child.' ] },
     { icon:'bi-shield-check', title:'Allergies & safety', items:[
       'Please avoid packing nuts, and tell the coaches about any allergies at drop-off.',
@@ -615,8 +615,8 @@ export function mountCampRegForm(root: HTMLElement, opts: CampRegFormOptions): v
       if (k.camp === 'private') continue;
       if (computeKid(k).total <= 0) { state.error = 'Every camper needs at least one day (or remove them / switch to a private booking).'; render(); return; }
       if (!k.name.trim()) { state.error = 'Please name each camper.'; render(); return; }
-      if (k.age !== '' && Number(k.age) < 5) { state.error = 'Camps are for ages 5 and up — check ' + (k.name.trim() || 'your camper') + '’s age.'; render(); return; }
-      if (!waiverOk(k)) { state.error = 'Waiver still needed for ' + (k.name.trim() || 'a camper') + ' — answer Step 1 and complete it.'; render(); return; }
+      if (k.age !== '' && Number(k.age) < 5) { state.error = 'Camps are for ages 5 and up. Check ' + (k.name.trim() || 'your camper') + '’s age.'; render(); return; }
+      if (!waiverOk(k)) { state.error = 'Waiver still needed for ' + (k.name.trim() || 'a camper') + '. Answer Step 1 and complete it.'; render(); return; }
     }
     state.ref = 'TMV-' + Math.random().toString(36).slice(2, 7).toUpperCase();
     state.stage = 'confirm'; state.error = ''; state.mSumOpen = false;

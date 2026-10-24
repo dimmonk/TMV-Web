@@ -10,7 +10,7 @@ export interface ArriveStep extends Surfaced { n: string; text: string; }
 
 export const firstVisitBring: BringItem[] = [
   { text: 'Comfortable clothes you can move in.' },
-  { text: "A second pair of clean indoor shoes — not the ones you arrived in. (Forgot them? You can train barefoot, but shoes are comfier when you're starting out.)", mobile: { text: 'A clean pair of indoor shoes (or train barefoot).' } },
+  { text: "A second pair of clean indoor shoes, not the ones you arrived in. (Forgot them? You can train barefoot, but shoes are comfier when you're starting out.)", mobile: { text: 'A clean pair of indoor shoes (or train barefoot).' } },
   { text: 'A water bottle so you can stay hydrated.', mobile: { text: 'A water bottle to stay hydrated.' } },
 ];
 

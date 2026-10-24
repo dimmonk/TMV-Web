@@ -59,7 +59,7 @@ const anySocial = hasSocial(social);
         <img src={url('assets/tmvlogo.png')} alt="" width="38" height="38" />
         <span>The Monkey Vault</span>
       </div>
-      <p class="sf-blurb">Toronto's home for parkour, flips and movement. Train, play and level up — every age, every level.</p>
+      <p class="sf-blurb">Toronto's home for parkour, flips and movement. Train, play and level up, at every age and every level.</p>
       <div class="sf-socials" data-socials-wrap hidden={!anySocial}>
         {socials.map((s) => (
           <a href={s.href || undefined} hidden={!s.href} data-social={s.key} aria-label={s.label} class="sf-soc" target="_blank" rel="noopener"><i class={`bi ${s.icon}`} aria-hidden="true"></i></a>

@@ -32,7 +32,7 @@ import { sq } from '../data/square-links';
     <div class="container herog">
       <div class="pagehero-kicker"><span class="rule"></span>Schools · Teams · Corporate</div>
       <h1 class="herog-title">Bring your whole group.</h1>
-      <p class="herog-lead">A fun, active way to build teamwork, confidence and skills — guided by our coaches, under one big roof. From school field trips to corporate team-building.</p>
+      <p class="herog-lead">A fun, active way to build teamwork, confidence and skills, guided by our coaches, under one big roof. From school field trips to corporate team-building.</p>
       <div class="herog-actions">
         <a href={sq.book.groupEvents} target="_blank" rel="noopener" class="btn btn-primary">Plan an event <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
         <a href={sq.book.earlyGymAccess} target="_blank" rel="noopener" class="btn btn-ghost-light">Reserve early access</a>
@@ -41,12 +41,12 @@ import { sq } from '../data/square-links';
   </section>
 
   <section class="section container" style="padding-bottom:80px">
-    <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Group events" title="Two ways to bring a group" description="Pick the format that fits your crew — a guided group event, or the whole gym to yourselves before we open." color={cat.groups} /></div>
+    <div style="margin-bottom:34px"><SectionHeader num="01" eyebrow="Group events" title="Two ways to bring a group" description="Pick the format that fits your crew: a guided group event, or the whole gym to yourselves before we open." color={cat.groups} /></div>
 
     <div class="ev-groups">
       <div class="ev-gcard">
         <div class="ev-ghead"><span class="ev-gic" style="background:color-mix(in srgb,#8c52ff 14%,#fff)"><i class="bi bi-people-fill" style="color:#8c52ff" aria-hidden="true"></i></span><div><div class="ev-geyebrow" style="color:#8c52ff">Group Events</div><div class="ev-gtitle">Field trips &amp; team-building</div></div></div>
-        <p class="ev-gdesc">Two hours total — an hour of guided activities, then an hour of open gym. Intro parkour workshops, team-building obstacle courses, games and skill development for all levels. Great for field trips, teams and community events.</p>
+        <p class="ev-gdesc">Two hours total: an hour of guided activities, then an hour of open gym. Intro parkour workshops, team-building obstacle courses, games and skill development for all levels. Great for field trips, teams and community events.</p>
         <div class="ev-gfoot">
           <div class="ev-glabel">Price per participant</div>
           <div class="ev-tiers">{groupTiers.map((t) => <div class="ev-tier"><span>{t.label}</span><span class="ev-tier-v"><Priced text={t.val} /></span></div>)}</div>
@@ -63,7 +63,7 @@ import { sq } from '../data/square-links';
         </div>
       </div>
     </div>
-    <p class="ev-note">Booking &amp; cancellation: your card isn't charged at booking — payment is made in person based on final headcount. A fee applies for cancellations within 24 hours or no-shows.</p>
+    <p class="ev-note">Booking &amp; cancellation: your card isn't charged at booking. Payment is made in person based on final headcount. A fee applies for cancellations within 24 hours or no-shows.</p>
   </section>
   </div>
 </BaseLayout>

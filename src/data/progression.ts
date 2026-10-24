@@ -39,7 +39,7 @@ export const stages: Stage[] = [
   },
   {
     key: 'learn', n: 'Stage 2 · Learn', title: 'Learn with a coach',
-    desc: 'Structured lessons at your own pace — learn and play.',
+    desc: 'Structured lessons at your own pace. Learn and play.',
     items: [
       { label: 'Intro lesson', color: '#ffd400' },
       { label: 'Drop-in classes', color: cat.classes },
@@ -94,12 +94,12 @@ export const nextSteps: Record<NextStepKey, NextStep> = {
   },
   'weekly-athletic': {
     icon: 'bi-trophy',
-    text: 'Training every week? The Athletic Program is built for exactly that — ages 9+.',
+    text: 'Training every week? The Athletic Program is built for exactly that. Ages 9+.',
     cta: 'See the program', href: url('athletic-program'),
   },
   'private-pack': {
     icon: 'bi-arrow-repeat',
-    text: 'Progress is repetition — a pack means each session builds on the last.',
+    text: 'Progress is repetition. A pack means each session builds on the last.',
     cta: 'See 5-packs', href: `${url('store')}#classes`,
   },
   'athletic-intro': {
@@ -136,7 +136,7 @@ export const purchaseFit: PurchaseFit[] = [
   },
   {
     color: cat.classes, who: 'One goal, one program', title: 'Get a pack', rec: '10-class pack or a private 5-pack',
-    body: 'Several sessions at the same thing — a skill, a class, a coach. Cheaper per visit, and each session builds on the last.',
+    body: 'Several sessions at the same thing: a skill, a class, a coach. Cheaper per visit, and each session builds on the last.',
     price: { value: '{groupClass10x}', note: '10 classes' }, fine: 'Valid 10 months · 20-pack: 20 months',
     cta: 'See packs', href: '#price-classes', onPage: true,
   },
@@ -148,7 +148,7 @@ export const purchaseFit: PurchaseFit[] = [
   },
   {
     color: cat.athletic, who: 'Serious about progressing', title: 'Train with a plan', rec: 'Athletic Program or private pack',
-    body: 'Faster, more structured progression: two coached 90-min sessions a week with monthly check-ins — or a private pack with your own coach.',
+    body: 'Faster, more structured progression: two coached 90-min sessions a week with monthly check-ins, or a private pack with your own coach.',
     price: { value: '{athleticMembership30}', note: '/ month' }, fine: 'Ages 9+ · open gym included',
     cta: 'See the program', href: url('athletic-program'),
   },
@@ -179,7 +179,7 @@ export const partyReturn: PartyReturnCard[] = [
   },
   {
     color: cat.classes, bookingTag: 'Drop-in', status: 'No reservation', statusTone: 'neutral', title: 'Kids Parkour classes',
-    desc: 'Learn this stuff with a coach. Recreational parkour and Flip Class, drop-in — try one first, no pack required.',
+    desc: 'Learn this stuff with a coach. Recreational parkour and Flip Class, drop-in. Try one first, no pack required.',
     pills: 'Parent & Child 3+ | Flips 7+', price: '{groupClass1x}', priceNote: 'single class', cta: 'See schedule', href: url('schedule'),
   },
   {

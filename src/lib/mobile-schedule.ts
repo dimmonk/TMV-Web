@@ -107,7 +107,7 @@ export function mountMobileSchedule({ siteConfig }: { siteConfig: () => Promise<
               </div>
             </div>`).join('')}
         </div>
-      </div>`).join('') + `<div class="m-autonote"><i class="bi bi-arrow-repeat"></i><span>Times update automatically — the same schedule our front desk runs from.</span></div>`;
+      </div>`).join('') + `<div class="m-autonote"><i class="bi bi-arrow-repeat"></i><span>Times update automatically. The same schedule our front desk runs from.</span></div>`;
   }
   function loadSchedule() {
     schedErr = false; schedClasses = null; renderSchedule();
