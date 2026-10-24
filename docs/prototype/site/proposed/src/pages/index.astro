@@ -57,6 +57,7 @@ const camps = [
         <p class="hero-lead">Toronto's home for parkour, flips and movement. Coached classes, open gym, camps and birthday parties — every age, every level, under one big roof.</p>
         <div class="hero-actions">
           <a href="#start" class="btn btn-primary">Find your starting point <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
+          <a href="#offerings" class="btn btn-ghost-light">Browse activities</a>
         </div>
         <div class="hero-stats">
           {heroStats.map((st, i) => (
@@ -80,14 +81,6 @@ const camps = [
     </div>
   </section>
 
-  <!-- GOAL PICKER, first after the hero. ASK → RECOMMEND → REASON → INVITE (see data/goals.ts) -->
-  <section id="start" class="section container goalsec">
-    <div class="goalsec-head">
-      <SectionHeader num="01" eyebrow="Where to start" title="What are you here for?" description="Pick a goal and we'll point you to one first step — and why." />
-    </div>
-    <GoalPicker />
-  </section>
-
   <!-- SCHEDULE CHANGES: staff's cancelled dates and closed days, shown only while there are any -->
   <div class="container home-changes"><ScheduleChanges /></div>
 
@@ -97,6 +90,14 @@ const camps = [
       <div slot="head" class="home-events-head"><SectionHeader eyebrow="Coming up" title="Special events" color={cat.parties} /></div>
     </SpecialEvents>
   </div>
+
+  <!-- GOAL PICKER — ASK → RECOMMEND → REASON → INVITE (see data/goals.ts) -->
+  <section id="start" class="section container goalsec">
+    <div class="goalsec-head">
+      <SectionHeader num="01" eyebrow="Where to start" title="What are you here for?" description="Pick a goal and we'll point you to one first step — and why." />
+    </div>
+    <GoalPicker />
+  </section>
 
   <!-- OFFERINGS -->
   <section id="offerings" class="section container offerings">
@@ -236,6 +237,7 @@ const camps = [
     .hero-kicker-rule { width: 18px; }
     .hero-title { font-size: 34px; line-height: 1.02; letter-spacing: -.02em; margin-bottom: 14px; }
     .hero-lead { margin-bottom: 22px; }
+    .hero-actions .btn-ghost-light { display: none; }
     .hero-actions .btn { width: 100%; justify-content: center; padding: 14px; font-size: 14px; min-height: 48px; }
     .hero-stats { flex-wrap: nowrap; margin-top: 22px; padding-top: 16px; }
     .hero-stat { flex: 1; min-width: 0; padding: 0 8px; margin: 0; text-align: center; }
