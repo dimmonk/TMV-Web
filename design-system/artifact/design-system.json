@@ -1,0 +1,49 @@
+{
+ "v": 3,
+ "layout": "files",
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-10-24T08:52:54Z"
+ },
+ "title": "The Monkey Vault Website",
+ "namespace": "TMV",
+ "libraries": [],
+ "sections": {},
+ "groups": [
+  "Logos"
+ ],
+ "assetGroups": {
+  "Logos": {
+   "name": "Logos",
+   "tile": "m",
+   "order": [
+    "tmvlogo.png",
+    "tmv-wordmark.png"
+   ],
+   "files": {
+    "tmvlogo.png": {
+     "name": "tmvlogo.png",
+     "blob": "5d1a94994d5977e8ef1ff92816dae2ba",
+     "size": 62810,
+     "type": "image/png"
+    },
+    "tmv-wordmark.png": {
+     "name": "tmv-wordmark.png",
+     "blob": "53018b5e86cc837caea2c8b304a78db4",
+     "size": 157433,
+     "type": "image/png"
+    }
+   }
+  }
+ },
+ "blobs": {},
+ "docs": {
+  "sections": []
+ },
+ "lastChange": {
+  "by": "Steven",
+  "at": "2026-10-24T08:52:54Z",
+  "via": "Claude Code",
+  "note": "First version from the Square redesign export, with the drift list"
+ }
+}

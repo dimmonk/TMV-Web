@@ -15,7 +15,7 @@ import { groupHubCards } from '../../data/events';
 
 const dropIns = [
   { title: 'Open Gym', color: cat.openGym, href: url('open-gym'), desc: "Any day we're open, stay as long as you like. Day pass from {openGym1x}.", sub: 'Just sign the waiver and jump in.' },
-  { title: 'Group Classes', color: cat.classes, href: url('schedule'), desc: 'Recreational, Flips, Calisthenics, Tricking, Gymnastics & more.', sub: 'Show up at class time — see the Schedule tab for times.' },
+  { title: 'Group Classes', color: cat.classes, href: url('schedule'), desc: 'Recreational, Flips, Calisthenics, Tricking, Gymnastics & more.', sub: 'Show up at class time. See the Schedule tab for times.' },
 ];
 const intro = privateWays.find((w) => w.key === 'intro')!;
 const priv = privateWays.find((w) => w.key === 'private')!;
@@ -39,7 +39,7 @@ const bookOptions = [
 ---
 <MobileHero eyebrow="Book" title="Reserve your spot" desc="Group classes and open gym need no booking. Reserve an intro, a private lesson, a camp or a party." />
 <div class="m-pad">
-  <div class="m-label">No booking — just show up</div>
+  <div class="m-label">No booking, just show up</div>
   <div class="m-stack" style="margin-bottom:28px">
     {dropIns.map((d) => (
       <a class="m-dropin" href={d.href} style="text-decoration:none;color:inherit">

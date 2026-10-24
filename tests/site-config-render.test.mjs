@@ -183,7 +183,7 @@ test('the Specialized Classes card is the Members schedule, and its price the pr
   assert.equal(tricking.querySelector('[data-class-body]').textContent, 'Fixture tricking body');
   assert.equal(card.querySelector('[data-class-headline]'), null);
   assert.deepEqual([...card.querySelectorAll('[data-class-panel="flips"] .ct-when-line')].map((l) => l.textContent),
-    ['Level 1, ages 18+: Wed — 7 PM', 'Level 2, ages 18+: Fri — 8 PM']);
+    ['Level 1, ages 18+: Wed, 7 PM', 'Level 2, ages 18+: Fri, 8 PM']);
   assert.match(card.querySelector('.ct-offer-t').textContent, /All drop-in: \$31 a class · 10 for \$276\./);
   assert.doesNotMatch(site.page('train'), /Explosive/);
 });

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TMV Print Schedule — Design</title>
+  <link rel="stylesheet" href="schedule-styles.css" />
+  <style>
+    html, body { margin: 0; padding: 0; background: #efece6; font-family: 'Roboto', sans-serif; }
+    .frame {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.18), 0 1px 0 rgba(0,0,0,0.04);
+      background: #fff;
+    }
+    .print-bar {
+      position: fixed;
+      top: 14px; right: 14px;
+      z-index: 100;
+      display: flex; gap: 8px;
+      background: #14110f;
+      color: #fff;
+      padding: 8px 10px;
+      border-radius: 6px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.08em;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    .print-bar button, .print-bar select {
+      background: transparent;
+      color: #fff;
+      border: 1px solid #555;
+      padding: 6px 10px;
+      border-radius: 3px;
+      font: inherit;
+      cursor: pointer;
+    }
+    .print-bar button:hover { background: #c8351e; border-color: #c8351e; }
+    .print-bar select { padding-right: 22px; }
+    @media print {
+      body { background: #fff; }
+      .frame { box-shadow: none; }
+      .print-bar, .dc-toolbar, .dc-section-header { display: none !important; }
+    }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="mock-data.js"></script>
+  <script type="text/babel" src="design-canvas.jsx"></script>
+  <script type="text/babel" src="schedule-sheet.jsx"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="react">
+    const { useState } = React;
+
+    function App() {
+      const [filter, setFilter] = useState('all');
+
+      return (
+        <>
+          <DesignCanvas
+            title="TMV Print Schedule — Design Refresh"
+            subtitle="US Letter Landscape · 11 × 8.5 in · auto-prints from getPublicSchedule API"
+          >
+            <DCSection id="color" title="01 · Color Edition" subtitle="Print-shop run, classes filled with discipline color">
+              <DCArtboard id="all-color" label="All Classes" width={1056} height={816}>
+                <ScheduleSheet variant="color" filter="all" />
+              </DCArtboard>
+              <DCArtboard id="kids-color" label="Kids (P&C + Kids)" width={1056} height={816}>
+                <ScheduleSheet variant="color" filter="kids" />
+              </DCArtboard>
+              <DCArtboard id="teens-color" label="Teens" width={1056} height={816}>
+                <ScheduleSheet variant="color" filter="teens" />
+              </DCArtboard>
+              <DCArtboard id="adults-color" label="Adults" width={1056} height={816}>
+                <ScheduleSheet variant="color" filter="adults" />
+              </DCArtboard>
+            </DCSection>
+
+            <DCSection id="editorial" title="02 · Editorial Edition" subtitle="Warm paper, no fills — a publication, not a database">
+              <DCArtboard id="all-ed" label="All Classes" width={1056} height={816}>
+                <ScheduleSheet variant="editorial" filter="all" />
+              </DCArtboard>
+              <DCArtboard id="teens-ed" label="Teens" width={1056} height={816}>
+                <ScheduleSheet variant="editorial" filter="teens" />
+              </DCArtboard>
+            </DCSection>
+
+            <DCSection id="bw" title="03 · B&W In-house" subtitle="Cheap copy-paper run, age tones via gray shading">
+              <DCArtboard id="all-bw" label="All Classes" width={1056} height={816}>
+                <ScheduleSheet variant="bw" filter="all" />
+              </DCArtboard>
+              <DCArtboard id="teens-bw" label="Teens" width={1056} height={816}>
+                <ScheduleSheet variant="bw" filter="teens" />
+              </DCArtboard>
+              <DCArtboard id="adults-bw" label="Adults" width={1056} height={816}>
+                <ScheduleSheet variant="bw" filter="adults" />
+              </DCArtboard>
+            </DCSection>
+          </DesignCanvas>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

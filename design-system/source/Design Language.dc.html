@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0; background:#f5f4f1;}
+  *{box-sizing:border-box;}
+  ::selection{background:#ffd400; color:#211f1b;}
+  .dl-jump a{transition:all .15s;}
+  .dl-jump a:hover{color:#211f1b!important; background:#fff!important; border-color:#d8d4cc!important;}
+  .dl-open:hover{gap:10px!important;}
+  .dl-open:hover i{color:#211f1b!important;}
+  .dl-page{transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;}
+  .dl-page:hover{transform:translateY(-3px); box-shadow:0 1px 3px rgba(28,25,23,.05),0 20px 38px -26px rgba(28,25,23,.5)!important; border-color:#e0c64a!important;}
+  .dl-page:hover .dl-pgo{gap:10px!important;}
+</style>
+</helmet>
+<div data-screen-label="Design Language hub" style="min-height:100vh; background:#f5f4f1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b;">
+
+  <!-- ===== MASTHEAD ===== -->
+  <header data-screen-label="Masthead" style="background:#211f1b; color:#fff; position:relative; overflow:hidden;">
+    <div style="position:absolute; inset:0; background:radial-gradient(620px 320px at 88% -10%, rgba(255,212,0,.14), transparent 70%);"></div>
+    <div style="max-width:1180px; margin:0 auto; padding:52px 40px 56px; position:relative;">
+      <div style="display:flex; align-items:center; gap:13px; margin-bottom:30px;">
+        <img src="assets/tmvlogo.png" alt="" style="width:44px; height:44px; object-fit:contain;">
+        <span style="font:900 19px/1 'Archivo',sans-serif; letter-spacing:.02em; color:#ffd400; text-transform:uppercase;">The Monkey Vault</span>
+      </div>
+      <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.16em; text-transform:uppercase; color:#ffd400; margin-bottom:20px;"><span style="width:22px; height:2px; background:#ffd400;"></span>Website Design Language</div>
+      <h1 style="font:800 54px/1.02 'Archivo',sans-serif; letter-spacing:-.022em; margin:0 0 18px; max-width:780px; text-wrap:balance;">Every part of the site, as its own building block.</h1>
+      <p style="font:400 16px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:rgba(255,255,255,.72); max-width:620px; margin:0 0 30px;">One system, built around a single idea: <strong style="color:#fff;">show the most valuable info at a glance, then let people open up more.</strong> Each component below is a real, reusable piece — edit it once and the whole site follows.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:30px; border-top:1px solid rgba(255,255,255,.14); padding-top:24px;">
+        <div><div style="font:800 28px/1 'Archivo',sans-serif; color:#ffd400;">9</div><div style="font:600 12.5px/1.3 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:rgba(255,255,255,.6); margin-top:6px;">components</div></div>
+        <div style="padding-left:30px; border-left:1px solid rgba(255,255,255,.14);"><div style="font:800 28px/1 'Archivo',sans-serif; color:#ffd400;">9</div><div style="font:600 12.5px/1.3 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:rgba(255,255,255,.6); margin-top:6px;">category colours</div></div>
+        <div style="padding-left:30px; border-left:1px solid rgba(255,255,255,.14);"><div style="font:800 28px/1 'Archivo',sans-serif; color:#ffd400;">1</div><div style="font:600 12.5px/1.3 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:rgba(255,255,255,.6); margin-top:6px;">type family</div></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== STICKY JUMP NAV (the JumpNav component, eating its own dog food) ===== -->
+  <dc-import name="JumpNav" top="0" max-width="1180" active="pages" items="Pages#pages | Foundations#foundations | Pills#pills | Header#header | Hero#hero | Section Header#section-header | Pathway#pathway | Class Card#class-card | Booking Card#booking-card | JumpNav#jump-nav | CTA Band#cta-band | Footer#footer" hint-size="100%,52px"></dc-import>
+
+  <main style="max-width:1180px; margin:0 auto; padding:60px 40px 30px;">
+
+    <!-- ===== PAGES INDEX ===== -->
+    <section id="pages" style="scroll-margin-top:80px; margin-bottom:46px;">
+      <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:22px;">
+        <div>
+          <div style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3; margin-bottom:10px;">The site</div>
+          <h2 style="font:800 32px/1.05 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 8px;">Every page, one click away</h2>
+          <p style="font:400 14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#6a6760; margin:0; max-width:560px;">The full Monkey Vault site. Open any page directly — no more clicking through the file list.</p>
+        </div>
+        <a href="BookNow.dc.html" class="dl-open" style="flex:none; display:inline-flex; align-items:center; gap:7px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; text-decoration:none; transition:gap .15s; padding-bottom:4px; border-bottom:2px solid #ffd400; white-space:nowrap;">Book Now <i class="bi bi-arrow-up-right" style="color:#ffd400; transition:color .15s;"></i></a>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(232px,1fr)); gap:16px;">
+        <sc-for list="{{ pages }}" as="pg" hint-placeholder-count="8">
+          <a href="{{ pg.file }}" class="dl-page" style="display:flex; flex-direction:column; background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:20px 22px 18px; text-decoration:none; color:inherit; box-shadow:0 1px 3px rgba(28,25,23,.05),0 12px 28px -26px rgba(28,25,23,.4);">
+            <div style="display:flex; align-items:center; gap:11px; margin-bottom:13px;">
+              <span style="flex:none; width:40px; height:40px; border-radius:11px; background:color-mix(in srgb,{{ pg.color }} 14%,#fff); display:flex; align-items:center; justify-content:center;"><i class="{{ pg.icon }}" style="font-size:18px; color:{{ pg.color }};"></i></span>
+              <div style="font:800 17px/1.1 'Archivo',sans-serif; letter-spacing:-.01em;">{{ pg.title }}</div>
+            </div>
+            <p style="font:400 12.5px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#6a6760; margin:0 0 16px; flex:1;">{{ pg.desc }}</p>
+            <span class="dl-pgo" style="display:inline-flex; align-items:center; gap:6px; font:800 11.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.05em; color:#211f1b; transition:gap .15s;">Open page <i class="bi bi-arrow-right" style="color:{{ pg.color }};"></i></span>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- ===== FOUNDATIONS ===== -->
+    <section id="foundations" style="scroll-margin-top:80px; margin-bottom:30px;">
+      <div style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3; margin-bottom:10px;">00 — Foundations</div>
+      <h2 style="font:800 32px/1.05 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 26px;">The shared kit</h2>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:22px;">
+        <!-- Brand + neutrals -->
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:24px;">
+          <div style="font:800 13px/1 'Archivo',sans-serif; letter-spacing:.04em; text-transform:uppercase; color:#211f1b; margin-bottom:16px;">Core palette</div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; align-items:center; gap:13px;"><span style="width:46px; height:46px; border-radius:10px; background:#ffd400; flex:none; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);"></span><div><div style="font:800 13.5px/1 'Archivo',sans-serif;">Brand Yellow</div><div style="font:500 12px/1 ui-monospace,Menlo,monospace; color:#9b9890; margin-top:5px;">#ffd400</div></div><div style="margin-left:auto; font:600 11.5px/1.4 -apple-system,system-ui,sans-serif; color:#6a6760; max-width:170px; text-align:right;">CTAs, accents, the one thing you want clicked.</div></div>
+            <div style="display:flex; align-items:center; gap:13px;"><span style="width:46px; height:46px; border-radius:10px; background:#211f1b; flex:none;"></span><div><div style="font:800 13.5px/1 'Archivo',sans-serif;">Ink</div><div style="font:500 12px/1 ui-monospace,Menlo,monospace; color:#9b9890; margin-top:5px;">#211f1b</div></div><div style="margin-left:auto; font:600 11.5px/1.4 -apple-system,system-ui,sans-serif; color:#6a6760; max-width:170px; text-align:right;">Headers, footers, hero, all heavy type.</div></div>
+            <div style="display:flex; align-items:center; gap:13px;"><span style="width:46px; height:46px; border-radius:10px; background:#f5f4f1; flex:none; box-shadow:inset 0 0 0 1px #ebe9e4;"></span><div><div style="font:800 13.5px/1 'Archivo',sans-serif;">Paper</div><div style="font:500 12px/1 ui-monospace,Menlo,monospace; color:#9b9890; margin-top:5px;">#f5f4f1</div></div><div style="margin-left:auto; font:600 11.5px/1.4 -apple-system,system-ui,sans-serif; color:#6a6760; max-width:170px; text-align:right;">Page background. Cards sit on it in white.</div></div>
+          </div>
+        </div>
+        <!-- Type -->
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:24px;">
+          <div style="font:800 13px/1 'Archivo',sans-serif; letter-spacing:.04em; text-transform:uppercase; color:#211f1b; margin-bottom:16px;">Type</div>
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; border-bottom:1px solid #f0efea; padding-bottom:13px;"><span style="font:800 30px/1 'Archivo',sans-serif; letter-spacing:-.02em;">Archivo</span><span style="font:600 11.5px/1.4 -apple-system,system-ui,sans-serif; color:#6a6760; text-align:right; max-width:150px;">Display & headings. Weights 700–900, tight tracking.</span></div>
+            <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px;"><span style="font:400 17px/1.3 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;">System sans</span><span style="font:600 11.5px/1.4 -apple-system,system-ui,sans-serif; color:#6a6760; text-align:right; max-width:150px;">Body & UI. Native stack — fast, neutral, legible.</span></div>
+            <div style="display:flex; gap:7px; flex-wrap:wrap; margin-top:2px;">
+              <span style="font:700 11px/1 'Archivo',sans-serif; background:#f3f2ee; border:1px solid #ebe9e4; border-radius:7px; padding:6px 9px;">H1 · 54–68</span>
+              <span style="font:700 11px/1 'Archivo',sans-serif; background:#f3f2ee; border:1px solid #ebe9e4; border-radius:7px; padding:6px 9px;">H2 · 32–34</span>
+              <span style="font:700 11px/1 'Archivo',sans-serif; background:#f3f2ee; border:1px solid #ebe9e4; border-radius:7px; padding:6px 9px;">H3 · 20–22</span>
+              <span style="font:700 11px/1 'Archivo',sans-serif; background:#f3f2ee; border:1px solid #ebe9e4; border-radius:7px; padding:6px 9px;">Body · 14–18</span>
+              <span style="font:700 11px/1 'Archivo',sans-serif; background:#f3f2ee; border:1px solid #ebe9e4; border-radius:7px; padding:6px 9px;">Eyebrow · 11–12 · .14em</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category colours -->
+      <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:24px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:16px;">
+          <div style="font:800 13px/1 'Archivo',sans-serif; letter-spacing:.04em; text-transform:uppercase; color:#211f1b;">Colour by what you're booking</div>
+          <div style="font:500 12.5px/1.4 -apple-system,system-ui,sans-serif; color:#6a6760; max-width:430px; text-align:right;">The price list is the source of truth. Each thing you can book owns one accent — it drives that card's bar, chip, pills and arrow.</div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+          <sc-for list="{{ catColors }}" as="c" hint-placeholder-count="8">
+            <div style="border:1px solid #ebe9e4; border-radius:11px; overflow:hidden;"><div style="height:46px; background:{{ c.color }};"></div><div style="padding:9px 11px 11px;"><div style="font:800 12px/1 'Archivo',sans-serif;">{{ c.name }}</div><div style="font:500 11px/1.35 -apple-system,system-ui,sans-serif; color:#8a877f; margin-top:5px;">{{ c.note }}</div><div style="font:500 10px/1 ui-monospace,Menlo,monospace; color:#b3b0a8; margin-top:6px;">{{ c.color }}</div></div></div>
+          </sc-for>
+        </div>
+        <div style="margin-top:18px; border-top:1px solid #efeee8; padding-top:16px;">
+          <div style="font:800 13px/1 'Archivo',sans-serif; letter-spacing:.04em; text-transform:uppercase; color:#211f1b; margin-bottom:12px;">Category colour marks identity, not action</div>
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
+            <div style="border:1px solid #efeee8; border-radius:12px; padding:15px 16px;"><div style="display:flex; align-items:center; gap:9px; margin-bottom:9px;"><span style="width:14px; height:14px; border-radius:4px; background:#ffd400; box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);"></span><div style="font:800 12px/1 'Archivo',sans-serif;">Brand yellow = action</div></div><div style="font:500 12px/1.5 -apple-system,system-ui,sans-serif; color:#6a6760;">Every primary / conversion CTA is yellow on ink, on every page. It's a functional signal — "this is the button" — so it must read the same everywhere. A day-pass button is yellow, not green.</div></div>
+            <div style="border:1px solid #efeee8; border-radius:12px; padding:15px 16px;"><div style="display:flex; align-items:center; gap:9px; margin-bottom:9px;"><span style="width:14px; height:14px; border-radius:4px; background:#2e9e4f;"></span><div style="font:800 12px/1 'Archivo',sans-serif;">Category = identity</div></div><div style="font:500 12px/1.5 -apple-system,system-ui,sans-serif; color:#6a6760;">The category colour marks <em>what</em> you're booking — accent bar, arrow, category pill. It never fills a CTA, or button colour stops meaning "button" and just repeats the identity you already read.</div></div>
+            <div style="border:1px solid #efeee8; border-radius:12px; padding:15px 16px;"><div style="display:flex; align-items:center; gap:9px; margin-bottom:9px;"><span style="width:14px; height:14px; border-radius:4px; background:#1b6b2f;"></span><div style="font:800 12px/1 'Archivo',sans-serif;">Green = status</div></div><div style="font:500 12px/1.5 -apple-system,system-ui,sans-serif; color:#6a6760;">Green is reserved for the <code style="font:600 11px/1 ui-monospace,Menlo,monospace; color:#1b6b2f;">go</code> status chip ("no reservation needed"). A green Open-Gym CTA would blur status with action — one more reason CTAs stay yellow.</div></div>
+          </div>
+          <div style="margin-top:12px; font:500 12px/1.5 -apple-system,system-ui,sans-serif; color:#8a877f;">Optional: a <em>secondary / ghost</em> button inside a category-themed block may take a thin category-coloured border to tie it to its section. The filled primary CTA stays yellow.</div>
+        </div>
+      </div>
+
+      <!-- Pills & tags -->
+      <div id="pills" style="scroll-margin-top:80px; background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:24px; margin-top:22px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
+          <div style="display:flex; align-items:center; gap:11px;">
+            <div style="font:800 13px/1 'Archivo',sans-serif; letter-spacing:.04em; text-transform:uppercase; color:#211f1b;">Pills &amp; tags</div>
+            <code style="font:600 12px/1 ui-monospace,Menlo,monospace; color:#9b8e6a; background:#fbf7e8; border:1px solid #f0e7c8; border-radius:6px; padding:4px 8px;">Pill.dc.html</code>
+          </div>
+          <div style="font:500 12.5px/1.4 -apple-system,system-ui,sans-serif; color:#6a6760; max-width:430px; text-align:right;">One spec for every small label on the site — <strong style="color:#211f1b;">600 · 12px · 7&times;12 padding · pill radius</strong>. Never restyle per page; mount this and pick a variant.</div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px;">
+          <div style="border:1px solid #efeee8; border-radius:12px; padding:18px;">
+            <div style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Light · default</div>
+            <dc-import name="Pill" variant="light" gap="8" items="Ages 5+ | Drop-in | All levels" hint-size="100%,34px"></dc-import>
+          </div>
+          <div style="border:1px solid #efeee8; border-radius:12px; padding:18px;">
+            <div style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Tinted · category</div>
+            <dc-import name="Pill" variant="tinted" color="#f44336" gap="8" items="1-on-1 | By appointment" hint-size="100%,34px"></dc-import>
+          </div>
+          <div style="background:#211f1b; border:1px solid #211f1b; border-radius:12px; padding:18px;">
+            <div style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.5); margin-bottom:12px;">Dark · on ink</div>
+            <dc-import name="Pill" variant="dark" color="#f44336" gap="8" items="No time limit | Open daily" hint-size="100%,34px"></dc-import>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== COMPONENT: HEADER ===== -->
+    <section id="header" style="scroll-margin-top:80px; padding:40px 0; border-top:1px solid #e7e5df;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:22px;">
+        <div style="max-width:620px;">
+          <div style="display:flex; align-items:center; gap:11px; margin-bottom:11px;"><span style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3;">01 — Component</span><span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#3a4a8c; background:#eef0f6; padding:5px 9px; border-radius:999px;">Ready</span></div>
+          <h2 style="font:800 30px/1.04 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 7px;">Site Header</h2>
+          <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a; background:#fbf7e8; border:1px solid #f0e7c8; border-radius:6px; padding:4px 8px;">SiteHeader.dc.html</code>
+          <p style="font:400 14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#6a6760; margin:14px 0 0;">The persistent top bar — wordmark, primary nav, and the one yellow Book Now button. The active page underlines in brand yellow.</p>
+        </div>
+        <a href="SiteHeader.dc.html" class="dl-open" style="flex-none; display:inline-flex; align-items:center; gap:7px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; text-decoration:none; transition:gap .15s; padding-bottom:4px; border-bottom:2px solid #ffd400; white-space:nowrap;">Open component <i class="bi bi-arrow-up-right" style="color:#ffd400; transition:color .15s;"></i></a>
+      </div>
+      <div style="border:1px solid #e3e0d8; border-radius:16px; overflow:hidden; background:#211f1b; box-shadow:0 1px 3px rgba(28,25,23,.05),0 24px 50px -38px rgba(28,25,23,.5);">
+        <div style="display:flex; align-items:center; gap:8px; padding:11px 16px; background:#fff; border-bottom:1px solid #ebe9e4;"><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="margin-left:8px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#b0aca3;">Live preview</span><span style="margin-left:auto; font:600 11.5px/1 -apple-system,system-ui,sans-serif; color:#9b9890;">variant: solid</span></div>
+        <dc-import name="SiteHeader" variant="solid" hint-size="100%,70px"></dc-import>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px;">
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;"><div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Variants</div><div style="display:flex; flex-wrap:wrap; gap:7px;"><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Solid (dark)</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Transparent (over hero)</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Light</span></div></div>
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;"><div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Rules of thumb</div><div style="display:flex; flex-direction:column; gap:8px;"><div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>Exactly one filled CTA — Book Now, always yellow.</div><div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>Active item underlined; everything else muted until hover.</div></div></div>
+      </div>
+    </section>
+
+    <!-- ===== COMPONENT: HERO ===== -->
+    <section id="hero" style="scroll-margin-top:80px; padding:40px 0; border-top:1px solid #e7e5df;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:22px;">
+        <div style="max-width:620px;">
+          <div style="display:flex; align-items:center; gap:11px; margin-bottom:11px;"><span style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3;">02 — Component</span><span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#3a4a8c; background:#eef0f6; padding:5px 9px; border-radius:999px;">Ready</span></div>
+          <h2 style="font:800 30px/1.04 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 7px;">Hero</h2>
+          <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a; background:#fbf7e8; border:1px solid #f0e7c8; border-radius:6px; padding:4px 8px;">SiteHero.dc.html</code>
+          <p style="font:400 14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#6a6760; margin:14px 0 0;">The opening pitch. Headline, one-line promise, two CTAs, and an at-a-glance stat or image. Sets the “glance first” tone for the page.</p>
+        </div>
+        <a href="SiteHero.dc.html" class="dl-open" style="flex-none; display:inline-flex; align-items:center; gap:7px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; text-decoration:none; transition:gap .15s; padding-bottom:4px; border-bottom:2px solid #ffd400; white-space:nowrap;">Open component <i class="bi bi-arrow-up-right" style="color:#ffd400; transition:color .15s;"></i></a>
+      </div>
+      <div style="border:1px solid #e3e0d8; border-radius:16px; overflow:hidden; background:#211f1b; box-shadow:0 1px 3px rgba(28,25,23,.05),0 24px 50px -38px rgba(28,25,23,.5);">
+        <div style="display:flex; align-items:center; gap:8px; padding:11px 16px; background:#fff; border-bottom:1px solid #ebe9e4;"><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="margin-left:8px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#b0aca3;">Live preview</span><span style="margin-left:auto; font:600 11.5px/1 -apple-system,system-ui,sans-serif; color:#9b9890;">layout: split</span></div>
+        <dc-import name="SiteHero" layout="split" hint-size="100%,520px"></dc-import>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px;">
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;"><div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Variants</div><div style="display:flex; flex-wrap:wrap; gap:7px;"><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Split + image</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Centered + stats</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Stat rail</span></div></div>
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;"><div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Rules of thumb</div><div style="display:flex; flex-direction:column; gap:8px;"><div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>Lead with a benefit, not a feature list.</div><div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>One primary (yellow) CTA; the second stays outline.</div></div></div>
+      </div>
+    </section>
+
+    <!-- ===== COMPONENT: SECTION HEADER ===== -->
+    <section id="section-header" style="scroll-margin-top:80px; padding:40px 0; border-top:1px solid #e7e5df;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:22px;">
+        <div style="max-width:620px;">
+          <div style="display:flex; align-items:center; gap:11px; margin-bottom:11px;"><span style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3;">03 — Component</span><span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#3a4a8c; background:#eef0f6; padding:5px 9px; border-radius:999px;">Ready</span></div>
+          <h2 style="font:800 30px/1.04 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 7px;">Section Header</h2>
+          <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a; background:#fbf7e8; border:1px solid #f0e7c8; border-radius:6px; padding:4px 8px;">SectionHeader.dc.html</code>
+          <p style="font:400 14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#6a6760; margin:14px 0 0;">The repeating rhythm between blocks — a numbered eyebrow, a short title, and an optional one-line intro. Gives the long page structure.</p>
+        </div>
+        <a href="SectionHeader.dc.html" class="dl-open" style="flex-none; display:inline-flex; align-items:center; gap:7px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; text-decoration:none; transition:gap .15s; padding-bottom:4px; border-bottom:2px solid #ffd400; white-space:nowrap;">Open component <i class="bi bi-arrow-up-right" style="color:#ffd400; transition:color .15s;"></i></a>
+      </div>
+      <div style="border:1px solid #e3e0d8; border-radius:16px; overflow:hidden; background:#fff; box-shadow:0 1px 3px rgba(28,25,23,.05),0 24px 50px -38px rgba(28,25,23,.5);">
+        <div style="display:flex; align-items:center; gap:8px; padding:11px 16px; background:#fff; border-bottom:1px solid #ebe9e4;"><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="margin-left:8px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#b0aca3;">Live preview</span><span style="margin-left:auto; font:600 11.5px/1 -apple-system,system-ui,sans-serif; color:#9b9890;">align: left</span></div>
+        <div style="padding:40px;"><dc-import name="SectionHeader" hint-size="100%,180px"></dc-import></div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px;">
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;"><div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Variants</div><div style="display:flex; flex-wrap:wrap; gap:7px;"><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Left</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Centered</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">On dark</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">With action link</span></div></div>
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;"><div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Rules of thumb</div><div style="display:flex; flex-direction:column; gap:8px;"><div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>Number + eyebrow set context; title stays short.</div><div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>Intro is one line — anything longer is body copy, not a header.</div></div></div>
+      </div>
+    </section>
+
+    <!-- ===== COMPONENT: PATHWAY ===== -->
+    <section id="pathway" style="scroll-margin-top:80px; padding:40px 0; border-top:1px solid #e7e5df;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:22px;">
+        <div style="max-width:620px;">
+          <div style="display:flex; align-items:center; gap:11px; margin-bottom:11px;"><span style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3;">04 — Component</span><span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#3a4a8c; background:#eef0f6; padding:5px 9px; border-radius:999px;">Ready</span></div>
+          <h2 style="font:800 30px/1.04 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 7px;">Pathway</h2>
+          <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a; background:#fbf7e8; border:1px solid #f0e7c8; border-radius:6px; padding:4px 8px;">Pathway.dc.html</code>
+          <p style="font:400 14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#6a6760; margin:14px 0 0;">The “soft gate” that explains how programs relate: start in Recreational or Private, then graduate into the Athletic Program when ready.</p>
+        </div>
+        <a href="Pathway.dc.html" class="dl-open" style="flex-none; display:inline-flex; align-items:center; gap:7px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; text-decoration:none; transition:gap .15s; padding-bottom:4px; border-bottom:2px solid #ffd400; white-space:nowrap;">Open component <i class="bi bi-arrow-up-right" style="color:#ffd400; transition:color .15s;"></i></a>
+      </div>
+      <div style="border:1px solid #e3e0d8; border-radius:16px; overflow:hidden; background:#f5f4f1; box-shadow:0 1px 3px rgba(28,25,23,.05),0 24px 50px -38px rgba(28,25,23,.5);">
+        <div style="display:flex; align-items:center; gap:8px; padding:11px 16px; background:#fff; border-bottom:1px solid #ebe9e4;"><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="margin-left:8px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#b0aca3;">Live preview</span><span style="margin-left:auto; font:600 11.5px/1 -apple-system,system-ui,sans-serif; color:#9b9890;">recommendation, not a wall</span></div>
+        <div style="padding:28px;"><dc-import name="Pathway" hint-size="100%,330px"></dc-import></div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px;">
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;"><div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Variants</div><div style="display:flex; flex-wrap:wrap; gap:7px;"><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Two entry points</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Single entry</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Compact</span></div></div>
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;"><div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Rules of thumb</div><div style="display:flex; flex-direction:column; gap:8px;"><div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>Frame the gate as guidance — “a coach will tell you”, never “locked”.</div><div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>Entry options share weight; the destination is visually the goal.</div></div></div>
+      </div>
+    </section>
+
+    <!-- ===== CLASS CARD (special: links to its real spec, shows gallery) ===== -->
+    <section id="class-card" style="scroll-margin-top:80px; padding:40px 0; border-top:1px solid #e7e5df;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:22px;">
+        <div style="max-width:620px;">
+          <div style="display:flex; align-items:center; gap:11px; margin-bottom:11px;">
+            <span style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3;">05 — Component</span>
+            <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#1b6b2f; background:#e6f4ea; padding:5px 9px; border-radius:999px;">Documented</span>
+            <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#1f1810; background:#ffd400; padding:5px 9px; border-radius:999px;">★ Hero component</span>
+          </div>
+          <h2 style="font:800 30px/1.04 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 7px;">The Class Card</h2>
+          <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a; background:#fbf7e8; border:1px solid #f0e7c8; border-radius:6px; padding:4px 8px;">ClassCard.dc.html</code>
+          <p style="font:400 14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#6a6760; margin:14px 0 0;">The most important piece on the site — it sells every class. The whole design language flows from its idea: a <strong>front</strong> for the at-a-glance scan, a <strong>back</strong> one tap away for the detail that closes the decision. It already has a full written spec.</p>
+        </div>
+        <a href="Card - Design Language.dc.html" class="dl-open" style="flex-none; display:inline-flex; align-items:center; gap:7px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; text-decoration:none; padding-bottom:4px; border-bottom:2px solid #ffd400; white-space:nowrap;">Open full spec <i class="bi bi-arrow-up-right" style="color:#ffd400;"></i></a>
+      </div>
+      <div style="border:1px solid #e3e0d8; border-radius:16px; overflow:hidden; background:#fff; box-shadow:0 1px 3px rgba(28,25,23,.05),0 24px 50px -38px rgba(28,25,23,.5);">
+        <div style="display:flex; align-items:center; gap:8px; padding:11px 16px; background:#fff; border-bottom:1px solid #ebe9e4;">
+          <span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span>
+          <span style="margin-left:8px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#b0aca3;">Live preview</span>
+          <span style="margin-left:auto; font:600 11.5px/1 -apple-system,system-ui,sans-serif; color:#9b9890;">Tap a card to flip it</span>
+        </div>
+        <div style="padding:28px; background:#f5f4f1; display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+          <dc-import name="ClassCard" category="Parkour" tag="Parkour" title="Recreational" description="Parkour & acrobatics at your own pace. All fun, zero pressure." booking-tag="Drop-in" pills="Ages 3+ | All levels | Drop-in" image="assets/recreational.gif" action-label="View schedule" back-eyebrow="Recreational · Parkour" back-headline="At your own pace, zero pressure" back-body="Relaxed, drop-in parkour and acrobatics. Coaches meet you exactly where you are." specs="Level: All levels || Ages: All ages — Parent &amp; Child (3+) to Adults || Booking: Drop-in · no reservation needed || Price: $30 single · 10-pack $275" hint-size="100%,460px"></dc-import>
+          <dc-import name="ClassCard" category="Private" tag="Private" title="Private Lessons" description="Three ways in: a discounted intro, ongoing 1-on-1, or your own specific coach." booking-tag="By appointment" pills="Intro + 1-on-1 | All ages | Your coach or ours" image="assets/private.mp4" action-label="See private options" back-eyebrow="Private · 1-on-1" back-headline="Three ways to train privately" back-body="Start with a one-time Introduction, or pick a specific coach who follows your whole progress." specs="Level: All levels · built around you || Ages: Kids ≤17 &amp; Adults 18+ || Booking: By appointment · reserve online || Price: Intro $45 · then from $65" hint-size="100%,460px"></dc-import>
+          <dc-import name="ClassCard" category="Athletic" tag="Athletic" title="Athletic Program" description="Train like an athlete with structured coaching and progress tracking." booking-tag="Membership" pills="Prerequisite | 2× / week | Membership" media-badge="Serious students only" image="assets/athletic.mp4" action-label="View program" back-eyebrow="Athletic · Program" back-headline="Build a well-rounded athlete" back-body="Train several times a week to build strength, speed and all-round athleticism." specs="Level: Prerequisite required || Ages: 9+ || Schedule: 2 × 90 min / week || Booking: Membership · join any time || Price: $150 / month" hint-size="100%,460px"></dc-import>
+        </div>
+      </div>
+      <div style="margin-top:18px; background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:20px 24px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;"><i class="bi bi-calendar-check" style="color:#9b8e6a; font-size:16px;"></i><div style="font:800 15px/1.1 'Archivo',sans-serif; letter-spacing:-.005em; color:#211f1b;">Pattern — the booking-method tag</div></div>
+        <p style="font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#5b5853; margin:0 0 14px; max-width:700px;">The small squared-off badge above each title — <strong>Drop-in</strong>, <strong>By appointment</strong> or <strong>Membership</strong> (plus <strong>Register</strong> on dated sessions like camps) — sets the commitment before anyone taps in. It's deliberately drawn differently from the rounded key-info pills below it, so it reads as its own signal site-wide: <em>see this tag, know how to book.</em> Both <code style="font:600 11.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">ClassCard</code> and <code style="font:600 11.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">BookingCard</code> take it via the same <code style="font:600 11.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">booking-tag</code> prop — set it whenever a card sits next to others with a genuinely different booking model; skip it when every card on the page books the same way.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          <span style="display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:5px; background:color-mix(in srgb,#2196f3 9%,#fff); border:1px solid color-mix(in srgb,#2196f3 22%,#fff); color:#2196f3; font:700 10px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase;"><i class="bi bi-door-open" style="font-size:11px;"></i>Drop-in</span>
+          <span style="display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:5px; background:color-mix(in srgb,#f44336 9%,#fff); border:1px solid color-mix(in srgb,#f44336 22%,#fff); color:#f44336; font:700 10px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase;"><i class="bi bi-calendar-check" style="font-size:11px;"></i>By appointment</span>
+          <span style="display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:5px; background:color-mix(in srgb,#ffb82a 9%,#fff); border:1px solid color-mix(in srgb,#ffb82a 22%,#fff); color:color-mix(in srgb,#ffb82a 70%,#000); font:700 10px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase;"><i class="bi bi-arrow-repeat" style="font-size:11px;"></i>Membership</span>
+          <span style="display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:5px; background:color-mix(in srgb,#e27902 9%,#fff); border:1px solid color-mix(in srgb,#e27902 22%,#fff); color:#e27902; font:700 10px/1 'Archivo',sans-serif; letter-spacing:.08em; text-transform:uppercase;"><i class="bi bi-calendar-event" style="font-size:11px;"></i>Register</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== COMPONENT: BOOKING CARD ===== -->
+    <section id="booking-card" style="scroll-margin-top:80px; padding:40px 0; border-top:1px solid #e7e5df;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:22px;">
+        <div style="max-width:620px;">
+          <div style="display:flex; align-items:center; gap:11px; margin-bottom:11px;">
+            <span style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3;">06 — Component</span>
+            <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#1b6b2f; background:#e6f4ea; padding:5px 9px; border-radius:999px;">Documented</span>
+          </div>
+          <h2 style="font:800 30px/1.04 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 7px;">Booking Card</h2>
+          <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a; background:#fbf7e8; border:1px solid #f0e7c8; border-radius:6px; padding:4px 8px;">BookingCard.dc.html</code>
+          <p style="font:400 14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#6a6760; margin:14px 0 0;">The card for anything you book — used across Book Now. It's the Class Card with the photo and flip removed: same accent bar, duration chip, tinted pills and price+action. It <strong>inherits the Class Card's pill and colour logic exactly</strong>, so the two can never drift, and it auto-darkens text on light accents (yellow) for contrast.</p>
+        </div>
+        <a href="BookingCard.dc.html" class="dl-open" style="flex-none; display:inline-flex; align-items:center; gap:7px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; text-decoration:none; padding-bottom:4px; border-bottom:2px solid #ffd400; white-space:nowrap;">Open component <i class="bi bi-arrow-up-right" style="color:#ffd400;"></i></a>
+      </div>
+      <div style="border:1px solid #e3e0d8; border-radius:16px; overflow:hidden; background:#f5f4f1; box-shadow:0 1px 3px rgba(28,25,23,.05),0 24px 50px -38px rgba(28,25,23,.5);">
+        <div style="display:flex; align-items:center; gap:8px; padding:11px 16px; background:#fff; border-bottom:1px solid #ebe9e4;">
+          <span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span>
+          <span style="margin-left:8px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#b0aca3;">Live preview</span>
+          <span style="margin-left:auto; font:600 11.5px/1 -apple-system,system-ui,sans-serif; color:#9b9890;">one accent per service</span>
+        </div>
+        <div style="padding:28px; display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+          <dc-import name="BookingCard" color="#f44336" duration="1 hr" booking-tag="By appointment" title="Private — Adults" description="One-on-one coaching built around your goals and pace." pills="Ages 18+ | 1-on-1 | By appointment" price="From $85" price-note="5-packs available" action-label="Book" hint-size="100%,290px"></dc-import>
+          <dc-import name="BookingCard" color="#e27902" duration="9–2 daily" booking-tag="Register" title="Weekly Camps" description="A full week of parkour over school breaks — skills, flips, games and friends." pills="Ages 5+ | Mon–Fri | All levels" price="$350 / week" price-note="late pickup to 4 PM" action-label="See camps" hint-size="100%,290px"></dc-import>
+          <dc-import name="BookingCard" color="#2e9e4f" duration="No limit" title="Open Gym Day Pass" description="Drop in any day and stay as long as you like." pills="All ages | No time limit | No booking" price="From $25" price-note="11 AM–10 PM daily" action-label="Get a pass" hint-size="100%,290px"></dc-import>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px;">
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;"><div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Anatomy</div><div style="display:flex; flex-wrap:wrap; gap:7px;"><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Accent bar</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Duration chip</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Optional flag</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Tinted pills</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Price + note</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Action link</span></div></div>
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;"><div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Rules of thumb</div><div style="display:flex; flex-direction:column; gap:8px;"><div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>Pills use the same spec as the Class Card — never resize them per page.</div><div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>Pass the service's accent from the table above — don't invent a colour.</div></div></div>
+      </div>
+    </section>
+
+    <!-- ===== COMPONENT: JUMP NAV ===== -->
+    <section id="jump-nav" style="scroll-margin-top:80px; padding:40px 0; border-top:1px solid #e7e5df;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:22px;">
+        <div style="max-width:620px;">
+          <div style="display:flex; align-items:center; gap:11px; margin-bottom:11px;">
+            <span style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3;">07 — Component</span>
+            <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#1b6b2f; background:#e6f4ea; padding:5px 9px; border-radius:999px;">Documented</span>
+          </div>
+          <h2 style="font:800 30px/1.04 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 7px;">Jump Nav</h2>
+          <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a; background:#fbf7e8; border:1px solid #f0e7c8; border-radius:6px; padding:4px 8px;">JumpNav.dc.html</code>
+          <p style="font:400 14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#6a6760; margin:14px 0 0;">The sticky in-page section bar — sits just under the header on any long page and lets people skip to a section. <strong>One component, used everywhere</strong>: Train, Events, Book Now and this page all mount the same <code style="font:600 12px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">JumpNav</code>. It scroll-spies the page and highlights the section you're in, takes optional right-aligned quick links, and is driven by a single pipe-delimited <code style="font:600 12px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">items</code> string.</p>
+        </div>
+        <a href="JumpNav.dc.html" class="dl-open" style="flex-none; display:inline-flex; align-items:center; gap:7px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; text-decoration:none; padding-bottom:4px; border-bottom:2px solid #ffd400; white-space:nowrap;">Open component <i class="bi bi-arrow-up-right" style="color:#ffd400;"></i></a>
+      </div>
+      <div style="border:1px solid #e3e0d8; border-radius:16px; overflow:hidden; background:#f5f4f1; box-shadow:0 1px 3px rgba(28,25,23,.05),0 24px 50px -38px rgba(28,25,23,.5);">
+        <div style="display:flex; align-items:center; gap:8px; padding:11px 16px; background:#fff; border-bottom:1px solid #ebe9e4;">
+          <span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span>
+          <span style="margin-left:8px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#b0aca3;">Live preview</span>
+          <span style="margin-left:auto; font:600 11.5px/1 -apple-system,system-ui,sans-serif; color:#9b9890;">with right-aligned quick links</span>
+        </div>
+        <dc-import name="JumpNav" top="0" max-width="760" active="core" spy="false" items="Open Gym#opengym | Core Programs#core | Specialized#specialized | Partnerships#partnership" actions="Price List#Pricing.dc.html#bi bi-tag" hint-size="100%,52px"></dc-import>
+        <div style="height:90px;"></div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px;">
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;"><div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Props</div><div style="display:flex; flex-wrap:wrap; gap:7px;"><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">items</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">label</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">active</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">top</span><span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">actions</span></div></div>
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;"><div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Rules of thumb</div><div style="display:flex; flex-direction:column; gap:8px;"><div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>One bar per page — never roll a bespoke copy. Set <code style="font:600 12px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">top</code> to clear the header (66, or 0 with no header).</div><div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>Give each target section <code style="font:600 12px/1 ui-monospace,Menlo,monospace; color:#9b8e6a;">scroll-margin-top</code> ≈ top + 70 so it isn't hidden under the bar.</div></div></div>
+      </div>
+    </section>
+
+    <!-- ===== COMPONENT: CTA BAND ===== -->
+    <section id="cta-band" style="scroll-margin-top:80px; padding:40px 0; border-top:1px solid #e7e5df;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:22px;">
+        <div style="max-width:620px;">
+          <div style="display:flex; align-items:center; gap:11px; margin-bottom:11px;">
+            <span style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3;">08 — Component</span>
+            <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#3a4a8c; background:#eef0f6; padding:5px 9px; border-radius:999px;">Ready</span>
+          </div>
+          <h2 style="font:800 30px/1.04 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 7px;">CTA Band</h2>
+          <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a; background:#fbf7e8; border:1px solid #f0e7c8; border-radius:6px; padding:4px 8px;">CtaBand.dc.html</code>
+          <p style="font:400 14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#6a6760; margin:14px 0 0;">The pair of big link cards near the foot of a page — Price List and Schedule. One dark, one light, both lead somewhere obvious.</p>
+        </div>
+        <a href="CtaBand.dc.html" class="dl-open" style="flex-none; display:inline-flex; align-items:center; gap:7px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; text-decoration:none; padding-bottom:4px; border-bottom:2px solid #ffd400; white-space:nowrap;">Open component <i class="bi bi-arrow-up-right" style="color:#ffd400;"></i></a>
+      </div>
+      <div style="border:1px solid #e3e0d8; border-radius:16px; overflow:hidden; background:#f5f4f1; box-shadow:0 1px 3px rgba(28,25,23,.05),0 24px 50px -38px rgba(28,25,23,.5);">
+        <div style="display:flex; align-items:center; gap:8px; padding:11px 16px; background:#fff; border-bottom:1px solid #ebe9e4;">
+          <span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span>
+          <span style="margin-left:8px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#b0aca3;">Live preview</span>
+          <span style="margin-left:auto; font:600 11.5px/1 -apple-system,system-ui,sans-serif; color:#9b9890;">two-up</span>
+        </div>
+        <div style="padding:28px;">
+          <dc-import name="CtaBand" hint-size="100%,130px"></dc-import>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px;">
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;">
+          <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Variants</div>
+          <div style="display:flex; flex-wrap:wrap; gap:7px;">
+            <span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Two-up (dark + light)</span>
+            <span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Single full-width</span>
+            <span style="font:700 12px/1 -apple-system,system-ui,sans-serif; color:#211f1b; background:#f3f2ee; border:1px solid #e6e4dd; border-radius:8px; padding:7px 11px;">Three-up</span>
+          </div>
+        </div>
+        <div style="background:#fff; border:1px solid #ebe9e4; border-radius:14px; padding:18px 20px;">
+          <div style="font:700 11px/1 'Archivo',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#b0aca3; margin-bottom:12px;">Rules of thumb</div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>Pair a dark card with a light one so neither competes.</div>
+            <div style="display:flex; gap:9px; align-items:flex-start; font:500 13.5px/1.45 -apple-system,system-ui,sans-serif; color:#3a3833;"><i class="bi bi-dot" style="color:#ffd400; font-size:18px; margin:-2px -4px 0 -6px; flex:none;"></i>Each card is one destination — never stack two links inside.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== COMPONENT: FOOTER ===== -->
+  <section id="footer" style="scroll-margin-top:80px; max-width:1180px; margin:0 auto; padding:40px 40px 30px; border-top:1px solid #e7e5df;">
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:22px;">
+      <div style="max-width:620px;">
+        <div style="display:flex; align-items:center; gap:11px; margin-bottom:11px;">
+          <span style="font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:#b0aca3;">09 — Component</span>
+          <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#3a4a8c; background:#eef0f6; padding:5px 9px; border-radius:999px;">Ready</span>
+        </div>
+        <h2 style="font:800 30px/1.04 'Archivo',sans-serif; letter-spacing:-.018em; margin:0 0 7px;">Site Footer</h2>
+        <code style="font:600 12.5px/1 ui-monospace,Menlo,monospace; color:#9b8e6a; background:#fbf7e8; border:1px solid #f0e7c8; border-radius:6px; padding:4px 8px;">SiteFooter.dc.html</code>
+        <p style="font:400 14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#6a6760; margin:14px 0 0;">The shared dark footer on every page — wordmark, hours, location, nav columns and socials. Links and social icons are wired from site-config so they update in one place.</p>
+      </div>
+      <a href="SiteFooter.dc.html" class="dl-open" style="flex-none; display:inline-flex; align-items:center; gap:7px; font:800 13px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; text-decoration:none; padding-bottom:4px; border-bottom:2px solid #ffd400; white-space:nowrap;">Open component <i class="bi bi-arrow-up-right" style="color:#ffd400;"></i></a>
+    </div>
+    <div style="border:1px solid #e3e0d8; border-radius:16px; overflow:hidden; background:#211f1b; box-shadow:0 1px 3px rgba(28,25,23,.05),0 24px 50px -38px rgba(28,25,23,.5);">
+      <div style="display:flex; align-items:center; gap:8px; padding:11px 16px; background:#fff; border-bottom:1px solid #ebe9e4;">
+        <span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span><span style="width:11px; height:11px; border-radius:50%; background:#f0eee8;"></span>
+        <span style="margin-left:8px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#b0aca3;">Live preview</span>
+      </div>
+      <dc-import name="SiteFooter" hint-size="100%,320px"></dc-import>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {};
+  componentDidMount() {
+    import('./categories.js').then(m => this.setState({ catColors: m.CATEGORIES })).catch(e => console.warn(e));
+  }
+  renderVals() {
+    const doc = (s) => ({ status:'Documented', statusBg:'#e6f4ea', statusFg:'#1b6b2f' });
+    const ready = { status:'Ready', statusBg:'#eef0f6', statusFg:'#3a4a8c' };
+    const components = [
+      {
+        id:'header', num:'01', title:'Site Header', file:'SiteHeader.dc.html', cmp:'SiteHeader',
+        desc:'The persistent top bar — wordmark, primary nav, and the one yellow Book Now button. The active page underlines in brand yellow.',
+        ...ready, specHref:'SiteHeader.dc.html', specLabel:'Open component',
+        previewBg:'#211f1b', previewPad:'0', previewNote:'variant: solid', hintSize:'100%,70px',
+        layout:'', variant:'solid',
+        variants:['Solid (dark)','Transparent (over hero)','Light'],
+        rules:['Exactly one filled CTA — Book Now, always yellow.','Active item underlined; everything else muted until hover.'],
+      },
+      {
+        id:'hero', num:'02', title:'Hero', file:'SiteHero.dc.html', cmp:'SiteHero',
+        desc:'The opening pitch. Headline, one-line promise, two CTAs, and an at-a-glance stat or image. Sets the “glance first” tone for the page.',
+        ...ready, specHref:'SiteHero.dc.html', specLabel:'Open component',
+        previewBg:'#211f1b', previewPad:'0', previewNote:'layout: split', hintSize:'100%,520px',
+        layout:'split', variant:'',
+        variants:['Split + image','Centered + stats','Stat rail'],
+        rules:['Lead with a benefit, not a feature list.','One primary (yellow) CTA; the second stays outline.'],
+      },
+      {
+        id:'section-header', num:'03', title:'Section Header', file:'SectionHeader.dc.html', cmp:'SectionHeader',
+        desc:'The repeating rhythm between blocks — a numbered eyebrow, a short title, and an optional one-line intro. Gives the long page structure.',
+        ...ready, specHref:'SectionHeader.dc.html', specLabel:'Open component',
+        previewBg:'#fff', previewPad:'40px', previewNote:'align: left', hintSize:'100%,180px',
+        layout:'', variant:'',
+        variants:['Left','Centered','On dark','With action link'],
+        rules:['Number + eyebrow set context; title stays ≤ 4 words where it can.','Intro is one line — anything longer is body copy, not a header.'],
+      },
+      {
+        id:'pathway', num:'04', title:'Pathway', file:'Pathway.dc.html', cmp:'Pathway',
+        desc:'The “soft gate” that explains how programs relate: start in Recreational or Private, then graduate into the Athletic Program when ready.',
+        ...ready, specHref:'Pathway.dc.html', specLabel:'Open component',
+        previewBg:'#f5f4f1', previewPad:'28px', previewNote:'recommendation, not a wall', hintSize:'100%,330px',
+        layout:'', variant:'',
+        variants:['Two entry points','Single entry','Compact'],
+        rules:['Frame the gate as guidance — “a coach will tell you”, never “locked”.','Entry options share weight; the destination is visually the goal.'],
+      },
+    ];
+    const catColors = this.state.catColors || [];
+    return { components, catColors, pages: [
+      { title:'Home', file:'Home.dc.html', icon:'bi bi-house-door-fill', color:'#211f1b', desc:'The front door — hero, what we offer, and the paths into the gym.' },
+      { title:'Train', file:'Train.dc.html', icon:'bi bi-person-arms-up', color:'#2196f3', desc:'Open gym, classes and the Athletic Program — every way to train.' },
+      { title:'Athletic Program', file:'Athletic Program.dc.html', icon:'bi bi-trophy-fill', color:'#ffb82a', desc:'The serious-training tier — the program, class structure, schedule and how to join.' },
+      { title:'Schedule', file:'Schedule.dc.html', icon:'bi bi-calendar3', color:'#0ea5e9', desc:'The full weekly group-class timetable in one view.' },
+      { title:'Pricing', file:'Pricing.dc.html', icon:'bi bi-tag-fill', color:'#2e9e4f', desc:'Live price list — passes, packs and memberships, ready to buy.' },
+      { title:'Events', file:'Events.dc.html', icon:'bi bi-balloon-fill', color:'#8c52ff', desc:'Birthday parties, group events and team-building bookings.' },
+      { title:'Camps', file:'Camps.dc.html', icon:'bi bi-sun-fill', color:'#e27902', desc:'Weekly, P.A. Day and private day camps over school breaks.' },
+      { title:'Book Now', file:'BookNow.dc.html', icon:'bi bi-calendar-check-fill', color:'#f44336', desc:'Every bookable service in one place, linked to booking.' },
+      { title:'Reviews', file:'Reviews.dc.html', icon:'bi bi-star-fill', color:'#e9a300', desc:'What members and parents say about the gym.' },
+      { title:'About', file:'About.dc.html', icon:'bi bi-geo-alt-fill', color:'#2196f3', desc:'Who we are, the space, and how to reach us.' },
+      { title:'Get Started', file:'GetStarted.dc.html', icon:'bi bi-flag-fill', color:'#2e9e4f', desc:'First-timer steps — waiver, booking, and a closing FAQ.' },
+    ] };
+  }
+}
+</script>
+</body>
+</html>

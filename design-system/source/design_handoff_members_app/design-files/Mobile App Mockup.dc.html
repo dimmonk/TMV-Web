@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0; background:#e9e7e1;}
+  *{box-sizing:border-box;}
+  ::selection{background:#ffd400; color:#211f1b;}
+  .app-scroll{scrollbar-width:none;}
+  .app-scroll::-webkit-scrollbar{display:none;}
+  .navbtn{transition:transform .12s ease;}
+  .navbtn:active{transform:scale(.9);}
+  .qa:active{transform:scale(.97);}
+  .tile:active{transform:scale(.98);}
+  .addslot:active{transform:scale(.98);}
+  @keyframes tmv-pulse{0%{box-shadow:0 0 0 0 rgba(95,208,127,.5);}70%{box-shadow:0 0 0 6px rgba(95,208,127,0);}100%{box-shadow:0 0 0 0 rgba(95,208,127,0);}}
+  .tmv-pulse{animation:tmv-pulse 1.6s ease-in-out infinite;}
+  .appcanvas.emb{min-height:0; height:100%; padding:0; background:transparent;}
+  .appcanvas.emb .appwrap{width:100%; height:100%;}
+  .appcanvas.emb .appframe{width:100%; height:100%; border-radius:0; box-shadow:none; border:0;}
+</style>
+</helmet>
+<div data-screen-label="Mobile app concept canvas" class="appcanvas {{ embedCls }}" style="min-height:100vh; background:#e9e7e1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:#211f1b; padding:44px 24px 80px; display:flex; flex-direction:column; align-items:center;">
+
+  <sc-if value="{{ notEmbed }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:560px; text-align:center; margin-bottom:34px;">
+    <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.16em; text-transform:uppercase; color:#9b8e6a; margin-bottom:16px;"><span style="width:22px; height:2px; background:#ffd400;"></span>Concept · Members app</div>
+    <h1 style="font:800 34px/1.08 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 12px;">The Monkey Vault, as an app</h1>
+    <p style="font:400 15px/1.6 inherit; color:#6a6760; margin:0;">Same shape as the mobile site — <strong style="color:#211f1b;">Home · Store · Book · Schedule · More</strong> — so there's nothing new to learn. Since you're already a member, the website's <strong style="color:#211f1b;">Train</strong> sell page becomes a <strong style="color:#211f1b;">Store</strong> buy page, and <strong style="color:#211f1b;">Home</strong> becomes your account dashboard.</p>
+  </div>
+  </sc-if>
+
+  <div class="appwrap" style="position:relative; width:392px; flex:none;">
+    <div class="appframe" style="position:relative; width:392px; height:812px; background:#f5f4f1; border-radius:46px; overflow:hidden; box-shadow:0 2px 4px rgba(28,25,23,.06), 0 50px 90px -40px rgba(28,25,23,.55); border:1px solid rgba(28,25,23,.08); display:flex; flex-direction:column;">
+
+      <div style="flex:none; height:46px; display:flex; align-items:center; justify-content:space-between; padding:0 26px; position:relative; z-index:20; background:#211f1b;">
+        <span style="font:600 14px/1 -apple-system,system-ui,sans-serif; color:#fff; letter-spacing:.02em; padding-top:4px;">9:41</span>
+        <div style="display:flex; align-items:center; gap:7px; padding-top:4px; color:#fff;">
+          <i class="bi bi-reception-4" style="font-size:12px;"></i>
+          <i class="bi bi-wifi" style="font-size:12px;"></i>
+          <i class="bi bi-battery-full" style="font-size:15px;"></i>
+        </div>
+      </div>
+
+      <div style="flex:none; background:#211f1b; border-bottom:1px solid rgba(255,255,255,.08); padding:11px 18px; display:flex; align-items:center; justify-content:space-between; position:relative; z-index:15;">
+        <div style="display:flex; align-items:center; gap:9px;">
+          <img src="assets/tmvlogo.png" alt="" style="width:28px; height:28px; object-fit:contain;">
+          <span style="font:900 13px/1 'Archivo',sans-serif; letter-spacing:.02em; text-transform:uppercase; color:#fff;">The Monkey Vault</span>
+        </div>
+        <span style="display:inline-flex; align-items:center; gap:6px; font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.05em; text-transform:uppercase; color:{{ status.fg }}; background:{{ status.bg }}; border:1px solid {{ status.bd }}; border-radius:999px; padding:6px 10px;"><span class="{{ status.dotCls }}" style="width:7px; height:7px; border-radius:50%; background:{{ status.dot }};"></span>{{ status.label }}</span>
+      </div>
+
+      <div class="app-scroll" style="flex:1; overflow-y:auto; overflow-x:hidden; position:relative;">
+
+        <!-- ============ HOME (account dashboard) ============ -->
+        <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:22px 0 120px;">
+            <div style="display:flex; align-items:flex-end; justify-content:space-between; padding:0 18px; margin-bottom:12px;">
+              <h3 style="font:800 13px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#9b8e6a; margin:0;">On your account</h3>
+              <sc-if value="{{ isFamily }}" hint-placeholder-val="">
+                <button onClick="{{ goMore }}" style="cursor:pointer; background:none; border:0; font:800 11.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; display:inline-flex; align-items:center; gap:5px;">Manage <i class="bi bi-arrow-right"></i></button>
+              </sc-if>
+            </div>
+
+            <div class="app-scroll" ref="{{ heroRef }}" onScroll="{{ onHeroScroll }}" onMouseDown="{{ onRailDown }}" onMouseMove="{{ onRailMove }}" onMouseUp="{{ onRailUp }}" onMouseLeave="{{ onRailUp }}" style="display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; padding:0 18px 2px; cursor:grab;">
+              <sc-for list="{{ members }}" as="mb" hint-placeholder-count="2">
+                <div style="scroll-snap-align:center; flex:none; width:308px; background:#211f1b; color:#fff; border-radius:22px; padding:20px; position:relative; overflow:hidden;">
+                  <div style="position:absolute; inset:0; background:radial-gradient(340px 190px at 88% -25%, {{ mb.glow }}, transparent 70%);"></div>
+                  <div style="position:relative;">
+                    <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+                      <div style="flex:1; min-width:0;">
+                        <div style="font:800 17px/1.1 'Archivo',sans-serif; letter-spacing:-.01em;">{{ mb.name }}</div>
+                        <div style="font:600 12px/1.3 inherit; color:rgba(255,255,255,.55); margin-top:3px;">{{ mb.role }}</div>
+                      </div>
+                      <span style="flex:none; display:inline-flex; align-items:center; gap:6px; font:700 10px/1 'Archivo',sans-serif; letter-spacing:.05em; text-transform:uppercase; color:#5fd07f; background:rgba(95,208,127,.14); border-radius:999px; padding:6px 9px;"><i class="bi bi-patch-check-fill" style="font-size:11px;"></i>Waiver OK</span>
+                    </div>
+
+                    <div style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.07em; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:9px;">Membership</div>
+                    <sc-if value="{{ mb.hasMembership }}" hint-placeholder-val="{{ true }}">
+                      <div style="display:flex; align-items:baseline; justify-content:space-between; gap:10px;">
+                        <span style="font:800 15px/1.1 'Archivo',sans-serif; color:{{ mb.membershipTint }};">{{ mb.membership }}</span>
+                        <span style="flex:none; font:700 12px/1 inherit; color:{{ mb.membershipTint }};">{{ mb.membershipMeta }}</span>
+                      </div>
+                      <sc-if value="{{ mb.membershipHasBar }}" hint-placeholder-val="{{ true }}">
+                        <div style="height:6px; border-radius:999px; background:rgba(255,255,255,.14); overflow:hidden; margin-top:10px;"><div style="width:{{ mb.membershipPct }}; height:100%; background:{{ mb.membershipTint }}; border-radius:999px;"></div></div>
+                      </sc-if>
+                    </sc-if>
+                    <sc-if value="{{ mb.noMembership }}" hint-placeholder-val="">
+                      <button class="addslot" onClick="{{ goTrain }}" style="cursor:pointer; width:100%; display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.05); border:1px dashed rgba(255,255,255,.22); border-radius:12px; padding:11px 12px; color:#fff; transition:transform .12s ease;">
+                        <span style="flex:none; width:24px; height:24px; border-radius:50%; background:#ffd400; color:#211f1b; display:flex; align-items:center; justify-content:center;"><i class="bi bi-plus-lg" style="font-size:13px;"></i></span>
+                        <span style="font:700 12.5px/1 'Archivo',sans-serif;">Add a membership</span>
+                      </button>
+                    </sc-if>
+
+                    <div style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.07em; text-transform:uppercase; color:rgba(255,255,255,.45); margin:20px 0 9px;">Passes</div>
+                    <sc-if value="{{ mb.hasPasses }}" hint-placeholder-val="">
+                      <div style="display:flex; flex-direction:column; gap:10px;">
+                        <sc-for list="{{ mb.passes }}" as="pz" hint-placeholder-count="1">
+                          <div style="display:flex; align-items:baseline; justify-content:space-between; gap:10px;">
+                            <span style="font:800 14px/1.1 'Archivo',sans-serif; color:{{ pz.color }};">{{ pz.label }}</span>
+                            <span style="flex:none; font:700 12.5px/1 inherit; color:{{ pz.color }};">{{ pz.meta }}</span>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ mb.noPasses }}" hint-placeholder-val="{{ true }}">
+                      <button class="addslot" onClick="{{ goTrain }}" style="cursor:pointer; width:100%; display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.05); border:1px dashed rgba(255,255,255,.22); border-radius:12px; padding:11px 12px; color:#fff; transition:transform .12s ease;">
+                        <span style="flex:none; width:24px; height:24px; border-radius:50%; background:#ffd400; color:#211f1b; display:flex; align-items:center; justify-content:center;"><i class="bi bi-plus-lg" style="font-size:13px;"></i></span>
+                        <span style="font:700 12.5px/1 'Archivo',sans-serif;">Add passes</span>
+                      </button>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <sc-if value="{{ isFamily }}" hint-placeholder-val="">
+              <div style="display:flex; justify-content:center; gap:6px; margin:14px 0 2px;">
+                <sc-for list="{{ heroDots }}" as="d" hint-placeholder-count="3">
+                  <button onClick="{{ d.onClick }}" aria-label="Go to card" style="cursor:pointer; padding:6px 3px; background:none; border:0; display:flex; align-items:center;"><span style="width:{{ d.w }}; height:6px; border-radius:999px; background:{{ d.bg }}; transition:width .2s ease, background .2s ease;"></span></button>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <div style="padding:0 18px; margin-top:28px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:13px;">
+                <h3 style="font:800 17px/1 'Archivo',sans-serif; letter-spacing:-.01em; margin:0;">Active bookings</h3>
+                <button onClick="{{ goBook }}" style="cursor:pointer; background:none; border:0; font:800 11.5px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.04em; color:#211f1b; display:inline-flex; align-items:center; gap:5px;">Book <i class="bi bi-arrow-right"></i></button>
+              </div>
+              <sc-if value="{{ hasBookings }}" hint-placeholder-val="{{ true }}">
+                <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; overflow:hidden;">
+                  <sc-for list="{{ activeBookings }}" as="b" hint-placeholder-count="3">
+                    <div style="display:flex; align-items:stretch; gap:13px; padding:14px 16px; border-bottom:1px solid #f0efea;">
+                      <span style="flex:none; width:3px; border-radius:2px; background:{{ b.color }};"></span>
+                      <div style="flex:1; min-width:0;">
+                        <div style="font:800 15px/1.2 'Archivo',sans-serif; color:#211f1b;">{{ b.title }}</div>
+                        <div style="font:600 11px/1 'Archivo',sans-serif; letter-spacing:.03em; text-transform:uppercase; color:{{ b.statusFg }}; margin-top:6px;">{{ b.status }}</div>
+                      </div>
+                      <div style="flex:none; text-align:right;">
+                        <div style="font:800 13px/1.1 'Archivo',sans-serif; color:#211f1b;">{{ b.when }}</div>
+                        <div style="font:500 11.5px/1 inherit; color:#8a877f; margin-top:5px;">{{ b.who }}</div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ noBookings }}" hint-placeholder-val="">
+                <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:22px; text-align:center;">
+                  <div style="font:600 13px/1.5 -apple-system,system-ui,sans-serif; color:#8a877f;">No upcoming bookings — <span style="color:#211f1b; font-weight:800;">book a lesson, camp or party</span></div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ TRAIN (buy surface) ============ -->
+        <sc-if value="{{ isTrain }}" hint-placeholder-val="">
+          <div style="padding:6px 18px 120px;">
+            <div style="display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:20px;">
+              <div>
+                <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Passes &amp; memberships</h2>
+                <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0;">Buy for anyone on your account.</p>
+              </div>
+              <span style="position:relative; width:40px; height:40px; border-radius:12px; background:#fff; border:1px solid #ebe9e4; display:flex; align-items:center; justify-content:center;"><i class="bi bi-bag" style="font-size:17px; color:#211f1b;"></i><span style="position:absolute; top:-5px; right:-5px; min-width:18px; height:18px; padding:0 5px; border-radius:999px; background:#f44336; color:#fff; font:800 10px/18px 'Archivo',sans-serif; text-align:center;">2</span></span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <sc-for list="{{ storeProducts }}" as="s" hint-placeholder-count="6">
+                <dc-import name="BookingCard" color="{{ s.color }}" title="{{ s.title }}" description="{{ s.desc }}" pills="{{ s.pills }}" price="{{ s.price }}" price-note="{{ s.note }}" action-label="{{ s.action }}" href="#" hint-size="100%,240px"></dc-import>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ BOOK ============ -->
+        <sc-if value="{{ isBook }}" hint-placeholder-val="">
+          <div style="padding:6px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Book</h2>
+            <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 20px;">What would you like to book?</p>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <sc-for list="{{ bookOptions }}" as="b" hint-placeholder-count="4">
+                <dc-import name="BookingCard" color="{{ b.color }}" booking-tag="{{ b.tag }}" title="{{ b.title }}" description="{{ b.desc }}" pills="{{ b.pills }}" price="{{ b.price }}" price-note="{{ b.note }}" action-label="{{ b.action }}" href="#" hint-size="100%,250px"></dc-import>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ SCHEDULE ============ -->
+        <sc-if value="{{ isSchedule }}" hint-placeholder-val="">
+          <div style="padding:6px 18px 120px;">
+            <h2 style="font:800 27px/1.1 'Archivo',sans-serif; letter-spacing:-.02em; margin:0 0 4px;">Schedule</h2>
+            <p style="font:500 14px/1.4 inherit; color:#8a877f; margin:0 0 18px;">Drop-in classes &amp; open gym — just show up.</p>
+            <div class="app-scroll" style="display:flex; gap:8px; overflow-x:auto; margin:0 -18px 20px; padding:0 18px;">
+              <sc-for list="{{ days }}" as="d" hint-placeholder-count="7">
+                <button onClick="{{ d.onClick }}" style="cursor:pointer; flex:none; min-width:52px; display:flex; flex-direction:column; align-items:center; gap:5px; padding:10px 12px; border-radius:14px; background:{{ d.bg }}; border:1px solid {{ d.bd }};">
+                  <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.05em; text-transform:uppercase; color:{{ d.subFg }};">{{ d.dow }}</span>
+                  <span style="font:900 16px/1 'Archivo',sans-serif; color:{{ d.fg }};">{{ d.num }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+              <span style="font:800 13px/1 'Archivo',sans-serif; letter-spacing:.02em; color:#211f1b;">{{ dayHeading }}</span>
+              <span style="font:600 12px/1 inherit; color:#8a877f;">{{ sessionCount }}</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <sc-for list="{{ sessions }}" as="s" hint-placeholder-count="5">
+                <div style="display:flex; gap:13px; background:#fff; border:1px solid #ebe9e4; border-radius:16px; padding:15px 16px;">
+                  <div style="flex:none; width:56px; text-align:center; padding-top:2px;">
+                    <div style="font:900 15px/1 'Archivo',sans-serif; color:#211f1b;">{{ s.time }}</div>
+                    <div style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.05em; color:#8a877f; margin-top:5px;">{{ s.ampm }}</div>
+                  </div>
+                  <span style="flex:none; width:3px; border-radius:2px; background:{{ s.color }};"></span>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font:800 15px/1.1 'Archivo',sans-serif;">{{ s.title }}</div>
+                    <div style="font:500 12px/1.35 inherit; color:#8a877f; margin-top:4px;">{{ s.sub }}</div>
+                    <div style="margin-top:9px;"><span style="display:inline-flex; align-items:center; gap:5px; font:700 10.5px/1 'Archivo',sans-serif; letter-spacing:.05em; text-transform:uppercase; color:#1b6b2f; background:#e6f4ea; border-radius:999px; padding:6px 10px;"><i class="bi bi-unlock-fill" style="font-size:10px;"></i>{{ s.tag }}</span></div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ MORE (everything else) ============ -->
+        <sc-if value="{{ isMore }}" hint-placeholder-val="">
+          <div style="padding:18px 18px 120px;">
+
+            <div style="background:#fff; border:1px solid #ebe9e4; border-radius:16px; overflow:hidden; margin-bottom:26px;">
+              <div style="display:flex; align-items:center; gap:13px; padding:16px; border-bottom:1px solid #f0efea;">
+                <span style="flex:none; width:44px; height:44px; border-radius:50%; background:#ffd400; color:#211f1b; display:flex; align-items:center; justify-content:center; font:900 18px/1 'Archivo',sans-serif;">{{ initial }}</span>
+                <div style="flex:1; min-width:0;"><div style="font:800 16px/1.1 'Archivo',sans-serif;">{{ memberName }} Rivera</div><div style="font:500 12px/1 inherit; color:#8a877f; margin-top:4px;">Account holder</div></div>
+              </div>
+              <sc-for list="{{ accountActions }}" as="a" hint-placeholder-count="6">
+                <button style="cursor:pointer; width:100%; text-align:left; background:none; border:0; display:flex; align-items:center; gap:13px; padding:15px 16px; border-bottom:1px solid #f0efea;">
+                  <i class="bi {{ a.icon }}" style="font-size:16px; color:{{ a.color }}; width:20px;"></i>
+                  <span style="flex:1; font:600 14px/1 -apple-system,system-ui,sans-serif; color:{{ a.color }};">{{ a.label }}</span>
+                  <i class="bi bi-chevron-right" style="font-size:12px; color:#c4c0b7;"></i>
+                </button>
+              </sc-for>
+            </div>
+
+            <h3 style="font:800 13px/1 'Archivo',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#9b8e6a; margin:0 0 12px;">Explore</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:26px;">
+              <sc-for list="{{ moreTiles }}" as="m" hint-placeholder-count="8">
+                <button class="tile" onClick="{{ m.onClick }}" style="cursor:pointer; text-align:left; background:#fff; border:1px solid #ebe9e4; border-radius:16px; box-shadow:0 1px 3px rgba(28,25,23,.04),0 14px 30px -24px rgba(28,25,23,.38); padding:16px; display:flex; flex-direction:column; gap:14px; min-height:104px; transition:transform .12s ease;">
+                  <span style="width:40px; height:40px; border-radius:12px; background:color-mix(in srgb,{{ m.color }} 14%,#fff); display:flex; align-items:center; justify-content:center;"><i class="bi {{ m.icon }}" style="font-size:19px; color:{{ m.color }};"></i></span>
+                  <div><div style="font:800 14.5px/1.1 'Archivo',sans-serif; letter-spacing:-.005em;">{{ m.title }}</div><div style="font:500 11.5px/1.35 inherit; color:#8a877f; margin-top:4px;">{{ m.sub }}</div></div>
+                </button>
+              </sc-for>
+            </div>
+
+            <div style="background:#211f1b; color:#fff; border-radius:20px; padding:24px;">
+              <div style="display:flex; align-items:center; gap:9px; font:700 11px/1 'Archivo',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#ffd400; margin-bottom:18px;"><span style="width:18px; height:2px; background:#ffd400;"></span>Visit us</div>
+              <div style="display:flex; flex-direction:column; gap:14px;">
+                <div style="display:flex; align-items:flex-start; gap:12px;"><i class="bi bi-geo-alt-fill" style="font-size:15px; color:#ffd400; margin-top:2px;"></i><div><div style="font:700 13.5px/1.3 'Archivo',sans-serif;">75 Carl Hall Rd, Unit 15</div><div style="font:500 12px/1.3 inherit; color:rgba(255,255,255,.6); margin-top:3px;">Downsview Park, Toronto</div></div></div>
+                <div style="display:flex; align-items:flex-start; gap:12px;"><i class="bi bi-clock-fill" style="font-size:15px; color:#ffd400; margin-top:2px;"></i><div><div style="font:700 13.5px/1.3 'Archivo',sans-serif;">Open 7 days · 11 AM – 10 PM</div><div style="font:500 12px/1.3 inherit; color:rgba(255,255,255,.6); margin-top:3px;">Open gym to the public daily</div></div></div>
+                <div style="display:flex; gap:10px; margin-top:6px;">
+                  <a href="#" style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius:11px; padding:12px; color:#fff; text-decoration:none; font:700 12px/1 'Archivo',sans-serif;"><i class="bi bi-instagram"></i> Instagram</a>
+                  <a href="tel:" style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius:11px; padding:12px; color:#fff; text-decoration:none; font:700 12px/1 'Archivo',sans-serif;"><i class="bi bi-telephone-fill"></i> Call us</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+
+      <!-- ===== BOTTOM NAV ===== -->
+      <div style="flex:none; position:relative; z-index:30; background:rgba(28,26,23,.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-top:1px solid rgba(255,255,255,.08); padding:9px 12px 22px; display:flex; align-items:flex-end;">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+          <button class="navbtn" onClick="{{ n.onClick }}" style="flex:1; cursor:pointer; background:none; border:0; padding:0; display:flex; flex-direction:column; align-items:center; gap:5px;">
+            <sc-if value="{{ n.center }}" hint-placeholder-val="">
+              <span style="width:54px; height:54px; margin-top:-30px; border-radius:50%; background:#ffd400; border:4px solid #2e2c29; box-shadow:0 6px 15px -7px rgba(255,212,0,.45); display:flex; align-items:center; justify-content:center;"><i class="bi {{ n.icon }}" style="font-size:23px; color:#211f1b;"></i></span>
+              <span style="font:800 10px/1 'Archivo',sans-serif; letter-spacing:.03em; text-transform:uppercase; color:{{ n.fg }};">{{ n.label }}</span>
+            </sc-if>
+            <sc-if value="{{ n.regular }}" hint-placeholder-val="{{ true }}">
+              <i class="bi {{ n.icon }}" style="font-size:21px; color:{{ n.fg }};"></i>
+              <span style="font:700 10px/1 'Archivo',sans-serif; letter-spacing:.02em; color:{{ n.fg }};">{{ n.label }}</span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+
+    </div>
+  </div>
+
+  <sc-if value="{{ notEmbed }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:520px; text-align:center; margin-top:30px;">
+    <p style="font:500 13px/1.6 inherit; color:#8a877f; margin:0;">The nav mirrors the mobile site — <strong style="color:#211f1b;">Home · Store · Book · Schedule · More</strong>. <strong style="color:#211f1b;">More</strong> is the catch-all, so any page you add later already has a home. On each Home card, membership and passes each show what you own — or a <strong style="color:#211f1b;">quick-add</strong> when the slot is empty.</p>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:440,&quot;height&quot;:1000},&quot;memberName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Ana&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;accountType&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;family&quot;,&quot;options&quot;:[&quot;family&quot;,&quot;self&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Account&quot;},&quot;startTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;home&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;train&quot;,&quot;book&quot;,&quot;schedule&quot;,&quot;more&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Account&quot;}}">
+class Component extends DCLogic {
+  state = { tab: null, cats: null, heroIndex: 0, day: 4 };
+
+  setTab = (t) => this.setState({ tab: t, heroIndex: 0 });
+  setDay = (i) => this.setState({ day: i });
+  onHeroScroll = (e) => {
+    const i = Math.round(e.target.scrollLeft / 322);
+    if (i !== this.state.heroIndex) this.setState({ heroIndex: i });
+  };
+  heroRef = (el) => { this._rail = el; };
+  scrollToCard = (i) => { if (this._rail) this._rail.scrollTo({ left: i * 322, behavior: 'smooth' }); };
+  onRailDown = (e) => { if (!this._rail) return; this._drag = { x: e.clientX, l: this._rail.scrollLeft, moved: false }; this._rail.style.cursor = 'grabbing'; };
+  onRailMove = (e) => {
+    if (!this._drag || !this._rail) return;
+    const dx = e.clientX - this._drag.x;
+    if (Math.abs(dx) > 3) this._drag.moved = true;
+    this._rail.scrollLeft = this._drag.l - dx;
+    e.preventDefault();
+  };
+  onRailUp = () => { if (this._rail) this._rail.style.cursor = 'grab'; this._drag = null; };
+
+  // Live open/closed status in the gym's timezone (matches the website pill).
+  getOpenStatus() {
+    let hour = 12, minute = 0, wd = 'Mon';
+    try {
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Toronto', hour12: false, weekday: 'short', hour: '2-digit', minute: '2-digit' }).formatToParts(new Date());
+      const m = Object.fromEntries(parts.map((p) => [p.type, p.value]));
+      hour = parseInt(m.hour, 10) % 24;
+      minute = parseInt(m.minute, 10) || 0;
+      wd = m.weekday;
+    } catch (e) { /* fall back to open */ }
+    const isFri = wd === 'Fri';
+    const mins = hour * 60 + minute;
+    const isOpen = mins >= 11 * 60 && mins < (isFri ? 24 * 60 : 22 * 60);
+    if (isOpen) {
+      return { label: 'Open now', fg: '#5fd07f', bg: 'rgba(95,208,127,.13)', bd: 'rgba(95,208,127,.28)', dot: '#5fd07f', dotCls: 'tmv-pulse' };
+    }
+    return { label: 'Opens 11 AM', fg: 'rgba(255,255,255,.6)', bg: 'rgba(255,255,255,.07)', bd: 'rgba(255,255,255,.15)', dot: 'rgba(255,255,255,.4)', dotCls: '' };
+  }
+
+  componentDidMount() {
+    this._clock = setInterval(() => this.forceUpdate(), 60000);
+    import('./categories.js')
+      .then((m) => {
+        const map = Object.fromEntries(m.CATEGORIES.map((x) => [x.key, x.color]));
+        this.setState({ cats: map });
+      })
+      .catch((e) => console.warn(e));
+  }
+
+  componentWillUnmount() {
+    if (this._clock) clearInterval(this._clock);
+  }
+
+  cat(key, fallback) {
+    return (this.state.cats && this.state.cats[key]) || fallback;
+  }
+
+  renderVals() {
+    const p = this.props;
+    const tab = this.state.tab || (p.startTab ?? 'home');
+    const memberName = (p.memberName ?? 'Ana').toString().trim() || 'Ana';
+    const accountType = p.accountType ?? 'family';
+    const isFamily = accountType === 'family';
+
+    const classColor = this.cat('classes', '#2196f3');
+    const campColor = this.cat('camps', '#e27902');
+    const privateColor = this.cat('private', '#f44336');
+    const openGymColor = this.cat('openGym', '#2e9e4f');
+    const partyColor = this.cat('parties', '#e5399b');
+    const athleticColor = this.cat('athletic', '#ffb82a');
+    const groupsColor = this.cat('groups', '#8c52ff');
+    const GO = '#5fd07f';
+    const YEL = '#ffd400';
+    const INK = '#211f1b';
+
+    // ---- bottom nav (mirrors the mobile website exactly) ----
+    const navDef = [
+      { key: 'home', label: 'Home', icon: 'bi-house-door-fill' },
+      { key: 'train', label: 'Store', icon: 'bi-bag-fill' },
+      { key: 'book', label: 'Book', icon: 'bi-calendar-check-fill', center: true },
+      { key: 'schedule', label: 'Schedule', icon: 'bi-calendar3' },
+      { key: 'more', label: 'More', icon: 'bi-grid-fill' },
+    ];
+    const nav = navDef.map((n) => ({
+      ...n,
+      center: !!n.center,
+      regular: !n.center,
+      fg: tab === n.key ? '#fff' : 'rgba(255,255,255,.42)',
+      onClick: () => this.setTab(n.key),
+    }));
+
+    const goTrain = () => this.setTab('train');
+    const goBook = () => this.setTab('book');
+    const goSchedule = () => this.setTab('schedule');
+    const goMore = () => this.setTab('more');
+
+    // ---- members (family wallet): each shows Membership + Passes,
+    //      or a quick-add placeholder when a slot is empty ----
+    const parent = {
+      name: memberName + ' Rivera', role: 'You · Parent', initial: memberName.charAt(0).toUpperCase(),
+      avatarBg: YEL, avatarFg: INK, glow: 'rgba(255,212,0,.18)', dot: YEL,
+      hasMembership: true, noMembership: false, membership: 'Class Membership', membershipMeta: '18 days left', membershipPct: '60%', membershipTint: classColor, membershipHasBar: true,
+      hasPasses: false, noPasses: true, passes: [],
+    };
+    const maya = {
+      name: 'Maya', role: 'Age 8 · Kid', initial: 'M',
+      avatarBg: 'color-mix(in srgb,' + classColor + ' 85%,#000)', avatarFg: '#fff', glow: 'rgba(33,150,243,.16)', dot: classColor,
+      hasMembership: false, noMembership: true,
+      hasPasses: true, noPasses: false, passes: [{ label: 'Class 10-pack', meta: '6 left', color: classColor }],
+    };
+    const leo = {
+      name: 'Leo', role: 'Age 11 · Kid', initial: 'L',
+      avatarBg: 'color-mix(in srgb,' + athleticColor + ' 80%,#000)', avatarFg: '#fff', glow: 'rgba(255,184,42,.16)', dot: athleticColor,
+      hasMembership: true, noMembership: false, membership: 'Athletic Membership', membershipMeta: 'Renews Aug 1', membershipTint: athleticColor, membershipHasBar: false,
+      hasPasses: false, noPasses: true, passes: [],
+    };
+    const selfMember = {
+      name: memberName + ' Rivera', role: 'You', initial: memberName.charAt(0).toUpperCase(),
+      avatarBg: YEL, avatarFg: INK, glow: 'rgba(255,212,0,.18)', dot: YEL,
+      hasMembership: true, noMembership: false, membership: 'Open Gym Membership', membershipMeta: '18 days left', membershipPct: '60%', membershipTint: openGymColor, membershipHasBar: true,
+      hasPasses: true, noPasses: false, passes: [{ label: 'Class 10-pack', meta: '6 left', color: classColor }],
+    };
+    const members = isFamily ? [parent, maya, leo] : [selfMember];
+
+    const heroDots = members.map((_, i) => ({
+      w: i === this.state.heroIndex ? '22px' : '6px',
+      bg: i === this.state.heroIndex ? INK : '#d8d5cd',
+      onClick: () => this.scrollToCard(i),
+    }));
+
+    const membersLabel = members.length + ' people';
+
+    // ---- home: active bookings & registrations on the account ----
+    const CHIP = { go: { fg: '#1b6b2f', bg: '#e6f4ea' }, info: { fg: '#3a4a8c', bg: '#eef0f6' }, neutral: { fg: '#211f1b', bg: '#f3f2ee' } };
+    const rawBookings = isFamily ? [
+      { title: 'Summer Camp 2026', who: 'Maya', when: 'Jul 21–25', color: campColor, status: 'Registered', tone: 'info' },
+      { title: 'Private Lesson', who: 'Leo', when: 'Sat Jul 19 · 2:00 PM', color: privateColor, status: 'Booked', tone: 'go' },
+      { title: 'Birthday Party', who: 'The Riveras', when: 'Sat Aug 2 · 1:00 PM', color: partyColor, status: 'Booked', tone: 'go' },
+    ] : [
+      { title: 'Private Lesson', who: 'You', when: 'Sat Jul 19 · 2:00 PM', color: privateColor, status: 'Booked', tone: 'go' },
+    ];
+    const activeBookings = rawBookings.map((b) => ({ ...b, statusFg: CHIP[b.tone].fg, statusBg: CHIP[b.tone].bg }));
+    const hasBookings = activeBookings.length > 0;
+    const noBookings = !hasBookings;
+
+    // ---- schedule ----
+    const dayDefs = [
+      { dow: 'Mon', num: '14' }, { dow: 'Tue', num: '15' }, { dow: 'Wed', num: '16' },
+      { dow: 'Thu', num: '17' }, { dow: 'Fri', num: '18' }, { dow: 'Sat', num: '19' }, { dow: 'Sun', num: '20' },
+    ];
+    const sel = this.state.day;
+    const days = dayDefs.map((d, i) => ({
+      ...d,
+      onClick: () => this.setDay(i),
+      bg: i === sel ? INK : '#fff',
+      bd: i === sel ? INK : '#e6e4dd',
+      fg: i === sel ? '#fff' : INK,
+      subFg: i === sel ? 'rgba(255,255,255,.6)' : '#9b8e6a',
+    }));
+    const S = (time, ampm, title, sub, color) => ({ time, ampm, title, sub, color, tag: 'Drop-in' });
+    const OG = S('11:00', 'AM–10 PM', 'Open Gym', 'All ages · No time limit', openGymColor);
+    const schedule = {
+      0: [S('4:00', 'PM', 'Recreational', 'All ages · All levels', classColor), S('5:30', 'PM', 'Flip Class', 'Ages 7+ · Levels 1–2', classColor)],
+      1: [S('6:00', 'PM', 'Gymnastics', 'Teens & Adults 13+', classColor), S('7:00', 'PM', 'Tricking', 'Teens & Adults 13+', classColor)],
+      2: [S('4:00', 'PM', 'Recreational', 'All ages · All levels', classColor), S('7:00', 'PM', 'Calisthenics', 'Teens & Adults 13+', classColor)],
+      3: [S('5:30', 'PM', 'Flip Class', 'Ages 7+ · Levels 1–2', classColor), S('7:00', 'PM', 'Tricking', 'Teens & Adults 13+', classColor)],
+      4: [OG, S('4:00', 'PM', 'Recreational', 'All ages · All levels', classColor), S('6:00', 'PM', 'Gymnastics', 'Teens & Adults 13+', classColor)],
+      5: [S('11:00', 'AM', 'Recreational', 'All ages · Family class', classColor), OG],
+      6: [OG],
+    };
+    const sessions = schedule[sel] || [];
+    const dayHeading = dayDefs[sel].dow === 'Fri' ? 'Today · Fri Jul 18' : dayDefs[sel].dow + ' Jul ' + dayDefs[sel].num;
+    const sessionCount = sessions.length + (sessions.length === 1 ? ' session' : ' sessions');
+
+    // ---- book ----
+    const bookOptions = [
+      { color: privateColor, tag: 'By appointment', title: 'Private Lesson', desc: '1-on-1 coaching built around your goals and pace.', pills: 'All ages | Your coach or ours', price: 'From $85', note: '5-packs available', action: 'Book' },
+      { color: openGymColor, tag: 'Drop-in', title: 'Open Gym', desc: 'Drop in any day and stay as long as you like.', pills: 'All ages | No time limit', price: 'From $25', note: '11 AM – 10 PM daily', action: 'Get a pass' },
+      { color: campColor, tag: 'Register', title: 'Weekly Camps', desc: 'A full week of parkour over school breaks.', pills: 'Ages 5+ | Mon–Fri', price: '$350 / week', note: 'late pickup to 4 PM', action: 'See dates' },
+      { color: partyColor, tag: 'By appointment', title: 'Birthday Party', desc: 'A coached session, a private room and free play.', pills: 'Ages 5+ | Private room', price: 'From $350', note: 'up to 15 kids', action: 'Enquire' },
+    ];
+
+    // ---- train (buy surface) ----
+    const storeProducts = [
+      { color: openGymColor, title: 'Day Passes', desc: 'Walk in and train as long as you like — single, or save with a 10 or 20 pack.', pills: 'All ages | No time limit', price: 'From $25', note: 'single pass', action: 'Buy' },
+      { color: openGymColor, title: 'Open Gym Membership', desc: 'Unlimited open gym for whatever stretch suits you — 30 days to a year.', pills: 'Unlimited | 30–360 days', price: 'From $110', note: '30 days', action: 'Buy' },
+      { color: classColor, title: 'Class Passes', desc: 'Good for any group class on the schedule — single or 10/20 pack.', pills: 'Any class | All levels', price: 'From $30', note: 'single class', action: 'Buy' },
+      { color: classColor, title: 'Class Membership', desc: 'Unlimited group classes and open gym for 30 days.', pills: 'Classes + open gym', price: '$180', note: '30 days', action: 'Buy' },
+      { color: privateColor, title: 'Private Class Pack', desc: 'A block of private lessons at a better rate — book each as you go.', pills: '1-on-1 | Book as you go', price: 'From $250', note: '5-pack · kids', action: 'Buy' },
+      { color: athleticColor, title: 'Athletic Membership', desc: 'Unlimited Athletic Program training, monthly.', pills: 'Ages 9+ | Monthly', price: '$150', note: 'per month', action: 'Buy' },
+    ];
+
+    // ---- more: single account card (owner + the things you can manage) ----
+    const accountActions = [
+      { label: 'Family members', icon: 'bi-people', color: '#211f1b' },
+      { label: 'Waiver & documents', icon: 'bi-file-earmark-check', color: '#211f1b' },
+      { label: 'Payment methods', icon: 'bi-credit-card', color: '#211f1b' },
+      { label: 'Notifications', icon: 'bi-bell', color: '#211f1b' },
+      { label: 'Help & contact', icon: 'bi-question-circle', color: '#211f1b' },
+      { label: 'Sign out', icon: 'bi-box-arrow-right', color: '#9b8e6a' },
+    ];
+
+    // ---- more: explore tiles (other programs + reference pages) ----
+    const moreTiles = [
+      { title: 'Camps', sub: 'School-break day camps', icon: 'bi-sun-fill', color: campColor, onClick: goBook },
+      { title: 'Events', sub: 'Birthdays & parties', icon: 'bi-balloon-fill', color: partyColor, onClick: goBook },
+      { title: 'Private Lessons', sub: '1-on-1 coaching', icon: 'bi-person-arms-up', color: privateColor, onClick: goBook },
+      { title: 'Athletic Program', sub: 'Train like an athlete', icon: 'bi-trophy-fill', color: athleticColor, onClick: goTrain },
+      { title: 'Pricing', sub: 'Passes, packs & memberships', icon: 'bi-tag-fill', color: openGymColor, onClick: goTrain },
+      { title: 'Groups', sub: 'Schools, teams & corporate', icon: 'bi-people-fill', color: groupsColor, onClick: () => {} },
+      { title: 'About', sub: 'The space, hours & contact', icon: 'bi-geo-alt-fill', color: classColor, onClick: () => {} },
+      { title: 'Reviews', sub: 'What members say', icon: 'bi-star-fill', color: '#e9a300', onClick: () => {} },
+    ];
+
+    return {
+      embedCls: this.props.embed ? 'emb' : '',
+      notEmbed: !this.props.embed,
+      nav,
+      status: this.getOpenStatus(),
+      initial: (isFamily ? members[0].name : memberName).charAt(0).toUpperCase(),
+      memberName,
+      isFamily,
+      // home
+      isHome: tab === 'home',
+      membersLabel,
+      members,
+      heroDots,
+      onHeroScroll: this.onHeroScroll,
+      heroRef: this.heroRef,
+      onRailDown: this.onRailDown,
+      onRailMove: this.onRailMove,
+      onRailUp: this.onRailUp,
+      activeBookings,
+      hasBookings,
+      noBookings,
+      campColor,
+      goTrain,
+      goBook,
+      goSchedule,
+      goMore,
+      // train / book
+      isTrain: tab === 'train',
+      isBook: tab === 'book',
+      storeProducts,
+      bookOptions,
+      // schedule
+      isSchedule: tab === 'schedule',
+      days,
+      sessions,
+      dayHeading,
+      sessionCount,
+      // more
+      isMore: tab === 'more',
+      accountActions,
+      moreTiles,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -30,7 +30,7 @@ const reviewItems = reviews.items.map((r) => ({ name: r.name, role: r.context, t
   <div class="m-home-hero-inner">
     <div class="mh-eyebrow"><span class="mh-rule"></span>Parkour &amp; movement · Toronto</div>
     <h2 class="m-home-title">Come to play.<br>Stay to learn.</h2>
-    <p class="m-home-lead">Classes, open gym, camps and birthday parties — every age, every level, under one big roof.</p>
+    <p class="m-home-lead">Classes, open gym, camps and birthday parties. Every age, every level, under one big roof.</p>
     <a class="m-brandbtn" href="#m-start" style="margin-bottom:22px">Find your starting point <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
     <div class="m-home-stats">
       {heroStats.map((st, i) => (
@@ -68,7 +68,7 @@ const reviewItems = reviews.items.map((r) => ({ name: r.name, role: r.context, t
         <a class="m-alllink" href={url('camps')}>All camps <i class="bi bi-arrow-right" style={`color:${cat.camps}`} aria-hidden="true"></i></a>
       </div>
       <div style="margin-bottom:30px">
-        <BookingCard color={cat.camps} duration="9–2 daily" bookingTag="Register" title={season.label} description={`${season.when} — skills, flips, games and friends.`} pills="Ages 5–16 | Mon–Fri | All levels" price={season.price} priceNote="single days too" actionLabel="See dates" href={`${url('camps')}#m-dates`} />
+        <BookingCard color={cat.camps} duration="9–2 daily" bookingTag="Register" title={season.label} description={`${season.when}: skills, flips, games and friends.`} pills="Ages 5–16 | Mon–Fri | All levels" price={season.price} priceNote="single days too" actionLabel="See dates" href={`${url('camps')}#m-dates`} />
       </div>
     </>
   )}

@@ -43,7 +43,7 @@ const anySocial = hasSocial(social);
       <div>
         <div class="pagehero-kicker"><span class="rule"></span>Visit us · Downsview Park, Toronto</div>
         <h1 class="hero2-title">Come see<br>the space.</h1>
-        <p class="hero2-lead">The Monkey Vault is Toronto's parkour and movement training centre. Our community is built around open gym — a place for dancers, athletes, fitness enthusiasts and anyone who just wants to jump around and have fun.</p>
+        <p class="hero2-lead">The Monkey Vault is Toronto's parkour and movement training centre. Our community is built around open gym: a place for dancers, athletes, fitness enthusiasts and anyone who just wants to jump around and have fun.</p>
         <div class="hero2-actions">
           <a href={contact.href.directions || undefined} data-contact-href="directions" hidden={!contact.href.directions} target="_blank" rel="noopener" class="btn btn-primary">Get directions <i class="bi bi-geo-alt" aria-hidden="true"></i></a>
           <a href="#visit" class="btn btn-ghost-light">Hours &amp; contact</a>
@@ -70,7 +70,7 @@ const anySocial = hasSocial(social);
       <div class="ab-hours" data-hours-card hidden={hours.length === 0}>
         <div class="ab-hlabel">Hours</div>
         <div class="ab-htitle" data-hours-heading>{hoursHeading(hours)}</div>
-        <p class="ab-hnote">Listed times are "lights out, doors locked" — give yourself time to be out by close.</p>
+        <p class="ab-hnote">Listed times are "lights out, doors locked." Give yourself time to be out by close.</p>
         <div class="ab-hlist" data-hours-list>
           <template data-hours-row><div class="ab-hrow"><span data-day></span><span class="ab-htime" data-time></span></div></template>
           {hours.map((h) => <div class="ab-hrow" data-hours-line><span data-day>{h.day}</span><span class="ab-htime" data-time>{h.time}</span></div>)}
@@ -93,7 +93,7 @@ const anySocial = hasSocial(social);
   </section>
 
   <section id="gallery" class="section container" style="scroll-margin-top:120px">
-    <div style="margin-bottom:34px"><SectionHeader num="03" eyebrow="Inside the gym" title="Take a look around" description="10,000+ square feet of parkour rigs, foam pits, a sprung gymnastics floor and a full strength section — all under one roof." /></div>
+    <div style="margin-bottom:34px"><SectionHeader num="03" eyebrow="Inside the gym" title="Take a look around" description="10,000+ square feet of parkour rigs, foam pits, a sprung gymnastics floor and a full strength section, all under one roof." /></div>
     <div class="ab-gallery">
       {photos.map((g) => (
         <div class="ab-gitem"><img src={g.src} alt={g.alt} loading="lazy" /></div>

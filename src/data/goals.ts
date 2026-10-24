@@ -95,7 +95,7 @@ export const goals: Goal[] = [
   },
   {
     id: 'play', label: 'Just play & burn energy',
-    color: cat.openGym, eyebrow: "We'd point you to", title: 'Open Gym — no class, no booking',
+    color: cat.openGym, eyebrow: "We'd point you to", title: 'Open Gym: no class, no booking',
     reason: "Full run of the floor, foam pit and obstacles, any time we're open, no time limit. Sign the waiver online, get a day pass, show up. All ages; kids under 7 play with a parent.",
     cta: 'Plan an open gym visit', href: openGym, price: '{openGym1x} · all day',
     altLead: 'Want coaching on a specific move?', altLink: 'Book a private lesson built around it.', altHref: sq.privateLessons.privateLesson,

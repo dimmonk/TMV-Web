@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;}
+  .hero-cta{transition:transform .15s ease;}
+  .hero-cta:hover{transform:translateY(-2px);}
+  @media(max-width:820px){ .sh-hero{grid-template-columns:1fr!important;} }
+</style>
+</helmet>
+<section style="--brand: {{ brand }}; background:#211f1b; color:#fff; position:relative; overflow:hidden; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;">
+  <div class="sh-hero" style="max-width:1200px; margin:0 auto; padding:{{ pad }}; display:{{ display }}; grid-template-columns:{{ cols }}; gap:48px; align-items:center; text-align:{{ textAlign }};">
+
+    <div style="{{ textColStyle }}">
+      <div style="display:inline-flex; align-items:center; gap:9px; font:700 12px/1 'Archivo',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--brand); margin-bottom:22px;">
+        <span style="width:22px; height:2px; background:var(--brand);"></span>{{ eyebrow }}
+      </div>
+      <h1 style="font:800 {{ titleSize }}/1.0 'Archivo',sans-serif; letter-spacing:-.022em; margin:0 0 20px; text-wrap:balance;">{{ title }}</h1>
+      <p style="font:400 16px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:rgba(255,255,255,.72); max-width:460px; margin:0 0 30px; {{ subCenter }}">{{ sub }}</p>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:{{ justify }};">
+        <a href="#" class="hero-cta" style="display:inline-flex; align-items:center; gap:9px; background:var(--brand); color:#211f1b; font:800 15px/1 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; text-decoration:none; padding:16px 26px; border-radius:12px;">{{ primaryCta }} <i class="bi bi-arrow-right"></i></a>
+        <a href="#" style="display:inline-flex; align-items:center; gap:9px; background:transparent; color:#fff; font:700 15px/1 'Archivo',sans-serif; text-decoration:none; padding:16px 24px; border-radius:12px; border:1.5px solid rgba(255,255,255,.25);">{{ secondaryCta }}</a>
+      </div>
+
+      <sc-if value="{{ showStats }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex; flex-wrap:wrap; gap:0; margin-top:34px; border-top:1px solid rgba(255,255,255,.12); justify-content:{{ justify }};">
+          <sc-for list="{{ statList }}" as="s" hint-placeholder-count="3">
+            <div style="padding:18px 26px 0 0; margin-right:26px; border-right:1px solid rgba(255,255,255,.12);">
+              <div style="font:800 26px/1 'Archivo',sans-serif; color:var(--brand);">{{ s.value }}</div>
+              <div style="font:600 12.5px/1.3 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:rgba(255,255,255,.6); margin-top:6px;">{{ s.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showNewcomer }}" hint-placeholder-val="">
+        <p style="font:500 14px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:rgba(255,255,255,.5); margin:26px 0 0;">{{ newcomer }} <a href="#" style="color:var(--brand); text-decoration:none; font-weight:700;">{{ newcomerLink }} →</a></p>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ showImage }}" hint-placeholder-val="{{ true }}">
+      <div style="position:relative;">
+        <div style="aspect-ratio:5/4; border-radius:18px; overflow:hidden; box-shadow:0 30px 60px -25px rgba(0,0,0,.7); border:3px solid rgba(255,255,255,.08);">
+          <img src="{{ image }}" alt="" style="width:100%; height:100%; object-fit:cover; display:block;">
+        </div>
+        <sc-if value="{{ badge }}" hint-placeholder-val="">
+          <div style="position:absolute; bottom:-16px; right:-10px; background:var(--brand); color:#211f1b; font:800 13px/1.2 'Archivo',sans-serif; text-transform:uppercase; letter-spacing:.03em; padding:13px 16px; border-radius:12px; box-shadow:0 12px 30px -10px rgba(0,0,0,.5);">{{ badge }}</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {&quot;width&quot;: 1200, &quot;height&quot;: 520},
+  &quot;layout&quot;: {&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;split&quot;,&quot;options&quot;:[&quot;split&quot;,&quot;centered&quot;,&quot;stats&quot;],&quot;tsType&quot;:&quot;string&quot;},
+  &quot;eyebrow&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Parkour &amp; Movement Gym · Toronto&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;title&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;A class for every body.&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;sub&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Parkour, flips, gymnastics, calisthenics and more. Drop in for fun, level up your skills, or train like an athlete — at your own pace.&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;primaryCta&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Book a class&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;secondaryCta&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;See full schedule&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;stats&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;9 :: ways to move | 3+ :: ages welcome | Drop-in :: no membership&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;image&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;assets/hero.gif&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;badge&quot;: {&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;9 ways\nto move&quot;,&quot;tsType&quot;:&quot;string&quot;},
+  &quot;brand&quot;: {&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd400&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ffd400&quot;,&quot;#2196f3&quot;,&quot;#f44336&quot;,&quot;#2e9e4f&quot;]}
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props;
+    const layout = (p.layout ?? 'split').toString();
+    const centered = layout === 'centered';
+    const withImage = layout === 'split';
+    const statList = (p.stats ?? '9 :: ways to move | 3+ :: ages welcome | Drop-in :: no membership')
+      .toString().split('|').map(s => s.trim()).filter(Boolean).map(row => {
+        const f = row.split('::').map(x => x.trim());
+        return { value: f[0] || '', label: f[1] || '' };
+      });
+    return {
+      brand: p.brand ?? '#ffd400',
+      eyebrow: p.eyebrow ?? 'Parkour & Movement Gym · Toronto',
+      title: p.title ?? 'A class for every body.',
+      sub: p.sub ?? 'Parkour, flips, gymnastics, calisthenics and more. Drop in for fun, level up your skills, or train like an athlete — at your own pace.',
+      primaryCta: p.primaryCta ?? 'Book a class',
+      secondaryCta: p.secondaryCta ?? 'See full schedule',
+      image: p.image ?? 'assets/hero.gif',
+      badge: (p.badge ?? '9 ways\nto move').toString().trim(),
+      newcomer: (p.newcomer ?? 'New here? Start with').toString().trim(),
+      newcomerLink: (p.newcomerLink ?? 'Recreational Parkour').toString().trim(),
+      showNewcomer: !!(p.newcomer ?? 'New here? Start with'),
+      showImage: withImage,
+      showStats: centered || layout === 'stats',
+      statList,
+      display: withImage ? 'grid' : 'block',
+      cols: withImage ? '1.05fr .95fr' : '1fr',
+      pad: centered ? '88px 32px 96px' : '70px 32px 78px',
+      textAlign: centered ? 'center' : 'left',
+      justify: centered ? 'center' : 'flex-start',
+      textColStyle: centered ? 'max-width:760px; margin:0 auto;' : '',
+      titleSize: centered ? 'clamp(40px,9vw,68px)' : 'clamp(38px,8.5vw,58px)',
+      subCenter: centered ? 'margin-left:auto; margin-right:auto;' : '',
+    };
+  }
+}
+</script>
+</body>
+</html>

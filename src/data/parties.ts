@@ -31,7 +31,7 @@ export interface PartyHubCard {
 }
 
 export const partyHubCards: PartyHubCard[] = [
-  { key: 'full', color: cat.parties, title: 'Full Birthday Party', dur: '2 hrs', price: '{partyBase} base', priceNote: 'Up to 8 kids · +{partyExtraGuest}/extra kid', flag: 'Most popular', bookingTag: 'By appointment', desc: 'A coached session, a private party room and free play — coaches with the group the whole time.', pills: 'Ages 5+ | Private room', href: sq.book.fullBirthday },
+  { key: 'full', color: cat.parties, title: 'Full Birthday Party', dur: '2 hrs', price: '{partyBase} base', priceNote: 'Up to 8 kids · +{partyExtraGuest}/extra kid', flag: 'Most popular', bookingTag: 'By appointment', desc: 'A coached session, a private party room and free play, coaches with the group the whole time.', pills: 'Ages 5+ | Private room', href: sq.book.fullBirthday },
   { key: 'mini', color: cat.parties, title: 'Mini Birthday Party', dur: '1 hr', price: '{partyMiniPerPerson} / kid', priceNote: '3 kids min · up to 15', bookingTag: 'By appointment', desc: 'The same one-hour coached session of games and challenges, with a lower minimum. All-day pass for every kid.', pills: 'Ages 8+ | 3–15 people | All-day pass', href: sq.book.miniBirthday },
 ];
 
@@ -76,12 +76,12 @@ export const partyCards: PartyCardData[] = [
     theme: 'light',
     flag: 'Most popular',
     title: 'Full Birthday Party',
-    desc: 'Coaches stay with your group the whole time. A private party room, a coached session, and free play — the full experience.',
+    desc: 'Coaches stay with your group the whole time. A private party room, a coached session, and free play: the full experience.',
     image: url('assets/invite-default-photo.png'),
     timeline: [
-      { t: '60′', label: 'Activities — parkour intro lesson, movement games & requested skills' },
-      { t: '30′', label: 'Private party room — food, drinks & celebration' },
-      { t: '30′', label: 'Open gym — free play under instructor supervision' },
+      { t: '60′', label: 'Activities: parkour intro lesson, movement games & requested skills' },
+      { t: '30′', label: 'Private party room: food, drinks & celebration' },
+      { t: '30′', label: 'Open gym: free play under instructor supervision' },
     ],
     pills: 'Ages 5+ | 2 hrs total | Private room',
     price: eventPricing.fullBirthdayBase,
@@ -96,15 +96,15 @@ export const partyCards: PartyCardData[] = [
     theme: 'dark',
     tag: 'Smaller & last-minute',
     title: 'Mini Birthday Party',
-    desc: 'Booked solid for the full package? The Mini is the same action-packed one-hour coached parkour session of games and challenges — just a lower minimum so smaller groups and last-minute plans still get in.',
+    desc: 'Booked solid for the full package? The Mini is the same action-packed one-hour coached parkour session of games and challenges, just a lower minimum so smaller groups and last-minute plans still get in.',
     included: [
-      'One-hour coached parkour session — games & challenges',
+      'One-hour coached parkour session: games & challenges',
       '3 participants minimum, up to 15 · ages 8+',
-      'All-day pass for every kid — open gym after, leave to eat, come back',
+      'All-day pass for every kid: open gym after, leave to eat, come back',
     ],
     goodToKnow: [
       'Coaches lead the session, then kids are on their own in open gym',
-      'No private room — common-area tables are shared, not guaranteed',
+      'No private room: common-area tables are shared, not guaranteed',
     ],
     price: eventPricing.miniBirthdayPerKid,
     priceSub: 'per participant',

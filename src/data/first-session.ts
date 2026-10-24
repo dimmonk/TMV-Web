@@ -16,13 +16,13 @@ export interface IntroWhy { title: string; sub: string; }
 export const introWhy: IntroWhy[] = [
   { title: 'The parkour basics, one-on-one', sub: 'A set beginner lesson plan, the same proven hour every time. That is why it costs less than a private.' },
   { title: 'You leave knowing what fits next', sub: 'The coach tells you which class or program suits you or your kid.' },
-  { title: 'Any question, answered in person', sub: 'Ages, levels, safety, schedule — easier face to face than on a website.' },
+  { title: 'Any question, answered in person', sub: 'Ages, levels, safety, schedule: easier face to face than on a website.' },
 ];
 
 /** The other first visit: a specific skill or goal goes straight to a private lesson (owner's rule, 2026-10-20). */
 export const privateFirst = {
   label: 'Have a specific skill or goal?',
-  text: 'Book a private lesson instead. The coach plans the whole hour around it — you can book it as your very first visit.',
+  text: 'Book a private lesson instead. The coach plans the whole hour around it. You can book it as your very first visit.',
   cta: 'Book a private lesson',
 };
 
