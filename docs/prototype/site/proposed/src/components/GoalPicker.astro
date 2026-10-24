@@ -9,8 +9,8 @@ import Priced from './Priced.astro';
  * The goals are tabs, so they look like the site's other tabs: the Specialized
  * Classes list/detail card (ClassTabs). Each goal is one short row in a list (just
  * the goal, so the reader finds theirs at a glance); the selected row is tinted in
- * the goal's colour and its recommendation sits beside the list. On a phone the recommendation opens right under the
- * goal that was tapped, so the answer is never off screen.
+ * the goal's colour and its recommendation sits beside the list. On a phone every goal starts closed, so the whole
+ * list fits on one screen, and the recommendation opens right under the goal that was tapped.
  *
  * One markup at every width: each row is followed by its panel, and the grid
  * places the panels beside the list from 768px up. Content only, no chrome and
@@ -137,6 +137,13 @@ import { goals } from '../data/goals';
     /* A 44px tap area around the inline link, without moving its underline. */
     .gp-alt a { position: relative; }
     .gp-alt a::after { content: ""; position: absolute; inset: -12px 0; }
+  }
+  /* Phone with JS: every goal starts closed so the whole list fits on one screen; a tap opens one (goal-picker.ts). */
+  @media (max-width: 767px) and (scripting: enabled) {
+    .gp:not([data-picked]) .gp-card { display: none; }
+    .gp:not([data-picked]) .gp-row.on { background: transparent; border-color: transparent; }
+    .gp:not([data-picked]) .gp-row.on .gp-row-t { color: var(--ink); }
+    .gp:not([data-picked]) .gp-row.on .gp-row-chev { transform: rotate(90deg); color: var(--faint); }
   }
 </style>
 
