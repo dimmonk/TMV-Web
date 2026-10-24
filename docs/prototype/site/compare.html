@@ -4,58 +4,61 @@
 <title>TMV Website Prototype</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
-  :root { --bg:#f5f4f1; --ink:#211f1b; --muted:#6b6862; --line:#e5e3de; --card:#fff; --brand:#ffd400; --bar:#211f1b; --barink:#fff; }
+  :root { --bg:#f5f4f1; --ink:#211f1b; --muted:#6b6862; --line:#e5e3de; --card:#fff; --brand:#ffd400; }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#16150f; --ink:#f1efe9; --muted:#a9a59c; --line:#34322c; --card:#1f1e19; color-scheme: dark; } }
   :root[data-theme="dark"] { --bg:#16150f; --ink:#f1efe9; --muted:#a9a59c; --line:#34322c; --card:#1f1e19; color-scheme: dark; }
   * { box-sizing: border-box; }
-  header, .controls, .stage { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-  .notes { margin-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 system-ui, sans-serif; }
-  header { background: var(--bar); color: var(--barink); padding-block: 14px; border-bottom: 4px solid var(--brand); display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; }
-  header h1 { font-size: 18px; margin: 0; } header h1 b { color: var(--brand); } header p { margin: 0; color: #c7c5c0; font-size: 13px; }
-  .controls { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: end; padding-block: 12px; background: var(--card); border-bottom: 1px solid var(--line); }
-  .controls label { display: grid; gap: 4px; font-size: 12px; font-weight: 700; }
-  select, button { font: 600 13px/1.3 system-ui, sans-serif; padding: 9px 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--card); color: var(--ink); min-height: 40px; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 13px/1.4 system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden; }
+  /* One slim bar; everything else is the site. */
+  .bar { position: relative; flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 6px max(10px, env(safe-area-inset-left, 0px)); background: var(--card); border-bottom: 1px solid var(--line); }
+  select, button { font: 600 12.5px/1.2 system-ui, sans-serif; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); min-height: 32px; }
   button { cursor: pointer; } button[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #211f1b; }
-  .seg { display: flex; gap: 6px; flex-wrap: wrap; }
-  .width { flex: 1 1 320px; display: grid; gap: 6px; font-size: 12px; font-weight: 700; }
-  .width-row { display: flex; align-items: center; gap: 12px; }
-  .width input { flex: 1; accent-color: #b89a00; min-width: 140px; }
-  .width output { font: 700 13px/1 system-ui, sans-serif; min-width: 128px; }
-  .notes { margin-top: 12px; padding: 12px 14px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; }
+  .seg { display: flex; gap: 4px; }
+  .width { flex: 1 1 200px; display: flex; align-items: center; gap: 8px; min-width: 180px; }
+  .width input { flex: 1; accent-color: #b89a00; min-width: 80px; }
+  .width output { font-weight: 700; white-space: nowrap; min-width: 92px; }
+  /* What changed: a panel over the preview, closed until asked for. */
+  .notes { position: absolute; z-index: 5; top: 100%; right: 8px; left: 8px; max-width: 560px; margin-left: auto; max-height: 70vh; overflow: auto; padding: 12px 14px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 16px 40px -12px rgba(0,0,0,.35); }
+  .notes[hidden] { display: none; }
   .notes h2 { font-size: 13px; margin: 10px 0 6px; } .notes h2:first-child { margin-top: 0; } .notes ul { margin: 0; padding-left: 18px; } .notes li { margin: 2px 0; }
-  .stage { display: flex; justify-content: center; gap: 20px; padding-block: 16px; align-items: flex-start; }
+  /* A phone-sized window: one row that scrolls sideways; the snaps replace the slider. */
+  @media (max-width: 760px) {
+    .bar { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    .bar::-webkit-scrollbar { display: none; }
+    .bar > * { flex: none; }
+    .width { display: none; }
+    .notes { position: fixed; top: 46px; }
+  }
+  .stage { flex: 1; min-height: 0; display: flex; justify-content: center; gap: 12px; padding: 8px; align-items: flex-start; }
   .preview { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; }
   .preview[hidden] { display: none; }
-  .preview h2 { font-size: 13px; margin: 0 0 8px; align-self: stretch; text-align: center; } .preview h2 span { font-weight: 400; color: var(--muted); }
-  .frame { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+  .preview h2 { font-size: 11px; margin: 0 0 4px; color: var(--muted); } .stage:not(.both) .preview h2 { display: none; }
+  .frame { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
   .frame iframe { position: absolute; top: 0; left: 0; border: 0; transform-origin: 0 0; background: #fff; }
 </style>
-<header><h1><b>The Monkey Vault</b> &middot; website prototype</h1><p>Now = the site as built today. Proposed = the change under review. Nothing here is live.</p></header>
-<div class="controls">
-  <label>Page<select id="page"></select></label>
+<div class="bar">
+  <select id="page" aria-label="Page"></select>
   <div class="seg" id="seg" role="group" aria-label="Show">
     <button type="button" data-v="proposed" aria-pressed="true">Proposed</button>
     <button type="button" data-v="now" aria-pressed="false">Now</button>
-    <button type="button" data-v="both" aria-pressed="false">Side by side</button>
+    <button type="button" data-v="both" aria-pressed="false">Both</button>
+  </div>
+  <div class="seg" id="snaps" role="group" aria-label="Snap to">
+    <button type="button" data-w="375">Phone</button>
+    <button type="button" data-w="820">Tablet</button>
+    <button type="button" data-w="1440">Desktop</button>
   </div>
   <div class="width">
-    <span>Screen width</span>
-    <div class="width-row">
-      <input id="width" type="range" min="320" max="1440" step="1" value="375" aria-label="Screen width in pixels">
-      <output id="widthOut" for="width"></output>
-    </div>
-    <div class="seg" id="snaps" role="group" aria-label="Snap to">
-      <button type="button" data-w="375">Phone</button>
-      <button type="button" data-w="820">Tablet</button>
-      <button type="button" data-w="1440">Desktop</button>
-    </div>
+    <input id="width" type="range" min="320" max="1440" step="1" value="375" aria-label="Screen width in pixels">
+    <output id="widthOut" for="width"></output>
   </div>
+  <button type="button" id="notesBtn" aria-expanded="false" aria-controls="notes">What changed</button>
+  <section class="notes" id="notes" hidden></section>
 </div>
-<section class="notes" id="notes" aria-live="polite"></section>
 <main class="stage" id="stage">
-  <section class="preview" data-v="now" hidden><h2>Now <span>today's site</span></h2><div class="frame"><iframe title="The site today"></iframe></div></section>
-  <section class="preview" data-v="proposed"><h2>Proposed <span>from the brief</span></h2><div class="frame"><iframe title="The proposed site"></iframe></div></section>
+  <section class="preview" data-v="now" hidden><h2>Now</h2><div class="frame"><iframe title="The site today"></iframe></div></section>
+  <section class="preview" data-v="proposed"><h2>Proposed</h2><div class="frame"><iframe title="The proposed site"></iframe></div></section>
 </main>
 <script>
   // One row per page: where it lives in each build, what changed, and the phone-only lines left out (brief rule 2).
@@ -104,13 +107,13 @@
   // The frame renders the page at the chosen width (so the site's own breakpoints apply) and scales it down to fit.
   function layout() {
     var w = Number(range.value);
-    out.textContent = w + 'px · ' + kind(w);
+    out.textContent = w + 'px ' + kind(w);
     snaps.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(kind(Number(b.dataset.w)) === kind(w))); });
     var shown = previews.filter(function (s) { return !s.hidden; });
     var stage = document.getElementById('stage');
-    var avail = (stage.clientWidth - parseFloat(getComputedStyle(stage).paddingLeft) - parseFloat(getComputedStyle(stage).paddingRight) - 20 * (shown.length - 1)) / shown.length;
+    var avail = (stage.clientWidth - parseFloat(getComputedStyle(stage).paddingLeft) - parseFloat(getComputedStyle(stage).paddingRight) - 12 * (shown.length - 1)) / shown.length;
     var scale = Math.min(1, avail / w);
-    var h = Math.max(480, window.innerHeight - stage.getBoundingClientRect().top + window.scrollY - 60);
+    var h = Math.max(300, stage.clientHeight - parseFloat(getComputedStyle(stage).paddingTop) * 2 - (mode === 'both' ? 18 : 0));
     shown.forEach(function (s) {
       var frame = s.querySelector('.frame'), f = s.querySelector('iframe');
       frame.style.width = Math.round(w * scale) + 'px';
@@ -124,8 +127,15 @@
     mode = v;
     seg.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
     previews.forEach(function (s) { s.hidden = !(v === 'both' || s.dataset.v === v); });
+    document.getElementById('stage').classList.toggle('both', v === 'both');
     layout();
   }
+  var notesBtn = document.getElementById('notesBtn');
+  notesBtn.addEventListener('click', function () {
+    notes.hidden = !notes.hidden;
+    notesBtn.setAttribute('aria-expanded', String(!notes.hidden));
+    notesBtn.setAttribute('aria-pressed', String(!notes.hidden));
+  });
   page.addEventListener('change', show);
   range.addEventListener('input', layout);
   snaps.querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { range.value = b.dataset.w; layout(); }); });
