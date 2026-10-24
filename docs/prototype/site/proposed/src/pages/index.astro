@@ -54,7 +54,7 @@ const camps = [
       <div>
         <div class="hero-kicker"><span class="hero-kicker-rule"></span><Words full="Parkour & Movement Training Centre · Toronto" short="Parkour & movement · Toronto" /></div>
         <h1 class="hero-title">Come to play.<br>Stay to learn.</h1>
-        <p class="hero-lead">Toronto's home for parkour, flips and movement. Open gym, coached classes, camps and birthday parties — every age, every level, under one big roof.</p>
+        <p class="hero-lead">Toronto's home for parkour, flips and movement. Coached classes, open gym, camps and birthday parties — every age, every level, under one big roof.</p>
         <div class="hero-actions">
           <a href="#start" class="btn btn-primary">Find your starting point <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
         </div>
@@ -65,6 +65,7 @@ const camps = [
               : <span data-stat-label={st.hours ? '' : undefined}>{st.label}</span>}</div></div>
           ))}
         </div>
+        <p class="hero-new">Just here to play? <a href={url('open-gym')}>Open gym, no booking →</a></p>
       </div>
       <div class="hero-media">
         <div class="hero-frame" id="hero-carousel">
@@ -79,10 +80,10 @@ const camps = [
     </div>
   </section>
 
-  <!-- GOAL PICKER, first after the hero: a visitor picks their goal before anything else. ASK → RECOMMEND → REASON → INVITE (see data/goals.ts) -->
+  <!-- GOAL PICKER, first after the hero. ASK → RECOMMEND → REASON → INVITE (see data/goals.ts) -->
   <section id="start" class="section container goalsec">
     <div class="goalsec-head">
-      <SectionHeader num="01" eyebrow="Where to start" title="What are you here for?" />
+      <SectionHeader num="01" eyebrow="Where to start" title="What are you here for?" description="Pick a goal and we'll point you to one first step — and why." />
     </div>
     <GoalPicker />
   </section>
@@ -100,7 +101,7 @@ const camps = [
   <!-- OFFERINGS -->
   <section id="offerings" class="section container offerings">
     <div class="offerings-head">
-      <SectionHeader num="02" eyebrow="Or browse" title="Four ways to get moving" />
+      <SectionHeader num="02" eyebrow="Or browse" title="Four ways to get moving" description="Classes, open gym, camps and birthday parties — ages, prices and how to join, right on the card." />
     </div>
     <ActivityLinks />
   </section>
@@ -112,7 +113,7 @@ const camps = [
         <div>
           <div class="camps-eyebrow">03 — School breaks &amp; days off</div>
           <h2 class="camps-title">Camps booking now</h2>
-          <p class="camps-lead">School breaks and P.A. Days, ages 5 to 16.</p>
+          <p class="camps-lead">A school-break week or a single P.A. Day, ages 5 to 16. See every date on the camps page, then book.</p>
         </div>
         <a href={url('camps')} class="camps-all">All camps <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
       </div>
@@ -165,6 +166,8 @@ const camps = [
   .hero-stat.last { border-right: 0; margin-right: 0; padding-right: 0; }
   .hero-statnum { font: 800 26px/1 var(--font-display); color: var(--brand); }
   .hero-statlabel { font: 600 12.5px/1.3 var(--font-body); color: rgba(255,255,255,.6); margin-top: 6px; }
+  .hero-new { font: 500 14px/1.6 var(--font-body); color: rgba(255,255,255,.55); margin-top: 26px; }
+  .hero-new a { color: var(--brand); text-decoration: none; font-weight: 700; }
   .hero-media { position: relative; }
   .hero-frame { position: relative; aspect-ratio: 5/4; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 60px -25px rgba(0,0,0,.7); border: 3px solid rgba(255,255,255,.08); background: #2a2724; }
   .hero-slide { position: absolute; inset: 0; background-size: cover; background-position: center; transition: opacity 1s ease; }
@@ -240,6 +243,8 @@ const camps = [
     .hero-stat.last { padding-right: 0; text-align: right; }
     .hero-statnum { font-size: 20px; }
     .hero-statlabel { font-size: 12px; margin-top: 5px; }
+    .hero-new { margin-top: 18px; }
+    .hero-new a { display: inline-block; padding-block: 14px; margin-block: -14px; }
     .goalsec { padding-block: 32px 24px; }
     .goalsec-head { margin-bottom: 16px; }
     .offerings { padding-block: 24px 32px; }
