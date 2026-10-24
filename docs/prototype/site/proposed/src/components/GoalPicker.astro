@@ -7,10 +7,9 @@ import Priced from './Priced.astro';
  * deliberately not a menu of every program.
  *
  * The goals are tabs, so they look like the site's other tabs: the Specialized
- * Classes list/detail card (ClassTabs). Each goal is a row in a list, with what
- * we'd recommend under its name so the goals can be compared without opening
- * them; the selected row is tinted in the goal's colour and its recommendation
- * sits beside the list. On a phone the recommendation opens right under the
+ * Classes list/detail card (ClassTabs). Each goal is one short row in a list (just
+ * the goal, so the reader finds theirs at a glance); the selected row is tinted in
+ * the goal's colour and its recommendation sits beside the list. On a phone the recommendation opens right under the
  * goal that was tapped, so the answer is never off screen.
  *
  * One markup at every width: each row is followed by its panel, and the grid
@@ -27,7 +26,7 @@ import { goals } from '../data/goals';
         type="button" class:list={['gp-row', { on: i === 0 }]} data-goal-chip={g.id} style={`--cat:${g.color};--r:${i + 1}`}
         id={`gp-tab-${g.id}`} role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-controls={`gp-panel-${g.id}`} tabindex={i === 0 ? 0 : -1}
       >
-        <span class="gp-row-txt"><span class="gp-row-t">{g.label}</span><span class="gp-row-s">{g.title}</span></span>
+        <span class="gp-row-t">{g.label}</span>
         <i class="bi bi-chevron-right gp-row-chev" aria-hidden="true"></i>
       </button>
 
@@ -73,16 +72,14 @@ import { goals } from '../data/goals';
   /* THE LIST: every goal, with what we'd recommend under it. Same row as ClassTabs' .ct-row. */
   .gp-row {
     grid-column: 1; grid-row: var(--r); position: relative; margin: 0 8px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 10px;
-    min-height: 56px; padding: 8px 12px; border-radius: 9px; border: 1px solid transparent;
+    min-height: 48px; padding: 8px 12px; border-radius: 9px; border: 1px solid transparent;
     background: transparent; transition: background .15s ease, border-color .15s ease;
   }
   .gp-row:first-of-type { margin-top: 8px; }
   .gp-row:hover { background: #fff; border-color: var(--line); }
   /* Selected: a tint plus a full border in the goal's colour, never a single-side stripe. */
   .gp-row.on { background: color-mix(in srgb, var(--cat) 11%, #fff); border-color: color-mix(in srgb, var(--cat) 34%, #fff); }
-  .gp-row-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-  .gp-row-t { font: 800 14.5px/1.2 var(--font-display); letter-spacing: -.008em; color: var(--ink); }
-  .gp-row-s { font: 600 12.5px/1.3 var(--font-body); color: var(--muted); }
+  .gp-row-t { flex: 1; min-width: 0; font: 800 15px/1.25 var(--font-display); letter-spacing: -.008em; color: var(--ink); }
   .gp-row.on .gp-row-t { color: color-mix(in srgb, var(--cat) 66%, #000); }
   .gp-row-chev { flex: none; font-size: 12px; color: var(--faint); opacity: 0; transition: opacity .15s ease, transform .2s ease; }
   .gp-row:hover .gp-row-chev { opacity: 1; }
@@ -126,7 +123,7 @@ import { goals } from '../data/goals';
   @media (max-width: 767px) {
     .gp { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; background: #faf9f6; padding: 6px 0; }
     .gp::before { display: none; }
-    .gp-row { grid-row: auto; margin: 2px 6px; min-height: 60px; scroll-margin-top: calc(76px + env(safe-area-inset-top, 0px)); }
+    .gp-row { grid-row: auto; margin: 2px 6px; min-height: 52px; scroll-margin-top: calc(76px + env(safe-area-inset-top, 0px)); }
     .gp-row:first-of-type { margin-top: 2px; }
     .gp-row-chev { opacity: 1; transform: rotate(90deg); }
     .gp-row.on .gp-row-chev { transform: rotate(-90deg); }
@@ -137,7 +134,9 @@ import { goals } from '../data/goals';
     .gp .btn { width: 100%; justify-content: center; min-height: 44px; }
     .gp-actions { gap: 10px; }
     .gp-side { padding: 16px 18px 18px; }
-    .gp-alt a { display: inline-block; padding-block: 12px; margin-block: -12px; }
+    /* A 44px tap area around the inline link, without moving its underline. */
+    .gp-alt a { position: relative; }
+    .gp-alt a::after { content: ""; position: absolute; inset: -12px 0; }
   }
 </style>
 
