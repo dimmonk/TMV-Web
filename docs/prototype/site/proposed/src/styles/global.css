@@ -1,0 +1,225 @@
+/* ============================================================================
+ * The Monkey Vault — global stylesheet
+ * Design tokens (one place to change the brand) + reset + base + shared
+ * primitives. Component-specific styles live scoped inside their .astro files.
+ * ==========================================================================*/
+
+:root {
+  /* brand + ink */
+  --brand: #ffd400;
+  --ink: #211f1b;
+  --ink-2: #1a1815;
+
+  /* surfaces */
+  --bg: #f5f4f1;
+  --card: #ffffff;
+  --line: #ebe9e4;
+  --line-soft: #f0efea;
+
+  /* text */
+  --text: #211f1b;
+  --text-2: #3a3833;
+  --text-3: #5b5853;
+  --muted: #6a6760;
+  --muted-2: #8a877f;
+  --muted-3: #9b9890;
+  --faint: #b0aca3;
+
+  /* category accents — CSS mirror of `cat` in src/data/site.ts (the SSOT).
+     Change a colour there first, then here; keys and hex values must match. */
+  --c-classes: #2196f3;
+  --c-athletic: #ffb82a;
+  --c-private: #f44336;
+  --c-opengym: #2e9e4f;
+  --c-camps: #e27902;
+  --c-parties: #e5399b;
+  --c-groups: #8c52ff;
+  --c-intro: #6e6e6e;
+  --c-partner: #0d9488;
+
+  /* type */
+  --font-display: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+  /* shape + depth */
+  --radius: 16px;
+  --radius-lg: 22px;
+  --shadow-sm: 0 1px 3px rgba(28, 25, 23, .05), 0 16px 34px -30px rgba(28, 25, 23, .4);
+  --shadow-md: 0 1px 3px rgba(28, 25, 23, .05), 0 22px 50px -36px rgba(28, 25, 23, .4);
+  --shadow-lg: 0 1px 3px rgba(28, 25, 23, .05), 0 26px 48px -26px rgba(28, 25, 23, .5);
+
+  /* layout */
+  --container: 1200px;
+  --gutter: 24px;
+
+  /* The fixed bottom tab bar's real rendered height (MobileTabBar.astro
+   * measures itself and overwrites this on load/resize) — the ONE source
+   * anything that needs to clear or sit above the tab bar reads from. This
+   * value is only the pre-JS fallback, close to the real number so there's no
+   * layout jump before the measurement script runs. */
+  --tabbar-h: 86px;
+}
+
+/* ============================================================================
+ * BREAKPOINT SCALE — the canonical stops. Use these values for anything that
+ * changes PAGE LAYOUT or CHROME. (Component-internal tweaks — when a card's own
+ * columns wrap, say — may still use bespoke values; those are local decisions,
+ * not layout stops.)
+ *
+ *   sm   640px   large phone
+ *   md   768px   phone → tablet. THE CHROME HANDOFF (see below).
+ *   lg  1024px   tablet → laptop
+ *   xl  1280px   wide desktop
+ *
+ * 768 matches the other three TMV apps, so the phone/tablet line is the same
+ * across every product. CSS can't put a custom property inside a media query
+ * without a build plugin, so the rule is: the chrome handoff is written ONCE,
+ * here. No other file may branch on it.
+ * ==========================================================================*/
+
+/* ---- chrome handoff -------------------------------------------------------
+ * One responsive document, two chromes. Below md the page wears the app shell
+ * (dark sticky header + fixed bottom tab bar); at md and up it wears the site
+ * chrome (SiteHeader + SiteFooter). BaseLayout tags each chrome element with
+ * data-chrome, and this is the only place that decides which one is showing —
+ * there is no device sniffing and no redirect anywhere in the system.
+ * -------------------------------------------------------------------------*/
+@media (max-width: 767px) {
+  [data-chrome='site'] { display: none !important; }
+  /* Clear the fixed tab bar so the last content on the page isn't hidden. */
+  /* var(--tabbar-h) already includes the safe-area inset (baked into the tab
+     bar's own bottom padding) — do not add env(safe-area-inset-bottom) again
+     here, that would double-count it. */
+  body { padding-bottom: var(--tabbar-h); }
+}
+@media (min-width: 768px) {
+  [data-chrome='app'] { display: none !important; }
+}
+
+/* ---- short wording on a phone ---------------------------------------------
+ * A line that has a short version for tight phone spots (a hero stat, a page
+ * title, a card blurb) is written once with both, through <Words full short>,
+ * and the same md stop picks which one reads. Everything else has one wording.
+ * -------------------------------------------------------------------------*/
+.w-short { display: none; }
+@media (max-width: 767px) {
+  .w-full { display: none; }
+  .w-short { display: inline; }
+}
+
+/* ---- view transitions: instant, no cross-fade ---------------------------
+ * The default Astro root cross-fade morphs the whole page on every navigation
+ * — measured at ~700ms on content-heavy pages, which is what read as "slow".
+ * Killing the root animation makes the swap effectively instant (~20ms) while
+ * keeping client-side routing (no full reload, persisted head/fonts). Named
+ * transition:animate on specific elements still works if ever wanted.
+ * -----------------------------------------------------------------------*/
+::view-transition-old(root),
+::view-transition-new(root) { animation: none !important; mix-blend-mode: normal; }
+
+/* ---- shared desktop page hero -------------------------------------------
+ * The dark hero band at the top of every desktop page composition. Was copied
+ * verbatim into 14 page <style> blocks; now it lives here once. A page tints
+ * its accent by setting `--ph` on the `.pagehero` element (default: brand).
+ * Page-specific layout wrappers (.ap-hero, .gs-hero, .hero2, .herog, .pl-hero)
+ * stay in their own files — only this shared skeleton is centralized.
+ * -----------------------------------------------------------------------*/
+.pagehero { --ph: var(--brand); background: var(--ink); color: #fff; position: relative; overflow: hidden; }
+.pagehero-glow { position: absolute; inset: 0; background: radial-gradient(680px 360px at 88% -15%, color-mix(in srgb, var(--ph) 14%, transparent), transparent 70%); }
+.pagehero-inner { padding-block: 58px 52px; position: relative; }
+.pagehero-kicker { display: inline-flex; align-items: center; gap: 9px; font: 700 12px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--ph); margin-bottom: 18px; }
+.pagehero-kicker .rule { width: 22px; height: 2px; background: var(--ph); }
+.pagehero-title { font: 800 clamp(34px, 8vw, 54px)/1.02 var(--font-display); letter-spacing: -.02em; margin-bottom: 16px; max-width: 760px; }
+.pagehero-lead { font: 400 16px/1.55 var(--font-body); color: rgba(255, 255, 255, .72); max-width: 560px; }
+.pagehero-fine { font: 500 13px/1.5 var(--font-body); color: rgba(255, 255, 255, .5); margin-top: 18px; }
+/* Phone: the app's compact page hero (the old phone screens' MobileHero), so the page starts on its content. */
+@media (max-width: 767px) {
+  .pagehero-inner { padding-block: 24px 26px; }
+  .pagehero-kicker { letter-spacing: .12em; gap: 8px; margin-bottom: 14px; }
+  .pagehero-kicker .rule { width: 18px; }
+  .pagehero-title { font-size: 30px; margin-bottom: 10px; }
+}
+
+/* ---- reset ---- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+/* every in-page #anchor (JumpNav pills, hero jump links) scrolls smoothly;
+   scroll-margin-top on the sections keeps the landing offset correct */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+body { margin: 0; }
+img, picture, video, svg { max-width: 100%; display: block; }
+button, input, select, textarea { font: inherit; color: inherit; }
+h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+
+/* ---- base ---- */
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: var(--brand); color: var(--ink); }
+a { color: inherit; }
+:where(h1, h2, h3, h4) { font-family: var(--font-display); font-weight: 800; letter-spacing: -.018em; }
+
+/* keyboard focus only — visible ring, no mouse-click outline */
+:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand) 70%, #000); outline-offset: 2px; border-radius: 4px; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---- layout primitives ---- */
+/* A hidden hook (banner, hours, pill, social) shows nothing whatever display its class sets. */
+[hidden] { display: none !important; }
+
+.container { max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+.section { padding-block: clamp(48px, 8vw, 72px); }
+
+/* auto-fit responsive card grid */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 22px;
+}
+
+/* ---- eyebrow (numbered section kicker) ---- */
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 9px;
+  font: 700 12px/1 var(--font-display);
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--faint);
+}
+.eyebrow .num { color: var(--brand); font-weight: 800; }
+.eyebrow .rule { width: 14px; height: 2px; background: var(--brand); border-radius: 2px; }
+
+/* ---- buttons (one family, weight-only variants) ---- */
+.btn {
+  display: inline-flex; align-items: center; gap: 9px;
+  font: 800 14px/1 var(--font-display);
+  text-transform: uppercase; letter-spacing: .03em;
+  text-decoration: none; cursor: pointer;
+  padding: 14px 22px; border-radius: 11px; border: 0;
+  transition: transform .15s ease, background .15s ease, color .15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-primary { background: var(--brand); color: var(--ink); }
+.btn-dark { background: var(--ink); color: #fff; }
+.btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid #ddd9d0; }
+.btn-ghost-light { background: transparent; color: #fff; border: 1.5px solid rgba(255, 255, 255, .25); }
+
+/* ---- card ---- */
+.card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}

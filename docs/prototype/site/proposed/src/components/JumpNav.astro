@@ -59,9 +59,9 @@ const hasActions = actions.length > 0;
     .jn-scroll { padding: 6px var(--gutter); }
     .jn-link, .jn-act { min-height: 44px; display: inline-flex; align-items: center; }
   }
+  /* Phone: no jump bar and no back-to-top; the tab bar is the map and the pages are short enough to scroll. */
   @media (max-width: 767px) {
-    .jn { top: calc(64px + env(safe-area-inset-top, 0px)); }
-    .jn-top { bottom: calc(var(--tabbar-h) + 14px); right: 16px; }
+    .jn, .jn-top { display: none !important; }
   }
 </style>
 

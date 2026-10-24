@@ -64,25 +64,24 @@
   // One row per page: where it lives in each build, what changed, and the phone-only lines left out (brief rule 2).
   var PAGES = [
     { label: 'Home', now: '', proposed: '', notes: [
-      'One page at every width: the desktop content, laid out for the phone first. The separate phone copy is gone.',
-      'Phone and tablet: headline and buttons first, the gym photos after them (no screen of photo first).',
-      'Phone: the three hero numbers in one row; goal chips two to a row; reviews swipe sideways one at a time.',
-      'Phone now also shows what only the desktop had: both camp cards (Winter and P.A. Day), "Browse activities", and "Leave a review".',
-      'Desktop (1024 and up): unchanged.'
-    ], left: ['Phone hero lines "intro · 1-on-1" and "open weekly" (the desktop says "intro lesson · 1-on-1" and "open every week").'] },
+      'One page at every width. The phone keeps its own design: the compact dark hero with one button and the three numbers in a row, the short labels ("Parkour & movement · Toronto", "intro · 1-on-1"), and the review strip that swipes one review at a time.',
+      'Goal picker is now real tabs at every width: the goals in a list with what we recommend under each, the open one tinted in its colour. Desktop and tablet: the answer beside the list. Phone: it opens right under the goal you tap.',
+      'Phone now also gets: both camp cards (Winter break and P.A. days, your call), "Four ways to get moving", "Just here to play? Open gym", and "Leave a review".',
+      'Tablet: headline first, then the gym photo; goal tabs beside their answer.',
+      'Desktop (1024 and up): unchanged, except the goal tabs.'
+    ], left: ['Kept off the phone on purpose: the "Browse activities" button, the section numbers (01, 02...), the review section heading (the strip carries the rating).'] },
     { label: 'Schedule', now: 'schedule/', proposed: 'schedule/', notes: [
-      'One page, one schedule: below desktop the week is a list of days (from today), at desktop the 7-day grid as now.',
-      'Phone gets the desktop filters (Parent & Child · Kids, Athletic Program...), scrolling sideways in one row.',
-      'Tap a class on the phone or tablet for its details, the same card desktop opens on click.',
-      'Your saved default filter in Members now applies on phones too (it was desktop only).',
-      'Desktop (1024 and up): unchanged.'
-    ], left: ['Phone hero title "This week at the gym" (the desktop says "The full class schedule, always up to date.").'] },
+      'One page, one schedule. Phone keeps its design: the short title "This week at the gym", short filter chips (All, Kids, Teens, Adults, Athletic, Open Gym), and the day cards from today on (class, then time and ages on one line).',
+      'Tablet: the same day cards in a wider column. Desktop (1024 and up): the 7-day grid, unchanged.',
+      'Phone now also gets: the "See the price list" and "Explore the classes" links (side by side), the Open Gym filter, and the Members default filter.',
+      'Tap a class on the phone or tablet for its details, the same card desktop opens on click.'
+    ], left: ['The days already past this week stay off the phone and tablet list, as on the old phone screen.'] },
     { label: 'First Visit', now: 'get-started/', proposed: 'get-started/', notes: [
-      'One page at every width: the desktop steps, cards and questions, laid out for the phone.',
-      'Phone now gets what only the desktop had: the jump bar, the 15-minute arrival note, "Before you get here" in full, and the five questions at the bottom.',
-      'Phone: step numbers sit beside each title; buttons full width; the back-to-top button clears the tab bar.',
+      'One page at every width. Phone keeps its design: the compact hero, numbered steps (number beside the title, no "Step one" labels), full-width note and button, and the short "What to bring" and "When you arrive" lines.',
+      'Phone now also gets: the 15-minute arrival note in full, "Before you get here" and "I\'m at the gym. What now?" cards, and the five questions at the bottom.',
+      'No jump bar and no back-to-top button on the phone, as before (the tab bar does that job).',
       'Desktop (1024 and up): unchanged.'
-    ], left: ['Phone step 3 title "Show up ready" (the desktop says "Things to know").', 'Phone shortened lines in "What to bring" (the desktop wording is kept).'] }
+    ], left: [] }
   ];
   var page = document.getElementById('page'), seg = document.getElementById('seg'), notes = document.getElementById('notes');
   var range = document.getElementById('width'), out = document.getElementById('widthOut'), snaps = document.getElementById('snaps');
@@ -101,7 +100,7 @@
     previews.forEach(function (s) { s.querySelector('iframe').src = src(s.dataset.v, p[s.dataset.v]); });
     notes.textContent = '';
     list('What changed on ' + p.label, p.notes);
-    list('Only on the old phone copy, left out (say if any should stay)', p.left);
+    list('Kept as the phone had it', p.left);
     try { localStorage.setItem('proto-site-page', page.value); } catch (e) { /* storage blocked: start on Home next time */ }
   }
   // The frame renders the page at the chosen width (so the site's own breakpoints apply) and scales it down to fit.

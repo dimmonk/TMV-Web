@@ -1,0 +1,11 @@
+---
+/**
+ * One line with a short version for tight phone spots: the full wording from
+ * 768px up, the short one below (the switch is in global.css, next to the chrome
+ * handoff). With no `short`, it is just the full wording. Both are in the page,
+ * so a live update never has to know the width.
+ */
+interface Props { full: string; short?: string; }
+const { full, short } = Astro.props;
+---
+{short && short !== full ? <><span class="w-full">{full}</span><span class="w-short">{short}</span></> : full}

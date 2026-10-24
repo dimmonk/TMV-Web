@@ -8,6 +8,7 @@ import GoalPicker from '../components/GoalPicker.astro';
 import Reviews from '../components/Reviews.astro';
 import ScheduleChanges from '../components/ScheduleChanges.astro';
 import SpecialEvents from '../components/SpecialEvents.astro';
+import Words from '../components/Words.astro';
 import { seo, cat, url } from '../data/site';
 import { contact } from '../data/site-config';
 import { heroStats } from '../data/hero-stats';
@@ -51,7 +52,7 @@ const camps = [
     <div class="hero-glow"></div>
     <div class="hero-inner container">
       <div>
-        <div class="hero-kicker"><span class="hero-kicker-rule"></span>Parkour &amp; Movement Training Centre · Toronto</div>
+        <div class="hero-kicker"><span class="hero-kicker-rule"></span><Words full="Parkour & Movement Training Centre · Toronto" short="Parkour & movement · Toronto" /></div>
         <h1 class="hero-title">Come to play.<br>Stay to learn.</h1>
         <p class="hero-lead">Toronto's home for parkour, flips and movement. Coached classes, open gym, camps and birthday parties — every age, every level, under one big roof.</p>
         <div class="hero-actions">
@@ -60,7 +61,9 @@ const camps = [
         </div>
         <div class="hero-stats">
           {heroStats.map((st, i) => (
-            <div class:list={['hero-stat', { last: i === heroStats.length - 1 }]} data-hours-stat={st.hours ? '' : undefined} data-stat-variant={st.hours ? 'desktop' : undefined} hidden={st.hidden}><div class="hero-statnum" data-stat-value={st.hours ? '' : undefined}><Priced text={st.value} /></div><div class="hero-statlabel" data-stat-label={st.hours ? '' : undefined}>{st.label}</div></div>
+            <div class:list={['hero-stat', { last: i === heroStats.length - 1 }]} data-hours-stat={st.hours ? '' : undefined} data-stat-variant={st.hours ? 'desktop' : undefined} hidden={st.hidden}><div class="hero-statnum" data-stat-value={st.hours ? '' : undefined}><Priced text={st.value} /></div><div class="hero-statlabel">{st.mobileLabel
+              ? <><span class="w-full" data-stat-label={st.hours ? '' : undefined}>{st.label}</span><span class="w-short" data-stat-label={st.hours ? 'short' : undefined}>{st.mobileLabel}</span></>
+              : <span data-stat-label={st.hours ? '' : undefined}>{st.label}</span>}</div></div>
           ))}
         </div>
         <p class="hero-new">Just here to play? <a href={url('open-gym')}>Open gym, no booking →</a></p>
@@ -225,22 +228,40 @@ const camps = [
     .hero-frame { aspect-ratio: 16/9; }
     .hero-badge { right: 12px; }
   }
+  /* PHONE: the app home's compact hero (no photo, one button, the three numbers in one row), the sections as
+     headed rows on the page background, the camp cards stacked. */
   @media (max-width: 767px) {
-    .hero-inner { padding-block: 32px 36px; gap: 30px; }
-    .hero-kicker { font-size: 11px; margin-bottom: 16px; }
-    .hero-lead { margin-bottom: 24px; }
-    .hero-actions .btn { width: 100%; justify-content: center; }
-    .hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 28px; }
-    .hero-stat { padding: 18px 10px 0 0; margin-right: 10px; }
-    .hero-stat.last { margin-right: 0; }
-    .hero-statnum { font-size: 22px; }
-    .hero-badge { bottom: -12px; font-size: 12px; padding: 10px 12px; }
-    .goalsec { padding-block: 40px 28px; }
-    .offerings { padding-block: 28px 44px; }
-    .camps-band .container { padding-block: 40px; }
-    .camps-grid { grid-template-columns: minmax(0, 1fr); }
-    .camp-body { padding: 20px; }
-    .camps-all { min-height: 44px; }
+    .hero-inner { padding-block: 24px 26px; gap: 0; }
+    .hero-media { display: none; }
+    .hero-kicker { font-size: 12px; letter-spacing: .12em; gap: 8px; margin-bottom: 18px; }
+    .hero-kicker-rule { width: 18px; }
+    .hero-title { font-size: 34px; line-height: 1.02; letter-spacing: -.02em; margin-bottom: 14px; }
+    .hero-lead { margin-bottom: 22px; }
+    .hero-actions .btn-ghost-light { display: none; }
+    .hero-actions .btn { width: 100%; justify-content: center; padding: 14px; font-size: 14px; min-height: 48px; }
+    .hero-stats { flex-wrap: nowrap; margin-top: 22px; padding-top: 16px; }
+    .hero-stat { flex: 1; min-width: 0; padding: 0 8px; margin: 0; text-align: center; }
+    .hero-stat:first-child { padding-left: 0; text-align: left; }
+    .hero-stat.last { padding-right: 0; text-align: right; }
+    .hero-statnum { font-size: 20px; }
+    .hero-statlabel { font-size: 12px; margin-top: 5px; }
+    .hero-new { margin-top: 18px; }
+    .hero-new a { display: inline-block; padding-block: 14px; margin-block: -14px; }
+    .goalsec { padding-block: 32px 24px; }
+    .goalsec-head { margin-bottom: 16px; }
+    .offerings { padding-block: 24px 32px; }
+    .offerings-head { margin-bottom: 16px; }
+    .camps-band { background: transparent; color: var(--ink); }
+    .camps-band .container { padding-block: 8px 32px; }
+    .camps-head { flex-wrap: nowrap; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .camps-eyebrow { display: none; }
+    .camps-title { font-size: 22px; margin-bottom: 6px; }
+    .camps-lead { color: var(--muted); font-size: 15px; }
+    .camps-all { color: var(--ink); font-size: 12px; min-height: 44px; align-self: flex-start; }
+    .camps-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .camp-card { border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+    .camp-body { padding: 18px 18px 18px; }
+    .camp-title { font-size: 20px; margin-bottom: 12px; }
     .camp-resv { min-height: 44px; }
     .final-cta { padding-block: 16px 40px; }
   }

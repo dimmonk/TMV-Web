@@ -201,9 +201,8 @@ export function renderWeekList(root, { sessions, monday, today, closed, section,
       ? days.map(({ d, date, here }) => {
         const shut = closed.get(date);
         return el('section', { class: 'ws-day', 'aria-label': `${DAY_LONG[d]} ${shortDate(date)}` }, [
-          el('div', { class: `ws-head${date === today ? ' is-today' : ''}${shut ? ' is-closed' : ''}` }, [
-            el('span', { class: 'ws-kicker' }, [date === today ? el('span', { class: 'rule' }) : null, date === today ? `Today · ${shortDate(date)}` : shortDate(date)]),
-            el('span', { class: 'ws-title', text: DAY_LONG[d] }),
+          el('h3', { class: `ws-daylabel${date === today ? ' is-today' : ''}` }, [
+            `${date === today ? 'Today · ' : ''}${DAY_LONG[d]} · ${shortDate(date)}`,
             shut ? el('span', { class: 'ws-closed', text: `Gym closed${shut.reason ? `: ${shut.reason}` : ''}` }) : null,
           ]),
           el('div', { class: 'ws-card' }, here.map((s) => classItem(s, onClassClick))),

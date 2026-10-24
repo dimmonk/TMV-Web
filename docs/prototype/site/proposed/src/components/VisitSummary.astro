@@ -1,0 +1,36 @@
+---
+/**
+ * Where we are, when we're open, and the three first-visit links.
+ * The hours line is the one staff publish (site config), behind the same `data-hours-summary` hook the More sheet
+ * and footer use, so a staff edit reaches it with no release; with no hours published the row is hidden.
+ */
+import { url, links } from '../data/site';
+import { hours, contact } from '../data/site-config';
+import { hoursSummary } from '../lib/opening-hours.js';
+const hoursLine = hoursSummary(hours);
+---
+<div class="visit-summary">
+  <div>
+    <span class="vs-eyebrow">Downsview Park · Toronto</span>
+    <h2 class="vs-title">Come find your kind of fun.</h2>
+    <p class="vs-where" data-contact="street" hidden={!contact.street}>{contact.street}</p>
+    <p class="vs-hours" data-hours-wrap hidden={!hoursLine}><span data-hours-summary>{hoursLine}</span></p>
+    <a class="btn btn-primary" href={contact.href.directions || undefined} data-contact-href="directions" hidden={!contact.href.directions} target="_blank" rel="noopener">Get directions <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+  </div>
+  <div class="vs-links">
+    <a href={url('get-started')}>Your first visit <span>What to bring &amp; what to expect →</span></a>
+    <a href={links.waiver} target="_blank" rel="noopener">Sign the waiver <span>A parent or guardian signs for under-18s ↗</span></a>
+    <a href={contact.href.phone || undefined} data-contact-href="phone" hidden={!contact.href.phone}>Have a question? <span><span data-contact="phone">{contact.phone}</span> →</span></a>
+  </div>
+</div>
+<style>
+  .visit-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-sm); }
+  .vs-eyebrow { font: 700 11px/1 var(--font-display); color: var(--muted); letter-spacing: .12em; text-transform: uppercase; }
+  .vs-title { font: 800 27px/1.1 var(--font-display); margin: 12px 0; }
+  .vs-where, .vs-hours { font-size: 14px; line-height: 1.7; color: var(--text-3); margin: 0; }
+  .visit-summary .btn { margin-top: 20px; }
+  .vs-links a { display: block; padding: 18px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); font: 800 15px/1.4 var(--font-display); }
+  .vs-links a:last-child { border-bottom: 0; }
+  .vs-links span { display: block; font: 400 13px/1.5 var(--font-body); color: var(--muted); margin-top: 5px; }
+  @media (max-width: 640px) { .visit-summary { grid-template-columns: 1fr; padding: 24px; gap: 12px; } .vs-title { font-size: 24px; } .visit-summary .btn { min-height: 44px; } }
+</style>

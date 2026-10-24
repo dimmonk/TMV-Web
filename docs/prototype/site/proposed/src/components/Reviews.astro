@@ -1,5 +1,6 @@
 ---
 import { links, reviews as reviewData } from '../data/site';
+import Words from './Words.astro';
 
 interface Review { quote: string; name: string; context: string; stars?: number; }
 interface Props {
@@ -9,6 +10,9 @@ interface Props {
   ratingValue?: string;
   ratingCount?: string;
   reviews?: Review[];
+  /** On a phone: 'carousel' = the rating and one review at a time, swiped (the app home's strip);
+   *  'stack' = every review, one under another. Tablet and desktop are the grid either way. */
+  phone?: 'carousel' | 'stack';
 }
 
 // Defaults come from the reviews SSOT in data/site.ts — real curated Google
@@ -20,6 +24,7 @@ const {
   ratingValue = reviewData.ratingValue,
   ratingCount = reviewData.ratingCount,
   reviews = reviewData.items as unknown as Review[],
+  phone = 'carousel',
 } = Astro.props;
 
 const palette = ['#2196f3', '#e27902', '#f44336', '#2e9e4f', '#8c52ff'];
@@ -30,8 +35,9 @@ const badgeStars = Array.from({ length: 5 }, (_, i) =>
   i + 1 <= roundedHalf ? 'bi-star-fill' : i + 0.5 === roundedHalf ? 'bi-star-half' : 'bi-star',
 );
 ---
-<section class="rv">
+<section class:list={['rv', `rv-${phone}`]}>
   <div class="container">
+    <div class="rv-box">
     <div class="rv-head">
       <div>
         <div class="rv-eyebrow">{eyebrow}</div>
@@ -46,12 +52,14 @@ const badgeStars = Array.from({ length: 5 }, (_, i) =>
         <div class="rv-divider"></div>
         <div>
           <div class="rv-google"><i class="bi bi-google" aria-hidden="true"></i>Google Reviews</div>
-          <div class="rv-count">{ratingCount}</div>
+          <div class="rv-count"><Words full={ratingCount} short={ratingCount.replace(/^Based on /, '')} /></div>
         </div>
       </div>
     </div>
 
-    <div class="rv-grid">
+    <div class="rv-slides" data-carousel={phone === 'carousel' ? '' : undefined}>
+    <div class="rv-viewport" data-rev-viewport>
+    <div class="rv-grid" data-rev-track>
       {reviews.map((r, i) => (
         <figure class="rv-card">
           <div class="rv-cardtop">
@@ -68,6 +76,16 @@ const badgeStars = Array.from({ length: 5 }, (_, i) =>
           </figcaption>
         </figure>
       ))}
+    </div>
+    </div>
+    {phone === 'carousel' && (
+      <div class="rv-nav">
+        <button type="button" class="rv-arrow" data-rev-prev aria-label="Previous review"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+        <div class="rv-dots">{reviews.map((_, i) => <button type="button" class="rv-dot" data-rev-dot={i} aria-label={`Review ${i + 1}`}></button>)}</div>
+        <button type="button" class="rv-arrow" data-rev-next aria-label="Next review"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+    )}
+    </div>
     </div>
 
     <div class="rv-cta">
@@ -122,13 +140,48 @@ const badgeStars = Array.from({ length: 5 }, (_, i) =>
   .rv-write { display: inline-flex; align-items: center; gap: 9px; background: var(--ink); color: #fff; font: 800 13px/1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; text-decoration: none; padding: 13px 20px; border-radius: 11px; transition: transform .15s ease; }
   .rv-write:hover { transform: translateY(-1px); }
 
+  .rv-nav { display: none; }
+  /* The track only moves on a phone; from tablet up it is the grid. */
+  @media (min-width: 768px) { .rv-grid { transform: none !important; } }
+
   /* After the base rules, so it wins. */
-  @media (max-width: 640px) {
-    /* One review at a time, swiped sideways, the next one peeking in: three full cards stacked were a long scroll. */
-    .rv-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; margin-inline: calc(-1 * var(--gutter)); padding: 4px var(--gutter) 12px; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
-    .rv-grid::-webkit-scrollbar { display: none; }
-    .rv-card { flex: 0 0 86%; scroll-snap-align: start; padding: 22px 20px 18px; }
-    .rv-card:hover { transform: none; }
+  @media (max-width: 767px) {
+    .rv { padding-block: 8px 36px; }
     .rv-write { min-height: 44px; }
+    /* Carousel: the app home's strip. One card holds the rating and one review at a time, swiped or stepped. */
+    .rv-carousel .rv-head { margin-bottom: 0; align-items: stretch; }
+    .rv-carousel .rv-head > div:first-child { display: none; }
+    .rv-carousel .rv-box { background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-sm); padding: 20px; }
+    /* The rating as the app strip: the number, then the stars over the count. */
+    .rv-carousel .rv-badge { display: grid; grid-template-columns: auto 1fr; justify-content: start; column-gap: 10px; row-gap: 4px; align-items: center; background: none; border: 0; box-shadow: none; padding: 0 0 14px; }
+    .rv-carousel .rv-score { display: contents; }
+    .rv-carousel .rv-num { grid-row: 1 / 3; font-size: 26px; }
+    .rv-carousel .rv-stars { justify-content: flex-start; margin-top: 0; align-self: end; }
+    .rv-carousel .rv-divider, .rv-carousel .rv-google { display: none; }
+    .rv-carousel .rv-badge > div:last-child { grid-column: 2; align-self: start; }
+    .rv-carousel .rv-count { font-size: 12px; margin-top: 0; }
+    .rv-carousel .rv-viewport { overflow: hidden; touch-action: pan-y; }
+    .rv-carousel .rv-grid { display: flex; gap: 0; transition: transform .35s ease; }
+    .rv-carousel .rv-card { flex: 0 0 100%; min-width: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; background: none; }
+    .rv-carousel .rv-card:hover { transform: none; box-shadow: none; }
+    .rv-carousel .rv-cardtop { display: none; }
+    .rv-carousel .rv-text { font-size: 15px; margin-bottom: 12px; }
+    .rv-carousel .rv-by { padding-top: 0; border-top: 0; gap: 10px; }
+    .rv-carousel .rv-avatar { width: 32px; height: 32px; font-size: 13px; }
+    .rv-carousel .rv-nav { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
+    .rv-arrow { cursor: pointer; width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 1px solid var(--line); color: var(--ink); font-size: 15px; display: flex; align-items: center; justify-content: center; }
+    .rv-dots { display: flex; }
+    .rv-dot { cursor: pointer; background: none; border: 0; padding: 18px 5px; display: flex; }
+    .rv-dot::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #d8d4cc; transition: background .15s, transform .15s; }
+    .rv-dot.on::before { background: var(--ink); transform: scale(1.25); }
+    /* Stack: every review, one under another. */
+    .rv-stack .rv-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .rv-stack .rv-card { padding: 20px 18px 18px; }
+    .rv-stack .rv-card:hover { transform: none; }
   }
 </style>
+
+<script>
+  import { mountReviewCarousels } from '../lib/review-carousel';
+  document.addEventListener('astro:page-load', () => mountReviewCarousels());
+</script>

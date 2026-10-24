@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NextStep from '../components/NextStep.astro';
+import Words from '../components/Words.astro';
 import { seo, url } from '../data/site';
 import '../styles/schedule-web.css';
 import '../styles/schedule-changes.css';
@@ -10,10 +11,10 @@ import '../styles/schedule-changes.css';
   <section class="pagehero">
     <div class="pagehero-glow"></div>
     <div class="container pagehero-inner">
-      <div class="pagehero-kicker"><span class="rule"></span>Group classes · live timetable</div>
-      <h1 class="pagehero-title">The full class schedule, always up to date.</h1>
+      <div class="pagehero-kicker"><span class="rule"></span><Words full="Group classes · live timetable" short="Schedule" /></div>
+      <h1 class="pagehero-title"><Words full="The full class schedule, always up to date." short="This week at the gym" /></h1>
       <p class="pagehero-lead">Every recreational, specialized and athletic class — straight from our booking system. Find a time that works and reserve your spot in a couple of taps.</p>
-      <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap">
+      <div class="sched-hero-acts">
         <a href={url('pricing')} class="btn btn-primary">See the price list <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
         <a href={url('train')} class="btn btn-ghost-light">Explore the classes</a>
       </div>
@@ -24,11 +25,11 @@ import '../styles/schedule-changes.css';
        (src/lib/schedule-page.js). Drawn in the browser from the public projections, like the phone list. -->
   <main class="sched-main" data-sched-page>
     <div class="ws-filters" data-sched-filters role="group" aria-label="Show classes for">
-      <button type="button" class="ws-filter" data-filter="all">All Classes</button>
-      <button type="button" class="ws-filter" data-filter="kids">Parent &amp; Child &middot; Kids</button>
+      <button type="button" class="ws-filter" data-filter="all"><Words full="All Classes" short="All" /></button>
+      <button type="button" class="ws-filter" data-filter="kids"><Words full="Parent & Child · Kids" short="Kids" /></button>
       <button type="button" class="ws-filter" data-filter="teens">Teens</button>
       <button type="button" class="ws-filter" data-filter="adults">Adults</button>
-      <button type="button" class="ws-filter" data-filter="athletic">Athletic Program</button>
+      <button type="button" class="ws-filter" data-filter="athletic"><Words full="Athletic Program" short="Athletic" /></button>
       <button type="button" class="ws-filter" data-filter="open-gym">Open Gym</button>
     </div>
     <div data-sched-top></div>
@@ -48,12 +49,20 @@ import '../styles/schedule-changes.css';
   .sched-foot { font: 500 12.5px/1.5 var(--font-body); color: #9b9890; text-align: center; margin: 20px 0 32px; }
   .sched-next { max-width: 1120px; margin: 0 auto 44px; }
   .sched-foot i { color: var(--brand); }
+  .sched-hero-acts { margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; }
   /* Seven day columns need desktop width; below it the same week reads as a list of days. */
   .sched-narrow { display: none; }
   @media (max-width: 1023px) {
     .sched-wide { display: none; }
     .sched-narrow { display: block; }
     .sched-main { padding: 24px var(--gutter) 12px; max-width: 720px; }
+  }
+  /* Phone: the two hero links side by side, so the schedule starts high on the screen. */
+  @media (max-width: 767px) {
+    .sched-hero-acts { margin-top: 18px; flex-wrap: nowrap; gap: 8px; }
+    .sched-hero-acts .btn { flex: 1 1 0; min-width: 0; justify-content: center; padding: 12px 6px; font-size: 12px; letter-spacing: 0; white-space: nowrap; min-height: 44px; }
+    .sched-hero-acts .btn i { display: none; }
+    .sched-main { padding-top: 18px; }
   }
 </style>
 

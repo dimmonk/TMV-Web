@@ -6,10 +6,8 @@ import PathStrip from '../components/PathStrip.astro';
 import Faq from '../components/Faq.astro';
 import { seo, links, url } from '../data/site';
 import { firstVisitBring, firstVisitArrive } from '../data/first-visit';
-import { forSurface } from '../data/surface';
+import Words from '../components/Words.astro';
 
-const bring = forSurface(firstVisitBring, 'desktop');
-const arrive = forSurface(firstVisitArrive, 'desktop');
 const otherFaqs = [
   { q: 'Do I need any experience to start?', a: 'None at all. Most people who walk in have never done parkour before. Book an intro lesson for the basics, a private lesson for a specific goal, or drop into a group class or open gym.' },
   { q: 'What ages do you welcome?', a: 'Everyone from age 3 and up. We run youth classes, adult classes, camps for kids 5 to 16, and open gym for all ages. There is a class and a session for every body.' },
@@ -23,8 +21,8 @@ const otherFaqs = [
   <section class="pagehero">
     <div class="pagehero-glow"></div>
     <div class="gs-hero">
-      <div class="gs-kicker"><span class="rule"></span>New here? Start here<span class="rule"></span></div>
-      <h1 class="gs-title">Your first visit,<br>in three steps.</h1>
+      <div class="gs-kicker"><span class="rule"></span><Words full="New here? Start here" short="New here?" /><span class="rule"></span></div>
+      <h1 class="gs-title">Your first visit,<br> in three steps.</h1>
       <p class="gs-lead">Never trained with us before? No experience needed. Sign your waiver, book the lesson that fits your goal, and show up ready to move — we'll take care of the rest.</p>
     </div>
   </section>
@@ -67,11 +65,11 @@ const otherFaqs = [
       <div class="gsknow">
         <div class="gscard">
           <h3 class="gscard-title"><i class="bi bi-bag-check" aria-hidden="true"></i>Before you get here</h3>
-          <div class="gslist">{bring.map((b) => <div class="gsli"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>{b.text}</span></div>)}</div>
+          <div class="gslist">{firstVisitBring.map((b) => <div class="gsli"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span><Words full={b.text} short={b.mobile?.text} /></span></div>)}</div>
         </div>
         <div class="gscard">
           <h3 class="gscard-title"><i class="bi bi-geo-alt" aria-hidden="true"></i>I'm at the gym. What now?</h3>
-          <div class="gslist">{arrive.map((a) => <div class="gsli"><span class="gslin">{a.n}</span><span>{a.text}</span></div>)}</div>
+          <div class="gslist">{firstVisitArrive.map((a) => <div class="gsli"><span class="gslin">{a.n}</span><span><Words full={a.text} short={a.mobile?.text} /></span></div>)}</div>
         </div>
       </div>
       <div class="gsarrival"><i class="bi bi-clock-history" aria-hidden="true"></i><span>Please arrive <strong>15 minutes early</strong> to sign in. To be fair to those who arrive on time, there's a 15-minute cutoff — anyone more than 15 minutes late can't be admitted to a class.</span></div>
@@ -128,19 +126,35 @@ const otherFaqs = [
   .gsarrival { display: flex; align-items: flex-start; gap: 13px; background: #fff7d6; border: 1px solid #f1e4a0; border-radius: 14px; padding: 18px 22px; margin-top: 18px; font: 600 14px/1.6 var(--font-body); color: #5c4d12; }
   .gsarrival i { font-size: 18px; color: #9a7b00; margin-top: 1px; flex: none; }
 
+  /* Phone: the app's compact hero (left, no second rule), the steps as numbered rows without their "Step one"
+     labels (the number says it), cards stacked. */
   @media (max-width: 767px) {
-    .gs-hero { padding: 40px var(--gutter) 44px; }
-    .gswrap { padding: 0 var(--gutter) 48px; }
-    .gsstep { padding-top: 32px; }
-    #step-1 { padding-top: 36px; }
-    .gsrow { gap: 14px; }
-    .gsnum { width: 42px; height: 42px; border-radius: 12px; font-size: 19px; }
-    .gseyebrow { margin-bottom: 6px; }
+    .gs-hero { padding: 24px var(--gutter) 26px; text-align: left; }
+    .gs-kicker { gap: 8px; letter-spacing: .12em; margin-bottom: 14px; }
+    .gs-kicker .rule { width: 18px; }
+    .gs-kicker .rule:last-child { display: none; }
+    .gs-title { font-size: 30px; margin-bottom: 10px; }
+    .gs-title br { display: none; }
+    .gs-lead { margin-inline: 0; }
+    .gswrap { padding: 0 var(--gutter); }
+    .gsstep { padding-top: 28px; scroll-margin-top: 80px; }
+    #step-1 { padding-top: 24px; }
+    /* A step: the number beside its title and text; the note and the button take the full width under them. */
+    .gsrow { grid-template-columns: 40px minmax(0, 1fr); column-gap: 14px; row-gap: 0; }
+    .gsrow > div:last-child { display: contents; }
+    .gsnum { grid-row: 1; width: 40px; height: 40px; border-radius: 12px; font-size: 18px; }
+    .gseyebrow { display: none; }
+    .gsrow .gsh2 { grid-column: 2; grid-row: 1; align-self: center; font-size: 22px; margin: 0; }
+    .gsrow .gsp { grid-column: 2; margin: 8px 0 0; }
+    .gsrow .gsnote, .gsrow .btn { grid-column: 1 / -1; }
     .gsrow .btn { width: 100%; justify-content: center; min-height: 44px; }
-    .gsdiv { margin-top: 32px; }
-    .gsopts { margin-top: 22px; }
-    .gsknow { grid-template-columns: 1fr; gap: 14px; }
-    .gscard { padding: 22px 20px; }
-    .gspath { padding-top: 32px; }
+    #questions { display: none; }
+    .gsnote { padding: 14px 16px; margin: 14px 0 18px; }
+    .gsdiv { margin-top: 28px; }
+    .gsopts { margin-top: 18px; }
+    .gsknow { grid-template-columns: 1fr; gap: 12px; margin-top: 18px; }
+    .gscard { padding: 20px 18px; border-radius: 16px; }
+    .gspath { padding-top: 28px; }
+    .gspath .gseyebrow { display: block; }
   }
 </style>
