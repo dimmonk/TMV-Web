@@ -12,21 +12,21 @@
  * layout — both the print page and the embed page render through it.
  *
  * Color palette mirrors the badge colors used elsewhere in the app:
- *   blue (Classes), red (Private), yellow (Birthday Party),
- *   orange (Camps), green (Open Gym), gray (Intro/Athletic), black.
+ *   blue (Classes), red (Private), pink (Birthday Party),
+ *   orange (Camps), green (Open Gym), gray (Intro), amber (Athletic).
  */
 
 // `textOnHeader` is the text color rendered ON TOP of palette.header
 // (the colored pill and the .ed-glabel sub-group banner). Defaults to
-// white; yellow gets dark text since white-on-yellow fails contrast.
+// white; amber gets dark text since white-on-amber fails contrast.
 export const PRICE_LIST_PALETTE = {
   blue:   { header: '#1E4FA8', body: '#D7E4F4', divider: '#B6CFE8' },
   red:    { header: '#E63946', body: '#FCE3E3', divider: '#F4C5C5' },
-  yellow: { header: '#F9CA1A', body: '#FFF6CC', divider: '#F2DE7A', textOnHeader: '#1a1a1a' },
+  pink:   { header: '#E5399B', body: '#FBE1EE', divider: '#F3B7D5' },
+  amber:  { header: '#FFB82A', body: '#FFF1D4', divider: '#F6D58E', textOnHeader: '#1a1a1a' },
   orange: { header: '#F5853F', body: '#FDE2D0', divider: '#F4C49B' },
   green:  { header: '#19A95C', body: '#D6F2DF', divider: '#A9DDB9' },
   gray:   { header: '#6E6E6E', body: '#E6E6E6', divider: '#C9C9C9' },
-  black:  { header: '#111111', body: '#E6E6E6', divider: '#C9C9C9' },
 };
 
 /**
@@ -112,7 +112,7 @@ export const PRICE_LIST_SECTIONS = [
   {
     id: 'birthday_party',
     title: 'Birthday Party',
-    color: 'yellow',
+    color: 'pink',
     intro: false,
     about: [
       'Birthday party packages centered around parkour and movement activities',
@@ -274,7 +274,7 @@ export const PRICE_LIST_SECTIONS = [
   {
     id: 'athletic_program',
     title: 'Athletic Program',
-    color: 'black',
+    color: 'amber',
     intro: false,
     about: [
       'Develops versatile, well-rounded athletes through physical conditioning, parkour, and acrobatics training',
