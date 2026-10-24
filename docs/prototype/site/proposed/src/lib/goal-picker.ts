@@ -8,7 +8,9 @@
  *
  * The goals are a vertical tablist (GoalPicker.astro). On a phone the open
  * recommendation sits under its goal, so closing the one above a tapped goal
- * moves the page: the tapped goal is kept in view.
+ * moves the page: the tapped goal is kept in view. A phone also opens with every
+ * goal closed (GoalPicker's CSS, until `data-picked`), so all six fit on one
+ * screen and the reader finds theirs first; tapping the open goal closes it.
  *
  * Scoped to `root` per the shared-logic rule in CLAUDE.md.
  */
@@ -42,14 +44,23 @@ function mountOne(root: HTMLElement): void {
     }
   };
 
+  const stacked = window.matchMedia('(max-width: 767px)');
   tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => show(tab));
+    tab.addEventListener('click', () => {
+      if (stacked.matches && root.hasAttribute('data-picked') && tab.classList.contains('on')) {
+        root.removeAttribute('data-picked');
+        return;
+      }
+      root.setAttribute('data-picked', '');
+      show(tab);
+    });
     // A vertical tablist: Up/Down move (Left/Right still accepted).
     tab.addEventListener('keydown', (e) => {
       const dir = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1
         : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0;
       if (!dir) return;
       e.preventDefault();
+      root.setAttribute('data-picked', '');
       show(tabs[(i + dir + tabs.length) % tabs.length], true);
     });
   });

@@ -3,7 +3,8 @@ import Priced from './Priced.astro';
 /**
  * Get Started · step two — "Pick the first visit that fits your goal".
  *
- * Match the lesson to the goal. The intro is a
+ * The easiest way in comes first (owner's rule, 2026-10-24): an Open Gym row,
+ * no booking, then the lessons. Match the lesson to the goal. The intro is a
  * set basic-parkour lesson plan; a specific skill or goal goes straight to a
  * private lesson, first visit included. The intro stays the lead card (most
  * first visits are "learn the basics"), the private lesson is the one clear
@@ -12,15 +13,21 @@ import Priced from './Priced.astro';
  * Copy/price come from `privateWays[0]` (the intro's SSOT) and
  * src/data/first-session.ts. Content only — both chromes render this.
  */
-import { introWhy, introBonus, otherWaysIn, privateFirst } from '../data/first-session';
+import { introWhy, introBonus, otherWaysIn, privateFirst, openGymFirst } from '../data/first-session';
 import { privateWays } from '../data/private-lessons';
 import { sq } from '../data/square-links';
-import { cat } from '../data/site';
+import { cat, url } from '../data/site';
 
 
 const intro = privateWays.find((w) => w.key === 'intro')!;
 ---
 <div class="is">
+  <a class="is-private is-first" href={url('open-gym')}>
+    <span class="is-private-ic"><i class="bi bi-door-open" aria-hidden="true"></i></span>
+    <span class="is-private-txt"><strong>{openGymFirst.label}</strong> {openGymFirst.text} <b class="is-first-price"><Priced text={openGymFirst.price} /></b></span>
+    <span class="is-private-cta">{openGymFirst.cta} <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
+  </a>
+
   <div class="is-grid">
     <div class="is-card">
       <span class="is-strip"></span>
@@ -84,6 +91,8 @@ const intro = privateWays.find((w) => w.key === 'intro')!;
   .is-private-txt { font: 500 14px/1.5 var(--font-body); }
   .is-private-txt strong { font: 800 15px/1.4 var(--font-display); color: var(--ink); display: block; }
   .is-private-cta { font: 800 12px/1.2 var(--font-display); text-transform: uppercase; letter-spacing: .04em; color: var(--ink); white-space: nowrap; }
+  .is-first .is-private-ic { background: color-mix(in srgb, var(--c-opengym) 14%, #fff); color: var(--c-opengym); }
+  .is-first-price { font: 800 14px/1.4 var(--font-display); color: var(--ink); white-space: nowrap; }
   @media (max-width: 640px) { .is-private { grid-template-columns: auto 1fr; } .is-private-cta { grid-column: 1 / -1; } }
   .is-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; align-items: stretch; }
 

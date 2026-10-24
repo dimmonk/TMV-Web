@@ -64,13 +64,14 @@
   // One row per page: where it lives in each build, what changed, and the phone-only lines left out (brief rule 2).
   var PAGES = [
     { label: 'Home', now: '', proposed: '', notes: [
-      'One page at every width. The phone keeps its own design: the compact dark hero with one button and the three numbers in a row, the short labels ("Parkour & movement · Toronto", "intro · 1-on-1"), and the review strip that swipes one review at a time.',
-      'Hero: the first number is now the $25 open gym day pass (the cheapest way in, no booking, any time), not the intro. The least-barrier way in always comes first.',
-      'Goal picker is now real tabs at every width: the goals in a list with what we recommend under each, the open one tinted in its colour. Desktop and tablet: the answer beside the list. Phone: it opens right under the goal you tap.',
-      'Phone now also gets: both camp cards (Winter break and P.A. days, your call), "Four ways to get moving", "Just here to play? Open gym", and "Leave a review".',
-      'Tablet: headline first, then the gym photo; goal tabs beside their answer.',
-      'Desktop (1024 and up): unchanged, except the goal tabs.'
-    ], left: ['Kept off the phone on purpose: the "Browse activities" button, the section numbers (01, 02...), the review section heading (the strip carries the rating).'] },
+      'The page has one job: a new visitor finds the right option for them fast, with the easiest way in first.',
+      'Hero: one button ("Find your starting point"), and the first number is the $25 open gym day pass. The second button and the extra "Just here to play?" line are gone: the goal list right below does that job.',
+      'The goal list ("What are you here for?") now comes straight after the hero. Goals run from the easiest step to the biggest: Just play, my kid, Learn parkour, a specific skill, Train seriously, a birthday.',
+      'Each goal leads with what fits that person, with the easiest version as the "or": play and a kid trying it out get Open Gym (a coached drop-in class as the "or"); Learn parkour gets the intro (or drop into a Recreational class); a skill gets a private (or a specialized group class); training seriously gets the Athletic Program; a birthday gets a party.',
+      'Phone: every goal starts closed, so all six fit on one screen; tap yours and the answer opens right under it.',
+      'Section intros cut: the lines before the goal list and the activity cards are gone, the camps line is one short sentence. Activity cards start with Open Gym.',
+      'Phone keeps its own design: compact hero, the three numbers in a row, short labels, the review strip; both camp cards are on it now.'
+    ], left: ['Kept off the phone on purpose: the section numbers (01, 02...) and the review section heading (the strip carries the rating).'] },
     { label: 'Schedule', now: 'schedule/', proposed: 'schedule/', notes: [
       'One page, one schedule. Phone keeps its design: the short title "This week at the gym", short filter chips (All, Kids, Teens, Adults, Athletic, Open Gym), and the day cards from today on (class, then time and ages on one line).',
       'Tablet: the same day cards in a wider column. Desktop (1024 and up): the 7-day grid, unchanged.',
@@ -79,6 +80,7 @@
     ], left: ['The days already past this week stay off the phone and tablet list, as on the old phone screen.'] },
     { label: 'First Visit', now: 'get-started/', proposed: 'get-started/', notes: [
       'One page at every width. Phone keeps its design: the compact hero, numbered steps (number beside the title, no "Step one" labels), full-width note and button, and the short "What to bring" and "When you arrive" lines.',
+      'Step two is now "Pick your first visit" and starts with the easiest one: Open Gym, no booking, $25. Then the intro for the basics and a private lesson for a specific skill.',
       'Phone now also gets: the 15-minute arrival note in full, "Before you get here" and "I\'m at the gym. What now?" cards, and the five questions at the bottom.',
       'No jump bar and no back-to-top button on the phone, as before (the tab bar does that job).',
       'Desktop (1024 and up): unchanged.'
