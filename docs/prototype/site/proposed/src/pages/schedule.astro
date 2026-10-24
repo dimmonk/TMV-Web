@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NextStep from '../components/NextStep.astro';
+import { seo, url } from '../data/site';
+import '../styles/schedule-web.css';
+import '../styles/schedule-changes.css';
+---
+<BaseLayout title={seo.schedule.title} description={seo.schedule.description} active="train" mobileTab="schedule">
+
+  <section class="pagehero">
+    <div class="pagehero-glow"></div>
+    <div class="container pagehero-inner">
+      <div class="pagehero-kicker"><span class="rule"></span>Group classes · live timetable</div>
+      <h1 class="pagehero-title">The full class schedule, always up to date.</h1>
+      <p class="pagehero-lead">Every recreational, specialized and athletic class — straight from our booking system. Find a time that works and reserve your spot in a couple of taps.</p>
+      <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap">
+        <a href={url('pricing')} class="btn btn-primary">See the price list <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        <a href={url('train')} class="btn btn-ghost-light">Explore the classes</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- The dated week: the Members schedule laid on real dates, with staff's one-date cancellations and closed days
+       (src/lib/schedule-page.js). Drawn in the browser from the public projections, like the phone list. -->
+  <main class="sched-main" data-sched-page>
+    <div class="ws-filters" data-sched-filters role="group" aria-label="Show classes for">
+      <button type="button" class="ws-filter" data-filter="all">All Classes</button>
+      <button type="button" class="ws-filter" data-filter="kids">Parent &amp; Child &middot; Kids</button>
+      <button type="button" class="ws-filter" data-filter="teens">Teens</button>
+      <button type="button" class="ws-filter" data-filter="adults">Adults</button>
+      <button type="button" class="ws-filter" data-filter="athletic">Athletic Program</button>
+      <button type="button" class="ws-filter" data-filter="open-gym">Open Gym</button>
+    </div>
+    <div data-sched-top></div>
+    <div class="sched-wide" data-sched-week></div>
+    <div class="sched-narrow" data-sched-list></div>
+
+    <p class="sched-foot">
+      <i class="bi bi-arrow-repeat" aria-hidden="true"></i>&nbsp; Times update automatically from our booking system — the same schedule our front desk runs from.
+    </p>
+
+    <div class="sched-next"><NextStep step="weekly-athletic" /></div>
+  </main>
+</BaseLayout>
+
+<style>
+  .sched-main { max-width: 1440px; margin: 0 auto; padding: 40px 20px 20px; }
+  .sched-foot { font: 500 12.5px/1.5 var(--font-body); color: #9b9890; text-align: center; margin: 20px 0 32px; }
+  .sched-next { max-width: 1120px; margin: 0 auto 44px; }
+  .sched-foot i { color: var(--brand); }
+  /* Seven day columns need desktop width; below it the same week reads as a list of days. */
+  .sched-narrow { display: none; }
+  @media (max-width: 1023px) {
+    .sched-wide { display: none; }
+    .sched-narrow { display: block; }
+    .sched-main { padding: 24px var(--gutter) 12px; max-width: 720px; }
+  }
+</style>
+
+<script>
+  import { mountSchedulePage } from '../lib/schedule-page.js';
+  import { publishedSiteConfig } from '../lib/live-site-config';
+  document.addEventListener('astro:page-load', () => {
+    const root = document.querySelector<HTMLElement>('[data-sched-page]');
+    if (root) void mountSchedulePage(root, { siteConfig: publishedSiteConfig });
+  });
+</script>

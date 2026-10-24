@@ -47,5 +47,9 @@ node docs/prototype/site/build.mjs   # -> docs/prototype/dist/site/ (gitignored)
 ```
 
 The pages run offline: `offline.js` answers the published site config, schedule, price list and camp catalogue from a copy read
-at build time and refuses any other off-site request. The 2026-10 redesign was approved on 2026-10-22 and is now `src/`, so
-`site/proposed/src/` is empty and both builds match; the next iteration starts by adding its changed files there again.
+at build time and refuses any other off-site request. The 2026-10 redesign was approved on 2026-10-22 and is now `src/`.
+
+**Current iteration: the mobile-first rebuild** (brief signed 2026-10-24, `/mnt/project-files/mobile-tablet/brief.md`): every
+page built once, from the desktop content, laid out phone first. `site/proposed/src/` holds round 1 (Home, Schedule, First
+Visit). `compare.html` has a width slider (320 to 1440, snapping to phone / tablet / desktop) and shows Now, Proposed or
+both side by side at that width. Published: https://claude.ai/artifact/317zemetxgfkHVEckqrUnB (republish to it on every change).

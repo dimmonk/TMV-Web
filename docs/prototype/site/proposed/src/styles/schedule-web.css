@@ -1,0 +1,154 @@
+/* ============================================================================
+ * The schedule page: the dated week in the website's look (signed off 2026-10-22).
+ *
+ * The markup is drawn at runtime (src/lib/schedule-week-view.js, schedule-page.js, mobile-schedule.ts), which
+ * Astro's scoped styles cannot reach, so these rules are global and every name is schedule-prefixed: wk-* for the
+ * week bar and the Schedule changes card (both chromes), ws-* for the desktop grid, filters and popup.
+ *
+ * Every rule mirrors a part the site already ships: the price list card (price-list-web.css .pw-*), the .eyebrow
+ * kicker (global.css), and the ink pills of the price list's category nav (.pl-cats-nav).
+ * ========================================================================== */
+
+/* ── Filters: the price list's pills; the chosen one is ink ─────────────── */
+.ws-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 0 22px; }
+.ws-filter {
+  padding: 10px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  font: 700 12px/1.2 var(--font-display); cursor: pointer;
+}
+.ws-filter:hover { background: var(--line-soft); }
+.ws-filter.is-active { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+/* ── Week bar: eyebrow + Archivo title, as every section head on the site ─ */
+.wk-bar { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 0 0 18px; flex-wrap: wrap; }
+.wk-arrow {
+  width: 40px; height: 40px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  box-shadow: var(--shadow-sm); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px;
+}
+.wk-arrow:hover:not(:disabled) { background: var(--line-soft); }
+.wk-arrow:disabled { opacity: .3; cursor: default; }
+.wk-label { display: flex; flex-direction: column; align-items: center; min-width: 170px; }
+.wk-eyebrow { font: 700 11px/1.2 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+.wk-range { font: 800 26px/1.15 var(--font-display); letter-spacing: -.01em; color: var(--ink); }
+.wk-today {
+  font: 800 12.5px/1.2 var(--font-display); letter-spacing: .03em; text-transform: uppercase; color: var(--ink);
+  background: none; border: 0; border-bottom: 2px solid var(--brand); padding: 4px 0; cursor: pointer;
+}
+
+/* ── The week: one price-list card holding the sheet's grid (hours down, days across) ── */
+.ws-week { --c: var(--c-classes); }
+.ws-week[data-section="athletic"] { --c: var(--c-athletic); }
+.ws-week[data-section="open_gym"] { --c: var(--c-opengym); }
+.ws-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; }
+.ws-scroll { overflow-x: auto; }
+.ws-grid { display: grid; grid-template-columns: 64px repeat(7, minmax(120px, 1fr)); min-width: 940px; }
+.ws-corner { border-bottom: 1px solid var(--line); }
+.ws-head { display: flex; flex-direction: column; gap: 4px; padding: 16px 12px 10px; border-bottom: 2px solid var(--c); border-left: 1px solid var(--line-soft); }
+.ws-head.is-today { border-bottom-color: var(--brand); }
+.ws-head.is-closed { border-bottom-color: var(--c-private); }
+.ws-kicker { display: inline-flex; align-items: center; gap: 7px; font: 700 11px/1.2 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+.ws-kicker .rule { width: 14px; height: 2px; border-radius: 2px; background: var(--brand); }
+.ws-head.is-today .ws-kicker { color: var(--ink); }
+.ws-title { font: 800 18px/1.1 var(--font-display); letter-spacing: -.01em; color: var(--ink); }
+.ws-head.is-past .ws-title { color: var(--muted-3); }
+.ws-closed { font: 800 12px/1.3 var(--font-display); color: var(--c-private); }
+.ws-hour {
+  padding: 12px 10px 0 0; text-align: right; border-top: 1px solid var(--line);
+  font: 800 12.5px/1.2 var(--font-display); color: var(--text-2); font-variant-numeric: tabular-nums;
+}
+.ws-grid > .ws-hour:nth-child(9) { border-top: 0; }
+.ws-cell { display: flex; flex-direction: column; gap: 2px; padding: 6px 6px 8px; border-top: 1px solid var(--line); border-left: 1px solid var(--line-soft); min-width: 0; }
+.ws-cell.is-past { opacity: .5; }
+.ws-item {
+  display: grid; gap: 1px; width: 100%; text-align: left; padding: 5px 6px 5px 12px; border: 0; background: none;
+  font: inherit; color: var(--ink); border-radius: 0 8px 8px 0; box-shadow: inset 4px 0 0 var(--k);
+  transition: opacity .15s ease, background .15s ease;
+}
+button.ws-item { cursor: pointer; }
+button.ws-item:hover:not(.is-off) { background: var(--line-soft); }
+.ws-grid.has-focus .ws-item:not(.is-match) { opacity: .28; }
+.ws-grid.has-focus .ws-item.is-match { background: color-mix(in srgb, var(--k) 10%, #fff); }
+.ws-name { font: 700 14px/1.3 var(--font-body); }
+.ws-age { font: 500 12px/1.4 var(--font-body); color: var(--muted); }
+.ws-when { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 6px; font: 500 12px/1.4 var(--font-body); color: var(--muted-3); white-space: nowrap; }
+.ws-tag {
+  padding: 3px 7px; border-radius: 6px; background: var(--ink); color: #fff;
+  font: 700 10px/1.2 var(--font-display); letter-spacing: .1em; text-transform: uppercase;
+}
+.ws-tag.is-new { background: var(--c-opengym); }
+.ws-tag.is-off { background: var(--c-private); }
+.ws-item.is-off .ws-name { color: var(--muted-3); text-decoration: line-through; }
+.ws-item.is-off { box-shadow: inset 4px 0 0 color-mix(in srgb, var(--k) 35%, #fff); }
+.ws-note { margin: 24px 0; text-align: center; font: 500 14px/1.45 var(--font-body); color: var(--muted-3); }
+.ws-note.is-error { color: var(--c-private); }
+.ws-foot {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 22px; margin-top: 18px; padding-top: 12px;
+  border-top: 1px solid var(--line); font: 500 12.5px/1.5 var(--font-body); color: var(--muted);
+}
+
+/* ── Class popup: a site card. Archivo title over the class's colour rule, rows in the price list's
+      label/value style, the close button as the card's round button. ── */
+.ws-pop-overlay {
+  position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px;
+  background: rgba(28, 25, 23, .5);
+}
+.ws-pop {
+  position: relative; box-sizing: border-box; width: 100%; max-width: 460px; max-height: calc(100vh - 48px); overflow: auto;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+  padding: 22px 24px 20px; color: var(--ink); font-family: var(--font-body);
+}
+.ws-pop-close {
+  position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center; background: var(--line-soft); color: var(--ink);
+  font-size: 14px; cursor: pointer;
+}
+.ws-pop-close:hover { background: var(--ink); color: #fff; }
+.ws-pop-title {
+  margin: 0 44px 12px 0; padding-bottom: 12px; border-bottom: 2px solid var(--pc, var(--ink));
+  font: 800 24px/1.1 var(--font-display); letter-spacing: -.01em; color: var(--ink);
+}
+.ws-pop-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 7px 0; }
+.ws-pop-row + .ws-pop-row { border-top: 1px dashed var(--line); }
+.ws-pop-label { font: 500 14px/1.35 var(--font-body); color: var(--muted); }
+.ws-pop-value { font: 800 14.5px/1.35 var(--font-display); color: var(--ink); text-align: right; }
+.ws-pop-off {
+  display: flex; flex-direction: column; gap: 2px; margin: 0 0 10px; padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--line); border-left: 3px solid var(--c-private); background: var(--card);
+  font: 500 13.5px/1.45 var(--font-body); color: var(--ink);
+}
+.ws-pop-off strong { font: 800 14px/1.3 var(--font-display); color: var(--c-private); }
+.ws-pop-next { color: var(--muted); }
+.ws-pop-desc { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line); font: 400 14px/1.55 var(--font-body); color: var(--text-3); }
+.ws-pop-desc a { color: var(--ink); text-decoration-color: var(--brand); text-decoration-thickness: 2px; }
+.ws-pop-desc ul { margin: 6px 0 6px 18px; padding: 0; }
+
+/* ── The day list (phone and tablet): each day's head over one card of the grid's own class rows ── */
+.ws-day { margin-bottom: 22px; }
+.ws-list .ws-head { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; padding: 0 2px 10px; border-left: 0; border-bottom: 0; }
+.ws-list .ws-card { display: grid; }
+.ws-list .ws-item { padding: 12px 16px 12px 18px; border-radius: 0; min-height: 56px; }
+.ws-list .ws-item + .ws-item { border-top: 1px solid var(--line-soft); }
+.ws-list .ws-name { font-size: 15px; }
+.ws-list .ws-age, .ws-list .ws-when { font-size: 13px; }
+
+/* ── Below desktop: the filters scroll sideways in one row, the week bar spans the column, targets reach 44px ── */
+@media (max-width: 1023px) {
+  .ws-filters { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; margin: 0 calc(-1 * var(--gutter)) 16px; padding: 0 var(--gutter) 4px; scrollbar-width: none; }
+  .ws-filters::-webkit-scrollbar { display: none; }
+  .ws-filter { flex: none; min-height: 44px; font-size: 13px; padding: 10px 16px; white-space: nowrap; }
+  .wk-bar { justify-content: space-between; flex-wrap: nowrap; gap: 10px; }
+  .wk-arrow { width: 44px; height: 44px; flex: none; }
+  .wk-label { min-width: 0; }
+  .wk-range { font-size: 20px; }
+  .wk-today { min-height: 44px; }
+}
+
+/* ── Phone: the week bar and the changes card in the app's type (mobile-app.css) ── */
+.mapp .wk-phone-top { margin-bottom: 18px; }
+.mapp .wk-bar { justify-content: space-between; flex-wrap: nowrap; gap: 10px; margin-bottom: 12px; }
+.mapp .wk-arrow { width: 38px; height: 38px; flex: none; }
+.mapp .wk-label { min-width: 0; }
+.mapp .wk-range { font: 800 17px/1.15 'Archivo', sans-serif; }
+.mapp .wk-eyebrow { font: 800 10.5px/1.2 'Archivo', sans-serif; letter-spacing: .06em; color: #9b8e6a; }
+.mapp .wk-today { display: none; }
+.mapp .wk-daylabel-closed { color: #8b1f1f; margin-left: 6px; }
+.mapp .wk-sess-reason { font: 500 12px/1.3 inherit; color: #8b1f1f; margin-top: 3px; }
