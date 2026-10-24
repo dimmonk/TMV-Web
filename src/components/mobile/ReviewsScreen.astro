@@ -15,7 +15,7 @@ const stars = (v: string) => {
   return '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5 - n);
 };
 ---
-<MobileHero eyebrow="Reviews" title="Loved by the community" desc="What Toronto says about training here — parents, open-gym members, first-timers and athletes." stats={[{ v: reviews.ratingValue + '★', l: 'Google rating' }, { v: '449', l: 'reviews' }, { v: '5★', l: 'and counting' }]} />
+<MobileHero eyebrow="Reviews" title="Loved by the community" desc="What Toronto says about training here: parents, open-gym members, first-timers and athletes." stats={[{ v: reviews.ratingValue + '★', l: 'Google rating' }, { v: '449', l: 'reviews' }, { v: '5★', l: 'and counting' }]} />
 <div class="m-pad">
   <div class="rvm-stack">
     {reviews.items.map((r, i) => (

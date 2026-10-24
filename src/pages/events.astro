@@ -15,8 +15,8 @@ import { partyFaqGroups as faqGroups } from '../data/party-faqs';
 const steps = [
   { n: '1', title: 'Pick the age range', body: 'Select the average age of the group.' },
   { n: '2', title: 'Pick group size', body: 'You can update the headcount later if it changes.' },
-  { n: '3', title: 'Pick date & time', body: 'Weekend slots fill fast — the times you see online are all we have.' },
-  { n: '4', title: 'Enter payment info', body: 'Your card is not charged — it only holds the slot per our policy.' },
+  { n: '3', title: 'Pick date & time', body: 'Weekend slots fill fast: the times you see online are all we have.' },
+  { n: '4', title: 'Enter payment info', body: 'Your card is not charged. It only holds the slot per our policy.' },
   { n: '5', title: 'Check your email', body: "A confirmation lands in your inbox. Peek in spam if you don't see it." },
 ];
 ---
@@ -30,7 +30,7 @@ const steps = [
       <div>
         <div class="pagehero-kicker"><span class="rule"></span>Birthdays · Groups · Team events</div>
         <h1 class="hero2-title">Parties &amp; events,<br>they'll flip over.</h1>
-        <p class="hero2-lead">Expert-led, adrenaline-packed fun under one big roof — from kids' birthdays to corporate team-building. Pick the format that fits your crew.</p>
+        <p class="hero2-lead">Expert-led, adrenaline-packed fun under one big roof, from kids' birthdays to corporate team-building. Pick the format that fits your crew.</p>
         <div class="hero2-actions">
           <a href="#birthdays" class="btn btn-primary">Birthday parties <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
           <a href={url('groups')} class="btn btn-ghost-light">Groups &amp; teams</a>
@@ -55,7 +55,7 @@ const steps = [
 
   <section class="section container" style="padding-block:56px 12px">
     <div class="ev-how">
-      <div class="ev-how-head"><h3>How booking works</h3><p>Your card is never charged at booking — it just holds the slot. You pay in person on the day, based on final headcount.</p></div>
+      <div class="ev-how-head"><h3>How booking works</h3><p>Your card is never charged at booking. It just holds the slot. You pay in person on the day, based on final headcount.</p></div>
       <div class="ev-steps">{steps.map((s) => <div class="ev-step"><span class="ev-step-n">{s.n}</span><div class="ev-step-t">{s.title}</div><p>{s.body}</p></div>)}</div>
     </div>
   </section>
@@ -65,7 +65,7 @@ const steps = [
       <div class="ev-faq-left">
         <div class="ev-faq-eyebrow">Birthday FAQ</div>
         <h2 class="ev-faq-title">Good to know before you book</h2>
-        <p class="ev-faq-lead">Everything parents ask us most — payment, food, timing and the day-of details. Still stuck? We're happy to help.</p>
+        <p class="ev-faq-lead">Everything parents ask us most: payment, food, timing and the day-of details. Still stuck? We're happy to help.</p>
         <div class="ev-faq-contact">
           <a href={contact.href.email || undefined} data-contact-href="email" hidden={!contact.href.email}><i class="bi bi-envelope" aria-hidden="true"></i> <span data-contact="email">{contact.email}</span></a>
           <a href={contact.href.phone || undefined} data-contact-href="phone" hidden={!contact.href.phone}><i class="bi bi-telephone" aria-hidden="true"></i> <span data-contact="phone">{contact.phone}</span></a>
@@ -93,7 +93,7 @@ const steps = [
       a party is only one of the ways back in (data/progression.ts). */}
   <section id="comeback" class="section container" style={`scroll-margin-top:120px; padding-block:56px 72px; --party:${cat.parties}`}>
     <div style="margin-bottom:28px">
-      <SectionHeader num="03" eyebrow="After the party" title="Three ways to come back" description="The party is one way to use the gym. Every kid who came already knows the floor — here's how they keep moving." color={cat.parties} />
+      <SectionHeader num="03" eyebrow="After the party" title="Three ways to come back" description="The party is one way to use the gym. Every kid who came already knows the floor. Here's how they keep moving." color={cat.parties} />
     </div>
     <PartyReturn />
   </section>

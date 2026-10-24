@@ -18,7 +18,7 @@ import { sq } from '../../data/square-links';
       <span class="m-gic" style={`background:color-mix(in srgb,${cat.groups} 14%,#fff)`}><i class="bi bi-people-fill" style={`color:${cat.groups}`} aria-hidden="true"></i></span>
       <div><div class="m-geyebrow" style={`color:${cat.groups}`}>Group Events</div><div class="m-gtitle">Field trips &amp; team-building</div></div>
     </div>
-    <p class="m-gdesc">Two hours — an hour of guided activities, then an hour of open gym. Great for field trips, teams and community events, all levels.</p>
+    <p class="m-gdesc">Two hours: an hour of guided activities, then an hour of open gym. Great for field trips, teams and community events, all levels.</p>
     <div class="m-glabel">Price per participant</div>
     <div class="m-gtiers">
       {groupTiers.map((t) => <div class="m-gtier"><span>{t.label}</span><span class="m-gtier-v"><Priced text={t.val} /></span></div>)}
@@ -32,7 +32,7 @@ import { sq } from '../../data/square-links';
       <span class="m-gic" style={`background:color-mix(in srgb,${cat.openGym} 14%,#fff)`}><i class="bi bi-sunrise" style={`color:${cat.openGym}`} aria-hidden="true"></i></span>
       <div><div class="m-geyebrow" style={`color:${cat.openGym}`}>Early Access</div><div class="m-gtitle">The gym, all to yourself</div></div>
     </div>
-    <p class="m-gdesc">Reserve the gym before we open at 11 AM for exclusive access — perfect for small groups or focused training with no crowds.</p>
+    <p class="m-gdesc">Reserve the gym before we open at 11 AM for exclusive access, perfect for small groups or focused training with no crowds.</p>
     <div class="m-gfoot2">
       <div><div class="m-gbig"><Priced text={eventPricing.earlyAccessFrom} /></div><div class="m-gsub"><Priced text={eventPricing.earlyAccessOpenGym} /></div></div>
       <a href={sq.book.earlyGymAccess} target="_blank" rel="noopener" class="m-darkbtn-sm">Reserve <i class="bi bi-arrow-up-right"></i></a>

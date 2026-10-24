@@ -15,13 +15,13 @@ import { camps, campDaySchedule } from '../data/camps';
 import { forSurface } from '../data/surface';
 const schedule = campDaySchedule;
 const facts = [
-  { icon: 'bi-clock', title: 'Hours', body: 'Arrival from 8:45 AM, camp runs 9 AM–2 PM. Late pickup to 4 PM — {latePickupPerDay} for one day or {latePickupBulk} for five days.' },
+  { icon: 'bi-clock', title: 'Hours', body: 'Arrival from 8:45 AM, camp runs 9 AM–2 PM. Late pickup to 4 PM: {latePickupPerDay} for one day or {latePickupBulk} for five days.' },
   { icon: 'bi-person-badge', title: 'Ages', body: '5 to 16, all levels.' },
   { icon: 'bi-bag', title: 'What to bring', body: 'Clean indoor shoes, a labelled water bottle, lunch and snacks, and comfortable clothes.' },
   { icon: 'bi-shield-check', title: 'Waiver', body: 'Every new participant needs a completed waiver before their first day. Do it online to save time.' },
-  { icon: 'bi-exclamation-triangle', title: 'Allergies', body: 'A nut-free environment — please pack nut-free, and let us know about any allergies.' },
+  { icon: 'bi-exclamation-triangle', title: 'Allergies', body: 'Please avoid packing nuts, and let us know about any allergies.' },
   // The street is the published one (`contact`), shown before `body`.
-  { icon: 'bi-geo-alt', title: 'Location', street: true, body: ' — in Downsview Park.' },
+  { icon: 'bi-geo-alt', title: 'Location', street: true, body: ', in Downsview Park.' },
 ];
 ---
 <BaseLayout title={seo.camps.title} description={seo.camps.description} active="camps" mobileTab="more" appHeader="back" appTitle="Camps">
@@ -34,7 +34,7 @@ const facts = [
       <div>
         <div class="pagehero-kicker"><span class="rule"></span>School breaks &amp; days off · Ages 5 to 16</div>
         <h1 class="hero2-title">Parkour camps,<br>packed with fun.</h1>
-        <p class="hero2-lead">A full day of skill-building, flips, games and friends. All levels — and always a big focus on having fun in the process.</p>
+        <p class="hero2-lead">A full day of skill-building, flips, games and friends. All levels, and always a big focus on having fun in the process.</p>
         <div class="hero2-actions">
           {hasCampDates && <a href="#dates" class="btn btn-primary">See the dates <i class="bi bi-arrow-down" aria-hidden="true"></i></a>}
           <a href="#camps" class={hasCampDates ? 'btn btn-ghost-light' : 'btn btn-primary'}>Compare the camps</a>
@@ -92,9 +92,9 @@ const facts = [
   <section id="know" class="section container" style="scroll-margin-top:120px">
     <div class="know">
       <div class="know-left">
-        <div class="know-eyebrow">03 — A day at camp</div>
+        <div class="know-eyebrow">03 · A day at camp</div>
         <h2 class="know-title">From drop-off to pick-up</h2>
-        <p class="know-lead">Doors open at 8:45 for arrival. Here's how a typical day flows — a mix of coached skills, games and free time.</p>
+        <p class="know-lead">Doors open at 8:45 for arrival. Here's how a typical day flows: a mix of coached skills, games and free time.</p>
         <div class="know-sched">{schedule.map((d) => <div class="know-row"><span class="know-time">{d.time}</span><span>{d.label}</span></div>)}</div>
         <div class="know-pilltitle">What we get up to</div>
         <Pill variant="dark" gap={7} items="Warm up | Safety skills | Parkour movements | Flips | Parkour & flip challenges | Group games | Nerf battles | Stretching | Free time" />

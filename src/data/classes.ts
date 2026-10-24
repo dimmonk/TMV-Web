@@ -38,7 +38,7 @@ export const classes: ClassItem[] = [
     group: 'core', category: 'Parkour', tag: 'Parkour', title: 'Recreational', image: 'assets/recreational.gif',
     description: 'Parkour & acrobatics at your own pace. Drop in at any class time: the coach meets you where you are, no commitment.', bookingTag: 'Drop-in',
     pills: 'All ages | All levels', actionLabel: 'View schedule', link: { screen: 'schedule' },
-    specs: 'Level: All levels || Ages: All ages — Parent & Child (3+) to Adults || Booking: Drop-in · no reservation needed || Price: {groupClass1x} single · 10-pack {groupClass10x}',
+    specs: 'Level: All levels || Ages: All ages, Parent & Child (3+) to Adults || Booking: Drop-in · no reservation needed || Price: {groupClass1x} single · 10-pack {groupClass10x}',
   },
   {
     group: 'core', category: 'Private', tag: 'Private', title: 'Private Lessons', image: 'assets/private.mp4',
@@ -54,7 +54,7 @@ export const classes: ClassItem[] = [
   },
 
   // ---- Partnership classes (booked directly with the partner coach) ----
-  { group: 'partnership', category: 'Partner', tag: 'Partner', title: 'Stick Fighting Toronto', image: 'assets/stickfighting.mp4', description: 'Filipino stick fighting with our partner, coach Peter.', bookingTag: 'Direct with coach', pills: 'Adults (18+) | Saturdays', actionLabel: 'Contact coach', link: { external: 'mailto:coachpeter@stickfightingtoronto.com' }, specs: 'Level: All levels || Ages: Adults (18+) || Schedule: Sat — 10 AM to 12 PM || Booking: Direct with coach Peter || Price: $30 drop-in · $100 / month' },
+  { group: 'partnership', category: 'Partner', tag: 'Partner', title: 'Stick Fighting Toronto', image: 'assets/stickfighting.mp4', description: 'Filipino stick fighting with our partner, coach Peter.', bookingTag: 'Direct with coach', pills: 'Adults (18+) | Saturdays', actionLabel: 'Contact coach', link: { external: 'mailto:coachpeter@stickfightingtoronto.com' }, specs: 'Level: All levels || Ages: Adults (18+) || Schedule: Sat, 10 AM to 12 PM || Booking: Direct with coach Peter || Price: $30 drop-in · $100 / month' },
   { group: 'partnership', category: 'Partner', tag: 'Partner', title: 'Martial Arts', image: 'assets/martialarts.mp4', description: 'Jiu Jitsu, Wrestling, Boxing & Muay Thai.', bookingTag: 'Direct with coach', pills: 'Ages 16+ | Grappling | Striking', actionLabel: 'Get in touch', link: { external: contact.href.email && `${contact.href.email}?subject=${encodeURIComponent('Martial Arts classes (for Ryan)')}` }, specs: 'Level: All levels · beginner to competitor || Ages: 16+ || Booking: Direct via WhatsApp · ask for Ryan || Disciplines: BJJ · Wrestling · Boxing · Muay Thai' },
 ];
 
