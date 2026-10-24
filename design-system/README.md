@@ -6,19 +6,21 @@ is built, shipped or imported by the site: `src/` does not read it and `tsconfig
 excludes it.
 
 Status: **draft for approval.** Where the design and the live site differ, the differences
-are listed in [drift-list.md](drift-list.md). Steven approves each item. Until an item is
+are listed in the artifact's drift list ([backup](artifact/drift-list.md)). Steven approves each item. Until an item is
 approved, the live site stays as it is and the design file stays as it is.
 
-## What is in here
+## Where the design system lives
+
+The design system is the Design System artifact **The Monkey Vault Website**:
+https://claude.ai/artifact/4zocEa7e9SRcorriud1Zd8 (tokens, components with live previews,
+logos, the brand book, the drift list, pages and source history).
+
+This folder is only a backup:
 
 | Folder | What it holds |
 |---|---|
-| [`source/`](source/) | Every file from the export, byte for byte, in its original layout (292 of the 295 files). Kept in one tree because the design files load each other by relative path (`dc-import name="Pill"` fetches `Pill.dc.html`, pages import `./categories.js` and `assets/...`). Moving them into sub folders would break every page in the design tool. |
-| [`tokens/`](tokens/README.md) | Colour, type, radius, shadow, spacing, motion and breakpoint values, with the file each one comes from. |
-| [`components/`](components/README.md) | One page per shared component: what it is for, its parts, props, variants and exact values, and its source file. |
-| [`patterns/`](patterns/README.md) | Rules that span components (colour roles, buttons, booking tag, flip cards, accordions, forms, the mobile app shell) and one page per screen in the design. |
-| [`versions.md`](versions.md) | Which copy of each file is the newest, how the older repo copy `design-reference/` differs, and what each folder of the export is. |
-| [`drift-list.md`](drift-list.md) | Every difference between this design and the live site on `main`, with a recommendation for each. |
+| [`artifact/`](artifact/README.md) | A copy of the artifact's files (`tokens.json`, `components/`, `README.md`, `drift-list.md`, `pages.md`, `versions.md`). The artifact is the original; edit it there. |
+| [`source/`](source/) | Every file from the export, byte for byte, in its original layout (292 of the 295 files). |
 
 ## Three files were held back
 
@@ -56,4 +58,4 @@ cd design-system/source && python3 -m http.server 8080
 
 The export's copy uses em dashes in many places. Steven's rule is no em dashes in site
 copy. The docs in this folder use none; the files in `source/` are kept verbatim, so their
-em dashes stay until a copy item is approved (see drift-list.md, item C1).
+em dashes stay until a copy item is approved (see the drift list, item C1).
