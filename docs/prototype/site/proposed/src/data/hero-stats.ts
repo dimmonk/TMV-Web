@@ -2,9 +2,9 @@
  * Home-hero stat tiles: SSOT for both surfaces (desktop uses `label`, the
  * narrower mobile hero uses `mobileLabel` where set).
  *
- * The lead figure is the DROP-IN CLASS: the least-barrier way in is always shown first (owner's rule, 2026-10-24):
- * no booking, no commitment, come to any class time. The intro and the day pass follow in the goal picker and the
- * line under these tiles.
+ * The lead figure is the OPEN GYM DAY PASS: the least-barrier way in is always shown first (owner's rule,
+ * 2026-10-24): the cheapest option, no booking, come any time we're open. Classes and the intro follow in the goal
+ * picker.
  *
  * The hours tile is not typed here. It is read off the published opening hours
  * (`site-config.ts`), and when there are none to read the tile is hidden.
@@ -25,7 +25,7 @@ export interface HeroStat {
 const hoursTile = hoursStat(hours);
 
 export const heroStats: readonly HeroStat[] = [
-  { value: '{groupClass1x}', label: 'drop-in class · no booking', mobileLabel: 'drop-in class' },
+  { value: '{openGym1x}', label: 'open gym · come any time', mobileLabel: 'open gym day' },
   // Always in the markup (hidden when there is nothing to say) so the browser can show it
   // when hours are published after the build.
   { value: hoursTile?.value ?? '', label: hoursTile?.label ?? '', mobileLabel: hoursTile?.mobileLabel ?? '', hours: true, hidden: !hoursTile },
