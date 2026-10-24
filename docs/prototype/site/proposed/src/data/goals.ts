@@ -3,10 +3,9 @@
  * ASK → RECOMMEND → REASON → INVITE entry point on Home. One goal → ONE
  * recommendation with a reason, one CTA, and where it usually leads next.
  *
- * Easiest way in first, in context (owner's rule, 2026-10-24): the goals run from
- * the easiest step to the biggest, and each answer leads with what fits that goal,
- * its easiest version as the "or". Just play → Open Gym; a kid trying it out →
- * Open Gym (no booking, any time), a coached drop-in class as the "or"; parkour basics → the
+ * The goals run from the easiest step to the biggest (owner's rule, 2026-10-24);
+ * each answer is the approved one. Match the lesson to the goal (owner's rule,
+ * 2026-10-20): a kid trying it out → a drop-in Recreational class (no booking, no commitment); parkour basics → the
  * Intro Lesson, a set beginner lesson plan that is the same every time (why it
  * costs less); a specific skill → a Private Lesson built around it, first visit
  * included; regular structured training → the Athletic Program, whose
@@ -63,21 +62,21 @@ export const goals: Goal[] = [
   },
   {
     id: 'kid', label: 'Find an activity my kid loves',
-    color: cat.openGym, cta: 'Plan an open gym visit', href: openGym, price: '{openGym1x} · all day',
-    eyebrow: "We'd start them with", title: 'Open Gym, any time we are open',
-    reason: 'The easiest way to find out if they love it: no booking, no class, no commitment. They try the floor, the foam pit and the obstacles at their own pace. Kids under 7 play with a parent.',
-    altLead: 'Rather a coach leads them?', altLink: 'Drop into a Recreational class.', altHref: url('schedule'),
+    color: cat.classes, cta: 'See the class times', href: url('schedule'), price: '{groupClass1x} · drop-in · ages 3+',
+    eyebrow: "We'd start them with", title: 'A drop-in Recreational class',
+    reason: 'The easiest way to find out if they love it: no booking, no commitment. Parkour and acrobatics at their own pace with a coach and other kids. Come to any class time, and the coach tells you what fits next.',
+    altLead: 'Rather they start one-on-one?', altLink: 'Book an intro lesson with a coach.', altHref: sq.getStarted.introduction,
     sideLabel: 'Where it usually leads',
     leads: [
-      { title: 'Recreational classes', sub: 'Drop-in, coached, ages 3+', color: cat.classes, href: url('schedule') },
       { title: 'Camps', sub: 'School breaks & P.A. Days · ages 5 to 16', color: cat.camps, href: url('camps') },
+      { title: 'Open Gym', sub: 'Play together any day, no booking', color: cat.openGym, href: openGym },
     ],
   },
   {
     id: 'parkour', label: 'Learn parkour', ...INTRO,
     eyebrow: "We'd start you with", title: 'An intro lesson with a coach',
     reason: 'One hour on our set beginner lesson plan: the parkour basics, the same proven plan every time. For a specific skill or goal, a private lesson is built around you instead.',
-    altLead: 'Rather not book?', altLink: 'Drop into a Recreational Parkour class.', altHref: url('schedule'),
+    altLead: 'Coming with friends?', altLink: 'Intros cost less per person in a group of two or more.', altHref: url('get-started'),
     sideLabel: 'Where it usually leads',
     leads: [
       { title: 'Recreational Parkour', sub: 'Drop-in group classes, all ages', color: cat.classes, href: url('schedule') },
